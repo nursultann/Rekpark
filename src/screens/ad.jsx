@@ -1,8 +1,8 @@
 import React from "react";
-import Navbar from "./navbar";
+import Navbar from "../components/navbar";
 
-class Ad extends React.Component{
-    render(){
+class Ad extends React.Component {
+    render() {
         return(
             <div>
                 <Navbar />

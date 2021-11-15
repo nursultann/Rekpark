@@ -1,8 +1,8 @@
 import React from "react";
-import Navbar from "./navbar";
+import Navbar from "../components/navbar";
 
-class SearchResult extends React.Component{
-    render(){
+class SearchResult extends React.Component {
+    render() {
         return(
             <div>
                 <Navbar />
@@ -25,4 +25,5 @@ class SearchResult extends React.Component{
         );
     }
 }
+
 export default SearchResult;

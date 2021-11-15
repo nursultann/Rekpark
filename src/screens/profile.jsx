@@ -1,8 +1,9 @@
 import React from "react";
 import {Link} from 'react-router-dom';
-import Navbar from "./navbar";
-class Lk extends React.Component{
-    render(){
+import Navbar from "../components/navbar";
+
+class Profile extends React.Component{
+    render() {
         return(
             <div>
             <Navbar/>
@@ -77,4 +78,4 @@ class Lk extends React.Component{
         );
     }
 }
-export default Lk;
+export default Profile;

@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import Navbar from "./navbar";
+import Navbar from "../components/navbar";
 // import Slider from "react-slick";
 class Category extends React.Component{
     render(){

@@ -1,6 +1,7 @@
 import React from "react";
-import Navbar from "./navbar";
-class Add extends React.Component{
+import Navbar from "../components/navbar";
+
+class CreateAd extends React.Component {
     render(){
         return(
           <div>
@@ -59,4 +60,5 @@ class Add extends React.Component{
         );
     }
 }
-export default Add;
+
+export default CreateAd;

@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./navbar";
+import Navbar from "../components/navbar";
 
 class Contacts extends React.Component{
     render(){
