@@ -2,25 +2,59 @@ import React from "react";
 import Ad from "./ad";
 import Navbar from "./navbar";
 import SearchBar from "./search-bar";
-
 class Ads extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+          error:null,
+          isLoaded:false,
+          products:[]
+        };
+      }
+      componentDidMount(){
+        fetch("http://univerosh.kg/testapp/public/api/products?limit=20&offset=0")
+        .then(res => res.json())
+        .then(
+          (result) => {
+            this.setState({
+              isLoaded:true,
+              products:result.data
+            
+            });
+          },
+          (error) => {
+            this.setState({
+                isLoaded:true,
+                error
+            });
+          }
+      )
+  }
     render(){
+        const {error,isLoaded, products} = this.state;
+        if(error){
+            return <p>Error {Error.message}</p>
+          }else if(!isLoaded){
+            return <p>Loading</p>
+          }  
         return( 
             <div>
                 <Navbar/>
                 <SearchBar/>
             <div className="col-md-12">
                 <div className="row">
-                     <div className="col-md-4 mt-2 mb-2">
+                {products.map(item =>(
+                     <div className="col-md-4 mt-2 mb-2" key={item.id}>
                             <div class="card">
-                                <img src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg" class="card-img-top" alt="..."/>
+                                <img src={item.media.original_url} class="card-img-top" alt="..."/>
                                 <div class="card-body">
-                                    <h5 class="card-title">З</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="/ad" class="badge badge-primary px-2 py-2">Подробнее</a>
+                                    <h5 class="card-title">{item.title}</h5>
+                                    <p class="card-text">{item.description}</p>
+                                    <a href={'/ad/id='+item.id} class="badge badge-primary px-2 py-2">Подробнее</a>
                                 </div>
                             </div>
                     </div>
+                ))}
                 </div>
             </div>                  
             </div>
