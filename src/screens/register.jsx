@@ -1,46 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
+import {firebase, auth} from "../config/firebase_config";
+import * as firebaseui from "firebaseui";
 
-class Register extends React.Component{
-        render() {
-            return(
-                <div>
-                    <Navbar/>
-                    <div className="row">
-                        <div className="col-md-8">
-                        <div className="col-md-8 px-3 py-3"> 
-                        <h5>Регистрация</h5>   
-                        <form>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Email или телефон</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
-                                <small id="emailHelp" class="form-text text-muted">Мы никогда не делимся вашими данными</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Пароль</label>
-                                <input type="password" class="form-control" id="password1"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Повторить пароль</label>
-                                <input type="password" class="form-control" id="password2"/>
-                                <label id="passcheck"></label>
-                            </div>
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
-                                <label class="form-check-label" for="exampleCheck1">Запомнить</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-                        </form>
-                        </div>    
-                        </div>
-                        <div className="col-md-4">
+const Register = () => {
+    // Inputs
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [otp, setOtp] = useState('');
+    const [showValidation, setShowValidation] = useState(false);
+    const [final, setFinal] = useState('');
 
-                        </div>
-                    </div>
-                </div>
-            );
+    console.log('log');
+
+    const signIn = () => {
+        if (phoneNumber === "" || phoneNumber.length < 9) return;
+        auth.signInWithPhoneNumber(`+${phoneNumber}`, window.verify).then((result) => {
+            setFinal(result);
+            alert("code sent")
+            setShowValidation(true);
+        }).catch((err) => {
+                alert(err);
+                window.location.reload()
+            });
+    };
+
+    const validateOtp = () => {
+        if (otp === null || final === null)
+            return;
+        final.confirm(otp).then((result) => {
+            alert("success");
+            // result.user.uuid;
+            console.log('success ', result);
+        }).catch((err) => {
+            alert("Wrong code");
+        })
     }
 
+    useEffect(() => {
+        window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+        window.verify.render();
+    }, []);
+
+    return(
+        <div>
+            <Navbar/>
+            <div style={{}}>
+                <center>
+                    <div style={{ display: !showValidation ? "block" : "none" }}>
+                        <input value={phoneNumber} onChange={(e) => { 
+                        setPhoneNumber(e.target.value) }}
+                            placeholder="phone number" />
+                        <br /><br />
+                        <div id="recaptcha-container"></div>
+                        <button onClick={signIn}>Send OTP</button>
+                    </div>
+                    <div style={{ display: showValidation ? "block" : "none" }}>
+                        <input type="text" placeholder={"Enter your OTP"}
+                            onChange={(e) => { setOtp(e.target.value) }}></input>
+                        <br /><br />
+                        <button onClick={validateOtp}>Verify</button>
+                    </div>
+                </center>
+            </div>
+        </div>
+    );
 }
 
 export default Register;

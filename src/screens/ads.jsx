@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Ad from "./ad";
 import Navbar from "../components/navbar";
 import SearchBar from "../components/search-bar";
-import axios from "axios";
 import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { setProducts } from "../redux/actions/product_actions";
@@ -45,8 +44,9 @@ const Ads = () => {
                         )
                     })}
                 </div>
-            </div>                  
+            </div>               
         </div>
     );
 }
+
 export default Ads;
