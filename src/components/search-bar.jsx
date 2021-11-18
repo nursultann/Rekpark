@@ -1,15 +1,31 @@
-import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import * as api from "../api";
+import { Link } from "react-router-dom";
+import { setCategories } from "../redux/actions/category_actions";
+import React, { useEffect } from "react";
+import Slider from "react-slick";
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 4,
+  slidesToScroll: 4,
+  nav:true
+};
+const SearchBar = () => {
+  const dispatch = useDispatch();
+  const {categories} = useSelector((state) => state.category);
 
-class SearchBar extends React.Component{
-  // constructor(props){
-  //   super(props);
-  //   this.state = {
-  //     categories : [],
-  //     error
-  //   };
-  // }  
-  
-  render(){
+  const fetchCategoriesTree = async () => {
+      const categories = await api.fetchCategoriesTree();
+      if (categories != null) {
+          dispatch(setCategories(categories));
+      }
+  };
+
+  useEffect(() => {
+      fetchCategoriesTree();
+  }, []);
         return(
             <div>
             <div class="col-md-12">
@@ -43,56 +59,24 @@ class SearchBar extends React.Component{
         </div>
     </div>
     <div className="col-md-12">
-      <hr/>
-              <div class="col-md-12 owl-carousel owl-theme" id="category">
-                  
-                  
-                  
-                  {/* <div class="slide text-center">
-                    <a href="/category" class="slide__link">
-                    <i class="fas fa-home fa-2x text-secondary"></i>
-                      <p class="slide__title">Недвижимость</p>
+      <hr/>         
+              {/* <div className="row"> */}
+              <Slider {...settings}>
+              {categories.map((category) => {
+                 return (
+                  <div class="col-md-4">    
+                 <div class="text-center" id={category.id}>     
+                    <a href={`/category/${category.id}`}>                    
+                      <p class="slide__title">{category.name}</p>
+                      <img src={category.media.length > 0 ? category.media[0].original_url : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg'} width="100%" />
                     </a>
                   </div>
-                  <div class="slide text-center">
-                    <a href="/category" class="slide__link">
-                    <i class="fas fa-car fa-2x text-secondary"></i>
-                      <p class="slide__title">Транспорт</p>
-                    </a>
-                  </div>
-                  <div class="slide text-center">
-                    <a href="/category" class="slide__link">
-                    <i class="fas fa-tools fa-2x text-secondary"></i>
-                      <p class="slide__title">Услуги</p>
-                    </a>
-                  </div>
-                  <div class="slide text-center">
-                    <a href="/category" class="slide__link">
-                    <i class="fas fa-people-carry fa-2x text-secondary"></i>
-                      <p class="slide__title">Работа</p>
-                    </a>
-                  </div>
-                  <div class="slide text-center">
-                    <a href="/category" class="slide__link">
-                    <i class="fas fa-tshirt fa-2x text-secondary"></i>
-                      <p class="slide__title">Личные вещи</p>
-                    </a>
-                  </div>
-                  <div class="slide text-center">
-                    <a href="/category" class="slide__link">
-                    <i class="fas fa-hand-holding text-secondary fa-2x"></i>
-                      <p class="slide__title">Отдам даром</p>
-                    </a>
-                  </div>
-                  <div class="slide text-center">
-                    <a href="/category" class="slide__link">
-                    <i class="far fa-star fa-2x text-secondary"></i>
-                      <p class="slide__title">Разное</p>
-                    </a>
-                  </div> */}
-                  
-                      
-              </div>
+                  </div> 
+                  )  
+              })}
+              </Slider>
+              {/* </div> */}
+              
       
     </div>
     
@@ -101,5 +85,4 @@ class SearchBar extends React.Component{
   </div>
         );
     }
-}
 export default SearchBar;

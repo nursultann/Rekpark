@@ -1,12 +1,13 @@
 import React, { Component } from "react";
+import Navbar from "../components/navbar";
 
-class Edit_ad extends Component{
-    render(){
+class EditAd extends Component {
+    render() {
         return(
             <div>
             <Navbar/>
-                                <div className="col-md-8">
-                                <form>
+                <div className="col-md-8">
+                <form>
                 <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="inputPassword4">Тип объявления</label>
@@ -52,6 +53,7 @@ class Edit_ad extends Component{
                     </div>
                 </div>
                 <h3>Настраиваемые поля</h3>
+                
                 <button type="submit" class="btn btn-primary">Опубликовать</button>
                 </form> 
                                 </div>
@@ -59,4 +61,5 @@ class Edit_ad extends Component{
         );
     }
 }
-export default Edit_ad;
+
+export default EditAd;

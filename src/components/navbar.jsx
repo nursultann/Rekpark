@@ -16,7 +16,7 @@ class Navbar extends React.Component{
         <a class="blog-header-logo text-dark" href="/">Ош Парк</a>
       </div>
       <div class="col-4 d-md-flex justify-content-end align-items-center">
-        <Link class="btn btn-sm btn-outline-secondary" to="/signin">Регистрация</Link>
+        <Link class="btn btn-sm btn-outline-secondary" to="/register">Регистрация</Link>
         <Link class="btn btn-sm btn-outline-secondary" to="/login">Войти</Link>
       </div>
     </div>
@@ -24,7 +24,7 @@ class Navbar extends React.Component{
   <div class="nav-scroller py-1 mb-2">
     <nav class="nav d-flex justify-content-between">
       <a class="p-2 text-muted" href="/about-us">О нас</a>
-      <a class="p-2 text-muted" href="/ads">Объявления</a>
+      <a class="p-2 text-muted" href="products">Объявления</a>
       <a class="p-2 text-muted" href="/articles">Статьи</a>
       <a class="p-2 text-muted" href="/contacts">Контакты</a>
       <a class="p-2 text-muted" href="/ad-manage">Рекламодателям</a>

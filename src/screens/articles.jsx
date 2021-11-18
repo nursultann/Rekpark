@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./navbar";
+import Navbar from "../components/navbar";
 
 class Articles extends React.Component{
     render(){
@@ -8,6 +8,10 @@ class Articles extends React.Component{
             <Navbar/>
             <div className="row">
             <div className="col-md-10">
+               <div className="col-md-12">
+                   <h3 className="">Статьи и новости</h3>
+                    <hr/>
+               </div>
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-3">
