@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 // import Slider from "react-slick";
 class Category extends React.Component{
     render(){
@@ -45,7 +46,7 @@ class Category extends React.Component{
                         </div>
                     </div>
             </div>   
-            
+            <Footer/>
            </div>
         );
         }

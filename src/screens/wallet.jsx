@@ -1,4 +1,5 @@
 import React from 'react';
+import Footer from '../components/footer';
 import Navbar from '../components/navbar';
 
 class Wallet extends React.Component{
@@ -11,6 +12,7 @@ class Wallet extends React.Component{
                     
                 </div>
             </div>
+            <Footer/>
             </div>
         );
     }

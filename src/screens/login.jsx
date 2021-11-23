@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 class Login extends React.Component{
 render(){
@@ -7,9 +8,10 @@ render(){
         <div>
             <Navbar/>
             <div className="row">
-                <div className="col-md-8">
-                <div className="col-md-8 px-3 py-3"> 
-                <h5>Войти</h5>   
+                <div className="col-md-12 d-flex justify-content-center">
+                <div className="col-md-6 px-3 py-3 border my-3"> 
+                <h5 className="text-center">Войти</h5>
+                <hr/>   
                 <form>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Email или телефон</label>
@@ -24,14 +26,12 @@ render(){
                         <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
                         <label class="form-check-label" for="exampleCheck1">Запомнить</label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Войти</button>
+                    <button type="submit" class="btn btn-primary col-md-12">Войти</button>
                     </form>
                 </div>    
                 </div>
-                <div className="col-md-4">
-
-                </div>
             </div>
+            <Footer/>
         </div>
     );
 }

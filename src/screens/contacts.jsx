@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 class Contacts extends React.Component{
     render(){
@@ -16,6 +17,7 @@ class Contacts extends React.Component{
                         </div>
                     </div>
                 </div>
+                <Footer/>
             </div>
         );
     }

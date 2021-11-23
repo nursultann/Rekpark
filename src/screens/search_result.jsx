@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar";
+import Navbar from '../components/navbar';
 
 class SearchResult extends React.Component {
     render() {
@@ -21,6 +22,7 @@ class SearchResult extends React.Component {
                     </div>
                 </div>
             </div>
+            <Footer/>
             </div> 
         );
     }

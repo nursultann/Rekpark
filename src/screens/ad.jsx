@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 class Ad extends React.Component {
     render() {
@@ -78,7 +79,7 @@ class Ad extends React.Component {
                             </div>
                         </div>
                     </div>
-                    
+                    <Footer/>  
             </div>
         );
     }

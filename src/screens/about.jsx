@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 class About extends React.Component {
     render() {
@@ -20,6 +21,7 @@ class About extends React.Component {
                         </div>
                     </div>
                 </div>
+                <Footer/>
             </div>
         );
     }

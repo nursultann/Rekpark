@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 class EditAd extends Component {
     render() {
@@ -57,6 +58,7 @@ class EditAd extends Component {
                 <button type="submit" class="btn btn-primary">Опубликовать</button>
                 </form> 
                                 </div>
+                                                    
             </div>
         );
     }

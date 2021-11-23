@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 class Article extends React.Component{
     render(){
         return(
@@ -13,6 +14,7 @@ class Article extends React.Component{
                     
                 </div>
             </div>
+            <Footer/>
             </div>
         );
     }

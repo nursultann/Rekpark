@@ -16,6 +16,7 @@ import Article from './screens/article';
 import Wallet from './screens/wallet';
 import Contacts from './screens/contacts';
 import Register from './screens/register';
+import Footer from './components/footer';
 
 class App extends React.Component{
   render(){
@@ -38,6 +39,7 @@ class App extends React.Component{
                 <Route path="/products/:id/edit" component={EditAd} />
                 <Route path="/products/:id" component={Ad}/>
                 <Route path="/products" component={Ads}/>
+                <Route path="/products/create" component={EditAd} />
                 <Route path="/register" component={Register}/>
                 <Route path="/profile"  component={Profile}/>
                 <Route path="/category" component={Category}/>
@@ -49,9 +51,7 @@ class App extends React.Component{
                 <Route path="/login" component={Login}/>
               </Switch>
             </BrowserRouter>
-            <footer class="blog-footer">
-              <p>Ош Парк <script type="text/javascript">document.write(new Date().getFullYear());</script></p>
-            </footer>
+            
             </div>
             <div className="col-md-2 bg-success px-0 d-none d-md-block text-white text-center" 
               style={{

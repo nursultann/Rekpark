@@ -1,5 +1,4 @@
-import { token } from "../utils/local_storage";
-import client from "./axios_config";
+import client from "../config/axios_config";
 
 class ApiClient {
     get = (url, body, contentType = 'application/json') => {
@@ -7,7 +6,7 @@ class ApiClient {
         return client.get(url, body);
     };
 
-    post = (url, body, contentType = 'multipart/form-data') => {
+    post = (url, body, contentType = 'application/json') => {
         setContentType(contentType);
         return client.post(url, body);
     };

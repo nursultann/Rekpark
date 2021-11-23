@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from 'react-router-dom';
 import Navbar from "../components/navbar";
-
+import Footer from "../components/footer";
 class Profile extends React.Component{
     render() {
         return(
@@ -74,6 +74,7 @@ class Profile extends React.Component{
                         </div>
                 </div>
             </div>
+            <Footer/>
             </div>
         );
     }

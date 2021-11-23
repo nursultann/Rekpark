@@ -4,14 +4,7 @@ import { Link } from "react-router-dom";
 import { setCategories } from "../redux/actions/category_actions";
 import React, { useEffect } from "react";
 import Slider from "react-slick";
-const settings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 4,
-  slidesToScroll: 4,
-  nav:true
-};
+
 const SearchBar = () => {
   const dispatch = useDispatch();
   const {categories} = useSelector((state) => state.category);
@@ -21,6 +14,13 @@ const SearchBar = () => {
       if (categories != null) {
           dispatch(setCategories(categories));
       }
+  };
+  
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
   };
 
   useEffect(() => {
