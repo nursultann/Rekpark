@@ -20,7 +20,7 @@ const SearchBar = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 5,
   };
 
   useEffect(() => {
@@ -58,18 +58,22 @@ const SearchBar = () => {
             </button>
         </div>
     </div>
-    <div className="col-md-12">
+    <div className="col-md-12 py-3">
       <hr/>         
               {/* <div className="row"> */}
               <Slider {...settings}>
               {categories.map((category) => {
                  return (
                   <div class="col-md-4">    
-                 <div class="text-center" id={category.id}>     
-                    <a href={`/category/${category.id}`}>                    
-                      <p class="slide__title">{category.name}</p>
-                      <img src={category.media.length > 0 ? category.media[0].original_url : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg'} width="100%" />
+                 <div id={category.id}>     
+                    <a href={`/category/${category.id}`}>
+                      <div className="col-md-12 px-2 mb-3">                    
+                      {/* <img className="mx-3" src={category.media.length > 0 ? category.media[0].original_url : 
+                        'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg'} width="100%" /> */}
+                      <a className="badge badge-primary" href={`/category/${category.id}`}>{category.name}</a>
+                      </div>
                     </a>
+                    
                   </div>
                   </div> 
                   )  
