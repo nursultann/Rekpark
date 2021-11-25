@@ -1,4 +1,5 @@
 // import logo from './logo.svg';
+import top from './img/top.png';
 import {Route, BrowserRouter, Switch} from 'react-router-dom';
 import React from 'react';
 import Navbar from './components/navbar';
@@ -17,6 +18,8 @@ import Wallet from './screens/wallet';
 import Contacts from './screens/contacts';
 import Register from './screens/register';
 import Footer from './components/footer';
+import './dist/css/bootstrap.css';
+
 
 class App extends React.Component{
   render(){
@@ -30,7 +33,7 @@ class App extends React.Component{
             </div>
             <div className="col-md-8 px-0">
             <div className="col-md-12 bg-success px-0 text-white text-center">
-                <img src="img/top.png" width="100%"/>
+                <img src={top} width="100%"/>
             </div>
             <BrowserRouter>
               <Switch>
