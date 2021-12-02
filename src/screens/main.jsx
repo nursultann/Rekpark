@@ -8,6 +8,7 @@ import { setProducts } from "../redux/actions/product_actions";
 import { Link } from "react-router-dom";
 import * as api from "../api";
 import Footer from "../components/footer";
+import { Skeleton } from "@mui/material";
 
 const Main = () => {  
   const dispatch = useDispatch();
@@ -32,6 +33,28 @@ const Main = () => {
           <div class="col-md-8">
             <h5 class="text-muted">Новые Объявления</h5>
             <div class="row mt-4 mb-4">
+            {/* {products === null || products === undefined || products === ""} ?
+            <div className="row mt-4 mb-4"> 
+            <div className="col-md-4">
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
+            </div>
+            <div className="col-md-4">
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
+            </div>
+            <div className="col-md-4">
+              <Skeleton variant="rectangular" width={'100%'} height={100} />
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
+              <Skeleton variant="text" />
+            </div>
+            </div>
+            :   */}
             {products.map((product) => {
                         return (
                             <div className="col-md-4 mt-2 mb-2">

@@ -78,9 +78,9 @@ const Register = () => {
             };
             console.log('params', params);
             const result = await register(params, function (data) {
-                alert("success");
+                localStorage.setItem('token', data.api_token);
             }, function (data) {
-                alert("error " + data);
+                
             });
         }else{
             alert("wrong password");

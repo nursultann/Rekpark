@@ -7,7 +7,6 @@ export const login = async (phone, password, onSuccess, onError) => {
             if (onSuccess != null) onSuccess(response.data.data);
         }
     } catch (error) {
-        console.log('login error ', error);
         if (onError != null) onError(error);
     }
 };
@@ -30,7 +29,7 @@ export const userDetails = async (params) => {
             return response.data.data;
         }
     } catch (error) {
-        console.log('fetch user details error ', error);
+        console.log('fetch user details error ', error.response.data);
     }
 
     return null;
