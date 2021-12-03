@@ -8,21 +8,33 @@ import { setProducts } from "../redux/actions/product_actions";
 import { Link } from "react-router-dom";
 import * as api from "../api";
 import Footer from "../components/footer";
+import { Button } from '@mui/material';
+import ProductItem from "../components/product/product_item";
 
 const Main = () => {  
   const dispatch = useDispatch();
-    const {products} = useSelector((state) => state.product);
+  const {products} = useSelector((state) => state.product);
 
-    const fetchProducts = async () => {
-        const products = await api.fetchProducts();
-        if (products != null) {
-            dispatch(setProducts(products));
-        }
-    };
 
-    useEffect(() => {
-        fetchProducts();
-    }, []);
+  const fetchInitProducts = async () => {
+    let products = await api.fetchProducts({'sub': true});
+    if (products != null) {
+      products = products.concat(await api.fetchProducts());
+      dispatch(setProducts(products));
+    }
+  };
+
+  const fetchProducts = async () => {
+    let prods = products.concat(await api.fetchProducts());
+    if (prods != null) {
+      dispatch(setProducts(prods));
+    }
+  };
+
+  useEffect(() => {
+    fetchInitProducts();
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -33,19 +45,10 @@ const Main = () => {
             <h5 class="text-muted">Новые Объявления</h5>
             <div class="row mt-4 mb-4">
             {products.map((product) => {
-                        return (
-                            <div className="col-md-4 mt-2 mb-2">
-                                <div class="card">
-                                    <img src={product.media.length > 0 ? product.media[0].original_url : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg'} class="card-img-top" alt="..."/>
-                                    <div class="card-body">
-                                        <h5 class="card-title">{product.title}</h5>
-                                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                        <Link to={`/products/${product.id}`} class="badge badge-primary px-2 py-2">Подробнее</Link>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    })}
+              return (
+                <><ProductItem product={product} /></>
+              )
+            })}
             </div> 
             <hr />
             <h5 class="text-muted">Бизнес профили</h5>

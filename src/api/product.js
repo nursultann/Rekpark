@@ -2,8 +2,10 @@ import ApiClient from "./ApiClient";
 
 export const fetchProducts = async (params = { limit: 20, offset: 0 }) => {
     try {
-        if (!params.hasOwnProperty('offset')) params['offset'] = 0;
-        if (!params.hasOwnProperty('limit')) params['limit'] = 20;
+        if (!params.hasOwnProperty('sub')) {
+            if (!params.hasOwnProperty('offset')) params['offset'] = 0;
+            if (!params.hasOwnProperty('limit')) params['limit'] = 20;
+        }
         
         const response = await ApiClient.get('/products', params);
         if (response.status == 200 || response.status == 201) {
