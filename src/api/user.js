@@ -7,7 +7,6 @@ export const login = async (phone, password, onSuccess, onError) => {
             if (onSuccess != null) onSuccess(response.data.data);
         }
     } catch (error) {
-        console.log('login error ', error);
         if (onError != null) onError(error);
     }
 };
@@ -18,7 +17,6 @@ export const register = async (params , onSuccess = null, onError = null) => {
             if (onSuccess != null) onSuccess(response.data.data);
         }
     }).catch(error => {
-        console.log('regiter error ', error.response.data);
         if (onError != null) onError(error);
     });
 };
