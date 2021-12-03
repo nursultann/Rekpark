@@ -13,3 +13,9 @@ export const selectedProduct = (product) => {
         payload: product,
     }
 }
+export const favoriteProducts = (products)=>{
+    return{
+        type:ActionTypes.SET_FAVORITE,
+        payload:products,
+    }
+}

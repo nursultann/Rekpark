@@ -77,8 +77,8 @@ const [currency,setCurrency] = useState();
 
   <button type="submit" class="btn btn-outline-primary">Опубликовать</button>
 </form> 
-                </div>
-                </div>
+</div>
+</div>
                 
         );
     

@@ -19,6 +19,7 @@ import Contacts from './screens/contacts';
 import Register from './screens/register';
 import Footer from './components/footer';
 import './dist/css/bootstrap.css';
+import './blog.css';
 
 
 class App extends React.Component{
@@ -26,7 +27,7 @@ class App extends React.Component{
     return(
       <div className="container-fluid">
         <div className="row">
-            <div className="col-md-1 bg-success px-0 d-none d-md-block text-white text-center" 
+            <div className="col-md-1 px-0 d-none d-md-block text-white text-center" 
               style={{backgroundSize : "auto", backgroundPosition: "right top", 
                 backgroundImage: "url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')",
                 backgroundRepeat: "no-repeat"}}>
@@ -56,7 +57,7 @@ class App extends React.Component{
             </BrowserRouter>
             
             </div>
-            <div className="col-md-1 bg-success px-0 d-none d-md-block text-white text-center" 
+            <div className="col-md-1 px-0 d-none d-md-block text-white text-center" 
               style={{
                 backgroundSize : "auto", 
                 backgroundImage: "url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')",

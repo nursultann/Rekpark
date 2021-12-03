@@ -24,8 +24,8 @@ class Navbar extends React.Component{
       </div>
     </div>
   </header>
-  <div class="nav-scroller mb-2 bg-primary">
-    <nav class="nav d-flex justify-content-between bg-primary">
+  <div class="nav-scroller mb-2 rounded px-2 py-1"  style={{backgroundColor:'#000fa6'}}>
+    <nav class="nav d-flex justify-content-between">
       <a class="p-2 text-white" href="/about-us">О нас</a>
       <a class="p-2 text-white" href="products">Объявления</a>
       <a class="p-2 text-white" href="/articles">Статьи</a>
@@ -34,8 +34,7 @@ class Navbar extends React.Component{
     </nav>
   </div>
 </div>
-  <hr/>
-  
+  <hr/>  
 </div>
 
            </div>
