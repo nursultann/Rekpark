@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Ad from "./ad";
 import Navbar from "../components/navbar";
 import SearchBar from "../components/search-bar";
@@ -8,30 +8,32 @@ import { setProducts } from "../redux/actions/product_actions";
 import { Link } from "react-router-dom";
 import * as api from "../api";
 import Footer from "../components/footer";
-<<<<<<< HEAD
-import { Button } from '@mui/material';
+import { Skeleton, Grid } from "@mui/material";
 import ProductItem from "../components/product/product_item";
-=======
-import { Skeleton } from "@mui/material";
->>>>>>> d89b5fbaa896eb96789f5ad9ee70f84742841016
+import { Button } from "@mui/material";
 
 const Main = () => {  
   const dispatch = useDispatch();
   const {products} = useSelector((state) => state.product);
 
+  const limit = 20;
+  const [offset, setOffset] = useState(0);
+
 
   const fetchInitProducts = async () => {
-    let products = await api.fetchProducts({'sub': true});
-    if (products != null) {
-      products = products.concat(await api.fetchProducts());
-      dispatch(setProducts(products));
+    let _products = await api.fetchProducts({'sub': true});
+    if (_products != null) {
+      _products = _products.concat(await api.fetchProducts());
+      dispatch(setProducts(_products));
+      setOffset(offset + limit);
     }
   };
 
   const fetchProducts = async () => {
-    let prods = products.concat(await api.fetchProducts());
+    let prods = products.concat(await api.fetchProducts({offset: offset}));
     if (prods != null) {
       dispatch(setProducts(prods));
+      setOffset(offset + limit);
     }
   };
 
@@ -47,51 +49,45 @@ const Main = () => {
         <div class="row">
           <div class="col-md-8">
             <h5 class="text-muted">Новые Объявления</h5>
-            <div class="row mt-4 mb-4">
-            {/* {products === null || products === undefined || products === ""} ?
-            <div className="row mt-4 mb-4"> 
-            <div className="col-md-4">
-              <Skeleton variant="rectangular" width={'100%'} height={100} />
-              <Skeleton variant="text" />
-              <Skeleton variant="text" />
-              <Skeleton variant="text" />
+            <div class="row mt-6 mb-6">
+              {//products === null || products === undefined || products.length === 0
+               true ?
+                <Grid container spacing={2} className="pl-3 pt-4 pb-4">
+                  <Grid item xs={4}>
+                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                  </Grid>
+                </Grid>
+              : products.map((product) => {
+                  return (
+                    <div className="col-md-4">
+                      <ProductItem product={product} />
+                    </div>            
+                  )
+              })}
             </div>
-            <div className="col-md-4">
-              <Skeleton variant="rectangular" width={'100%'} height={100} />
-              <Skeleton variant="text" />
-              <Skeleton variant="text" />
-              <Skeleton variant="text" />
-            </div>
-            <div className="col-md-4">
-              <Skeleton variant="rectangular" width={'100%'} height={100} />
-              <Skeleton variant="text" />
-              <Skeleton variant="text" />
-              <Skeleton variant="text" />
-            </div>
-            </div>
-            :   */}
-            {products.map((product) => {
-<<<<<<< HEAD
-              return (
-                <><ProductItem product={product} /></>
-              )
-            })}
-=======
-                        return (
-                            <div className="col-md-4 mt-2 mb-2">
-                                <div class="card">
-                                    <img src={product.media.length > 0 ? product.media[0].original_url : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg'} class="card-img-top" alt="..."/>
-                                    <div class="card-body">
-                                        <h5 class="card-title">{product.title}</h5>
-                                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                        <a href={`/products/${product.id}`} class="badge badge-primary px-2 py-2">Подробнее</a>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    })}
->>>>>>> d89b5fbaa896eb96789f5ad9ee70f84742841016
-            </div> 
+            <center><Button 
+                variant="outlined"
+                onClick={() => {
+                  fetchProducts();
+                }}>
+                  Показать еще
+              </Button>
+              </center> 
             <hr />
             <h5 class="text-muted">Бизнес профили</h5>
             <div class="col-md-12 pb-5 pt-1 owl-carousel owl-theme" id="slider">

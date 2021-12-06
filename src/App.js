@@ -20,6 +20,7 @@ import Register from './screens/register';
 import Footer from './components/footer';
 import './dist/css/bootstrap.css';
 import './blog.css';
+import "./App.css";
 
 
 class App extends React.Component{
