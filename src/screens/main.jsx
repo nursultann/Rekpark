@@ -13,7 +13,7 @@ import { Skeleton } from "@mui/material";
 const Main = () => {  
   const dispatch = useDispatch();
     const {products} = useSelector((state) => state.product);
-
+    const defaultImg = 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
     const fetchProducts = async () => {
         const products = await api.fetchProducts();
         if (products != null) {
@@ -56,16 +56,42 @@ const Main = () => {
             </div>
             :   */}
             {products.map((product) => {
+              var image;
+              if(product.media.length > 0){ 
+                image = product.media[0].original_url;
+              }else{
+                image=defaultImg;
+              }
+              var nowDay = new Date().getDay();
+              var Fulldate = new Date(product.created_at);
+              var date = Fulldate.getDate();
+              var month = Fulldate.getDate();
+              var year = Fulldate.getFullYear();
+              var day = Fulldate.getDay();
+              var res = date+'/'+month+'/'+year;
+              if(day<nowDay && day+1==nowDay){
+                res = "Вчера";
+              }
+              
+              
                         return (
                             <div className="col-md-4 mt-2 mb-2">
+                              <a href={`/products/${product.id}`}>
                                 <div class="card">
-                                    <img src={product.media.length > 0 ? product.media[0].original_url : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg'} class="card-img-top" alt="..."/>
+                                    <div style={{backgroundImage : "url('"+ image +"')",backgroundSize:"cover",width:"100%",height:"250px"}} alt="..."/>
                                     <div class="card-body">
-                                        <h5 class="card-title">{product.title}</h5>
-                                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                        <a href={`/products/${product.id}`} class="badge badge-primary px-2 py-2">Подробнее</a>
+                                        <h5 class="card-title text-dark">{product.title}</h5>
+                                        <p class="card-text text-muted">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                        <label className="text-muted" style={{fontSize:15}}>
+                                          Цена:{product.price}
+                                        </label>
+                                        <br/>
+                                        <label className="text-muted" style={{fontSize:15}}>
+                                          Дата добавления:{res}
+                                        </label>
                                     </div>
                                 </div>
+                              </a>  
                             </div>
                         )
                     })}

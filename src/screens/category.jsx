@@ -12,6 +12,7 @@ class Category extends React.Component{
     //     slidesToScroll: 1,
     //     arrows:true
     //   };
+        
         return(
             <div>
             <Navbar />
