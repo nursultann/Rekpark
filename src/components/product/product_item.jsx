@@ -13,7 +13,7 @@ const ProductItem = ({product}) => {
         history.push(`products/${product.id}`);
     };
 
-    const baseStyle = { height: 300 };
+    const baseStyle = { height: 'auto' };
     if (typeof product.features === 'object' && !Array.isArray(product.features)) {
         if (product.features.color !== null) {
             baseStyle.background = product.features.color;
@@ -58,7 +58,7 @@ const ProductItem = ({product}) => {
                         style={{ height: 150, objectFit: "cover", background: "#CFCFCA" }}
                     />
                     {product.is_vip ? 
-                        <div style={{ position: "absolute", left: "30px", top: "10px" }}>vip</div> 
+                        <div style={{ position: "absolute", left: "30px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
                         : <></>}
                 </div>
                 <div class="card-body">
