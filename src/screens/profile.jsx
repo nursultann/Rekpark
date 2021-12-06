@@ -5,13 +5,20 @@ import Footer from "../components/footer";
 import { userDetails } from "../api/user";
 import { useEffect,useState } from "react";
 import Skeleton from '@mui/material/Skeleton';
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../redux/actions/user_actions";
 
-const Profile = ()=>{
-    const [user, setUser] = useState();
+const Profile = () => {
+    if (!localStorage.getItem('token')) {
+        window.location.href = '/';
+    }
+
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.user);
     const fetchUserDetails = async () => { 
-        const response = await userDetails(); 
-        if(response != null){
-            setUser(response);
+        const user = await userDetails(); 
+        if(user != null){
+            dispatch(setUser(user));
         }
     };
 
@@ -19,9 +26,9 @@ const Profile = ()=>{
         fetchUserDetails();
     }, []);
 
-        return(
-            user === null || user === undefined || user === "" 
-                ? <div className="px-4">
+    return(
+        user === null || user === undefined || user === "" 
+            ? <div className="px-4">
                     <Skeleton variant="rectangular" width={'100%'} height={200} />
                     <div className="row mt-3">
                         <div className="col-md-4">

@@ -12,8 +12,6 @@ client.interceptors.request.use(config => {
     if (token !== null) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    console.log('headers', config.headers);
   
     return config;
   }, error => {

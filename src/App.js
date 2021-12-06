@@ -20,6 +20,7 @@ import Register from './screens/register';
 import Footer from './components/footer';
 import './dist/css/bootstrap.css';
 import './blog.css';
+import "./App.css";
 
 
 class App extends React.Component{
@@ -32,7 +33,7 @@ class App extends React.Component{
                 backgroundImage: "url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')",
                 backgroundRepeat: "no-repeat"}}>
             </div>
-            <div className="col-md-10 px-0">
+            <div className="col-md-10 px-0" style={{ backgroundColor: '#fafafa' }}>
             <div className="col-md-12 bg-success px-0 text-white text-center">
                 <img src={top} width="100%"/>
             </div>

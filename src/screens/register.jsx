@@ -5,6 +5,12 @@ import * as firebaseui from "firebaseui";
 import ApiClient from "../api/ApiClient";
 import { register} from "../api/user";
 import Footer from "../components/footer";
+import { SelectPicker } from "rsuite";
+
+const countryCodes = [
+    {"value": "+996", "label": "+996"},
+    {"value": "+7", "label": "+7"},
+];
 
 const Register = () => {
     // Inputs

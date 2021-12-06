@@ -1,31 +1,8 @@
-import { useSelector, useDispatch } from "react-redux";
-import * as api from "../api";
-import { Link } from "react-router-dom";
-import { setCategories } from "../redux/actions/category_actions";
-import React, { useEffect } from "react";
-import Slider from "react-slick";
+import React from "react";
+import CategorySlider from "./category/category_slider";
 
 const SearchBar = () => {
-  const dispatch = useDispatch();
-  const {categories} = useSelector((state) => state.category);
-
-  const fetchCategoriesTree = async () => {
-      const categories = await api.fetchCategoriesTree();
-      if (categories != null) {
-          dispatch(setCategories(categories));
-      }
-  };
   
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-  };
-
-  useEffect(() => {
-      fetchCategoriesTree();
-  }, []);
         return(
             <div>
             <div class="col-md-12">
@@ -59,29 +36,8 @@ const SearchBar = () => {
         </div>
     </div>
     <div className="col-md-12 py-3">
-      <hr/>         
-              {/* <div className="row"> */}
-              <Slider {...settings}>
-              {categories.map((category) => {
-                 return (
-                  <div class="col-md-4">    
-                 <div id={category.id}>     
-                    <a href={`/category/${category.id}`}>
-                      <div className="col-md-12 px-2 mb-3">                    
-                      {/* <img className="mx-3" src={category.media.length > 0 ? category.media[0].original_url : 
-                        'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg'} width="100%" /> */}
-                      <a className="badge badge-primary" href={`/category/${category.id}`}>{category.name}</a>
-                      </div>
-                    </a>
-                    
-                  </div>
-                  </div> 
-                  )  
-              })}
-              </Slider>
-              {/* </div> */}
-              
-      
+      <hr/>
+      <center><CategorySlider /></center>
     </div>
     
   </div>
