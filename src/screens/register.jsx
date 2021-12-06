@@ -79,14 +79,15 @@ const Register = () => {
             const params = {
                 'name': userName,
                 'password': userPassword,
-                'phone': phoneNumber,
+                'phone':countrycode + phoneNumber,
                 'uuid': uuid,
             };
             console.log('params', params);
             const result = await register(params, function (data) {
-                alert("success");
+                localStorage.setItem('token', data.api_token);
+                window.location.href = '/profile';
             }, function (data) {
-                alert("error " + data);
+                console.log("Error");
             });
         }else{
             alert("wrong password");
@@ -100,8 +101,8 @@ const Register = () => {
     return(
         <div>
             <Navbar/>
-            <div className="col-md-12 d-flex justify-content-center" style={{}}>   
-                    <div className="form-group col-md-6 border my-3 py-3 px-3" style={{ display: showValidation ? "block" : "none" }}>
+            <div className="col-md-12 d-flex justify-content-center" style={{height:500}}>   
+                    <div className="form-group col-md-6 border my-3 py-3 px-3" style={{ display: showValidation ? "block" : "none" , height:350}}>
                     <h4 className="text-center">Регистрация</h4>
                     <div className="row px-3 mt-4">    
                         <select className="form-control col-md-3" onChange={(e)=>{setCountryCode(e.target.value)}}>
@@ -123,7 +124,7 @@ const Register = () => {
                         <div className="text-secondary">{":"+timer}</div>
                         <button className="form-control" onClick={validateOtp}>Подтвердить</button>
                     </div>
-                    <div className="form-group col-md-6" style={{ display: showRegisterFields ? "block" : "none" }}>
+                    <div className="form-group col-md-6" style={{ display: showRegisterFields ? "block" : "none",height:350 }}>
                         <input className="form-control mt-3" placeholder="Имя" value={userName} 
                         onChange={(e) =>{setUserName(e.target.value)}} />
                         <input className="form-control mt-3" placeholder="пароль" value={userPassword}

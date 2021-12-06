@@ -186,20 +186,20 @@
 />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
 <script>
-  function checkpassword() {
-    var pass1 = document.getElementById("password1").value;
-    var pass2 = document.getElementById("password2").value;
-    if (pass1 != pass2) {
-      document.getElementById("passcheck").innerHTML = "Пароли не совпадают!";
-    } else {
-      document.getElementById("passcheck").innerHTML = "Пароли совпадают :)";
-    }
-    if (pass1 == "" || pass2 == "") {
-      document.getElementById("passcheck").innerHTML = "Не все поля заполнены!";
-    }
-  }
-  var pass1 = document.getElementById("password1");
-  var pass2 = document.getElementById("password2");
-  pass1.oninput = checkpassword;
-  pass2.oninput = checkpassword;
+  // function checkpassword() {
+  //   var pass1 = document.getElementById("password1").value;
+  //   var pass2 = document.getElementById("password2").value;
+  //   if (pass1 != pass2) {
+  //     document.getElementById("passcheck").innerHTML = "Пароли не совпадают!";
+  //   } else {
+  //     document.getElementById("passcheck").innerHTML = "Пароли совпадают :)";
+  //   }
+  //   if (pass1 == "" || pass2 == "") {
+  //     document.getElementById("passcheck").innerHTML = "Не все поля заполнены!";
+  //   }
+  // }
+  // var pass1 = document.getElementById("password1");
+  // var pass2 = document.getElementById("password2");
+  // pass1.oninput = checkpassword;
+  // pass2.oninput = checkpassword;
 </script>

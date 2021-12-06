@@ -10,10 +10,11 @@ const [title, setTitle] = useState();
 const [city,setCity] = useState();
 const [price,setPrice] = useState();
 const [currency,setCurrency] = useState();
+
         return(
           <div>
             <Navbar/>
-                <div className="col-md-8">
+                <div className="col-md-8 py-5">
                 <form>
   <div class="form-row">
   <div class="form-group col-md-6">
@@ -71,14 +72,23 @@ const [currency,setCurrency] = useState();
       </select>
     </div>
   </div>
-  <h3>Настраиваемые поля</h3>+
-  <button type="submit" class="btn btn-primary">Опубликовать</button>
+  <h3>Настраиваемые поля</h3>
+  
+
+  <button type="submit" class="btn btn-outline-primary">Опубликовать</button>
 </form> 
-                </div>
-                </div>
+</div>
+</div>
                 
         );
-    }
+    
+    
+    
+    
+    
+    
+    
+}
 
 
 export default CreateAd;

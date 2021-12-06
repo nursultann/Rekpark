@@ -28,7 +28,7 @@ export const userDetails = async (params) => {
             return response.data.data;
         }
     } catch (error) {
-        console.log('fetch user details error ', error);
+        console.log('fetch user details error ', error.response.data);
     }
 
     return null;

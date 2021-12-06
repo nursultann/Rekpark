@@ -2,9 +2,61 @@ import React from "react";
 import {Link} from 'react-router-dom';
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-class Profile extends React.Component{
-    render() {
+import { userDetails } from "../api/user";
+import { useEffect,useState } from "react";
+import Skeleton from '@mui/material/Skeleton';
+
+const Profile = ()=>{
+    const [user, setUser] = useState();
+    const fetchUserDetails = async () => { 
+        const response = await userDetails(); 
+        if(response != null){
+            setUser(response);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserDetails();
+    }, []);
+
         return(
+            user === null || user === undefined || user === "" 
+                ? <div className="px-4">
+                    <Skeleton variant="rectangular" width={'100%'} height={200} />
+                    <div className="row mt-3">
+                        <div className="col-md-4">
+                        <Skeleton variant="text" />
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={118} />
+                        </div>
+                        <div className="col-md-8">
+                            <div className="row">
+                                <div className="col-md-12 mb-2">
+                                <Skeleton variant="rectangular" width={'100%'} height={50} />
+                                </div>
+                                <div className="col-md-4">
+                                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                </div>
+                                <div className="col-md-4">
+                                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                </div>
+                                <div className="col-md-4">
+                                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                :
             <div>
             <Navbar/>
             <div className="row px-4">
@@ -15,8 +67,8 @@ class Profile extends React.Component{
                                     <img src="https://funpick.ru/wp-content/uploads/2018/02/ava-vats-1.jpg" height="90" width="90" style={{borderRadius:"%50"}}/>
                                 </div>
                                 <div className="col-6 py-2">
-                                    <p style={{padding:"0px",margin:"0px"}}>Пользователь</p>
-                                    <p style={{padding:"0px",margin:"0px"}}>+996 555 555 555</p>
+                                    
+                                    <p style={{padding:"0px",margin:"0px"}}>+{user.phone}</p>
                                 </div>
                             </div> 
                       </div>
@@ -77,6 +129,5 @@ class Profile extends React.Component{
             <Footer/>
             </div>
         );
-    }
 }
 export default Profile;
