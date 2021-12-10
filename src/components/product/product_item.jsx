@@ -51,11 +51,10 @@ const ProductItem = ({product}) => {
     return (
         <a onClick={() => navigateToProductDetailsPage(product)}>
             <div class="shadow-sm rounded" style={{ ...baseStyle }}>
-                <div style={{ height: 150 }}>
-                    <img 
-                        src={ image } 
+                <div style={{ height: 250 }}>
+                    <div  
                         class="card-img-top" 
-                        style={{ height: 150, objectFit: "cover", background: "#CFCFCA" }}
+                        style={{ height: 250, backgroundSize: "cover", backgroundImage: "url('"+image+"')"}}
                     />
                     {product.is_vip ? 
                         <div style={{ position: "absolute", left: "30px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 

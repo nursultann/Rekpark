@@ -11,6 +11,7 @@ import Footer from "../components/footer";
 import { Skeleton, Grid } from "@mui/material";
 import ProductItem from "../components/product/product_item";
 import { Button } from "@mui/material";
+import Bussiness_Slider from "../components/bussiness/bussiness_slider";
 
 const Main = () => {  
   const dispatch = useDispatch();
@@ -79,7 +80,7 @@ const Main = () => {
                   )
               })}
             </div> 
-            <center><Button 
+            <center className="mt-5"><Button 
                 variant="outlined"
                 onClick={() => {
                   fetchProducts();
@@ -89,68 +90,9 @@ const Main = () => {
               </center> 
             <hr />
             <h5 class="text-muted">Бизнес профили</h5>
-            <div class="col-md-12 pb-5 pt-1 owl-carousel owl-theme" id="slider">
-              <div class="slide">
-                <img
-                  src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg"
-                  width="100%"
-                />
-                <h5 class="slide__title">Заголовок слайда</h5>
-                <a href="#" class="slide__link">Кнопка</a>
-              </div>
-
-              <div class="slide">
-                <img
-                  src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg"
-                  width="100%"
-                />
-                <h5 class="slide__title">Заголовок слайда</h5>
-                <a href="#" class="slide__link">Кнопка</a>
-              </div>
-              <div class="slide">
-                <img
-                  src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg"
-                  width="100%"
-                />
-                <h5 class="slide__title">Заголовок слайда</h5>
-                <a href="#" class="slide__link">Кнопка</a>
-              </div>
-              <div class="slide">
-                <img
-                  src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg"
-                  width="100%"
-                />
-                <h5 class="slide__title">Заголовок слайда</h5>
-                <a href="#" class="slide__link">Кнопка</a>
-              </div>
-
-              <div class="slide">
-                <img
-                  src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg"
-                  width="100%"
-                />
-                <h5 class="slide__title">Заголовок слайда</h5>
-                <a href="#" class="slide__link">Кнопка</a>
-              </div>
-
-              <div class="slide">
-                <img
-                  src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg"
-                  width="100%"
-                />
-                <h5 class="slide__title">Заголовок слайда</h5>
-                <a href="#" class="slide__link">Кнопка</a>
-              </div>
-
-              <div class="slide">
-                <img
-                  src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg"
-                  width="100%"
-                />
-                <h5 class="slide__title">Заголовок слайда</h5>
-                <a href="#" class="slide__link">Кнопка</a>
-              </div>
-            </div>
+            <div class="col-md-12 pb-5 pt-1">
+            <Bussiness_Slider />
+            </div>  
           </div>
           <div class="col-md-4"></div>
         </div>

@@ -4,7 +4,7 @@ import Footer from "../components/footer";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProduct } from "../api";
 import { setProductDetails } from "../redux/actions/product_actions";
-
+import Carousel from 'react-gallery-carousel';
 
 const Ad = ({match}) => {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ const Ad = ({match}) => {
 
     const fetchProductDetails = async () => {
         const productDetails = await fetchProduct(match.params.id, {
-            'with': 'category;customAttributeValues.customAttribute'
+            'with': 'category;customAttributeValues.customAttribute;region;city'
         });
         if (productDetails != null) {
             dispatch(setProductDetails(productDetails));
@@ -21,25 +21,11 @@ const Ad = ({match}) => {
 
     useEffect(() => {
         fetchProductDetails();
-    }, []);
-    var region;
-    var city;
-    if(productDetails.region_id==1){
-        region="Чуйская область";
-        if(productDetails.city_id==1){
-            city="Бишкек";
-        }else if(productDetails.city_id==2){
-            city="Чуй";
-        }
-    }else if(productDetails.region_id==2){
-        region="Ошская область";
-        if(productDetails.city_id==1){
-            city="Ош";
-        }
-    }
+    }, []);      
     return(
         <div>
-            <Navbar />            
+            <Navbar />  
+                {productDetails != null ? <>          
                 <div className="col-md-12">
                         <div className="row">
                             <div className="col-md-2">
@@ -53,7 +39,7 @@ const Ad = ({match}) => {
                             </div>
                             <div className="col-md-3 mt-2">
                             <label class="ml-3 text-muted">Просмотры: {productDetails.views}<br/>
-                             Регион,город: {city+","+region}</label>
+                             Регион,город: {productDetails.region != null ? productDetails.region.name+","+productDetails.city.name : ""}</label>
                             </div>
                             <div className="col-md-3 mt-2">
                             <hr className="d-block d-md-none" /> 
@@ -67,7 +53,7 @@ const Ad = ({match}) => {
                         </div>
                     <hr/>
                 </div>
-                {productDetails != null ?
+                
                 <div className="col-md-12">
                     <div className="row">
                         <div className="col-md-9">
@@ -88,13 +74,11 @@ const Ad = ({match}) => {
                                     </div>
                                 </div>
                                 <div className="col-md-8">
-                                    <div class="fotorama"  data-nav="thumbs" data-maxwith="100%" data-maxheight="100%" data-transitions="crossfade" data-allowfullscreen="native">
-                                        {productDetails.media.map((item) => {
-                                            return (
-                                                <img src={item.original_url}/>
-                                            )
-                                        })}    
-                                    </div>
+                                    <Carousel 
+                                        images={productDetails.media.map((item) => ({
+                                            src: `${item.original_url}`
+                                        }))} 
+                                        style={{ height:"350px", width: "100%" }} />
                                 </div>
                             </div>
                             <hr/>
@@ -107,7 +91,7 @@ const Ad = ({match}) => {
 
                         </div>
                     </div>
-                </div> : <div></div>}
+                </div></> : <div>loading</div>}
                 <Footer/>  
         </div>
     );
