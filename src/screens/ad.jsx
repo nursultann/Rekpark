@@ -53,7 +53,7 @@ const Ad = ({match}) => {
                             </div>
                             <div className="col-md-3 mt-2">
                             <label class="ml-3 text-muted">Просмотры: {productDetails.views}<br/>
-                            Регион,город: {city+","+region}</label>
+                             Регион,город: {city+","+region}</label>
                             </div>
                             <div className="col-md-3 mt-2">
                             <hr className="d-block d-md-none" /> 
