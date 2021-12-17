@@ -116,6 +116,7 @@ const Profile = () => {
                             </div>
                             <div class="tab-pane fade" id="nav-active" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div className="row">
+                                {}
                                     <div className="col-md-4 mt-2 mb-2">
                                         <div class="card">
                                         <img src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg" class="card-img-top" alt="..."/>

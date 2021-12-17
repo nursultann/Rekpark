@@ -63,7 +63,7 @@ const Register = () => {
         if (otp === null || final === null)
             return;
         final.confirm(otp).then((result) => {
-            alert("success");
+            alert("Код потверждения выслан");
             setRegisterFields(true);
             setShowOTP(false);
             setUuid(result.user.uuid);
@@ -71,7 +71,7 @@ const Register = () => {
             
             console.log('success ', result);
         }).catch((err) => {
-            alert("Wrong code");
+            alert("Код потверждения введен неверно!");
         })
     }
     const addUser = async () =>{
@@ -90,7 +90,7 @@ const Register = () => {
                 console.log("Error");
             });
         }else{
-            alert("wrong password");
+            alert("Неправильный пароль");
         }
     }
     useEffect(() => {

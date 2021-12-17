@@ -22,8 +22,7 @@ import './dist/css/bootstrap.css';
 import './blog.css';
 import 'antd/dist/antd.css';
 import "./App.css";
-
-
+import 'react-gallery-carousel/dist/index.css';
 class App extends React.Component{
   render() {
     return(
