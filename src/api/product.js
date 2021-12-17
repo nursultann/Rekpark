@@ -35,25 +35,33 @@ export const createProduct = async (params) => {
     try {
         const response = await ApiClient.post('/products', params, 'multipart/form-data');
         if (response.status == 200 || response.status == 201) {
-            return response.data.data;
+            return response.data;
         }
     } catch (error) {
-        console.log('fetching products error ', error);
+        console.log('create product error ', error.response);
     }
 
     return null;
 };
 
-export const updateProduct = async (id, params = {}) => {
+export const updateProduct = async (id, params) => {
     try {
-        if (!params.hasOwnProperty('_method')) params['_method'] = 'PATCH';
+        if (params instanceof FormData && !params.has('_method')) {
+            console.log('instance of formdata', params);
+            params.append('_method', 'PATCH');
+        } else if (typeof params === 'Object' && !params.hasOwnProperty('_method')) { 
+            params['_method'] = 'PATCH'; 
+        } else {
+            console.log('params not object');
+        }
+        console.log('params', params);
 
         const response = await ApiClient.post(`/products/${id}`, params, 'multipart/form-data');
         if (response.status == 200 || response.status == 201) {
-            return response.data.data;
+            return response.data;
         }
     } catch (error) {
-        console.log('fetching products error ', error);
+        console.log('fetching products error ', error.response);
     }
 
     return null;

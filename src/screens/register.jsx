@@ -75,7 +75,7 @@ const Register = () => {
         })
     }
     const addUser = async () =>{
-        if(userPassword == passwordCheck){
+        if(userPassword === passwordCheck){
             const params = {
                 'name': userName,
                 'password': userPassword,
@@ -110,7 +110,7 @@ const Register = () => {
                             <option value="996">+996</option>
                             <option value="7">+7</option>
                         </select>        
-                        <input type="number" className="form-control col-md-9" placeholder="без код страны и 0, без +код страны" value={phoneNumber} onChange={(e) => { 
+                        <input type="number" className="form-control col-md-9" value={phoneNumber} onChange={(e) => { 
                         setPhoneNumber(e.target.value) }}
                             placeholder="Телефон" />
                     </div>        

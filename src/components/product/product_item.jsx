@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import '../../dist/css/custom_card.css';
 import { setProductDetails } from "../../redux/actions/product_actions";
+import { AppImage } from "../custom_components";
 
 const ProductItem = ({product}) => {
     const dispatch = useDispatch();
@@ -22,23 +23,21 @@ const ProductItem = ({product}) => {
 
     const image = product.has_media 
         ? product.media[0].original_url 
-        : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
+        : '';
     return (
         <a onClick={() => navigateToProductDetailsPage(product)}>
-            <div class="shadow-sm rounded" style={{ ...baseStyle }}>
+            <div className="shadow-sm rounded" style={{ ...baseStyle }}>
                 <div style={{ height: 150 }}>
-                    <img 
-                        src={ image } 
-                        class="card-img-top" 
-                        style={{ height: 150, objectFit: "cover", background: "#CFCFCA" }}
-                    />
+                    <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{objectFit: "cover"}} />
                     {product.is_vip ? 
                         <div style={{ position: "absolute", left: "30px", top: "10px" }}>vip</div> 
                         : <></>}
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">{product.title}</h5>
-                    <p class="card-text">{product.description}</p>
+                <div className="card-body">
+                    <h5 className="card-title">{product.title}</h5>
+                    <p style={{overflow: "hidden", textOverflow: 'ellipsis', maxHeight: 70}}>
+                        {product.description}
+                    </p>
                 </div>
             </div>
         </a>

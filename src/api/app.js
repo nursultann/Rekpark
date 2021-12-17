@@ -27,3 +27,15 @@ export const fetchRegions = async (params = { }) => {
 
     return null;
 };
+
+export const fetchCurrencies = async (params = {}) => {
+    try {
+        const response = await ApiClient.get('/currencies', params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetch currencies error', error);
+    }
+    return null;
+};

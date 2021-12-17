@@ -4,6 +4,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import ProductGridList from './components/product/product_grid_list';
+
 
 ReactDOM.render(
   <React.StrictMode>

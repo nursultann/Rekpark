@@ -70,7 +70,7 @@ const Ad = ({match}) => {
                                     </div>
                                 </div>
                                 <div className="col-md-8">
-                                    <div class="fotorama"  class="fotorama" data-nav="thumbs" data-maxwith="700" data-maxheight="100%" data-transitions="crossfade" data-allowfullscreen="native">
+                                    <div class="fotorama"  class="fotorama" data-nav="thumbs" data-maxwith="100%" data-maxheight="100%" data-transitions="crossfade" data-allowfullscreen="native">
                                         {productDetails.media.map((item) => {
                                             return (
                                                 <img src={item.original_url}/>
