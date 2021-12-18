@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { setCategories } from "../../redux/actions/category_actions";
 import React, { useEffect } from "react";
 import Slider from "react-slick";
+import { Cascader, Popover } from 'antd';
 
 function SampleArrow(props) {
     const { className, style, onClick } = props;
@@ -32,7 +33,7 @@ const CategorySlider = () => {
         arrows: false,
         infinite: false,
         speed: 500,
-        slidesToShow: 4,
+        slidesToShow: 11,
         slidesToScroll: 1,
         nextArrow: <SampleArrow />,
         prevArrow: <SampleArrow />
@@ -42,24 +43,43 @@ const CategorySlider = () => {
         fetchCategoriesTree();
     }, []);
 
+    const popoverContent = (children) => (
+        <div style={{width: '250px'}}>
+          {children.map((item) => (<p>{item.name}</p>))}
+        </div>
+    );
+
+    const content = (category) => {
+        const image = category.media.length > 0 
+                    ? category.media[0].original_url 
+                    : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
+        return (
+            <div id={category.id}>  
+                <Link to={`/category/${category.id}`}>
+                    <div className="col-md-12 px-2 mb-3 d-flex flex-column align-items-center justify-content-center">                  
+                        <img className="mx-3 mb-1 rounded-circle" src={image} width="50px" height="50px" />
+                        <p style={{fontSize: 10}}>{category.name}</p>
+                    </div>
+                </Link>
+            </div>
+        );
+    };
+
     return (
         <Slider {...sliderSettings}>
             {categories.map((category) => {
-                const image = category.media.length > 0 
-                    ? category.media[0].original_url 
-                    : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
-
                 return (
-                    <div class="col-md-4">    
-                        <div id={category.id}>     
-                            <a href={`/category/${category.id}`}>
-                                <div className="col-md-12 px-2 mb-3 d-flex flex-column align-items-center justify-content-center">                  
-                                    <img className="mx-3 mb-1 rounded-circle" src={image} width="70px" height="70px" />
-                                    <a className="" href={`/category/${category.id}`}>{category.name}</a>
-                                </div>
-                            </a>
+                    category.children?.length ? 
+                        <Popover 
+                            className="col-md-4" 
+                            content={() => popoverContent(category.children)} 
+                            placement="bottom"
+                        >
+                            {content(category)}
+                        </Popover> 
+                        : <div className="col-md-4">
+                            {content(category)}
                         </div>
-                    </div> 
                   )  
               })}
         </Slider>

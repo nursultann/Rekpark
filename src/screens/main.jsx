@@ -10,7 +10,8 @@ import * as api from "../api";
 import Footer from "../components/footer";
 import { Skeleton, Grid } from "@mui/material";
 import ProductItem from "../components/product/product_item";
-import { Button } from "antd";
+import { Button, BackTop, Tooltip } from "antd";
+import { UpOutlined } from "@ant-design/icons";
 import ProductGridList from "../components/product/product_grid_list";
 import Bussiness_Slider from "../components/bussiness/bussiness_slider";
 
@@ -42,6 +43,17 @@ const Main = () => {
   useEffect(() => {
     fetchInitProducts();
   }, []);
+
+  const style = {
+    height: 40,
+    width: 40,
+    lineHeight: '40px',
+    borderRadius: 4,
+    backgroundColor: '#1088e9',
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 14,
+  };
 
   return (
     <div>
@@ -95,6 +107,11 @@ const Main = () => {
             <Bussiness_Slider />
             </div>  
           </div>
+          <BackTop>
+            <Tooltip title="Наверх">
+              <Button shape="circle" size="large" type="primary" icon={<UpOutlined />} />
+            </Tooltip>
+          </BackTop>
           <div className="col-md-4"></div>
         </div>
       </main>

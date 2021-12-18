@@ -20,6 +20,7 @@ const ProductItem = ({product}) => {
             baseStyle.background = product.features.color;
         }
     }
+    
     var nowDay = new Date().getDay();
     var Fulldate = new Date(product.created_at);
     var date = Fulldate.getDate();
@@ -27,17 +28,17 @@ const ProductItem = ({product}) => {
     var year = Fulldate.getFullYear();
     var day = Fulldate.getDay();
     var allDate = date+'/'+month+'/'+year;
-    if(day < nowDay && day + 1 == nowDay || day == nowDay + 6){
+    if(day < nowDay && day + 1 == nowDay || day == nowDay + 6) {
         allDate = "Вчера";
     } else if (day < nowDay && day + 2 == nowDay || day == nowDay + 5) {
-                allDate = "Позавчера";
+        allDate = "Позавчера";
     }
     var Update = new Date(product.updated_at);
     var updated_day = Update.getDay();
     var updated_date = Update.getDate();
     var updated_month = Update.getMonth();
     var updated_year = Update.getFullYear();
-    var update = updated_date + '/'+updated_month+'/'+updated_year;
+    var update = updated_date + '/' + updated_month + '/' + updated_year;
     if(updated_day == nowDay) {
         update = "Сегодня";
     } else if (updated_day < nowDay && updated_day + 1 == nowDay || updated_day == nowDay + 6) {
