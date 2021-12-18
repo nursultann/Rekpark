@@ -1,83 +1,75 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../components/footer";
 import Navbar from "../components/navbar";
-import { Select, MenuItem, InputLabel } from '@mui/material';
-import { FormControl } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import * as api from "../api";
+import { useHistory } from "react-router-dom";
+import { 
+  Form,
+  notification
+} from "antd";
+import ProductFields from "../components/product/product_fields";
+import { setUser } from "../redux/actions/user_actions";
 
 const CreateAd = () => {
-    const [typeAd,setTypeAd] = useState();
-    const [dealAd,setTypeDeal]= useState();
-    const [region,setRegion] = useState();
-    const [title, setTitle] = useState();
-    const [city,setCity] = useState();
-    const [price,setPrice] = useState();
-    const [currency,setCurrency] = useState();
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.user);
 
-    return(
+    const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const [form] = Form.useForm();
+
+    const fetchUserDetails = async () => {
+      const userDetails = await api.userDetails();
+      if (userDetails != null) {
+          dispatch(setUser(userDetails));
+      }
+    };
+
+    useEffect(() => {
+      fetchUserDetails();
+    }, []);
+
+    const openNotification = (type, message, description) => {
+      notification[type]({
+        message: message,
+        description: description,
+      });
+    };
+
+    return (
       <div>
         <Navbar/>
         <div className="col-md-8 py-5">
-          <FormControl variant="filled">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <InputLabel id="demo-simple-select-filled-label">Age</InputLabel>
-                <Select labelId="demo-simple-select-filled-label" className="w-100">
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="inputEmail4">Тип сделки</label>
-                <select className="form-control" onChange={(e)=>{setTypeDeal(e.target.value)}}>
-                  <option selected disabled>Выберите тип сделки</option>
-                  <option>Продажа</option>
-                  <option>Аренда</option>
-                  <option>Куплю</option>
-                  <option>Сниму</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="inputPassword4">Регион</label>
-                <select className="form-control" onChange={(e)=>{setRegion(e.target.value)}}>
-                  <option selected disabled>Выберите регион</option>
-                  <option>Ош</option>
-                  <option>Бишкек</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="inputPassword4">Город</label>
-                <select className="form-control" onChange={(e)=>{setCity(e.target.value)}}>
-                  <option selected disabled>Выберите город</option>
-                  <option>Ош</option>
-                  <option>Бишкек</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputAddress">Заголовок объявления</label>
-              <input type="text" class="form-control" id="inputAddress" 
-                placeholder="Заголовок объявления" onChange={(e)=>{setTitle(e.target.value)}}/>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="inputCity">Цена</label>
-                <input type="number" class="form-control" id="inputCity" onChange={(e)=>{setPrice(e.target.value)}}/>
-              </div>
-              <div class="form-group col-md-4">
-                <label for="inputState">Валюта</label>
-                <select id="inputState" class="form-control" onChange={(e)=>{setCurrency(e.target.value)}}>
-                  <option selected>сом</option>
-                  <option>$</option>
-                </select>
-              </div>
-            </div>
-            <h3>Настраиваемые поля</h3>
-            <button type="submit" class="btn btn-outline-primary">Опубликовать</button>
-          </FormControl> 
+          <ProductFields 
+            form={form}
+            loading={loading}
+            onSend={async (model) => {
+              const valid = await form.validateFields();
+              if (valid) {
+                const formData = new FormData();
+                formData.append('user_id', user.id);
+                formData.append('currency_id', model.currency_id);
+                  
+                model.files.forEach(file => {
+                  formData.append('images[]', file);
+                });
+                for (const [key, value] of Object.entries(form.getFieldsValue())) {
+                  formData.append(`${key}`, value);
+                }
+                setLoading(true);
+                const response = await api.createProduct(formData);
+                if (response != null && response.success) {
+                  openNotification('success', 'Успешно сохранено!', null);
+                  history.push(`/`);
+                } else {
+                  openNotification('error', 'Не удалось сохранить!', null);
+                }
+                setLoading(false);
+              }
+            }} 
+          /> 
         </div>
       </div>     
     );

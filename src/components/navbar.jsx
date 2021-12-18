@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/actions/user_actions";
 import { userDetails } from "../api/user";
 import { useEffect,useState } from "react";
+import { Button } from 'antd';
+
 const Navbar = () => {
     const history = useHistory();
     const navigateTo = (page) => {
@@ -49,12 +51,12 @@ if(user != null){
 }           
     return (
       <div>
-        <div class="container-fluid">
+        <div className="container-fluid">
           <div>            
-          <header class="blog-header py-3">
-            <div class="row flex-nowrap justify-content-between align-items-center">
-              <div class="col-4 col-md-3 text-center">
-                <a class="blog-header-logo text-success" href="/"><img src={img} width="100%"/></a>
+          <header className="blog-header py-3">
+            <div className="row flex-nowrap justify-content-between align-items-center">
+              <div className="col-4 col-md-3 text-center">
+                <a className="blog-header-logo text-success" href="/"><img src={img} width="100%"/></a>
               </div>
               <div class="col-6 d-md-flex justify-content-end align-items-center">
                 {token == null ?
@@ -76,13 +78,13 @@ if(user != null){
               </div>
             </div>
           </header>
-          <div class="nav-scroller mb-2 rounded px-2 py-1"  style={{backgroundColor:'#000fa6'}}>
-            <nav class="nav d-flex justify-content-between">
-              <a class="p-2 text-white" href="/about-us">О нас</a>
-              <a class="p-2 text-white" href="products">Объявления</a>
-              <a class="p-2 text-white" href="/articles">Статьи</a>
-              <a class="p-2 text-white" href="/contacts">Контакты</a>
-              <a class="p-2 text-white" href="/ad-manage">Рекламодателям</a>
+          <div className="nav-scroller mb-2 rounded px-2 py-1"  style={{backgroundColor:'#000fa6'}}>
+            <nav className="nav d-flex justify-content-between">
+              <a className="p-2 text-white" href="/about-us">О нас</a>
+              <a className="p-2 text-white" href="products">Объявления</a>
+              <a className="p-2 text-white" href="/articles">Статьи</a>
+              <a className="p-2 text-white" href="/contacts">Контакты</a>
+              <a className="p-2 text-white" href="/ad-manage">Рекламодателям</a>
             </nav>
           </div>
         </div>

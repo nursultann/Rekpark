@@ -73,7 +73,7 @@ const Register = () => {
         })
     }
     const addUser = async () =>{
-        if(userPassword == passwordCheck){
+        if(userPassword === passwordCheck){
             const params = {
                 'name': userName,
                 'password': userPassword,

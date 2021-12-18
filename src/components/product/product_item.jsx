@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import '../../dist/css/custom_card.css';
 import { setProductDetails } from "../../redux/actions/product_actions";
+import { AppImage } from "../custom_components";
 
 const ProductItem = ({product}) => {
     const dispatch = useDispatch();
@@ -53,15 +54,12 @@ const ProductItem = ({product}) => {
               }
     const image = product.has_media 
         ? product.media[0].original_url 
-        : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
+        : '';
     return (
         <a onClick={() => navigateToProductDetailsPage(product)}>
-            <div class="shadow-sm rounded" style={{ ...baseStyle }}>
+            <div className="shadow-sm rounded" style={{ ...baseStyle }}>
                 <div style={{ height: 250 }}>
-                    <div  
-                        class="card-img-top" 
-                        style={{ height: 250, backgroundSize: "cover", backgroundImage: "url('"+image+"')"}}
-                    />
+                    <AppImage height={250} width="100%" src={image} classNameName="card-img-top rounded" style={{objectFit: "cover"}} />
                     {product.is_vip ? 
                         <div style={{ position: "absolute", left: "30px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
                         : <></>}

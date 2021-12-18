@@ -10,7 +10,8 @@ import * as api from "../api";
 import Footer from "../components/footer";
 import { Skeleton, Grid } from "@mui/material";
 import ProductItem from "../components/product/product_item";
-import { Button } from "@mui/material";
+import { Button } from "antd";
+import ProductGridList from "../components/product/product_grid_list";
 import Bussiness_Slider from "../components/bussiness/bussiness_slider";
 
 const Main = () => {  
@@ -22,9 +23,9 @@ const Main = () => {
 
 
   const fetchInitProducts = async () => {
-    let _products = await api.fetchProducts({'sub': true});
+    let _products = await api.fetchProducts({'sub': true, 'with': 'user'});
     if (_products != null) {
-      _products = _products.concat(await api.fetchProducts());
+      _products = _products.concat(await api.fetchProducts({'with': 'user'}));
       dispatch(setProducts(_products));
       setOffset(offset + limit);
     }
@@ -46,11 +47,11 @@ const Main = () => {
     <div>
       <Navbar />
       <SearchBar />
-      <main role="main" class="container-fluid">
-        <div class="row">
-          <div class="col-md-8">
-            <h5 class="text-muted">Новые Объявления</h5>
-            <div class="row mt-6 mb-6">
+      <main role="main" className="container-fluid">
+        <div className="row">
+          <div className="col-md-8">
+            <h5 className="text-muted">Новые Объявления</h5>
+            <div className="row mt-6 mb-6">
               {products === null || products === undefined || products.length === 0 ?
                 <Grid container spacing={2} className="pl-3 pt-4 pb-4">
                   <Grid item xs={4}>
@@ -87,14 +88,14 @@ const Main = () => {
                 }}>
                   Показать еще
               </Button>
-              </center> 
+            </center> 
             <hr />
-            <h5 class="text-muted">Бизнес профили</h5>
-            <div class="col-md-12 pb-5 pt-1">
+            <h5 className="text-muted">Бизнес профили</h5>
+            <div className="col-md-12 pb-5 pt-1">
             <Bussiness_Slider />
             </div>  
           </div>
-          <div class="col-md-4"></div>
+          <div className="col-md-4"></div>
         </div>
       </main>
       <Footer/>

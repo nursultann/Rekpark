@@ -9,5 +9,10 @@ export const ActionTypes = {
     // user
     SET_USER: "SET_USER",
     // settings
-    SET_SETTINGS: "SET_SETTINGS"
+    SET_SETTINGS: "SET_SETTINGS",
+    // others
+    SET_CURRENCIES: "SET_CURRENCIES",
+    SET_REGIONS: "SET_REGIONS",
+    SET_CITIES: "SET_CITIES",
+    SET_DISTRICTS: "SET_DISTRICTS"
 };
