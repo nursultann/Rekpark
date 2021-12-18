@@ -26,7 +26,7 @@ import 'react-gallery-carousel/dist/index.css';
 import Settings from './screens/userSettings';
 import 'antd/dist/antd.css'; 
 import Wallets from './screens/wallets';
-import ForgotPassword from './screens/forgot-password';
+import ForgotPassword from './screens/forgot_password';
 class App extends React.Component{
   render() {
     return(

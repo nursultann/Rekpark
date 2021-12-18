@@ -5,12 +5,14 @@ import * as firebaseui from "firebaseui";
 import ApiClient from "../api/ApiClient";
 import { checkPhone, register} from "../api/user";
 import Footer from "../components/footer";
-import { Steps, Button, message } from 'antd';
+import { Steps, Button, message,Form, Input,Select } from 'antd';
+import { Alert } from 'antd';
 
-const countryCodes = [
-    {"value": "+996", "label": "+996"},
-    {"value": "+7", "label": "+7"},
-];
+// const countryCodes = [
+//     {"value": "+996", "label": "+996"},
+//     {"value": "+7", "label": "+7"},
+// ];
+const { Option } = Select;
 const { Step } = Steps;
 const Register = () => {
     // Inputs
@@ -24,16 +26,18 @@ const Register = () => {
     const [uuid,setUuid] = useState();
     const [countrycode,setCountryCode] = useState();
     const [current, setCurrent] = useState(0);
+    const [visible, setVisible] = useState(false);
+    const [visible1,setVisible1] = useState(false);
     const signIn = async ()  => {
         const check = await checkPhone(countrycode+phoneNumber);
         if(check==true){
-            alert("Такой номер уже существует");
+            setVisible1(true);
         }
         else if (check==false){       
         if (phoneNumber === "" || phoneNumber.length < 9) return;
         auth.signInWithPhoneNumber(`+${countrycode+phoneNumber}`, window.verify).then((result) => {    
             setFinal(result);
-            alert("Код потверждения отправлен");
+            setVisible(true);
             setCurrent(current+1);
             var t = 59;
             function i(){
@@ -91,7 +95,13 @@ const Register = () => {
             alert("Неправильный пароль");
         }
     }
-        
+    const handleClose=()=>{
+        setVisible(false);
+    }
+    
+    const handleClose1=()=>{
+        setVisible1(false);
+    }    
     useEffect(() => {
         window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         window.verify.render();
@@ -100,14 +110,30 @@ const Register = () => {
         <div className="form-group col-md-6 border py-5 px-5 bg-white shadow-sm">
                         <h4 className="text-center">Регистрация профиля</h4>
                         <div className="row px-3 mt-4">    
-                            <select className="form-control col-md-3" onChange={(e)=>{setCountryCode(e.target.value)}}>
+                            {/* <select className="form-control col-md-3">
                                 <option selected disabled>код страны</option>
                                 <option value="996">+996</option>
                                 <option value="7">+7</option>
-                            </select>        
-                            <input type="number" className="form-control col-12 col-md-8 mt-3 mt-md-0 ml-md-3" placeholder="без код страны и 0, без +код страны" value={phoneNumber} onChange={(e) => { 
-                            setPhoneNumber(e.target.value) }}
-                                placeholder="Телефон" />
+                            </select> */}
+                            <Select
+                                    showSearch
+                                    placeholder="код страны"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                    onChange={(e)=>{setCountryCode(e.target.value)}}
+                                >
+                                    <Option value="996">+996</Option>
+                                    <Option value="7">+7</Option>
+                                </Select>        
+                                <Form.Item
+                                    name="username"
+                                    rules={[{ required: true, message: 'Пожалуйста заполни это поле!' }]}
+                                >
+                                    <Input type="number" value={phoneNumber} onChange={(e) => { 
+                            setPhoneNumber(e.target.value)}} />
+                                </Form.Item>
                         </div>
                             <div className="row py-4 px-3">
                                 <div className="mt-3" id="recaptcha-container"></div>        
@@ -117,6 +143,7 @@ const Register = () => {
     );
     const step2=(
                     <div className="form-group col-md-6">
+                        
                     <input className="form-control" type="text" placeholder={"Код потверждения"}
                         onChange={(e) => { setOtp(e.target.value) }}></input>
                     <br /><br />
@@ -155,8 +182,14 @@ const Register = () => {
         <div>
             <Navbar/>
             <div className="col-md-12" style={{height:"auto"}}>
-            <div className="col-md-12 d-flex justify-content-center mt-0 mt-md-3">
-                <div className="col-md-6 bg-white md-rounded-pill py-2 py-3">
+            {visible1 ? (
+                        <Alert className="mt-3" showIcon message="Такой номер уже существует!" type="warning" closable afterClose={handleClose1} />
+                                    ) : null}    
+            {visible ? (
+                        <Alert className="mt-3" showIcon message="Код потверждения отправлен!" type="success" closable afterClose={handleClose} />
+                                    ) : null}
+            <div className="col-md-12 d-flex justify-content-center mt-2 mt-md-3">
+                <div className="col-md-6 bg-white md-rounded-pill shadow-sm py-2 py-3">
                 <Steps current={current}>
                     {steps.map(item => (
                     <Step key={item.title} title={item.title} />

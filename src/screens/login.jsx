@@ -2,10 +2,12 @@ import React, {useState} from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { login } from "../api/user";
+import { Alert } from 'antd';
 
 const Sign  = () => {
     const [phoneNumber, setLogin] = useState();
     const [password,setPassword]=useState();
+    const [visible, setVisible] = useState(false);
     const signIn = async ()=>{
         if (password === "" || phoneNumber.length < 9) return;
         login(phoneNumber, password, onLoginSuccess, onLoginError);
@@ -18,9 +20,11 @@ const Sign  = () => {
 
     const onLoginError = (data) => {
         console.log('error', data);
-        alert("Логин или пароль введен неверно!");
+        setVisible(true);
     };
-    
+    const handleClose = () => {
+        setVisible(false);
+      };
     return(
         <div>
             <Navbar/>
@@ -28,6 +32,9 @@ const Sign  = () => {
                 <div className="col-md-12 d-flex justify-content-center">
                 <div className="col-md-5 px-3 py-3 border my-3"> 
                 <h5 className="text-center">Войти</h5>
+                {visible ? (
+                    <Alert message="Неверный логин или пароль!" type="error" closable afterClose={handleClose} />
+                ) : null}
                 <hr/>   
                     <div class="form-group">
                         <label for="exampleInputEmail1">Телефон</label>

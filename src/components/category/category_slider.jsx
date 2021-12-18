@@ -32,10 +32,36 @@ const CategorySlider = () => {
         arrows: false,
         infinite: false,
         speed: 500,
-        slidesToShow: 4,
+        slidesToShow: 9,
         slidesToScroll: 1,
         nextArrow: <SampleArrow />,
-        prevArrow: <SampleArrow />
+        prevArrow: <SampleArrow />,
+        responsive: [
+            {
+              breakpoint: 1024,
+              settings: {
+                slidesToShow: 9,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: true
+              }
+            },
+            {
+              breakpoint: 600,
+              settings: {
+                slidesToShow: 6,
+                slidesToScroll: 2,
+                initialSlide: 2
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 1
+              }
+            }
+          ]
     };
 
     useEffect(() => {
@@ -55,7 +81,7 @@ const CategorySlider = () => {
                             <a href={`/category/${category.id}`}>
                                 <div className="col-md-12 px-2 mb-3 d-flex flex-column align-items-center justify-content-center">                  
                                     <img className="mx-3 mb-1 rounded-circle" src={image} width="70px" height="70px" />
-                                    <a className="" href={`/category/${category.id}`}>{category.name}</a>
+                                    <a className="" style={{width:"100px"}} href={`/category/${category.id}`}>{category.name}</a>
                                 </div>
                             </a>
                         </div>
