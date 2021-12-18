@@ -23,6 +23,10 @@ import './blog.css';
 import 'antd/dist/antd.css';
 import "./App.css";
 import 'react-gallery-carousel/dist/index.css';
+import Settings from './screens/userSettings';
+import 'antd/dist/antd.css'; 
+import Wallets from './screens/wallets';
+import ForgotPassword from './screens/forgot-password';
 class App extends React.Component{
   render() {
     return(
@@ -51,9 +55,12 @@ class App extends React.Component{
                 <Route path="/about" component={About}/>
                 <Route path="/articles" component={Articles}/>
                 <Route path="/article" component={Article} />
-                <Route path="/wallet" component={Wallet}/>
+                <Route path="/wallets" component={Wallets}/>
+                <Route path="/wallet/:wallet" component={Wallet}/>
                 <Route path="/contacts" component={Contacts}/>
                 <Route path="/login" component={Login}/>
+                <Route path="/settings" component={Settings}/>
+                <Route path="/forgot_password" component={ForgotPassword}/>
               </Switch>
             </BrowserRouter>
             

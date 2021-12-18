@@ -6,9 +6,7 @@ import { Button, Dropdown, Menu, Space, Divider } from 'antd';
 import { UserOutlined, PlusOutlined } from '@ant-design/icons';
 
 const Navbar = () => {
-    
     const history = useHistory();
-
     const navigateTo = (page) => {
       history.push(page);
     };

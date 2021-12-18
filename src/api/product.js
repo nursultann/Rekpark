@@ -66,3 +66,21 @@ export const updateProduct = async (id, params) => {
 
     return null;
 };
+
+export const fetchUserProducts = async (params = { limit: 20, offset: 0 }) => {
+    try {
+        if (!params.hasOwnProperty('sub')) {
+            if (!params.hasOwnProperty('offset')) params['offset'] = 0;
+            if (!params.hasOwnProperty('limit')) params['limit'] = 20;
+        }
+        
+        const response = await ApiClient.get('/user/products', params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetching products error ', error);
+    }
+
+    return null;
+};

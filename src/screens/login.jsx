@@ -26,7 +26,7 @@ const Sign  = () => {
             <Navbar/>
             <div className="row">
                 <div className="col-md-12 d-flex justify-content-center">
-                <div className="col-md-6 px-3 py-3 border my-3"> 
+                <div className="col-md-5 px-3 py-3 border my-3"> 
                 <h5 className="text-center">Войти</h5>
                 <hr/>   
                     <div class="form-group">
@@ -39,7 +39,7 @@ const Sign  = () => {
                         <label for="exampleInputPassword1" >Пароль</label>
                         <input type="password" onChange={(e)=> {setPassword(e.target.value)}} class="form-control" id="password1"/>
                     </div>
-                    <button class="btn btn-outline col-md-12" onClick={signIn}>Войти</button>
+                    <button class="btn btn-outline-primary col-md-12" onClick={signIn}>Войти</button>
                 </div>    
                 </div>
             </div>
