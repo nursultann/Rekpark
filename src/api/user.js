@@ -33,3 +33,16 @@ export const userDetails = async (params) => {
 
     return null;
 };
+export const checkPhone = async (phone) => {
+    try {
+        const response = await ApiClient.get('/user/check', {'phone': phone});
+        if (response.status == 200 || response.status == 201) {
+            return true;
+        }
+    } catch (error) {
+        return false;
+    }
+};
+export const changePassword = async (password) =>{
+    
+}

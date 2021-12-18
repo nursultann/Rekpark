@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import CategorySlider from "../components/category/category_slider";
 
 class Category extends React.Component{
     render(){
@@ -17,21 +18,12 @@ class Category extends React.Component{
             <div>
             <Navbar />
             <div className="col-md-12">
-            <hr/>
-            <div class="nav-scroller py-1 mb-2">
-                <nav class="nav d-flex justify-content-between">
-                <a class="p-2 text-muted" href="/category">Недвижимость</a>
-                <a class="p-2 text-muted" href="/category">Авто</a>
-                <a class="p-2 text-muted" href="/category">Разное</a>
-                <a class="p-2 text-muted" href="/category">Услуги</a>
-                <a class="p-2 text-muted" href="/category">Электроника</a>
-                <a class="p-2 text-muted" href="/category">Отдам даром</a>
-                <a class="p-2 text-muted" href="/category">Работа</a>
-                </nav>
+            <CategorySlider/>
             </div>
-            <hr/>
-            </div>
-            <div className="row mx-0">
+            {/* <div className="col-md-12">
+                <hr/>
+            </div> */}
+            <div className="row mx-0 mt-3">
                 <div className="col-md-12">
                 <h3>По категории</h3>
                 </div>

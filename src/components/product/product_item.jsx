@@ -18,7 +18,10 @@ const ProductItem = ({product}) => {
         if (product.features.color !== null) {
             baseStyle.background = product.features.color;
         }
-    }
+    }         
+              var nowDate = new Date().getDate();
+              var nowMonth = new Date().getMonth();
+              var nowYear = new Date().getFullYear(); 
               var nowDay = new Date().getDay();
               var Fulldate = new Date(product.created_at);
               var date = Fulldate.getDate();
@@ -26,9 +29,12 @@ const ProductItem = ({product}) => {
               var year = Fulldate.getFullYear();
               var day = Fulldate.getDay();
               var allDate = date+'/'+month+'/'+year;
-              if(day<nowDay && day+1==nowDay || day==nowDay+6){
+              if(date==nowDate && month==nowMonth && year ==nowYear && day==nowDay){
+                allDate = "Сегодня";
+              }
+              else if(date==nowDate && month==nowMonth && year ==nowYear && day<nowDay && day+1==nowDay || date==nowDate && month==nowMonth && year ==nowYear && day==nowDay+6){
                 allDate = "Вчера";
-              }else if(day<nowDay && day+2 == nowDay || day==nowDay+5){
+              }else if(date==nowDate && month==nowMonth && year ==nowYear && day<nowDay && day+2 == nowDay || date==nowDate && month==nowMonth && year ==nowYear && day==nowDay+5){
                 allDate = "Позавчера";
               }
               var Update = new Date(product.updated_at);
@@ -37,12 +43,12 @@ const ProductItem = ({product}) => {
               var updated_month = Update.getMonth();
               var updated_year = Update.getFullYear();
               var update = updated_date + '/'+updated_month+'/'+updated_year;
-              if(updated_day==nowDay){
+              if(updated_date == nowDate && updated_month==nowMonth && updated_year==nowYear && updated_day==nowDay){
                 update = "Сегодня";
               }
-              else if(updated_day<nowDay && updated_day+1==nowDay || updated_day==nowDay+6){
+              else if(updated_date == nowDate && updated_month==nowMonth && updated_year==nowYear && updated_day<nowDay && updated_day+1==nowDay || updated_date == nowDate && updated_month==nowMonth && updated_year==nowYear && updated_day==nowDay+6){
                 update = "Вчера";
-              }else if(updated_day<nowDay && updated_day+2 == nowDay || updated_day==nowDay+5){
+              }else if(updated_date == nowDate && updated_month==nowMonth && updated_year==nowYear && updated_day<nowDay && updated_day+2 == nowDay || updated_date == nowDate && updated_month==nowMonth && updated_year==nowYear && updated_day==nowDay+5){
                 update = "Позавчера";
               }
     const image = product.has_media 

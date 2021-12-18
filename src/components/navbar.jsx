@@ -3,11 +3,14 @@ import top from '../img/top.png';
 import React from "react";
 import {Link, useHistory } from "react-router-dom";
 import { Button } from '@mui/material';
-
+import { Menu, Dropdown } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../redux/actions/user_actions";
+import { userDetails } from "../api/user";
+import { useEffect,useState } from "react";
 const Navbar = () => {
-    
     const history = useHistory();
-
     const navigateTo = (page) => {
       history.push(page);
     };
@@ -16,6 +19,34 @@ const Navbar = () => {
       localStorage.removeItem('token');
       window.location.href = '/';
     }
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.user);
+    const fetchUserDetails = async () => { 
+        const user = await userDetails(); 
+        if(user != null){
+            dispatch(setUser(user));
+        }
+    };    
+    useEffect(() => {
+        fetchUserDetails();
+    }, []);
+let menu = null;    
+if(user != null){
+  menu = (
+    <Menu>
+      <Menu.Item>
+      <a onClick={() => navigateTo('/profile')}>Личный кабинет</a>
+      </Menu.Item>
+      <Menu.Item>
+      <a onClick={() => navigateTo('/settings')}>Настройки</a>
+      </Menu.Item>
+      <Menu.Item>
+      <a onClick={() => navigateTo('/wallets')}>Пополнить баланс {user.balance}сом</a>
+      </Menu.Item>
+      <Menu.Item danger><a onClick={logOut}>Выйти</a></Menu.Item>
+    </Menu>
+  );
+}           
     return (
       <div>
         <div class="container-fluid">
@@ -33,16 +64,12 @@ const Navbar = () => {
                 </>
                 : 
                 <>
-                <a class="nav-link dropdown-toggle mr-3" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
-                  Личный кабинет
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a onClick={() => navigateTo('/profile')} class="dropdown-item">Личный кабинет</a>
-                  <a onClick={() => navigateTo('/settings')} class="dropdown-item">Настройки</a>
-                  <div class="dropdown-divider"></div>
-                  <a onClick={logOut} class="dropdown-item">Выйти</a>
-                </div>
-                <Button onClick={() => navigateTo('/products/create')} variant="contained" size="small" disableElevation>Добавить рекламу +</Button>
+                <Dropdown overlay={menu} className='mr-3'>
+                  <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                    Личный кабинет<DownOutlined />
+                  </a>
+                </Dropdown>
+                <Button onClick={() => navigateTo('/products/create')} className='mt-2 mt-md-0' variant="contained" size="small" disableElevation>Добавить рекламу +</Button>
                 </>  
                 }
                 
