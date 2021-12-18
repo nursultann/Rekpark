@@ -60,7 +60,7 @@ class App extends React.Component{
                 <Route path="/contacts" component={Contacts}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/settings" component={Settings}/>
-                <Route path="/forgot-password" component={ForgotPassword}/>
+                <Route path="/forgot_password" component={ForgotPassword}/>
               </Switch>
             </BrowserRouter>
             
