@@ -2,13 +2,13 @@ import img from '../img/logo.png';
 import top from '../img/top.png';
 import React from "react";
 import {Link, useHistory } from "react-router-dom";
-import { Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/actions/user_actions";
 import { userDetails } from "../api/user";
 import { useEffect,useState } from "react";
-import { Button } from 'antd';
+import { Button, Dropdown, Menu, Space, Divider } from 'antd';
+import { UserOutlined, PlusOutlined } from '@ant-design/icons';
 
 const Navbar = () => {
     const history = useHistory();
@@ -16,38 +16,32 @@ const Navbar = () => {
       history.push(page);
     };
     const token = localStorage.getItem('token');
-    const logOut = ()=>{
+    const logOut = ()=> {
       localStorage.removeItem('token');
       window.location.href = '/';
     }
-    const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
-    const fetchUserDetails = async () => { 
-        const user = await userDetails(); 
-        if(user != null){
-            dispatch(setUser(user));
+    const menu = (
+      <Menu onClick={(menu) => {
+        switch (menu.key) {
+          case 'settings':
+            navigateTo('/settings');
+            break;
+          case 'logout':
+            logOut();
+            break;  
+          default:
         }
-    };    
-    useEffect(() => {
-        fetchUserDetails();
-    }, []);
-let menu = null;    
-if(user != null){
-  menu = (
-    <Menu>
-      <Menu.Item>
-      <a onClick={() => navigateTo('/profile')}>Личный кабинет</a>
-      </Menu.Item>
-      <Menu.Item>
-      <a onClick={() => navigateTo('/settings')}>Настройки</a>
-      </Menu.Item>
-      <Menu.Item>
-      <a onClick={() => navigateTo('/wallets')}>Пополнить баланс {user.balance}сом</a>
-      </Menu.Item>
-      <Menu.Item danger><a onClick={logOut}>Выйти</a></Menu.Item>
-    </Menu>
-  );
-}           
+      }}>
+        <Menu.Item key="settings">
+          Настройки
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="logout">
+          Выйти
+        </Menu.Item>
+      </Menu>
+    );
+
     return (
       <div>
         <div className="container-fluid">
@@ -59,19 +53,23 @@ if(user != null){
               </div>
               <div class="col-6 d-md-flex justify-content-end align-items-center">
                 {token == null ?
-                <> 
-                <Button onClick={() => navigateTo('/register')} variant="outlined" size="small" disableElevation className="mr-2">Регистрация</Button>
-                <Button onClick={() => navigateTo('/login')} variant="outlined" size="small" disableElevation className="mr-2">Войти</Button> 
-                </>
+                  <> 
+                    <Button onClick={() => navigateTo('/register')} className="mr-2">Регистрация</Button>
+                    <Button onClick={() => navigateTo('/login')} className="mr-2">Войти</Button> 
+                  </>
                 : 
-                <>
-                <Dropdown overlay={menu} className='mr-3'>
-                  <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                    Личный кабинет<DownOutlined />
-                  </a>
-                </Dropdown>
-                <Button onClick={() => navigateTo('/products/create')} className='mt-2 mt-md-0' variant="contained" size="small" disableElevation>Добавить рекламу +</Button>
-                </>  
+                  <Space>
+                    <Dropdown.Button overlay={menu}>
+                      <Link to="/profile">Личный кабинет</Link>
+                    </Dropdown.Button>
+                    <Button 
+                      type='primary'
+                      onClick={() => navigateTo('/products/create')} 
+                      disableElevation
+                    >
+                      Добавить рекламу
+                    </Button>
+                  </Space>  
                 }
                 
               </div>
@@ -93,4 +91,5 @@ if(user != null){
       </div>
     );
 }
+
 export default Navbar;
