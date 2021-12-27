@@ -10,12 +10,11 @@ import {
     Button, 
     Input, 
     InputNumber, 
-    Select, 
-    Upload,
-    notification
-  } from "antd";
-  
-const { Dragger } = Upload;
+    Select,
+    TreeSelect
+} from "antd";
+
+const { TreeNode } = TreeSelect;
 const { Option } = Select;
 
 const ProductFields = ({ form, loading = false, onSend }) => {
@@ -29,6 +28,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     const [cities, setCities] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [files, setFiles] = useState([]);
+    const [phoneOptions, setPhoneOptions] = useState([]);
 
     const fetchCategoriesTree = async () => {
         const categories = await api.fetchCategoriesTree();
@@ -107,6 +107,11 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         </Select>
     );
 
+    const categoryTree = (tree) => {
+        if (!tree.length) return;
+        return tree.map((item) => (<TreeNode value={item.id} title={item.name}>{categoryTree(item.children)}</TreeNode>));
+    };
+
     return (
         <Form 
             form={form}
@@ -137,18 +142,25 @@ const ProductFields = ({ form, loading = false, onSend }) => {
               rules={[{required: true, message: 'Выберите категорию!'}]}
               className="mt-2"
             >
-                <Select 
+                <TreeSelect
+                  showSearch 
                   placeholder="Выберите категорию"
                   onChange={(item) => {
                     const category = categories.find(o => o.id === item);
                     setSelectedCategory(category);
                   }}
+                  allowClear
+                  treeDefaultExpandAll
                   value={selectedCategory?.id}
                 >
                     {categories.map((item) => { 
-                      return (<Option value={item.id}>{item.name}</Option>); 
+                      return (
+                        <TreeNode value={item.id} title={item.name}>
+                            {categoryTree(item.children)}
+                        </TreeNode>
+                      ); 
                     })}
-                </Select>
+                </TreeSelect>
             </Form.Item>
             <Form.Item 
               key="title"
@@ -156,7 +168,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
               name="title" 
               rules={[{required: true, message: 'Введите загаловок!'}]}
             >
-              <Input placeholder="Введите загаловок" />
+              <Input allowClear placeholder="Введите загаловок" />
             </Form.Item>
             <Form.Item 
               key="price"
@@ -250,10 +262,12 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             <Form.Item 
               key="phones"
               label="Телефон" 
-              name="phones" 
+              name="phones"
               rules={[{required: true, message: 'Введите телефон!'}]}
             >
-              <Input placeholder="Введите загаловок" />
+                <Select mode="tags" placeholder="Введите телефон" tokenSeparators={[',']}>
+                    {phoneOptions}
+                </Select>
             </Form.Item>
             <Button 
               loading={loading}

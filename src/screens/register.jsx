@@ -5,13 +5,14 @@ import * as firebaseui from "firebaseui";
 import ApiClient from "../api/ApiClient";
 import { checkPhone, register} from "../api/user";
 import Footer from "../components/footer";
-import { Steps, Button, message,Form, Input,Select } from 'antd';
+import { Steps, Button, message,Form, Input,Select} from 'antd';
 import { Alert } from 'antd';
 
 // const countryCodes = [
 //     {"value": "+996", "label": "+996"},
 //     {"value": "+7", "label": "+7"},
 // ];
+const key = 'updatable';
 const { Option } = Select;
 const { Step } = Steps;
 const Register = () => {
@@ -26,18 +27,16 @@ const Register = () => {
     const [uuid,setUuid] = useState();
     const [countrycode,setCountryCode] = useState();
     const [current, setCurrent] = useState(0);
-    const [visible, setVisible] = useState(false);
-    const [visible1,setVisible1] = useState(false);
     const signIn = async ()  => {
         const check = await checkPhone(countrycode+phoneNumber);
         if(check==true){
-            setVisible1(true);
+            message.warning('Такой номер уже существует!', 10);
         }
         else if (check==false){       
         if (phoneNumber === "" || phoneNumber.length < 9) return;
         auth.signInWithPhoneNumber(`+${countrycode+phoneNumber}`, window.verify).then((result) => {    
             setFinal(result);
-            setVisible(true);
+            message.success('Код потверждения отправлен!', 10);
             setCurrent(current+1);
             var t = 59;
             function i(){
@@ -49,14 +48,14 @@ const Register = () => {
             var time = setInterval(i,1000);
              }else if(t<=0){
                 clearInterval(time);
-                alert("Время вышло!");
+                message.info('Время вышло!', 10);
                 window.location.reload(); 
              }
             }
             time();
             setTimeout(time,60000);
         }).catch((err) => {
-                alert(err);
+            message.error('Номер указан неверно!', 10);
                 window.location.reload()
             });
     }
@@ -65,7 +64,7 @@ const Register = () => {
         if (otp === null || final === null)
             return;
         final.confirm(otp).then((result) => {
-            alert("Код потверждения выслан");
+            message.success('Код потверждения выслан', 10);
             setUuid(result.user.uuid);
             setCurrent(current+1);
             // result.user.uuid;
@@ -73,7 +72,7 @@ const Register = () => {
             console.log('success ', result);
             
         }).catch((err) => {
-            alert("Код потверждения введен неверно!");
+            message.error('Код потверждения введен неверно!', 10);
         })
     }
     const addUser = async () =>{
@@ -87,21 +86,22 @@ const Register = () => {
             console.log('params', params);
             const result = await register(params, function (data) {
                 localStorage.setItem('token', data.api_token);
+                message.loading({ content: 'Загрузка...', key });
+                setTimeout(() => {
+                    message.success({ content: 'Успешно!', key, duration: 2 });
+                }, 1000);
                 window.location.href = '/profile';
             }, function (data) {
                 console.log("Error");
             });
         }else{
-            alert("Неправильный пароль");
+            message.error('Неправильный пароль', 10);
         }
     }
-    const handleClose=()=>{
-        setVisible(false);
-    }
-    
-    const handleClose1=()=>{
-        setVisible1(false);
-    }    
+    function onChange(value) {
+        console.log(`selected ${value}`);
+        setCountryCode(value);
+      }   
     useEffect(() => {
         window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         window.verify.render();
@@ -109,33 +109,34 @@ const Register = () => {
     const step1 = (
         <div className="form-group col-md-6 border py-5 px-5 bg-white shadow-sm">
                         <h4 className="text-center">Регистрация профиля</h4>
-                        <div className="row px-3 mt-4">    
-                            {/* <select className="form-control col-md-3">
-                                <option selected disabled>код страны</option>
-                                <option value="996">+996</option>
-                                <option value="7">+7</option>
-                            </select> */}
-                            <Select
-                                    showSearch
-                                    placeholder="код страны"
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                    }
-                                    onChange={(e)=>{setCountryCode(e.target.value)}}
-                                >
-                                    <Option value="996">+996</Option>
-                                    <Option value="7">+7</Option>
-                                </Select>        
-                                <Form.Item
-                                    name="username"
-                                    rules={[{ required: true, message: 'Пожалуйста заполни это поле!' }]}
-                                >
-                                    <Input type="number" value={phoneNumber} onChange={(e) => { 
-                            setPhoneNumber(e.target.value)}} />
-                                </Form.Item>
+                        <div className="row px-3 mt-4">
+                            <div className="col-md-4">    
+                                    <Select
+                                        placeholder="код страны"
+                                        showSearch
+                                        optionFilterProp="children"
+                                        onChange={onChange}
+                                        filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                        style={{width:"100%"}}
+                                        >
+                                        <Option value="996">+996</Option>
+                                        <Option value="7">+7</Option>
+                                    </Select>
+                            </div>
+                            <div className="col-md-8">            
+                                    <Form.Item
+                                        name="username"
+                                        rules={[{ required: true, message: 'Пожалуйста заполни это поле!' }]}
+                                        style={{width:"100%"}}
+                                    >
+                                        <Input type="number" placeholder="Без кода страны и +код страны" value={phoneNumber} onChange={(e) => { 
+                                setPhoneNumber(e.target.value)}} />
+                                    </Form.Item>
+                            </div>    
                         </div>
-                            <div className="row py-4 px-3">
+                            <div className="row py-2 px-3">
                                 <div className="mt-3" id="recaptcha-container"></div>        
                                 <button className="col-md-12 btn btn-outline-primary mt-3" onClick={signIn}>Зарегистрироваться</button>  
                             </div>
@@ -182,12 +183,6 @@ const Register = () => {
         <div>
             <Navbar/>
             <div className="col-md-12" style={{height:"auto"}}>
-            {visible1 ? (
-                        <Alert className="mt-3" showIcon message="Такой номер уже существует!" type="warning" closable afterClose={handleClose1} />
-                                    ) : null}    
-            {visible ? (
-                        <Alert className="mt-3" showIcon message="Код потверждения отправлен!" type="success" closable afterClose={handleClose} />
-                                    ) : null}
             <div className="col-md-12 d-flex justify-content-center mt-2 mt-md-3">
                 <div className="col-md-6 bg-white md-rounded-pill shadow-sm py-2 py-3">
                 <Steps current={current}>

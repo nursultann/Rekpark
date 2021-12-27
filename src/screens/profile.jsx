@@ -12,6 +12,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Button } from "@mui/material";
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
+import ProductItem from "../components/product/product_item";
 const Profile = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
@@ -107,30 +108,18 @@ const Profile = () => {
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="nav-ad" role="tabpanel" aria-labelledby="nav-home-tab">
-                                <div className="row">
-                                {/* {user.products.map((product)=>{
+                                <div className="row my-3">
+                                {products.map((product)=>{
                                     return(
-                                //         <div className="col-md-4 mt-2 mb-2">
-                                //     <div class="card">
-                                //     <img src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg" class="card-img-top" alt="..."/>
-                                //     <div class="card-body">
-                                //         <h5 class="card-title">З</h5>
-                                //         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                //         <Button size="small">Редактировать</Button>
-                                //         <Button size="small">Деактивировать</Button>
-                                //         <Button size="small">Поднять</Button>
-                                //     </div>
-                                //     </div>
-                                // </div>    
+                                        <>
+                                        <ProductItem product={product}/>
+                                        </>
                                     );
-                                })}     */}
+                                })}    
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="nav-active" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div className="row">
-                                {
-
-                                }
                                     <div className="col-md-4 mt-2 mb-2">
                                         <div class="card">
                                         <img src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg" class="card-img-top" alt="..."/>

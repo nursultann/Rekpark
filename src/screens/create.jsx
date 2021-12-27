@@ -46,6 +46,7 @@ const CreateAd = () => {
             form={form}
             loading={loading}
             onSend={async (model) => {
+              console.log('phones', form.getFieldValue('phones'));
               const valid = await form.validateFields();
               if (valid) {
                 const formData = new FormData();

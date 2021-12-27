@@ -53,10 +53,6 @@ class App extends React.Component{
                 <Route path="/profile"  component={Profile}/>
                 <Route path="/category" component={Category}/>
                 <Route path="/about" component={About}/>
-                <Route path="/articles" component={Articles}/>
-                <Route path="/article" component={Article} />
-                <Route path="/wallets" component={Wallets}/>
-                <Route path="/wallet/:wallet" component={Wallet}/>
                 <Route path="/contacts" component={Contacts}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/settings" component={Settings}/>
