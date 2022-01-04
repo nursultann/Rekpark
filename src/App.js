@@ -51,12 +51,14 @@ class App extends React.Component{
                 <Route path="/products/create" component={CreateAd} />
                 <Route path="/register" component={Register}/>
                 <Route path="/profile"  component={Profile}/>
-                <Route path="/category" component={Category}/>
+                <Route path="/category/:id" component={Category}/>
                 <Route path="/about" component={About}/>
                 <Route path="/contacts" component={Contacts}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/settings" component={Settings}/>
                 <Route path="/forgot_password" component={ForgotPassword}/>
+                <Route path="/wallets" component={Wallets}/>
+                <Route path="/wallet" component={Wallet}/>
               </Switch>
             </BrowserRouter>
             

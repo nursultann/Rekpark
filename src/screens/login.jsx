@@ -3,7 +3,8 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { login } from "../api/user";
 import { Alert, Button } from 'antd';
-
+import { message } from 'antd';
+const key = 'updatable';
 const Sign  = () => {
     const [phoneNumber, setLogin] = useState();
     const [password,setPassword]=useState();
@@ -43,7 +44,7 @@ const Sign  = () => {
                         <label for="exampleInputPassword1" >Пароль</label>
                         <input type="password" onChange={(e)=> {setPassword(e.target.value)}} class="form-control" id="password1"/>
                     </div>
-                    <Button type="primary" className="col-md-12" onClick={signIn}>Войти</Button>
+                    <Button style={{backgroundColor:'#000fa6',color:"#fff"}} className="col-md-12" onClick={signIn}>Войти</Button>
                 </div>    
                 </div>
             </div>

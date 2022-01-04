@@ -7,7 +7,7 @@ import { setProductDetails } from "../redux/actions/product_actions";
 import Carousel from 'react-gallery-carousel';
 import { FacebookShareButton, WhatsappShareButton,TelegramShareButton } from "react-share";
 import { FacebookIcon,WhatsappIcon, TelegramIcon } from "react-share";
-import {Button} from 'antd';
+import {Button,EyeOutlined} from 'antd';
 const Ad = ({match}) => {
     const dispatch = useDispatch();
     const {productDetails} = useSelector((state) => state.product);
@@ -66,7 +66,7 @@ const Ad = ({match}) => {
                             </TelegramShareButton>
                             </div>
                             <div className="col-md-3 mt-2">
-                            <label class="ml-3 text-muted">Просмотры: {productDetails.views}<br/>
+                            <label class="ml-3 text-muted"><EyeOutlined /> {productDetails.views}<br/>
                              Регион,город: {productDetails.region != null ? productDetails.region.name+","+productDetails.city.name : ""}</label>
                             </div>
                             <div className="col-md-3 mt-2">

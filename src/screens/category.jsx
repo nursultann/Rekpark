@@ -4,19 +4,11 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import CategorySlider from "../components/category/category_slider";
 
-class Category extends React.Component{
-    render(){
-    // const settings = {
-    //     infinite: true,
-    //     speed: 500,
-    //     slidesToShow: 6,
-    //     slidesToScroll: 1,
-    //     arrows:true
-    //   };
+const Category = ()=> {
         return(
             <div>
             <Navbar />
-            <div className="col-md-12">
+            <div className="col-md-12 px-2">
             <CategorySlider/>
             </div>
             {/* <div className="col-md-12">
@@ -41,6 +33,5 @@ class Category extends React.Component{
             <Footer/>
            </div>
         );
-        }
 }
 export default Category;

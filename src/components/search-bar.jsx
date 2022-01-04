@@ -30,7 +30,7 @@ const SearchBar = () => {
           </select>
         </div>
         <div class="col-md-4 mt-2 mt-md-0 d-flex justify-content-center d-md-flex justify-content-end  mb-2">
-            <Button type="primary" className="rounded-pill" style={{backgroundColor:"#4dab04"}}>
+            <Button type="primary" className="rounded-pill" style={{backgroundColor:'#000fa6'}}>
               Поиск
             </Button>
         </div>

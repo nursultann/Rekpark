@@ -46,3 +46,16 @@ export const checkPhone = async (phone) => {
 export const changePassword = async (password) =>{
     
 }
+export const deleteAd = async (id) =>{
+    try {
+        const response = await ApiClient.delete('/products/'+ id);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('Error', error.response);
+    }
+
+    return null;
+};
+
