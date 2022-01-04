@@ -12,7 +12,11 @@ import { UserOutlined } from '@ant-design/icons';
 import { Button } from "@mui/material";
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
+<<<<<<< HEAD
 import ProductItem from "../components/product/product_item"
+=======
+import ProductItem from "../components/product/product_item";
+>>>>>>> a96fb2b9a8b9027de920c92426ef9d7a57fe7493
 const Profile = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
@@ -122,9 +126,6 @@ const Profile = () => {
                             </div>
                             <div class="tab-pane fade" id="nav-active" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <div className="row">
-                                {
-
-                                }
                                     <div className="col-md-4 mt-2 mb-2">
                                         <div class="card">
                                         <img src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg" class="card-img-top" alt="..."/>

@@ -51,7 +51,7 @@ const ProductItem = ({product}) => {
         : '';
     return (
         <a onClick={() => navigateToProductDetailsPage(product)}>
-            <div className="shadow-sm rounded" style={{ ...baseStyle }}>
+            <div className="shadow-sm bg-white rounded ml-3" style={{ ...baseStyle }}>
                 <div style={{ height: 250 }}>
                     <AppImage height={250} width="100%" src={image} classNameName="card-img-top rounded" style={{objectFit: "cover"}} />
                     {product.is_vip ? 
@@ -68,7 +68,7 @@ const ProductItem = ({product}) => {
                     <label className="text-muted" style={{fontSize:15}}>
                         Опубликовано: {allDate}
                     </label>
-                    <label className="text-muted" style={{fontSize:15}}>
+                    <label className="text-muted" style={{fontSize:12}}>
                         Обновлено: {update}
                     </label>
                 </div>
