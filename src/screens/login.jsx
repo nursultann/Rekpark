@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { login } from "../api/user";
-import { Alert } from 'antd';
+import { Alert, Button } from 'antd';
 
 const Sign  = () => {
     const [phoneNumber, setLogin] = useState();
@@ -30,7 +30,7 @@ const Sign  = () => {
             <Navbar/>
             <div className="row">
                 <div className="col-md-12 d-flex justify-content-center">
-                <div className="col-md-5 px-3 py-3 border my-3"> 
+                <div className="col-md-5 px-3 py-3 border my-3 bg-white"> 
                 <h5 className="text-center">Войти</h5>
                 {visible ? (
                     <Alert message="Неверный логин или пароль!" type="error" closable afterClose={handleClose} />
@@ -46,7 +46,7 @@ const Sign  = () => {
                         <label for="exampleInputPassword1" >Пароль</label>
                         <input type="password" onChange={(e)=> {setPassword(e.target.value)}} class="form-control" id="password1"/>
                     </div>
-                    <button class="btn btn-outline-primary col-md-12" onClick={signIn}>Войти</button>
+                    <Button type="primary" className="col-md-12" onClick={signIn}>Войти</Button>
                 </div>    
                 </div>
             </div>
@@ -54,6 +54,4 @@ const Sign  = () => {
         </div>
     );
 }
-
-
 export default Sign;

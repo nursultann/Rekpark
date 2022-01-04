@@ -58,9 +58,13 @@ const ProductItem = ({product}) => {
                         <div style={{ position: "absolute", left: "30px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
                         : <></>}
                 </div>
-                <div class="card-body">
+                <div class="card-body bg-white">
                     <h5 class="card-title">{product.title}</h5>
-                    <p class="card-text">{product.description}</p>
+                    <p class="card-text" style={{
+                                        lineHeight:"30px",
+                                        textOverflow: "ellipsis",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden"}}>{product.description}</p>
                     <label className="text-muted" style={{fontSize:15}}>
                         Опубликовано: {allDate}
                     </label>
