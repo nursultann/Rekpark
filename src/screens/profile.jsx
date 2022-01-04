@@ -12,11 +12,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Button } from "@mui/material";
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
-<<<<<<< HEAD
 import ProductItem from "../components/product/product_item"
-=======
-import ProductItem from "../components/product/product_item";
->>>>>>> a96fb2b9a8b9027de920c92426ef9d7a57fe7493
 const Profile = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
