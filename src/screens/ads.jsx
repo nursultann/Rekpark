@@ -76,14 +76,15 @@ const Ads = () => {
                   )
               })}
             </div> 
-            <center><Button 
+            <center className="mt-5">
+              <Button
                 variant="outlined"
                 onClick={() => {
                   fetchProducts();
                 }}>
                   Показать еще
               </Button>
-              </center> 
+            </center> 
             <hr />
             </div>  
             <Footer/>             

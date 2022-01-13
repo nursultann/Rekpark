@@ -1,34 +1,64 @@
 import React from "react";
+import{ useEffect, useState } from "react";
 import {Link} from "react-router-dom";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import CategorySlider from "../components/category/category_slider";
-
-const Category = ()=> {
+import SearchBar from "../components/search-bar";
+import { setCategoryProducts } from "../redux/actions/product_actions";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductsByCategory } from "../api";
+import { Skeleton, Grid } from "@mui/material";
+import ProductItem from "../components/product/product_item";
+const Category = ({match})=> {
+    const dispatch = useDispatch();
+    const {categoryProducts} = useSelector((state) => state.product);
+    const fetchCategoryProducts = async () => {
+        console.log(1);
+        const categoryProducts = await fetchProductsByCategory(match.params.id);
+        console.log(categoryProducts);
+        if (categoryProducts != null) {
+            dispatch(setCategoryProducts(categoryProducts));
+        }
+    };
+    useEffect(() => {
+        fetchCategoryProducts();
+      }, []);
         return(
             <div>
             <Navbar />
-            <div className="col-md-12 px-2">
-            <CategorySlider/>
-            </div>
-            {/* <div className="col-md-12">
-                <hr/>
-            </div> */}
+            <SearchBar/>
             <div className="row mx-0 mt-3">
                 <div className="col-md-12">
-                <h3>По категории</h3>
+                <label style={{fontSize:18}}>По категории</label>
                 </div>
-                    <div className="col-md-4">
-                        <div className="card">
-                            <img src="https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455__340.jpg" className="card-img-top" width="100%"/>
-                            <div className="card-body">
-                                <label className="card-title">
-                                    Заголовок
-                                </label>
-                                <p className="card-text"></p>
-                            </div>
-                        </div>
-                    </div>
+                    {categoryProducts === null || categoryProducts === undefined || categoryProducts.length === 0 ?
+                    <Grid container spacing={2} className="pl-3 pt-4 pb-4">
+                    <Grid item xs={4}>
+                        <Skeleton variant="rectangular" width={'100%'} height={100} />
+                        <Skeleton variant="text" />
+                        <Skeleton variant="text" />
+                        <Skeleton variant="text" />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Skeleton variant="rectangular" width={'100%'} height={100} />
+                        <Skeleton variant="text" />
+                        <Skeleton variant="text" />
+                        <Skeleton variant="text" />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Skeleton variant="rectangular" width={'100%'} height={100} />
+                        <Skeleton variant="text" />
+                        <Skeleton variant="text" />
+                        <Skeleton variant="text" />
+                    </Grid>
+                    </Grid>
+                : categoryProducts.map((product) => {
+                    return (
+                        <div className="col-xs-12 col-sm-6 col-xl-4 mt-3 mb-3">
+                        <ProductItem product={product} />
+                        </div>            
+                    )
+                })}
             </div>   
             <Footer/>
            </div>

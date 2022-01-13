@@ -62,7 +62,7 @@ const Main = () => {
       <main role="main" className="container-fluid">
         <div className="row">
           <div className="col-md-8">
-            <h5 className="text-muted">Новые Объявления</h5>
+            <label className="" style={{fontSize:20}}>Новые Объявления</label>
             <div className="row mt-6 mb-6">
               {products === null || products === undefined || products.length === 0 ?
                 <Grid container spacing={2} className="pl-3 pt-4 pb-4">
@@ -87,13 +87,14 @@ const Main = () => {
                 </Grid>
               : products.map((product) => {
                   return (
-                    <div className="col-md-4 mt-3">
+                    <div className="col-xs-12 col-sm-6 col-xl-4 mt-3">
                       <ProductItem product={product} />
                     </div>            
                   )
               })}
             </div> 
-            <center className="mt-5"><Button 
+            <center className="mt-5">
+              <Button 
                 variant="outlined"
                 onClick={() => {
                   fetchProducts();

@@ -84,3 +84,15 @@ export const fetchUserProducts = async (params = { limit: 20, offset: 0 }) => {
 
     return null;
 };
+export const fetchProductsByCategory = async (id) => {
+    try {
+        const response = await ApiClient.get(`/products?search=category_id:${id}&searchFields=category_id:=`);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetching products error '+id, error);
+    }
+
+    return null;
+};

@@ -107,8 +107,8 @@ const Register = () => {
         window.verify.render();
     }, []);
     const step1 = (
-        <div className="form-group col-md-6 border py-5 px-5 bg-white shadow-sm">
-                        <h4 className="text-center">Регистрация профиля</h4>
+        <div className="form-group col-md-6 border py-5 px-5 bg-white shadow text-center">
+                        <label style={{fontSize:20}}>Регистрация профиля</label>
                         <div className="row px-3 mt-4">
                             <div className="col-md-4">    
                                     <Select
@@ -143,7 +143,7 @@ const Register = () => {
                         </div>
     );
     const step2=(
-                    <div className="form-group col-md-6">
+                    <div className="form-group col-md-6 py-5 px-5 shadow">
                         
                     <input className="form-control" type="text" placeholder={"Код потверждения"}
                         onChange={(e) => { setOtp(e.target.value) }}></input>
@@ -152,7 +152,7 @@ const Register = () => {
                     <button className="form-control" onClick={validateOtp}>Подтвердить</button>
                     </div>);
     const step3 = (
-                    <div className="form-group col-md-6">
+                    <div className="form-group col-md-6 shadow">
                     <input className="form-control mt-3" placeholder="Имя" value={userName} 
                     onChange={(e) =>{setUserName(e.target.value)}} />
                     <input className="form-control mt-3" placeholder="пароль" value={userPassword}
@@ -184,7 +184,7 @@ const Register = () => {
             <Navbar/>
             <div className="col-md-12" style={{height:"auto"}}>
             <div className="col-md-12 d-flex justify-content-center mt-2 mt-md-3">
-                <div className="col-md-6 bg-white md-rounded-pill shadow-sm py-2 py-3">
+                <div className="col-md-6 bg-white md-rounded-pill shadow py-2 py-3">
                 <Steps current={current}>
                     {steps.map(item => (
                     <Step key={item.title} title={item.title} />
@@ -192,7 +192,7 @@ const Register = () => {
                 </Steps>
                 </div>
             </div>
-            <div className="steps-content col-md-12 d-flex justify-content-center rounded mt-3 mt-md-3">
+            <div className="steps-content col-md-12 d-flex justify-content-center rounded mt-3 mt-md-3" style={{height:"400px"}}>
                 {steps[current].content}
             </div>   
             </div>

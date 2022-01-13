@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "../../api";
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 import { setCategories } from "../../redux/actions/category_actions";
 import React, { useEffect } from "react";
 import Slider from "react-slick";
 import { Cascader, Popover } from 'antd';
-
+import {  setCategoryProducts } from "../../redux/actions/product_actions";
 function SampleArrow(props) {
     const { className, style, onClick } = props;
     return (
@@ -27,6 +27,10 @@ const CategorySlider = () => {
             dispatch(setCategories(categories));
         }
     };
+    const history = useHistory();
+    const navigateToCategory = (category) => {
+        history.push(`category/${category.id}`);
+    };
 
     const sliderSettings = {
         dots: true,
@@ -37,6 +41,7 @@ const CategorySlider = () => {
         slidesToScroll: 1,
         nextArrow: <SampleArrow />,
         prevArrow: <SampleArrow />,
+        
         responsive: [
             {
               breakpoint: 1024,
@@ -48,18 +53,29 @@ const CategorySlider = () => {
               }
             },
             {
-              breakpoint: 600,
+              breakpoint: 768,
               settings: {
                 slidesToShow: 6,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: true
+              }
+            },
+            {
+              breakpoint: 600,
+              settings: {
+                slidesToShow: 4,
                 slidesToScroll: 2,
-                initialSlide: 2
+                initialSlide: 2,
+                arrows: true,
               }
             },
             {
               breakpoint: 480,
               settings: {
                 slidesToShow: 3,
-                slidesToScroll: 1
+                slidesToScroll: 1,
+                arrows: true,
               }
             }
           ]
@@ -81,10 +97,10 @@ const CategorySlider = () => {
                     : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
         return (
             <div id={category.id}>  
-                <Link to={`/category/${category.id}`}>
+                <Link to={`category/${category.id}`} style={{color:"black"}}>
                     <div className="col-md-12 px-2 mb-3 d-flex flex-column align-items-center justify-content-center">                  
                         <img className="mx-3 mb-1 rounded-circle" src={image} width="50px" height="50px" />
-                        <p style={{fontSize: 10,width:"100px"}}>{category.name}</p>
+                        <p style={{fontSize: 13,width:"100px"}}>{category.name}</p>
                     </div>
                 </Link>
             </div>

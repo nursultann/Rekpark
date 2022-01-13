@@ -7,7 +7,7 @@ import {
   Form,
   notification
 } from "antd";
-import ProductFields from "../components/product/product_fields";
+import ProductFields from "../components/product/product_fields_update";
 import { setUser } from "../redux/actions/user_actions";
 import { setProductDetails } from "../redux/actions/product_actions";
 
@@ -104,7 +104,7 @@ const EditAd = ({match}) => {
                           console.log('formdata', formData);
                           const response = await api.updateProduct(match.params.id, formData);
                           if (response != null && response.success) {
-                            openNotification('success', 'Успешно сохранено!', null);
+                            openNotification('success', 'Изменения сохранены!', null);
                             history.push(`/products/${match.params.id}`);
                           } else {
                             openNotification('error', 'Не удалось сохранить!', null);
