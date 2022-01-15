@@ -33,7 +33,7 @@ const CategorySlider = () => {
         arrows: false,
         infinite: false,
         speed: 500,
-        slidesToShow: 11,
+        slidesToShow: 5,
         slidesToScroll: 1,
         nextArrow: <SampleArrow />,
         prevArrow: <SampleArrow />

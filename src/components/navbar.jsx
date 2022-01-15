@@ -47,7 +47,9 @@ const Navbar = () => {
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
               <div className="col-4 col-md-3 text-center">
-                <a className="blog-header-logo text-success" href="/"><img src={img} width="100%"/></a>
+                {/*<a className="blog-header-logo text-success" href="/">
+                  <img src={img} width="100%"/>
+                </a>*/}
               </div>
               <div class="col-6 d-md-flex justify-content-end align-items-center">
                 {token == null ?
@@ -73,6 +75,7 @@ const Navbar = () => {
               </div>
             </div>
           </header>
+          {/*
           <div className="nav-scroller mb-2 rounded px-2 py-1"  style={{backgroundColor:'#000fa6'}}>
             <nav className="nav d-flex justify-content-between">
               <a className="p-2 text-white" href="/about-us">О нас</a>
@@ -82,8 +85,8 @@ const Navbar = () => {
               <a className="p-2 text-white" href="/ad-manage">Рекламодателям</a>
             </nav>
           </div>
+          */}
         </div>
-          <hr/>  
         </div>
 
       </div>

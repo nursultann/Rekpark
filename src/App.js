@@ -26,16 +26,19 @@ import 'react-gallery-carousel/dist/index.css';
 import Settings from './screens/userSettings';
 import 'antd/dist/antd.css'; 
 import Wallets from './screens/wallets';
-import ForgotPassword from './screens/forgot-password';
+// import ForgotPassword from './screens/forgot-password';
+
 class App extends React.Component{
   render() {
     return(
       <div className="container-fluid">
         <div className="row">
             <div className="col-md-1 px-0 d-none d-md-block text-white text-center" 
-              style={{backgroundSize : "auto", backgroundPosition: "right top", 
+              style={{
+                backgroundSize : "auto", backgroundPosition: "right top", 
                 backgroundImage: "url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')",
-                backgroundRepeat: "no-repeat"}}>
+                backgroundRepeat: "no-repeat"
+              }}>
             </div>
             <div className="col-md-10 px-0" style={{ backgroundColor: '#fafafa' }}>
             <div className="col-md-12 bg-success px-0 text-white text-center">
@@ -60,7 +63,6 @@ class App extends React.Component{
                 <Route path="/contacts" component={Contacts}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/settings" component={Settings}/>
-                <Route path="/forgot_password" component={ForgotPassword}/>
               </Switch>
             </BrowserRouter>
             

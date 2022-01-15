@@ -13,9 +13,11 @@ import { Button } from "@mui/material";
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
 const Profile = () => {
+    
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
     }
+
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
     const {products} = useSelector((state) => state.product);
@@ -27,17 +29,20 @@ const Profile = () => {
             dispatch(setUser(user));
         }
     };
+
     const UserProducts = async () =>{
-        let _products = await api.fetchUserProducts({'sub': true});
+        let _products = await api.fetchUserProducts();
         if(_products!=null){
             dispatch(setProducts(_products));
             setOffset(offset + limit);
         }
     };
+
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
     }, []);
+
     return(
         user === null || user === undefined || user === "" 
             ? <div className="col-md-12">
@@ -93,7 +98,6 @@ const Profile = () => {
                       <div className="col-md-12">
                           <label>+{user.phone}</label>
                           <br/>
-                          <Link to="/wallets">Пополнить</Link>:{user.balance}сом
                       </div>
                       <hr/>
                 </div>
