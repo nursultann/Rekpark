@@ -113,6 +113,10 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     };
 
     return (
+        <>
+        <center className="pb-4">
+        <label style={{fontSize:25}}>Редактировать объявление</label>
+        </center>
         <Form 
             form={form}
             name="product_create"
@@ -281,6 +285,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             </Button>
             </center>
         </Form>
+        </>
     );
 };
 

@@ -20,3 +20,10 @@ export const setFavoriteProducts = (products)=>{
         payload: products,
     }
 }
+
+export const setCategoryProducts = (products) => {
+    return {
+        type: ActionTypes.SET_CATEGORY_PRODUCTS,
+        payload: products,
+    }
+}

@@ -9,6 +9,7 @@ import {
 } from "antd";
 import ProductFields from "../components/product/product_fields";
 import { setUser } from "../redux/actions/user_actions";
+import Footer from "../components/footer";
 
 const CreateAd = () => {
     const history = useHistory();
@@ -72,6 +73,7 @@ const CreateAd = () => {
             }} 
           /> 
         </div>
+        <Footer/>
       </div>     
     );
 }

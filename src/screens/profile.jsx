@@ -12,6 +12,10 @@ import { UserOutlined } from '@ant-design/icons';
 import { Button } from "@mui/material";
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
+import ProductItem from "../components/product/user_product_item";
+import { Tabs } from 'antd';
+
+const { TabPane } = Tabs;
 const Profile = () => {
     
     if (!localStorage.getItem('token')) {
@@ -98,58 +102,45 @@ const Profile = () => {
                       <div className="col-md-12">
                           <label>+{user.phone}</label>
                           <br/>
+                          <Link to="/wallets">Пополнить</Link>: {user.balance} сом
+                          <br/>
+                          <Link to="/settings">Настройки</Link>
                       </div>
                       <hr/>
                 </div>
                 <div className="col-md-8 mt-3 mt-md-0">
-                        <nav>
-                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-ad" role="tab" aria-controls="nav-home" aria-selected="true">Мои объявления</a>
-                                <a class="nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-active" role="tab" aria-controls="nav-profile" aria-selected="false">Активные</a>
-                                <a class="nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-notactive" role="tab" aria-controls="nav-contact" aria-selected="false">Неактивные</a>
-                            </div>
-                        </nav>
-                        <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="nav-ad" role="tabpanel" aria-labelledby="nav-home-tab">
-                                <div className="row">
-                                {/* {user.products.map((product)=>{
-                                    return(
-                                //         <div className="col-md-4 mt-2 mb-2">
-                                //     <div class="card">
-                                //     <img src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg" class="card-img-top" alt="..."/>
-                                //     <div class="card-body">
-                                //         <h5 class="card-title">З</h5>
-                                //         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                //         <Button size="small">Редактировать</Button>
-                                //         <Button size="small">Деактивировать</Button>
-                                //         <Button size="small">Поднять</Button>
-                                //     </div>
-                                //     </div>
-                                // </div>    
-                                    );
-                                })}     */}
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="nav-active" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <Tabs defaultActiveKey="1">
+                            <TabPane tab="Все объявления" key="1">
                             <div className="row">
-                                {
-
-                                }
-                                    <div className="col-md-4 mt-2 mb-2">
-                                        <div class="card">
-                                        <img src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg" class="card-img-top" alt="..."/>
-                                        <div class="card-body">
-                                            <h5 class="card-title">З</h5>
-                                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                            <a href="#" class="btn btn-primary">Редактировать</a>
-                                            <a href="#" class="btn btn-primary mt-2">Деактивировать</a>
+                                {products.map((product)=>{
+                                    return(
+                                        <>
+                                        <div className="col-xs-12 col-sm-6 col-xl-4 mt-3">
+                                        <ProductItem product={product}/>
                                         </div>
-                                        </div>
-                                    </div>
+                                        </>
+                                    );
+                                })}
                                 </div>
-                            </div>
-                            <div class="tab-pane fade" id="nav-notactive" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
-                        </div>
+                            </TabPane>
+                            <TabPane tab="Активные" key="2">
+                            <div className="row">
+                            {products.map((product)=>{
+                                    return(
+                                        <>
+                                        <div className="col-xs-12 col-sm-6 col-xl-4 mt-3">
+                                        <ProductItem product={product}/>
+                                        </div>
+                                        </>
+                                    );
+                                })}
+                                </div>
+                            </TabPane>
+                            <TabPane tab="Неактивные" key="3">
+                            Content of Tab Pane 3
+                            </TabPane>
+                        </Tabs>
+
                 </div>
             </div>
             </div>

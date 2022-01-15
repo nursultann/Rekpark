@@ -15,11 +15,9 @@ const Settings = () =>{
                     <div className='col-md-4'></div>
                     <div className='col-md-4'>
                     <h4>Настройки пользователя</h4>
-                        <label>Имя</label>
-                        <input type="text" className='form-control' />
-                        <label>Имя</label>
-                        <input type="text" className='form-control' />
-                        <label>Имя</label>
+                        <label>Имя пользователя</label>
+                        <input type="text" className='form-control'  />
+                        <label>Номер телефона:</label>
                         <input type="text" className='form-control' />
                     </div>
                     <div className='col-md-4'></div>

@@ -26,7 +26,7 @@ import 'react-gallery-carousel/dist/index.css';
 import Settings from './screens/userSettings';
 import 'antd/dist/antd.css'; 
 import Wallets from './screens/wallets';
-// import ForgotPassword from './screens/forgot-password';
+import ForgotPassword from './screens/forgot_password';
 
 class App extends React.Component{
   render() {
@@ -40,7 +40,7 @@ class App extends React.Component{
                 backgroundRepeat: "no-repeat"
               }}>
             </div>
-            <div className="col-md-10 px-0" style={{ backgroundColor: '#fafafa' }}>
+            <div className="col-md-10 px-0" style={{ backgroundColor: '#fff' }}>
             <div className="col-md-12 bg-success px-0 text-white text-center">
                 <img src={top} width="100%"/>
             </div>
@@ -54,15 +54,14 @@ class App extends React.Component{
                 <Route path="/products/create" component={CreateAd} />
                 <Route path="/register" component={Register}/>
                 <Route path="/profile"  component={Profile}/>
-                <Route path="/category" component={Category}/>
+                <Route path="/category/:id" component={Category}/>
                 <Route path="/about" component={About}/>
-                <Route path="/articles" component={Articles}/>
-                <Route path="/article" component={Article} />
-                <Route path="/wallets" component={Wallets}/>
-                <Route path="/wallet/:wallet" component={Wallet}/>
                 <Route path="/contacts" component={Contacts}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/settings" component={Settings}/>
+                <Route path="/forgot_password" component={ForgotPassword}/>
+                <Route path="/wallets" component={Wallets}/>
+                <Route path="/wallet" component={Wallet}/>
               </Switch>
             </BrowserRouter>
             
