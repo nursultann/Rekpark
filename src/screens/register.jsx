@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,Link } from "react";
 import Navbar from "../components/navbar";
 import {firebase, auth} from "../config/firebase_config";
 import * as firebaseui from "firebaseui";
@@ -27,6 +27,7 @@ const Register = () => {
     const [uuid,setUuid] = useState();
     const [countrycode,setCountryCode] = useState();
     const [current, setCurrent] = useState(0);
+    const [link,setLink] = useState(false);
     const signIn = async ()  => {
         const check = await checkPhone(countrycode+phoneNumber);
         if(check==true){
@@ -38,22 +39,20 @@ const Register = () => {
             setFinal(result);
             message.success('Код потверждения отправлен!', 10);
             setCurrent(current+1);
-            var t = 59;
-            function i(){
-                t-=1;
-                setTimer(t);
-            }
-            function time(){
-             if(t>0){
-            var time = setInterval(i,1000);
-             }else if(t<=0){
-                clearInterval(time);
-                message.info('Время вышло!', 10);
-                window.location.reload(); 
-             }
-            }
-            time();
-            setTimeout(time,60000);
+            setLink(false); 
+                var t = 59;
+                function i(){
+                    t-=1;
+                    setTimer(t);
+                }
+                var interval = setInterval(i,1000);
+                function time(){
+                    clearInterval(interval);
+                    setLink(true);
+                    message.info('Время вышло!', 10);
+                    // window.location.reload(); 
+                }
+                setTimeout(time,59000);
         }).catch((err) => {
             message.error('Номер указан неверно!', 10);
                 window.location.reload()
@@ -61,7 +60,6 @@ const Register = () => {
     }
     };
     const validateOtp = () => {
-        clearInterval(signIn.time);
         if (otp === null || final === null)
             return;
         final.confirm(otp).then((result) => {
@@ -128,7 +126,6 @@ const Register = () => {
                                                 placeholder="код страны"
                                                 showSearch
                                                 optionFilterProp="children"
-                                                onChange={onChange}
                                                 filterOption={(input, option) =>
                                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                                 }
@@ -149,25 +146,49 @@ const Register = () => {
     );
     const step2=(
                     <div className="form-group col-md-6 py-5 px-5 shadow">
-                        
-                    <input className="form-control" type="text" placeholder={"Код потверждения"}
-                        onChange={(e) => { setOtp(e.target.value) }}></input>
-                    <br /><br />
-                    <div className="text-secondary">{":"+timer}</div>
-                    <button className="form-control" onClick={validateOtp}>Подтвердить</button>
+                     <Form.Item
+                     name="otp"
+                     rules={[{ required: true, message: 'Пожалуйста введите код потверждения!' }]}
+                     >      
+                    <Input className="form-control" type="text" placeholder="Код потверждения"
+                    onChange={(e) => { setOtp(e.target.value) }}></Input>
+                    </Form.Item>
+                    <center>
+                        <div className="text-secondary">{":"+timer}</div>
+                        <a href="/register" style={{display: link ? "block" : "none"}}>Вернуться назад</a>
+                    <Form.Item wrapperCol={{offset:0}}>
+                    <Button className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
+                    </Form.Item>
+                    </center>
                     </div>);
     const step3 = (
                     <div className="form-group col-md-6 shadow">
-                    <input className="form-control mt-3" placeholder="Имя" value={userName} 
-                    onChange={(e) =>{setUserName(e.target.value)}} />
-                    <input className="form-control mt-3" placeholder="пароль" value={userPassword}
-                    onChange={(e) =>{setPassword(e.target.value)}}
-                    />
-                    
-                    <input className="form-control mt-3" placeholder=" повторить пароль" value={passwordCheck}
-                    onChange={(e) =>{checkPassword(e.target.value)}}
-                    />
-                    <button className="btn btn-outline-primary mt-3" onClick={addUser}>Сохранить изменения</button>
+                    <Form.Item
+                     name="password"
+                     rules={[{ required: true, message: 'Пожалуйста введите имя пользователя!' }]}
+                     >      
+                    <Input className="form-control" type="text" placeholder="Имя пользователя"
+                    onChange={(e) => {setUserName(e.target.value)}}></Input>
+                    </Form.Item>
+                    <Form.Item
+                     name="password"
+                     rules={[{ required: true, message: 'Пожалуйста введите новый пароль!' }]}
+                     >      
+                    <Input className="form-control" type="text" placeholder="Новый пароль"
+                    onChange={(e) => {setPassword(e.target.value)}}></Input>
+                    </Form.Item>
+                    <Form.Item
+                     name="password"
+                     rules={[{ required: true, message: 'Пожалуйста введите новый пароль снова!' }]}
+                     >      
+                    <Input className="form-control" type="text" placeholder="Повторить пароль"
+                    onChange={(e) => {checkPassword(e.target.value)}}></Input>
+                    </Form.Item>
+                    <center>
+                    <Form.Item wrapperCol={{offset:0}}>
+                    <Button className='col-md-7' onClick={addUser}>Завершить регистрацию</Button>
+                    </Form.Item>
+                    </center>
                 </div>
     );                
     const steps = [

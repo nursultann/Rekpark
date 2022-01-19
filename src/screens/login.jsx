@@ -3,14 +3,16 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { login } from "../api/user";
 import { message } from 'antd';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox,Select } from 'antd';
+const { Option } = Select;
 const key = 'updatable';
 const Sign  = () => {
     const [phoneNumber, setLogin] = useState();
     const [password,setPassword]=useState();
+    const [countrycode,setCountryCode] = useState();
     const signIn = async ()=>{
         if (password === "" || phoneNumber.length < 9) return;
-        login(phoneNumber, password, onLoginSuccess, onLoginError);
+        login(countrycode,phoneNumber, password, onLoginSuccess, onLoginError);
     }
 
     const onLoginSuccess = (data) => {
@@ -26,6 +28,10 @@ const Sign  = () => {
         console.log('error', data);
         message.error('Номер или пароль указан неверно!', 10);
     };
+    function onChange(value) {
+        console.log(`selected ${value}`);
+        setCountryCode(value);
+      } 
     return(
         <div>
             <Navbar/>
@@ -41,13 +47,23 @@ const Sign  = () => {
                         autoComplete="off"
                         >
                         <Form.Item
-                            label="Телефон"
-                            name="phone"
-                            rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
-                        >
-                            <Input onChange={(e) => {setLogin(e.target.value)}} placeholder="996 XXX XXX XXX" />
-                        </Form.Item>
-
+                                            label="Телефон"
+                                            name="phone"
+                                            rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
+                                        >     
+                                            <Input addonBefore={<Select
+                                                placeholder="код страны"
+                                                showSearch
+                                                optionFilterProp="children"
+                                                onChange={onChange}
+                                                filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                >
+                                                <Option value="996">+996</Option>
+                                                <Option value="7">+7</Option>
+                                            </Select>} onChange={(e) => {setLogin(e.target.value)}} type="number" placeholder="Номер телефона"  />
+                                        </Form.Item>
                         <Form.Item
                             label="Пароль"
                             name="password"

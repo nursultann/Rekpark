@@ -21,8 +21,6 @@ const Main = () => {
 
   const limit = 20;
   const [offset, setOffset] = useState(0);
-
-
   const fetchInitProducts = async () => {
     let _products = await api.fetchProducts({'sub': true, 'with': 'user'});
     if (_products != null) {

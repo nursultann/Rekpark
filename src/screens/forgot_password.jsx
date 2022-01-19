@@ -1,5 +1,5 @@
 import React from 'react';
-import {useState,useEffect} from 'react';
+import {useState,useEffect,Link} from 'react';
 import { checkPhone, passwordChange, login } from "../api/user";
 import {firebase, auth} from "../config/firebase_config";
 import * as firebaseui from "firebaseui";
@@ -20,6 +20,8 @@ const [timer,setTimer] = useState(59);
 const [password,setPassword] = useState();
 const [passwordCheck,checkPassword] = useState();
 const [uuid,setUuid] = useState();
+const [link,setLink] = useState(false);
+const result = "";
 const getAccessCode = async ()=>{
     const check = await checkPhone(countryСode+phoneNumber);
         if(check==false){
@@ -30,23 +32,20 @@ const getAccessCode = async ()=>{
                 setFinal(result);
                 message.success('Код потверждения отправлен!', 10);
                 setCurrent(current+1);
-                // var t = 59;
-                // function i(){
-                //     t-=1;
-                //     setTimer(t);
-                // }
-                // function time(){
-                //     if(t>0){
-                //    var time = setInterval(i,1000);
-                //     }else if(t<=0){
-                //        clearInterval(time);
-                //        message.info('Время вышло!', 10);
-                //        window.location.reload(); 
-                //     }
-                //    }
-                //    time();
-                //    setTimeout(time,60000);
-
+                setLink(false); 
+                var t = 59;
+                function i(){
+                    t-=1;
+                    setTimer(t);
+                }
+                var interval = setInterval(i,1000);
+                function time(){
+                    clearInterval(interval);
+                    setLink(true);
+                    message.info('Время вышло!', 10);
+                    // window.location.reload(); 
+                }
+                setTimeout(time,59000);
         }).catch((err) => {
             message.error('Номер указан неверно или было очень много попыток потверждения номера!', 10);
             alert(err);
@@ -145,22 +144,42 @@ const step1 = (
 );
 const step2=(
                 <div className="form-group col-md-6">
-                <input className="form-control" type="text" placeholder={"Код потверждения"}
-                    onChange={(e) => { setOtp(e.target.value) }}></input>
-                <br /><br />
-                <div className="text-secondary">{":"+timer}</div>
-                <button className="form-control" onClick={validateOtp}>Подтвердить</button>
+                     <Form.Item
+                     name="otp"
+                     rules={[{ required: true, message: 'Пожалуйста введите код потверждения!' }]}
+                     >      
+                    <Input className="form-control" type="text" placeholder="Код потверждения"
+                    onChange={(e) => { setOtp(e.target.value) }}></Input>
+                    </Form.Item>
+                    <center>
+                        <div className="text-secondary">{":"+timer}</div>
+                        <a href="/forgot_password" style={{display: link ? "block" : "none"}}>Вернуться назад</a>
+                    <Form.Item wrapperCol={{offset:0}}>
+                    <Button className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
+                    </Form.Item>
+                    </center>
                 </div>);
 const step3 = (
                 <div className="form-group col-md-6">
-                <input className="form-control mt-3" placeholder="пароль"
-                onChange={(e) =>{setPassword(e.target.value)}}
-                />
-                
-                <input className="form-control mt-3" placeholder=" повторить пароль"
-                onChange={(e) =>{checkPassword(e.target.value)}}
-                />
-                <button className="btn btn-outline-primary mt-3" onClick={saveChanges}>Сохранить новый пароль</button>
+                    <Form.Item
+                     name="password"
+                     rules={[{ required: true, message: 'Пожалуйста введите новый пароль!' }]}
+                     >      
+                    <Input className="form-control" type="text" placeholder="Новый пароль"
+                    onChange={(e) => {setPassword(e.target.value)}}></Input>
+                    </Form.Item>
+                    <Form.Item
+                     name="password"
+                     rules={[{ required: true, message: 'Пожалуйста введите новый пароль снова!' }]}
+                     >      
+                    <Input className="form-control" type="text" placeholder="Повторить пароль"
+                    onChange={(e) => {checkPassword(e.target.value)}}></Input>
+                    </Form.Item>
+                    <center>
+                    <Form.Item wrapperCol={{offset:0}}>
+                    <Button className='col-md-7' onClick={saveChanges}>Сохранить новый пароль</Button>
+                    </Form.Item>
+                    </center>
             </div>
 );                
 const steps = [
