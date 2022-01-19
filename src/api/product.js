@@ -1,12 +1,10 @@
 import ApiClient from "./ApiClient";
-
 export const fetchProducts = async (params = { limit: 20, offset: 0 }) => {
     try {
         if (!params.hasOwnProperty('sub')) {
             if (!params.hasOwnProperty('offset')) params['offset'] = 0;
             if (!params.hasOwnProperty('limit')) params['limit'] = 20;
         }
-        
         const response = await ApiClient.get('/products', params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
@@ -80,18 +78,6 @@ export const fetchUserProducts = async (params = { limit: 20, offset: 0 }) => {
         }
     } catch (error) {
         console.log('fetching products error ', error);
-    }
-
-    return null;
-};
-export const fetchProductsByCategory = async (id) => {
-    try {
-        const response = await ApiClient.get(`/products?search=category_id:${id}&searchFields=category_id:=`);
-        if (response.status == 200 || response.status == 201) {
-            return response.data.data;
-        }
-    } catch (error) {
-        console.log('fetching products error '+id, error);
     }
 
     return null;

@@ -7,7 +7,7 @@ import {
   Form,
   notification
 } from "antd";
-import ProductFields from "../components/product/product_fields_update";
+import ProductFields from "../components/product/product_fields";
 import { setUser } from "../redux/actions/user_actions";
 import { setProductDetails } from "../redux/actions/product_actions";
 
@@ -85,6 +85,9 @@ const EditAd = ({match}) => {
         <div>
             <Navbar/>
             <div className="col-md-8 py-5">
+            <center className="pb-4">
+            <label style={{fontSize:25}}>Редактировать объявление</label>
+            </center>
                 {ready ? <ProductFields
                     form={form} 
                     loading={loading}

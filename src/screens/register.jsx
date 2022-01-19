@@ -5,7 +5,7 @@ import * as firebaseui from "firebaseui";
 import ApiClient from "../api/ApiClient";
 import { checkPhone, register} from "../api/user";
 import Footer from "../components/footer";
-import { Steps, Button, message,Form, Input,Select} from 'antd';
+import { Steps, Button, message,Form, Input,Select,InputNumber} from 'antd';
 import { Alert } from 'antd';
 
 // const countryCodes = [
@@ -61,11 +61,12 @@ const Register = () => {
     }
     };
     const validateOtp = () => {
+        clearInterval(signIn.time);
         if (otp === null || final === null)
             return;
         final.confirm(otp).then((result) => {
             message.success('Код потверждения выслан', 10);
-            setUuid(result.user.uuid);
+            setUuid(result.user.uid);
             setCurrent(current+1);
             // result.user.uuid;
             
@@ -84,9 +85,9 @@ const Register = () => {
                 'uuid': uuid,
             };
             console.log('params', params);
+            message.loading({ content: 'Загрузка...', key });
             const result = await register(params, function (data) {
                 localStorage.setItem('token', data.api_token);
-                message.loading({ content: 'Загрузка...', key });
                 setTimeout(() => {
                     message.success({ content: 'Успешно!', key, duration: 2 });
                 }, 1000);
@@ -107,40 +108,44 @@ const Register = () => {
         window.verify.render();
     }, []);
     const step1 = (
-        <div className="form-group col-md-6 border py-5 px-5 bg-white shadow text-center">
-                        <label style={{fontSize:20}}>Регистрация профиля</label>
-                        <div className="row px-3 mt-4">
-                            <div className="col-md-4">    
-                                    <Select
-                                        placeholder="код страны"
-                                        showSearch
-                                        optionFilterProp="children"
-                                        onChange={onChange}
-                                        filterOption={(input, option) =>
-                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                        }
-                                        style={{width:"100%"}}
+        <div className="col-md-12 d-flex justify-content-center">
+                            <div className="col-md-5 py-3 shadow bg-white text-center">
+                                <label className="py-3" style={{fontSize:20}}>Регистрация профиля</label><br/>    
+                            
+                                        <Form
+                                        name="basic"
+                                        labelCol={{ span: 5 }}
+                                        wrapperCol={{ span: 18 }}
+                                        initialValues={{ remember: true }}
+                                        autoComplete="off"
                                         >
-                                        <Option value="996">+996</Option>
-                                        <Option value="7">+7</Option>
-                                    </Select>
-                            </div>
-                            <div className="col-md-8">            
-                                    <Form.Item
-                                        name="username"
-                                        rules={[{ required: true, message: 'Пожалуйста заполни это поле!' }]}
-                                        style={{width:"100%"}}
-                                    >
-                                        <Input type="number" placeholder="Без кода страны и +код страны" value={phoneNumber} onChange={(e) => { 
-                                setPhoneNumber(e.target.value)}} />
-                                    </Form.Item>
+                                        <Form.Item
+                                            label="Телефон"
+                                            name="phone"
+                                            rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
+                                        >     
+                                            <Input addonBefore={<Select
+                                                placeholder="код страны"
+                                                showSearch
+                                                optionFilterProp="children"
+                                                onChange={onChange}
+                                                filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                >
+                                                <Option value="996">+996</Option>
+                                                <Option value="7">+7</Option>
+                                            </Select>} onChange={(e) => {setPhoneNumber(e.target.value)}} type="number" placeholder="(XXX) XXX XXX"  />
+                                        </Form.Item>
+                                        <div className="my-3" id="recaptcha-container"></div>
+                                        <Form.Item wrapperCol={{offset:0}}>
+                                            <Button className="col-md-7" htmlType="submit" onClick={signIn}>
+                                            Зарегистрироваться
+                                            </Button>
+                                        </Form.Item>
+                                        </Form>
                             </div>    
-                        </div>
-                            <div className="row py-2 px-3">
-                                <div className="mt-3" id="recaptcha-container"></div>        
-                                <button className="col-md-12 btn btn-outline-primary mt-3" onClick={signIn}>Зарегистрироваться</button>  
-                            </div>
-                        </div>
+        </div>
     );
     const step2=(
                     <div className="form-group col-md-6 py-5 px-5 shadow">
@@ -184,7 +189,7 @@ const Register = () => {
             <Navbar/>
             <div className="col-md-12" style={{height:"auto"}}>
             <div className="col-md-12 d-flex justify-content-center mt-2 mt-md-3">
-                <div className="col-md-6 bg-white md-rounded-pill shadow py-2 py-3">
+                <div className="col-md-6 bg-white md-rounded-pill shadow-sm py-2 py-3">
                 <Steps current={current}>
                     {steps.map(item => (
                     <Step key={item.title} title={item.title} />

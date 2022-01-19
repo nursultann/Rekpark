@@ -83,7 +83,7 @@ const SearchBar = () => {
                   )  
               })}
         </TreeSelect>
-        <Search className="ml-2" placeholder="Поиск..." style={{ width: "100%" }} />
+        <Input className="ml-2" placeholder="Поиск..." style={{ width: "100%" }} />
         <Button type="primary">
               Поиск
         </Button>

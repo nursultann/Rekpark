@@ -9,27 +9,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategoryProducts } from "../api";
 import { Skeleton, Grid } from "@mui/material";
 import ProductItem from "../components/product/product_item";
-import SubCategories from "../components/category/sub_categories ";
-const Category = ({match})=> {
+const SubCategory = ({match})=> {
     const dispatch = useDispatch();
-    const [categoryProducts,setProducts] = useState();
-    const [ category, setCategory ] = useState();
-    const fetchCategory = async () => {
+    const {categoryProducts} = useSelector((state) => state.product);
+    const fetchCategoryProducts = async () => {
+        console.log(1);
         const category = await fetchCategoryProducts(match.params.id);
+        console.log(category);
         if (category != null) {
-            console.log(category.advertisements);
-            setCategory(category);
-            setProducts(category.advertisements);
             dispatch(setCategoryProducts(category.advertisements));
         }
     };
     useEffect(() => {
-        fetchCategory();
+        fetchCategoryProducts();
       }, []);
         return(
             <div>
             <Navbar />
-            <SubCategories category={category}/>
             <div className="row mx-0 mt-3">
                 <div className="col-md-12">
                 <label style={{fontSize:18}}>По категории</label>
@@ -67,4 +63,4 @@ const Category = ({match})=> {
            </div>
         );
 }
-export default Category;
+export default SubCategory;

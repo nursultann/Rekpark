@@ -164,11 +164,11 @@ const Navbar = () => {
           </header>
           <div className="nav-scroller mb-2 rounded px-2 py-1"  style={{backgroundColor:'#000fa6'}}>
             <nav className="nav d-flex justify-content-between">
-              <a className="p-2 text-white" href="/about-us">О нас</a>
+              <a className="p-2 text-white" href="/about_us">О нас</a>
               <a className="p-2 text-white" href="products">Объявления</a>
               <a className="p-2 text-white" href="/articles">Статьи</a>
               <a className="p-2 text-white" href="/contacts">Контакты</a>
-              <a className="p-2 text-white" href="/ad-manage">Рекламодателям</a>
+              <a className="p-2 text-white" href="/ad_manage">Рекламодателям</a>
             </nav>
           </div>
         </div> 

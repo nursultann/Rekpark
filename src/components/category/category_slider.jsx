@@ -27,11 +27,6 @@ const CategorySlider = () => {
             dispatch(setCategories(categories));
         }
     };
-    const history = useHistory();
-    const navigateToCategory = (category) => {
-        history.push(`category/${category.id}`);
-    };
-
     const sliderSettings = {
         dots: true,
         arrows: false,

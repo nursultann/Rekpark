@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
 import top from './img/top.png';
-import {Route, BrowserRouter, Switch} from 'react-router-dom';
+import {Route, BrowserRouter,useRouteMatch, Switch} from 'react-router-dom';
 import React from 'react';
 import Navbar from './components/navbar';
 import Ad from './screens/ad';
@@ -27,8 +27,10 @@ import Settings from './screens/userSettings';
 import 'antd/dist/antd.css'; 
 import Wallets from './screens/wallets';
 import ForgotPassword from './screens/forgot_password';
-class App extends React.Component{
-  render() {
+import SubCategory from './screens/sub_category';
+import SearchResult from './screens/search_result';
+
+const App = ({match}) => {
     return(
       <div className="container-fluid">
         <div className="row">
@@ -52,13 +54,17 @@ class App extends React.Component{
                 <Route path="/register" component={Register}/>
                 <Route path="/profile"  component={Profile}/>
                 <Route path="/category/:id" component={Category}/>
-                <Route path="/about" component={About}/>
+                {/* <Route path="/category/:id/sub_category/:id" component={SubCategory}/> */}
+                <Route path="/about_us" component={About}/>
                 <Route path="/contacts" component={Contacts}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/settings" component={Settings}/>
                 <Route path="/forgot_password" component={ForgotPassword}/>
                 <Route path="/wallets" component={Wallets}/>
                 <Route path="/wallet" component={Wallet}/>
+                <Route path="/articles" component={Articles}/>
+                <Route path="/article" component={Article}/>
+                <Route path="/search_result" component={SearchResult}/>
               </Switch>
             </BrowserRouter>
             
@@ -72,7 +78,6 @@ class App extends React.Component{
         </div>
       </div>
     );
-  }
 }
 
 

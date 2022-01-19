@@ -9,7 +9,7 @@ class Articles extends React.Component{
             <div className="row px-2">
             <div className="col-md-10">
                <div className="col-md-12">
-                   <h3 className="">Статьи и новости</h3>
+                   <label style={{fontSize:28}} className="">Статьи и новости</label>
                     <hr/>
                </div>
                <a class="nav-link" href="/article">

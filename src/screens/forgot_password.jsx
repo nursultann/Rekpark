@@ -1,13 +1,15 @@
 import React from 'react';
 import {useState,useEffect} from 'react';
-import { checkPhone, register} from "../api/user";
+import { checkPhone, passwordChange, login } from "../api/user";
 import {firebase, auth} from "../config/firebase_config";
 import * as firebaseui from "firebaseui";
-import ApiClient from "../api/ApiClient";
-import { Steps, Button, message } from 'antd';
+import { Steps, Button, message,Form, Input,Select,InputNumber} from 'antd';
 import Navbar from '../components/navbar';
-const { Step } = Steps;
+import Footer from '../components/footer';
 
+const { Option } = Select;
+const { Step } = Steps;
+const key = 'updatable';
 const ForgotPassword = ()=>{
 const [phoneNumber,setPhoneNumber] = useState();
 const [countryСode,setCountryCode] = useState();
@@ -17,79 +19,129 @@ const [otp, setOtp] = useState('');
 const [timer,setTimer] = useState(59);
 const [password,setPassword] = useState();
 const [passwordCheck,checkPassword] = useState();
+const [uuid,setUuid] = useState();
 const getAccessCode = async ()=>{
     const check = await checkPhone(countryСode+phoneNumber);
         if(check==false){
-            alert("Такого пользователя не удалось найти");
+            message.warning('Такого пользователя не удалось найти!', 10);
         }else if(check==true){
             if (phoneNumber === "" || phoneNumber.length < 9) return;
             auth.signInWithPhoneNumber(`+${countryСode+phoneNumber}`, window.verify).then((result) => {
                 setFinal(result);
-                alert("Код потверждения отправлен");
+                message.success('Код потверждения отправлен!', 10);
                 setCurrent(current+1);
-                var t = 59;
-                function i(){
-                    t-=1;
-                    setTimer(t);
-                }
-                function time(){
-                    if(t>0){
-                   var time = setInterval(i,1000);
-                    }else if(t<=0){
-                       clearInterval(time);
-                       alert("Время вышло!");
-                       window.location.reload(); 
-                    }
-                   }
-                   time();
-                   setTimeout(time,60000);
+                // var t = 59;
+                // function i(){
+                //     t-=1;
+                //     setTimer(t);
+                // }
+                // function time(){
+                //     if(t>0){
+                //    var time = setInterval(i,1000);
+                //     }else if(t<=0){
+                //        clearInterval(time);
+                //        message.info('Время вышло!', 10);
+                //        window.location.reload(); 
+                //     }
+                //    }
+                //    time();
+                //    setTimeout(time,60000);
 
         }).catch((err) => {
+            message.error('Номер указан неверно или было очень много попыток потверждения номера!', 10);
             alert(err);
             window.location.reload()
         });
     }
 }
 const validateOtp = () => {
+    // clearInterval(getAccessCode.time);
     if (otp === null || final === null)
         return;
     final.confirm(otp).then((result) => {
-        alert("Код потверждения выслан");
-        // setUuid(result.user.uuid);
+        message.success('Код потверждения верный', 10);
+        setUuid(result.user.uid);
+        console.log('firebase result', result);
         setCurrent(current+1);
         // result.user.uuid;
         
         console.log('success ', result);
         
     }).catch((err) => {
-        alert("Код потверждения введен неверно!");
+        message.error('Код потверждения введен неверно!', 10);
     })
 }
-const saveChanges = ()=>{
+const saveChanges = async ()=>{
     if(password == passwordCheck){
         const params = {
-            'password': password,
-            
+            'new_password': password,
+            'uuid': uuid,
+            'phone':countryСode + phoneNumber,
         };
+        message.loading({ content: 'Загрузка...', key });
+        const result = await passwordChange(params, async function (data) {
+            const loginResult = await login(countryСode + phoneNumber, password, function (user) {
+                localStorage.setItem('token', user.api_token);
+                window.location.href = '/profile';
+            }, function (data) {
+                message.loading({ content: 'Пароль успешно обновлен!', key });
+                window.location.href = '/login';
+            });
+        }, function (data) {
+            console.log("Error", data);
+        });
+    }else{
+        message.error('Пароли не совпадают!', 10);
     }
+    
 }
+function onChange(value) {
+    console.log(`selected ${value}`);
+    setCountryCode(value);
+  }  
+useEffect(() => {
+    window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+    window.verify.render();
+}, []);
 const step1 = (
-    <div className="form-group col-md-6 border py-5 px-5 bg-white shadow-sm">
-                    <h4 className="text-center">Потверждение номера</h4>
-                    <div className="row px-3 mt-4">    
-                        <select className="form-control col-md-3" onChange={(e)=>{setCountryCode(e.target.value)}}>
-                            <option selected disabled>код страны</option>
-                            <option value="996">+996</option>
-                            <option value="7">+7</option>
-                        </select>        
-                        <input type="number" className="form-control col-12 col-md-8 mt-3 mt-md-0 ml-md-3" placeholder="без код страны и 0, без +код страны" value={phoneNumber} onChange={(e) => { 
-                        setPhoneNumber(e.target.value) }}
-                            placeholder="Телефон" />
-                    </div>
-                        <div className="row py-4 px-3">        
-                            <button className="col-md-12 btn btn-outline-primary mt-3" onClick={getAccessCode}>Потдвердить номер</button>  
-                        </div>
-                    </div>
+    <div className="col-md-12 d-flex justify-content-center">
+                            <div className="col-md-5 py-3 shadow bg-white text-center">
+                                <label className="py-3" style={{fontSize:20}}>Восстановление пароля</label><br/>    
+                            
+                                        <Form
+                                        name="basic"
+                                        labelCol={{ span: 5 }}
+                                        wrapperCol={{ span: 18 }}
+                                        initialValues={{ remember: true }}
+                                        autoComplete="off"
+                                        >
+                                        <Form.Item
+                                            label="Телефон"
+                                            name="phone"
+                                            rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
+                                        >     
+                                            <Input addonBefore={<Select
+                                                placeholder="код страны"
+                                                showSearch
+                                                optionFilterProp="children"
+                                                onChange={onChange}
+                                                filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                >
+                                                <Option value="996">+996</Option>
+                                                <Option value="7">+7</Option>
+                                            </Select>} onChange={(e) => {setPhoneNumber(e.target.value)}} type="number" placeholder="(XXX) XXX XXX"  />
+                                        </Form.Item>
+                                        <div className="my-3" id="recaptcha-container"></div>
+                                        <Form.Item wrapperCol={{offset:0}}>
+                                            <Button className="col-md-7" htmlType="submit" onClick={getAccessCode}>
+                                            Получить код потверждения
+                                            </Button>
+                                        </Form.Item>
+                                        </Form>
+                            </div>    
+        </div>
 );
 const step2=(
                 <div className="form-group col-md-6">
@@ -101,11 +153,11 @@ const step2=(
                 </div>);
 const step3 = (
                 <div className="form-group col-md-6">
-                <input className="form-control mt-3" placeholder="пароль" value={password}
+                <input className="form-control mt-3" placeholder="пароль"
                 onChange={(e) =>{setPassword(e.target.value)}}
                 />
                 
-                <input className="form-control mt-3" placeholder=" повторить пароль" value={passwordCheck}
+                <input className="form-control mt-3" placeholder=" повторить пароль"
                 onChange={(e) =>{checkPassword(e.target.value)}}
                 />
                 <button className="btn btn-outline-primary mt-3" onClick={saveChanges}>Сохранить новый пароль</button>
@@ -143,6 +195,7 @@ const steps = [
                 {steps[current].content}
             </div>   
             </div>
+            <Footer/>
         </div>
     );
 }

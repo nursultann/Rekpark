@@ -20,6 +20,16 @@ export const register = async (params , onSuccess = null, onError = null) => {
         if (onError != null) onError(error);
     });
 };
+export const passwordChange = async (params , onSuccess = null, onError = null) => {
+    console.log('params', params);
+    await ApiClient.post('/user/change/password', params).then(response => {
+        if (response.status == 200 || response.status == 201) {
+            if (onSuccess != null) onSuccess(response.data.data);
+        }
+    }).catch(error => {
+        if (onError != null) onError(error);
+    });
+};
 
 export const userDetails = async (params) => {
     try {

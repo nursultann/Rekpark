@@ -43,6 +43,9 @@ const CreateAd = () => {
       <div>
         <Navbar/>
         <div className="col-md-8 py-5">
+        <center className="pb-4">
+        <label style={{fontSize:25}}>Создать новое объявление</label>
+        </center>
           <ProductFields 
             form={form}
             loading={loading}

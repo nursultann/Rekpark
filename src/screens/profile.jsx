@@ -99,6 +99,8 @@ const Profile = () => {
                           <br/>
                           <Link to="/wallets">Пополнить</Link>: {user.balance} сом
                           <br/>
+                          <Link to="/profile">Мои объявления</Link>
+                          <br/>
                           <Link to="/settings">Настройки</Link>
                       </div>
                       <hr/>

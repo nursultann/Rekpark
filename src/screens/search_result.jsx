@@ -1,14 +1,13 @@
 import React from "react";
 import Navbar from "../components/navbar";
-import Navbar from '../components/navbar';
+import Footer from "../components/footer";
 
-class SearchResult extends React.Component {
-    render() {
+const SearchResult = ()=> {
         return(
             <div>
                 <Navbar />
-            <h3>Результаты поиска</h3>
             <div className="col-md-12">
+                <label style={{fontSize:20}}>Результаты поиска</label>
                 <div className="row">
                     <div className="col-md-4 mt-2 mb-2">
                             <div class="card">
@@ -25,7 +24,6 @@ class SearchResult extends React.Component {
             <Footer/>
             </div> 
         );
-    }
 }
 
 export default SearchResult;

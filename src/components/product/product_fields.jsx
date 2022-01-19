@@ -18,18 +18,15 @@ const { TreeNode } = TreeSelect;
 const { Option } = Select;
 
 const ProductFields = ({ form, loading = false, onSend }) => {
-
     const dispatch = useDispatch();
     const { categories } = useSelector((state) => state.category);
     const { currencies, regions } = useSelector((state) => state.main);
-
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
     const [cities, setCities] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [files, setFiles] = useState([]);
     const [phoneOptions, setPhoneOptions] = useState([]);
-
     const fetchCategoriesTree = async () => {
         const categories = await api.fetchCategoriesTree();
         if (categories != null) {
@@ -113,6 +110,8 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     };
 
     return (
+      <>
+        
         <Form 
             form={form}
             name="product_create"
@@ -281,6 +280,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             </Button>
             </center>
         </Form>
+        </>
     );
 };
 

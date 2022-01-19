@@ -28,6 +28,7 @@ const ProductItem = ({product}) => {
     var Fulldate = new Date(product.created_at);
     var date = Fulldate.getDate();
     var month = Fulldate.getMonth();
+    month+=1;
     var year = Fulldate.getFullYear();
     var day = Fulldate.getDay();
     var allDate = date+'/'+month+'/'+year;
@@ -55,8 +56,8 @@ const ProductItem = ({product}) => {
         update = "Сегодня в "+updated_hour+":"+updated_min;
     } else if (((updated_day < nowDay && updated_day + 1 == nowDay) || updated_day == nowDay + 6) && updated_date < nowDate && updated_month == nowMonth && updated_year == nowYear ) {
         update = "Вчера в "+updated_hour+":"+updated_min;
-    } else if (((updated_day < nowDay && updated_day + 2 == nowDay) || updated_day) == nowDay + 5 && updated_date < nowDate && updated_month == nowMonth && updated_year == nowYear ) {
-        update = "Позавчера";
+    } else if (((updated_day < nowDay && updated_day + 2 == nowDay) || updated_day == nowDay + 5) && updated_date < nowDate && updated_month == nowMonth && updated_year == nowYear ) {
+        update = "Позавчера в "+updated_hour+":"+updated_min;;
     }
     const image = product.has_media 
         ? product.media[0].original_url 
@@ -71,7 +72,7 @@ const ProductItem = ({product}) => {
                         : <></>}
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">{product.title}</h5>
+                    <label style={{fontSize:20}} class="card-title">{product.price +" "+ product.currency_symbol}</label>
                     <p class="card-text" style={{
                                         lineHeight:"30px",
                                         textOverflow: "ellipsis",
