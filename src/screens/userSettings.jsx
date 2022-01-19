@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from 'react-router-dom';
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { userDetails } from "../api/user";
+import { userDetails, userSettings } from "../api/user";
 import { useEffect,useState } from "react";
 import Skeleton from '@mui/material/Skeleton';
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,7 @@ import { Input } from 'antd';
 import { Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 const { TabPane } = Tabs;
+const key = 'updatable';
 function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -39,6 +40,8 @@ function getBase64(img, callback) {
 const Settings = () => {
     const [loading,setLoading] = useState(false);
     const [imageUrl,setImageurl] = useState();
+    const [name,setName] = useState();
+    const [userid,setUserid] = useState();
     const handleChange = (info) => {
         if (info.file.status === 'uploading') {
           setLoading(true);
@@ -70,6 +73,7 @@ const Settings = () => {
         const user = await userDetails(); 
         if(user != null){
             dispatch(setUser(user));
+            setUserid(user.id);
         }
     };
     const UserProducts = async () =>{
@@ -79,6 +83,25 @@ const Settings = () => {
             setOffset(offset + limit);
         }
     };
+    const saveSettings = async ()=>{
+        if (name != null || name.length > 4){
+        const params = {
+            'name': name,
+        }
+        console.log(userid);
+        message.loading({ content: 'Загрузка...', key });
+        const result = await userSettings(params,userid, function (data) {
+            setTimeout(() => {
+                message.success({ content: 'Успешно!', key, duration: 2 });
+            }, 1000);
+            window.location.href = '/profile';
+        }, function (data) {
+            console.log("Error");
+        });
+    }else{
+        message.error('Имя не может быть короче 4 символов', 10);
+    }
+    }
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
@@ -167,10 +190,10 @@ const Settings = () => {
                                     <label style={{fontSize:16}}>Имя:</label>
                                 </div>
                                 <div className="col-md-4">       
-                                    <Input placeholder="Имя" value={user.name} />
+                                    <Input placeholder="Имя" onChange={(e)=>{setName(e.target.value)}} />
                                 </div>
                                 <div className="col-md-12 mt-4">
-                                    <Button type="dashed">Сохранить изменения</Button>
+                                    <Button type="dashed" onClick={saveSettings}>Сохранить изменения</Button>
                                 </div>
                             </div>
                         </div>

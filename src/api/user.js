@@ -10,7 +10,6 @@ export const login = async (phone, password, onSuccess, onError) => {
         if (onError != null) onError(error);
     }
 };
-
 export const register = async (params , onSuccess = null, onError = null) => {
     await ApiClient.post('/register', params).then(response => {
         if (response.status == 200 || response.status == 201) {
@@ -30,7 +29,6 @@ export const passwordChange = async (params , onSuccess = null, onError = null) 
         if (onError != null) onError(error);
     });
 };
-
 export const userDetails = async (params) => {
     try {
         const response = await ApiClient.get('/user', params);
@@ -68,4 +66,13 @@ export const deleteAd = async (id) =>{
 
     return null;
 };
-
+export const userSettings = async (params,userid , onSuccess = null, onError = null) => {
+    console.log('params', params);
+    await ApiClient.patch('/users/'+userid, params).then(response => {
+        if (response.status == 200 || response.status == 201) {
+            if (onSuccess != null) onSuccess(response.data.data);
+        }
+    }).catch(error => {
+        if (onError != null) onError(error);
+    });
+};

@@ -17,6 +17,7 @@ import { Tabs } from 'antd';
 
 const { TabPane } = Tabs;
 const Profile = () => {
+    console.log(localStorage.getItem('token'));
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
     }
@@ -45,7 +46,7 @@ const Profile = () => {
     return(
         user === null || user === undefined || user === "" 
             ? <div className="col-md-12">
-                    <Skeleton variant="rectangular" width={'100%'} height={200} />
+                    <Skeleton variant=".rectangular" width={'100%'} height={200} />
                     <div className="row mt-3">
                         <div className="col-md-4">
                         <Skeleton variant="text" />
