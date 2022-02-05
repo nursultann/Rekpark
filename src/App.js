@@ -37,9 +37,11 @@ const App = ({match}) => {
       <div className="container-fluid">
         <div className="row">
             <div className="col-md-1 px-0 d-none d-md-block text-white text-center" 
-              style={{backgroundSize : "auto", backgroundPosition: "right top", 
+              style={{
+                backgroundSize : "auto", backgroundPosition: "right top", 
                 backgroundImage: "url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')",
-                backgroundRepeat: "no-repeat"}}>
+                backgroundRepeat: "no-repeat"
+              }}>
             </div>
             <div className="col-md-10 px-0" style={{ backgroundColor: '#fff' }}>
             <div className="col-md-12 bg-success px-0 text-white text-center">

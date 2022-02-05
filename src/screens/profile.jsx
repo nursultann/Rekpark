@@ -17,7 +17,6 @@ import { Tabs } from 'antd';
 
 const { TabPane } = Tabs;
 const Profile = () => {
-    console.log(localStorage.getItem('token'));
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
     }
@@ -32,17 +31,20 @@ const Profile = () => {
             dispatch(setUser(user));
         }
     };
+
     const UserProducts = async () =>{
-        let _products = await api.fetchUserProducts({'sub': true});
+        let _products = await api.fetchUserProducts();
         if(_products!=null){
             dispatch(setProducts(_products));
             setOffset(offset + limit);
         }
     };
+
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
     }, []);
+
     return(
         user === null || user === undefined || user === "" 
             ? <div className="col-md-12">
