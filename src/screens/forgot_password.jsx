@@ -103,8 +103,8 @@ useEffect(() => {
     window.verify.render();
 }, []);
 const step1 = (
-    <div className="col-md-12 d-flex justify-content-center">
-                            <div className="col-md-5 py-3 shadow bg-white text-center">
+    <div className="col-xl-12 d-flex justify-content-center">
+                            <div className="col-xl-5 py-3 shadow bg-white text-center">
                                 <label className="py-3" style={{fontSize:20}}>Восстановление пароля</label><br/>    
                             
                                         <Form
@@ -143,7 +143,7 @@ const step1 = (
         </div>
 );
 const step2=(
-                <div className="form-group col-md-6">
+                <div className="form-group col-xl-6">
                      <Form.Item
                      name="otp"
                      rules={[{ required: true, message: 'Пожалуйста введите код потверждения!' }]}
@@ -160,7 +160,7 @@ const step2=(
                     </center>
                 </div>);
 const step3 = (
-                <div className="form-group col-md-6">
+                <div className="form-group col-xl-6">
                     <Form.Item
                      name="password"
                      rules={[{ required: true, message: 'Пожалуйста введите новый пароль!' }]}
@@ -177,7 +177,7 @@ const step3 = (
                     </Form.Item>
                     <center>
                     <Form.Item wrapperCol={{offset:0}}>
-                    <Button className='col-md-7' onClick={saveChanges}>Сохранить новый пароль</Button>
+                    <Button className='col-xl-7' onClick={saveChanges}>Сохранить новый пароль</Button>
                     </Form.Item>
                     </center>
             </div>
@@ -200,9 +200,9 @@ const steps = [
     return(
         <div>
             <Navbar/>
-            <div className="col-md-12" style={{height:"auto"}}>
-            <div className="col-md-12 d-flex justify-content-center mt-0 mt-md-3">
-                <div className="col-md-6 bg-white md-rounded-pill py-2 py-3">
+            <div className="col-xl-12" style={{height:"auto"}}>
+            <div className="col-xl-12 d-flex justify-content-center mt-0 mt-md-3">
+                <div className="col-xl-6 bg-white md-rounded-pill py-2 py-3">
                 <Steps current={current}>
                     {steps.map(item => (
                     <Step key={item.title} title={item.title} />
@@ -210,7 +210,7 @@ const steps = [
                 </Steps>
                 </div>
             </div>
-            <div className="steps-content col-md-12 d-flex justify-content-center rounded mt-3 mt-md-3">
+            <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-md-3">
                 {steps[current].content}
             </div>   
             </div>

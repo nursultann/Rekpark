@@ -10,22 +10,31 @@ import { Form, Row, Col, Input, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { CustomAttributeField } from "../custom_components";
 
-const SubCategories = ({category}) => {
+const SubCategories = ({category, onSubmit}) => {
     const [expand, setExpand] = useState(false);
     const [form] = Form.useForm();
     const onFinish = (values) => {
       console.log('Received values of form: ', values);
     };
     console.log(category);
+
+    const onChange = () => {
+      if (onSubmit != null) onSubmit(form);
+    };
     
     return(
             <>
             {category?.children?.length ?
-            <div className="col-md-12">
+            <div className="col-md-12 py-2 bg-light">
+              <label>По категориям</label>
+              <div className="row">
               {category.children.map((category)=>
-                <a href="">{category.name}</a>
+                <div className="col-3 col-md-2 mt-2 mt-md-2">
+                <a className="text-primary" href={`/category/${category.id}`}>{category.name}</a>
+                </div>
               )
-              }    
+              }
+              </div>    
             </div>
             :
             <div className="col-md-12 mt-3">
@@ -53,6 +62,7 @@ const SubCategories = ({category}) => {
               :<>No attributes</>
               }
               </div>
+              <Button onClick={onChange}>Send</Button>
               </Form>
             </div>
              } 

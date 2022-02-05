@@ -105,7 +105,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     );
 
     const categoryTree = (tree) => {
-        if (!tree.length) return;
+        if (!tree?.length) return;
         return tree.map((item) => (<TreeNode value={item.id} title={item.name}>{categoryTree(item.children)}</TreeNode>));
     };
 

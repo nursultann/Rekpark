@@ -65,14 +65,22 @@ const Navbar = () => {
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
               <div className="col-4 col-md-3 text-center">
-                <a className="blog-header-logo" href="/"><img src={img} width={"100%"}/></a>
+                <a className="navbar-brand" href="/"><img src={img} width={"100%"}/></a>
               </div>
-              <div class="col-6 d-md-flex justify-content-end align-items-center">
+              <div className='col-5 d-none d-md-block'>
+                <nav className="nav d-flex justify-content-center">
+                  <a className="p-2 px-4" href="/about_us">О нас</a>
+                  <a className="p-2 px-4" href="/articles">Статьи</a>
+                  <a className="p-2 px-4" href="/contacts">Контакты</a>
+                  <a className="p-2 px-4" href="/ad_manage">Рекламодателям</a>
+                </nav>
+              </div>
+              <div class="col-3 d-md-flex justify-content-end align-items-center">
                 {token == null ?
                   <>
                   <div className="d-none d-md-block"> 
-                    <Button  onClick={() => navigateTo('/register')} className="mr-2">Регистрация</Button>
-                    <Button  onClick={() => navigateTo('/login')} className="mr-2">Войти</Button> 
+                    <Button  onClick={() => navigateTo('/register')} className="mr-2 rounded-pill" style={{backgroundColor:'#000fa6',color:"#fff"}}>Регистрация</Button>
+                    <Button  onClick={() => navigateTo('/login')} className="mr-2 rounded-pill" style={{borderColor:'#000fa6',color:'#000fa6'}}>Войти</Button> 
                   </div>
                   <div class="d-xs-block d-md-none text-right">
                   <Button onClick={show}>
@@ -146,7 +154,7 @@ const Navbar = () => {
                       <Link to="/profile">Личный кабинет</Link>
                     </Dropdown.Button>
                     <Button 
-                      className=""
+                      className="rounded-pill"
                       type='primary'
                       onClick={() => navigateTo('/products/create')} 
                       disableElevation
@@ -162,15 +170,9 @@ const Navbar = () => {
               </div>
             </div>
           </header>
-          <div className="nav-scroller mb-2 rounded px-2 py-1"  style={{backgroundColor:'#000fa6'}}>
-            <nav className="nav d-flex justify-content-between">
-              <a className="p-2 text-white" href="/about_us">О нас</a>
-              <a className="p-2 text-white" href="products">Объявления</a>
-              <a className="p-2 text-white" href="/articles">Статьи</a>
-              <a className="p-2 text-white" href="/contacts">Контакты</a>
-              <a className="p-2 text-white" href="/ad_manage">Рекламодателям</a>
-            </nav>
-          </div>
+          {/* <div className="nav-scroller mb-2 rounded px-2 py-1" > */}
+            
+          {/* </div> */}
         </div> 
         </div>
 

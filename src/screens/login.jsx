@@ -12,7 +12,7 @@ const Sign  = () => {
     const [countrycode,setCountryCode] = useState();
     const signIn = async ()=>{
         if (password === "" || phoneNumber.length < 9) return;
-        login(countrycode,phoneNumber, password, onLoginSuccess, onLoginError);
+        login(countrycode+phoneNumber, password, onLoginSuccess, onLoginError);
     }
 
     const onLoginSuccess = (data) => {
@@ -35,8 +35,8 @@ const Sign  = () => {
     return(
         <div>
             <Navbar/>
-                <div className="col-md-12 d-flex justify-content-center">
-                    <div className="col-md-5 py-4 shadow my-3 bg-white text-center"> 
+                <div className="col-xl-12 d-flex justify-content-center">
+                    <div className="col-xl-5 py-4 shadow my-3 bg-white text-center"> 
                     <label className="py-2" style={{fontSize:20}}>Вход</label>
                     <br/>
                         <Form
@@ -72,7 +72,7 @@ const Sign  = () => {
                             <Input.Password onChange={(e)=> {setPassword(e.target.value)}} placeholder="Пароль" />
                         </Form.Item>
                         <Form.Item wrapperCol={{offset:0}}>
-                            <Button className="col-md-7" htmlType="submit" onClick={signIn}>
+                            <Button className="col-xl-7" htmlType="submit" onClick={signIn}>
                             Войти
                             </Button>
                         </Form.Item>

@@ -82,7 +82,7 @@ const CategorySlider = () => {
 
     const popoverContent = (children) => (
         <div style={{width: '250px'}}>
-          {children.map((item) => (<p>{item.name}</p>))}
+          {children.map((item) => (<><a className="text-primary" href={`/category/${item.id}`}>{item.name}</a><br/></>))}
         </div>
     );
 

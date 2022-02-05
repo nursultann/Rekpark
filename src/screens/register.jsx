@@ -54,6 +54,7 @@ const Register = () => {
                 }
                 setTimeout(time,59000);
         }).catch((err) => {
+            alert(err);
             message.error('Номер указан неверно!', 10);
                 window.location.reload()
             });
@@ -126,6 +127,7 @@ const Register = () => {
                                                 placeholder="код страны"
                                                 showSearch
                                                 optionFilterProp="children"
+                                                onChange={onChange}
                                                 filterOption={(input, option) =>
                                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                                 }
@@ -145,7 +147,10 @@ const Register = () => {
         </div>
     );
     const step2=(
-                    <div className="form-group col-md-6 py-5 px-5 shadow">
+                    <div className="form-group col-xl-6 py-5 px-5 shadow">
+                     <center>   
+                     <label className="py-3" style={{fontSize:20}}>Потверждение номера</label>
+                     </center>
                      <Form.Item
                      name="otp"
                      rules={[{ required: true, message: 'Пожалуйста введите код потверждения!' }]}
@@ -157,12 +162,12 @@ const Register = () => {
                         <div className="text-secondary">{":"+timer}</div>
                         <a href="/register" style={{display: link ? "block" : "none"}}>Вернуться назад</a>
                     <Form.Item wrapperCol={{offset:0}}>
-                    <Button className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
+                    <Button className='col-xl-7' onClick={validateOtp}>Подтвердить</Button>
                     </Form.Item>
                     </center>
                     </div>);
     const step3 = (
-                    <div className="form-group col-md-6 shadow">
+                    <div className="form-group col-xl-6 shadow">
                     <Form.Item
                      name="password"
                      rules={[{ required: true, message: 'Пожалуйста введите имя пользователя!' }]}
@@ -186,7 +191,7 @@ const Register = () => {
                     </Form.Item>
                     <center>
                     <Form.Item wrapperCol={{offset:0}}>
-                    <Button className='col-md-7' onClick={addUser}>Завершить регистрацию</Button>
+                    <Button className='col-xl-7' onClick={addUser}>Завершить регистрацию</Button>
                     </Form.Item>
                     </center>
                 </div>
@@ -208,9 +213,9 @@ const Register = () => {
     return(
         <div>
             <Navbar/>
-            <div className="col-md-12" style={{height:"auto"}}>
-            <div className="col-md-12 d-flex justify-content-center mt-2 mt-md-3">
-                <div className="col-md-6 bg-white md-rounded-pill shadow-sm py-2 py-3">
+            <div className="col-xl-12" style={{height:"auto"}}>
+            <div className="col-xl-12 d-flex justify-content-center mt-2 mt-xl-3">
+                <div className="col-xl-6 bg-white md-rounded-pill shadow-sm py-2 py-3">
                 <Steps current={current}>
                     {steps.map(item => (
                     <Step key={item.title} title={item.title} />
@@ -218,7 +223,7 @@ const Register = () => {
                 </Steps>
                 </div>
             </div>
-            <div className="steps-content col-md-12 d-flex justify-content-center rounded mt-3 mt-md-3" style={{height:"400px"}}>
+            <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-xl-3" style={{height:"400px"}}>
                 {steps[current].content}
             </div>   
             </div>

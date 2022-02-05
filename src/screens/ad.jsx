@@ -17,7 +17,7 @@ const Ad = ({match}) => {
     // setUrl();
     const fetchProductDetails = async () => {
         const productDetails = await fetchProduct(match.params.id, {
-            'with': 'category;customAttributeValues.customAttribute;region;city'
+            'with': 'category;customAttributeValues.customAttribute;region;city;user'
         });
         if (productDetails != null) {
             dispatch(setProductDetails(productDetails));
@@ -51,23 +51,9 @@ const Ad = ({match}) => {
         fetchProductDetails();
     }, []);
     if(productDetails!=null){
-    var nowMonth = new Date().getMonth();
-    var nowYear = new Date().getFullYear();
-    var nowDate = new Date().getDate();
-    var nowDay = new Date().getDay();
-    var Update = new Date(productDetails.updated_at);
-    var updated_day = Update.getDay();
-    var updated_date = Update.getDate();
-    var updated_month = Update.getMonth();
-    var updated_year = Update.getFullYear();
-    var update = updated_date + '/' + updated_month + '/' + updated_year;
-    if(updated_day == nowDay && updated_date == nowDate && updated_month == nowMonth && updated_year == nowYear ) {
-        update = "Сегодня";
-    } else if (updated_day < nowDay && updated_day + 1 == nowDay || updated_day == nowDay + 6 && updated_date < nowDate && updated_month == nowMonth && updated_year == nowYear ) {
-        update = "Вчера";
-    } else if (updated_day < nowDay && updated_day + 2 == nowDay || updated_day == nowDay + 5 && updated_date < nowDate && updated_month == nowMonth && updated_year == nowYear ) {
-        update = "Позавчера";
-    }
+        var time = moment(productDetails.created_at, 'YYYYMMDD, h:mm:ss a');
+        moment.locale('ru');
+        var update = time.calendar();
 }          
     return(
         <div>
@@ -77,7 +63,7 @@ const Ad = ({match}) => {
                         <div className="row">
                             <div className="col-md-2">
                             <img src="https://www.bazar.kg/build/images/no-avatar.451f5561.svg" style={{borderRadius:"50%",width:"50px", height:"50px"}}/>
-                            <label className="ml-2">{productDetails.name}</label>
+                            <label className="ml-2">{productDetails.user != null ? productDetails.user.name : <></> }</label>
                             <hr className="d-block d-md-none" />
                             </div>
                             <div className="col-6 col-md-3 mt-2"> 
@@ -145,6 +131,7 @@ const Ad = ({match}) => {
                                     <div className="row">
                                         <div className="col-md-8" style={{fontSize:"14px",whiteSpace:"normal"}}>
                                             <label style={{fontSize:"18px",whiteSpace:"normal"}} className="text-secondary">{productDetails.title}</label><br/>
+                                            <label>Категория: {productDetails.category != null ? productDetails.category.name : <></> }</label><br/>
                                             <label>Цена:{productDetails.price+" " + productDetails.currency_symbol}</label><br/>
                                             {productDetails.custom_attribute_values != null ? 
                                                 productDetails.custom_attribute_values.map((item) => {

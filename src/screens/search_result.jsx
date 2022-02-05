@@ -1,25 +1,79 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { fetchSearchProducts } from "../api/product";
+import { Skeleton, Grid } from "@mui/material";
+import ProductItem from "../components/product/product_item";
+import { Button, BackTop, Tooltip } from "antd";
+const SearchResult = ({match})=> {
+const [products,setProducts] = useState();
+const limit = 20;
+const [offset, setOffset] = useState(0);
+const fetchInitProducts = async () => {
+  let _products = await fetchSearchProducts({'search' : match.params.search});
+  if (_products != null) {
+    _products = _products.concat(await fetchSearchProducts({'with': 'user'}));
+    setProducts(_products);
+    setOffset(offset + limit);
+  }
+};
 
-const SearchResult = ()=> {
+const fetchProducts = async () => {
+  let prods = products.concat(await fetchSearchProducts({offset: offset}));
+  if (prods != null) {
+    setProducts(prods);
+    setOffset(offset + limit);
+  }
+};
+useEffect(() => {
+    fetchInitProducts();
+  }, []);
         return(
             <div>
                 <Navbar />
             <div className="col-md-12">
-                <label style={{fontSize:20}}>Результаты поиска</label>
-                <div className="row">
-                    <div className="col-md-4 mt-2 mb-2">
-                            <div class="card">
-                                <img src="https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg" class="card-img-top" alt="..."/>
-                                <div class="card-body">
-                                    <h5 class="card-title">З</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="/ad" class="badge badge-primary px-2 py-2">Подробнее</a>
-                                </div>
-                            </div>
-                    </div>
-                </div>
+                <label className="pt-3" style={{fontSize:20}}>Результаты поиска: {match.params.search}</label>
+                <hr className="pb-2"/>
+                <div className="row mt-6 mb-6">
+                            {products === null || products === undefined || products.length === 0 ?
+                                <Grid container spacing={2} className="pl-3 pt-4 pb-4">
+                                <Grid item xs={4}>
+                                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                    <Skeleton variant="text" />
+                                </Grid>
+                                </Grid>
+                            : products.map((product) => {
+                                return (
+                                    <div className="col-6 col-sm-6 col-xl-3 mt-3">
+                                    <ProductItem product={product} />
+                                    </div>            
+                                )
+                            })}
+                            </div> 
+                            <center className="mt-5">
+                            <Button 
+                                variant="outlined"
+                                onClick={() => {
+                                fetchProducts();
+                                }}>
+                                Показать еще
+                            </Button>
+                            </center> 
+                            <hr />
             </div>
             <Footer/>
             </div> 
