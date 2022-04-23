@@ -1,20 +1,20 @@
 import { Upload, Modal } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
-import { useState } from "react";
+import { React, useState } from "react";
 import { AppImage } from "./custom_components";
 
 const { Dragger } = Upload;
 
 function getBase64(file) {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
     });
 }
 
-const DragAndDropUploader = ({style, className, onChange, onRemove}) => {
+const DragAndDropUploader = ({ style, className, onChange, onRemove }) => {
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewTitle, setPreviewTitle] = useState(false);
     const [previewImage, setPreviewImage] = useState();
@@ -36,21 +36,21 @@ const DragAndDropUploader = ({style, className, onChange, onRemove}) => {
         multiple: true,
         listType: "picture-card",
         maxCount: 10,
-        beforeUpload: files => { 
+        beforeUpload: files => {
             console.log('before upload', files);
             if (onChange != null) onChange(files);
-            return false 
+            return false
         },
         onPreview: handlePreview,
         onChange(info) {
-          const { status } = info.file;
-          // console.log('Selected files ' + info.file, info.fileList);
-          // console.log('onChange', info.fileList);
-          // if (onChange != null) onChange(info.fileList);
+            const { status } = info.file;
+            // console.log('Selected files ' + info.file, info.fileList);
+            // console.log('onChange', info.fileList);
+            // if (onChange != null) onChange(info.fileList);
         },
         onDrop(e) {
-          // console.log('Dropped files', e.dataTransfer.files);
-          // if (onChange != null) onChange(e.dataTransfer.files);
+            // console.log('Dropped files', e.dataTransfer.files);
+            // if (onChange != null) onChange(e.dataTransfer.files);
         },
         onRemove(file) {
             if (onRemove != null) onRemove(file);

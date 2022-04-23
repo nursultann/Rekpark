@@ -1,10 +1,10 @@
 import React from 'react';
-import { List, Card } from 'antd';
+import { List } from 'antd';
 import ProductItem from './product_item';
 
-const ProductGridList = ({list}) => {
+const ProductGridList = ({ list }) => {
     return (
-        <List 
+        <List
             grid={{
                 gutter: 16,
                 xs: 1,

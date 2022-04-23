@@ -3,7 +3,7 @@ import Navbar from "../components/navbar";
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "../api";
 import { useHistory } from "react-router-dom";
-import { 
+import {
   Form,
   notification
 } from "antd";
@@ -11,114 +11,111 @@ import ProductFields from "../components/product/product_fields";
 import { setUser } from "../redux/actions/user_actions";
 import { setProductDetails } from "../redux/actions/product_actions";
 
-const EditAd = ({match}) => {
+const EditAd = ({ match }) => {
 
-    const history = useHistory();
-    const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
-    const { productDetails } = useSelector((state) => state.product);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(false);
 
-    const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [ready, setReady] = useState(false);
+  const [form] = Form.useForm();
 
-    const [form] = Form.useForm();
+  const fetchProductDetails = async () => {
+    const productDetails = await api.fetchProduct(match.params.id, {
+      'with': 'category;customAttributeValues.customAttribute'
+    });
+    if (productDetails != null) {
+      dispatch(setProductDetails(productDetails));
+      setFields(productDetails);
+    }
+    setReady(true);
+  };
 
-    const fetchProductDetails = async () => {
-        const productDetails = await api.fetchProduct(match.params.id, {
-            'with': 'category;customAttributeValues.customAttribute'
+  const fetchUserDetails = async () => {
+    const userDetails = await api.userDetails();
+    if (userDetails != null) {
+      dispatch(setUser(userDetails));
+    }
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+    fetchProductDetails();
+  }, []);
+
+  const setFields = (productDetails) => {
+    if (productDetails != null) {
+      const data = {
+        category_id: productDetails.category_id,
+        title: productDetails.title,
+        description: productDetails.description,
+        price: productDetails.price,
+        region_id: productDetails.region_id,
+        currency_id: productDetails.currency_id,
+        city_id: productDetails.city_id,
+        district: productDetails.district,
+        can_comment: productDetails.can_comment,
+        phones: productDetails.phones
+      };
+      if (productDetails.has_custom_attribute_values) {
+        productDetails.custom_attribute_values.forEach((item) => {
+          data[item.custom_attribute.name] = item.value;
         });
-        if (productDetails != null) {
-            dispatch(setProductDetails(productDetails));
-            setFields(productDetails);
-        }
-        setReady(true);
-    };
-
-    const fetchUserDetails = async () => {
-      const userDetails = await api.userDetails();
-      if (userDetails != null) {
-          dispatch(setUser(userDetails));
+        form.setFieldsValue(data);
       }
-    };
-
-    useEffect(() => {
-      fetchUserDetails();
-      fetchProductDetails();
-    }, []);
-
-    const setFields = (productDetails) => {
-        if (productDetails != null) {
-            const data = {
-                category_id: productDetails.category_id,
-                title: productDetails.title,
-                description: productDetails.description,
-                price: productDetails.price,
-                region_id: productDetails.region_id,
-                currency_id: productDetails.currency_id,
-                city_id: productDetails.city_id,
-                district: productDetails.district,
-                can_comment: productDetails.can_comment,
-                phones: productDetails.phones
-            };
-            if (productDetails.has_custom_attribute_values) {
-                productDetails.custom_attribute_values.forEach((item) => { 
-                    data[item.custom_attribute.name] = item.value;
-                });
-                form.setFieldsValue(data);
-            }
-            console.log('data', data);
-            form.setFieldsValue({
-                ...data,
-            });
-        }
-    };
-
-    const openNotification = (type, message, description) => {
-      notification[type]({
-        message: message,
-        description: description,
+      console.log('data', data);
+      form.setFieldsValue({
+        ...data,
       });
-    };
+    }
+  };
 
-    return(
-        <div>
-            <Navbar/>
-            <div className="col-md-8 py-5">
-            <center className="pb-4">
-            <label style={{fontSize:25}}>Редактировать объявление</label>
-            </center>
-                {ready ? <ProductFields
-                    form={form} 
-                    loading={loading}
-                    onSend={async (model) => {
-                        const valid = await form.validateFields();
-                        if (valid) {
-                          const formData = new FormData();
-                          formData.append('currency_id', model.currency_id);
-                            
-                          model.files.forEach(file => {
-                            formData.append('images[]', file);
-                          });
-                          for (const [key, value] of Object.entries(form.getFieldsValue())) {
-                            formData.append(`${key}`, value);
-                          }
-                          setLoading(true);
-                          console.log('formdata', formData);
-                          const response = await api.updateProduct(match.params.id, formData);
-                          if (response != null && response.success) {
-                            openNotification('success', 'Изменения сохранены!', null);
-                            history.push(`/products/${match.params.id}`);
-                          } else {
-                            openNotification('error', 'Не удалось сохранить!', null);
-                          }
-                          setLoading(false);
-                        }
-                    }}
-                /> : <></>}
-            </div>                                 
-        </div>
-    );
+  const openNotification = (type, message, description) => {
+    notification[type]({
+      message: message,
+      description: description,
+    });
+  };
+  document.title="Редактирование";
+  return (
+    <div>
+      <Navbar />
+      <div className="col-md-8 py-5">
+        <center className="pb-4">
+          <label style={{ fontSize: 25 }}>Редактировать объявление</label>
+          <p>Поля, обозначенные <span className="text-danger">*</span>  - обязательные. После создания объявления Вы можете редактировать и удалять его в Личном кабинете.</p>
+        </center>
+        {ready ? <ProductFields
+          form={form}
+          loading={loading}
+          onSend={async (model) => {
+            const valid = await form.validateFields();
+            if (valid) {
+              const formData = new FormData();
+              formData.append('currency_id', model.currency_id);
+
+              model.files.forEach(file => {
+                formData.append('images[]', file);
+              });
+              for (const [key, value] of Object.entries(form.getFieldsValue())) {
+                formData.append(`${key}`, value);
+              }
+              setLoading(true);
+              console.log('formdata', formData);
+              const response = await api.updateProduct(match.params.id, formData);
+              if (response != null && response.success) {
+                openNotification('success', 'Изменения сохранены!', null);
+                history.push(`/products/${match.params.id}`);
+              } else {
+                openNotification('error', 'Не удалось сохранить!', null);
+              }
+              setLoading(false);
+            }
+          }}
+        /> : <></>}
+      </div>
+    </div>
+  );
 }
 
 export default EditAd;

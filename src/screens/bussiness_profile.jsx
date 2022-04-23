@@ -39,7 +39,7 @@ const Profile = () => {
             setOffset(offset + limit);
         }
     };
-    document.title="Личный кабинет";
+    document.title="Бизнес профиль";
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
@@ -215,4 +215,4 @@ const Profile = () => {
     );
 }
 
-export default Profile;
+export default BussinessProfile;

@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "../../api";
-import { Link } from "react-router-dom";
 import { setCategories } from "../../redux/actions/category_actions";
 import React, { useEffect } from "react";
 import Slider from "react-slick";
@@ -8,17 +7,17 @@ import Slider from "react-slick";
 function SampleArrow(props) {
     const { className, style, onClick } = props;
     return (
-      <div
-        className={className}
-        style={{ ...style, display: "block" }}
-        onClick={onClick}
-      />
+        <div
+            className={className}
+            style={{ ...style, display: "block" }}
+            onClick={onClick}
+        />
     );
-  }
+}
 
 const Bussiness_Slider = () => {
     const dispatch = useDispatch();
-    const {categories} = useSelector((state) => state.category);
+    const { categories } = useSelector((state) => state.category);
 
     const fetchCategoriesTree = async () => {
         const categories = await api.fetchCategoriesTree();
@@ -45,23 +44,23 @@ const Bussiness_Slider = () => {
     return (
         <Slider {...sliderSettings}>
             {categories.map((category) => {
-                const image = category.media.length > 0 
-                    ? category.media[0].original_url 
+                const image = category.media.length > 0
+                    ? category.media[0].original_url
                     : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
 
                 return (
-                    <div class="col-md-4">    
-                        <div id={category.id}>     
+                    <div class="col-md-4">
+                        <div id={category.id}>
                             <a href={`/category/${category.id}`}>
-                                <div className="col-md-12 px-2 mb-3 d-flex flex-column align-items-center justify-content-center">                  
+                                <div className="col-md-12 px-2 mb-3 d-flex flex-column align-items-center justify-content-center">
                                     <img className="mx-3 mb-1 rounded-circle" src={image} width="70px" height="70px" />
                                     <a className="" href={`/category/${category.id}`}>{category.name}</a>
                                 </div>
                             </a>
                         </div>
-                    </div> 
-                  )  
-              })}
+                    </div>
+                )
+            })}
         </Slider>
     );
 
