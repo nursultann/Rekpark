@@ -77,14 +77,14 @@ const Sign = () => {
                             <Input.Password onChange={(e) => { setPassword(e.target.value) }} placeholder="Пароль" />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 0 }}>
-                            <Button style={{ backgroundColor: "#4dab04", color: "#fff" }} className="col-md-7" htmlType="submit" onClick={signIn}>
+                            <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="col-md-7" htmlType="submit" onClick={signIn}>
                                 Войти
                             </Button>
                         </Form.Item>
                     </Form>
                     <label>Вы не зарегистрированы?</label>
-                    <a style={{ color: "#4dab04" }} className="ml-2" href="/register">Зарегистроваться</a><br />
-                    <a style={{ color: "#4dab04" }} className="ml-2" href="/forgot_password">Забыли пароль</a>
+                    <a style={{ color: "#184d9f" }} className="ml-2" href="/register">Зарегистроваться</a><br />
+                    <a style={{ color: "#184d9f" }} className="ml-2" href="/forgot_password">Забыли пароль</a>
                 </div>
             </div>
         </div>

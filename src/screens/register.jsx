@@ -145,7 +145,7 @@ const Register = () => {
                     </Form.Item>
                     <div className="my-3" id="recaptcha-container"></div>
                     <Form.Item wrapperCol={{ offset: 0 }}>
-                        <Button style={{ backgroundColor: "#4dab04", color: "#fff" }} className="col-xl-7" htmlType="submit" onClick={signIn}>
+                        <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="col-xl-7" htmlType="submit" onClick={signIn}>
                             Зарегистрироваться
                         </Button>
                     </Form.Item>
@@ -170,7 +170,7 @@ const Register = () => {
                 <div className="text-secondary">{":" + timer}</div>
                 <a href="/register" style={{ display: link ? "block" : "none" }}>Вернуться назад</a>
                 <Form.Item wrapperCol={{ offset: 0 }}>
-                    <Button style={{ backgroundColor: "#4dab04", color: "#fff" }} className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
+                    <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
                 </Form.Item>
             </center>
         </div>
@@ -201,7 +201,7 @@ const Register = () => {
             </Form.Item>
             <center>
                 <Form.Item wrapperCol={{ offset: 0 }}>
-                    <Button style={{ backgroundColor: "#4dab04", color: "#fff" }} className='col-md-7' onClick={addUser}>Завершить регистрацию</Button>
+                    <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className='col-md-7' onClick={addUser}>Завершить регистрацию</Button>
                 </Form.Item>
             </center>
         </div>

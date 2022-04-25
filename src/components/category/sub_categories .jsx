@@ -210,13 +210,13 @@ const selectRegion = (region) => {
                 </div>
               </div>
               <div className="col-xl-12 d-xl-flex justify-content-end">
-                <Button className="col-12 col-xl-2" onClick={onChange} style={{backgroundColor:"#4dab04",color:"#fff"}}>Поиск</Button>
+                <Button className="col-12 col-xl-2" onClick={onChange} style={{backgroundColor:"#184d9f",color:"#fff"}}>Поиск</Button>
               </div>
             </Form>
           </div>
           <div className="d-block d-xl-none my-4">
             <div className="text-center px-3">
-            <button className="btn col-12 rounded" style={{backgroundColor:"#4dab04",color:"#fff"}} type="primary" onClick={showModal}>
+            <button className="btn col-12 rounded" style={{backgroundColor:"#184d9f",color:"#fff"}} type="primary" onClick={showModal}>
               Поиск по фильтрам
             </button>
             </div>
@@ -343,7 +343,7 @@ const selectRegion = (region) => {
                   </Form.Item>
                 </div>
                 <div className="col-xl-12 d-xl-flex justify-content-end">
-                  <Button className="col-12 col-xl-2" onClick={onChange} style={{backgroundColor:"#4dab04",color:"#fff"}}>Поиск</Button>
+                  <Button className="col-12 col-xl-2" onClick={onChange} style={{backgroundColor:"#184d9f",color:"#fff"}}>Поиск</Button>
                 </div>
               </Form>
             </Modal>

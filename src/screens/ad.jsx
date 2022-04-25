@@ -257,7 +257,7 @@ const Ad = ({ match }) => {
                                     <div className="row">
                                         <div className="col-xl-12 mt-xl-4">
                                         <hr className="d-block d-xl-none" /> 
-                                        <button class="btn col-xl-12 text-white" style={{backgroundColor:"#4dab04"}} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i class="fas fa-phone-volume"></i> Показать номер</button>
+                                        <button class="btn col-xl-12 text-white" style={{backgroundColor:"#184d9f"}} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i class="fas fa-phone-volume"></i> Показать номер</button>
                                             <div class="collapse multi-collapse" id="multiCollapseExample1">
                                                 <div class="card card-body">
                                                 <a href={"tel:"+productDetails.phones}>{productDetails.phones}</a>
@@ -270,7 +270,7 @@ const Ad = ({ match }) => {
                                         <hr className="d-block d-xl-none" /> 
                                          
                                         {favorite ?    
-                                        <button class="btn col-xl-12 text-white" style={{backgroundColor:"#4dab04"}} onClick={removeFav}><i class="far fa-heart"></i>Удалить из избранного</button>
+                                        <button class="btn col-xl-12 text-white" style={{backgroundColor:"#184d9f"}} onClick={removeFav}><i class="far fa-heart"></i>Удалить из избранного</button>
                                         :
                                         <button class="btn btn-outline-secondary col-xl-12" onClick={addFav}><i class="far fa-heart"></i> Добавить в избранное</button>
                                         }
@@ -368,11 +368,11 @@ const Ad = ({ match }) => {
                                                                 </Form.Item>
                                                                 <Form.Item>
                                                                     {!comment ?
-                                                                    <Button className="rounded-pill" htmlType="submit" loading={submitting} onClick={onSubmit} style={{ backgroundColor: "#4dab04", color: "#fff" }}>
+                                                                    <Button className="rounded-pill" htmlType="submit" loading={submitting} onClick={onSubmit} style={{ backgroundColor: "#184d9f", color: "#fff" }}>
                                                                         Добавить комментарий
                                                                     </Button>
                                                                     :
-                                                                    <Button className="rounded-pill" htmlType="submit" loading={submitting} onClick={Answer} style={{ backgroundColor: "#4dab04", color: "#fff" }}>
+                                                                    <Button className="rounded-pill" htmlType="submit" loading={submitting} onClick={Answer} style={{ backgroundColor: "#184d9f", color: "#fff" }}>
                                                                     Ответить на комментарий
                                                                     </Button>
                                                                     
@@ -398,7 +398,7 @@ const Ad = ({ match }) => {
                                             <hr/>
                                             <label style={{ fontSize: 14 }}>Чтобы оставить комментарий нужно авторизоваться</label>
                                             <br />
-                                            <Button style={{ borderColor: "#4dab04", color: "#4dab04" }}><a href="/login">Войти</a></Button>
+                                            <Button style={{ borderColor: "#184d9f", color: "#184d9f" }}><a href="/login">Войти</a></Button>
                                         </div>
                                     </>
                             }
@@ -442,7 +442,7 @@ const Ad = ({ match }) => {
          <hr/>
          <div className="text-right">
             <button className="btn btn-outline-light border text-dark mr-2" onClick={handleCancel}>Закрыть</button>
-            <button className="btn text-white" style={{backgroundColor:"#4dab04"}}  onClick={PostComplaint}>Пожаловаться</button>
+            <button className="btn text-white" style={{backgroundColor:"#184d9f"}}  onClick={PostComplaint}>Пожаловаться</button>
          </div>
       </Modal>
         </div>
