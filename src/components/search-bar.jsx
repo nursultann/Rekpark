@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as api from "../api";
 import { TreeSelect } from 'antd';
 import { useHistory } from "react-router-dom";
-
+import logo from "../../src/img/logo.png";
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
 
@@ -59,7 +59,7 @@ const SearchBar = () => {
           <div class="col-md-12">
             <div className='row py-2 px-3 px-lg-0 d-md-flex align-items-center'>
               <div className="col-lg-3 text-center d-none d-lg-block">
-                <a className="navbar-brand" href="/" ><img src='https://www.bazar.kg/build/images/bazarkg-logo.39b422a5.svg' style={{ width: "100%" }} /></a>
+                <a className="navbar-brand" href="/" ><img src={logo} style={{ width: "100%" }} /></a>
               </div>
               <div className='col-lg-9 mt-3 mt-xl-0 px-0'>
                 <div className='col-12 mr-2 rounded' style={{ backgroundColor: "#fff0bb" }}>

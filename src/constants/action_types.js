@@ -8,6 +8,7 @@ export const ActionTypes = {
     SET_CATEGORIES: "SET_CATEGORIES",
     // user
     SET_USER: "SET_USER",
+    SET_PRODUCT_USER_DETAIL:"SET_PRODUCT_USER_DETAIL",
     // settings
     SET_SETTINGS: "SET_SETTINGS",
     // others

@@ -6,3 +6,9 @@ export const setUser = (user) => {
         payload: user,
     }
 }
+export const setProductUserDetails = (user) => {
+    return {
+        type: ActionTypes.SET_PRODUCT_USER_DETAIL,
+        payload: user,
+    }
+}

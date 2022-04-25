@@ -58,9 +58,9 @@ export const createComment = async (text, productId, userId, parentId = null) =>
 
     return null;
 };
-export const deleteComment = async (productId, userId, parentId = null) => {
+export const deleteComments = async (id) => {
     try {
-        const response = await ApiClient.delete('/comments', {'advertisement_id': productId, 'user_id': userId, 'parent_id': parentId });
+        const response = await ApiClient.delete(`/comments/${id}`);
         if (response.status == 200 || response.status == 201) {
             return response.data;
         }
@@ -70,9 +70,10 @@ export const deleteComment = async (productId, userId, parentId = null) => {
 
     return null;
 };
-export const answerComment = async (text, productId, userId, parentId = null) => {
+export const answerComment = async (text, productId, userId, parentId) => {
     try {
-        const response = await ApiClient.post('/comments', { 'text': text, 'advertisement_id': productId, 'user_id': userId, 'parent_id': parentId });
+        console.log(parentId);
+        const response = await ApiClient.post(`/comments`, { 'text': text, 'advertisement_id': productId, 'user_id': userId, 'parent_id': parentId });
         if (response.status == 200 || response.status == 201) {
             return response.data;
         }
@@ -186,19 +187,6 @@ export const removeFromFavorites = async (id) => {
 
     return null;
 }
-export const postComment = async (params)=>{
-    try {
-        console.log('params ', params);
-        const response = await ApiClient.post(`/comments`,params);
-        if (response.status == 200 || response.status == 201) {
-            return response.data.data;
-        }
-    } catch (error) {
-        console.log('comments err ', error.response);
-    }
-
-    return null;
-}
 export const fetchArticles = async (params = { limit: 20, offset: 0 }) => {
     try {
         if (!params.hasOwnProperty('sub')) {
@@ -279,7 +267,7 @@ export const fetchUsersProducts = async (params) => {
         params['orderBy'] = 'id';
         params['sortedBy'] = 'desc';
         
-        const response = await ApiClient.get('/user/products', params);
+        const response = await ApiClient.get('/products', params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }

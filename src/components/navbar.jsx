@@ -11,7 +11,7 @@ import {
   LogoutOutlined,
   StarOutlined
 } from '@ant-design/icons';
-
+import logo from "../../src/img/logo.png";
 const { SubMenu } = Menu;
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
