@@ -16,6 +16,7 @@ import { Tabs } from 'antd';
 import { Input } from 'antd';
 import { Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { Clusterer } from '@2gis/mapgl-clusterer';
 
 const { TabPane } = Tabs;
 const key = 'updatable';
@@ -26,10 +27,12 @@ function getBase64(img, callback) {
     reader.readAsDataURL(img);
 }
 
-const Settings = () => {
+const BussinessSettings = () => {
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageurl] = useState();
-    const [name, setName] = useState();
+    const [whatsapp, setWhatsapp] = useState();
+    const [instagram, setInstagram] = useState();
+    const [facebook, setFacebook] = useState();
     const [userid, setUserid] = useState();
     const [file, setFile] = useState();
 
@@ -85,9 +88,9 @@ const Settings = () => {
 
     const saveSettings = async () => {
         const formData = new FormData();
-        if (name != null) {
-            if (name.length > 4) {
-                formData.append('name', name);
+        if (whatsapp != null) {
+            if (whatsapp.length > 4) {
+                formData.append('whatsapp', whatsapp);
             } else {
                 message.error('Имя не может быть короче 4 символов', 10);
                 return;
@@ -97,7 +100,7 @@ const Settings = () => {
         if (file != null) {
             formData.append('avatar', file);
         }
-        if (name != null || file != null) {
+        if (whatsapp != null || file != null) {
             formData.append('_method', 'PATCH');
             message.loading({ content: 'Загрузка...', key });
             const result = await userSettings(formData, userid, function (data) {
@@ -158,12 +161,6 @@ const Settings = () => {
             <div>
                 <Navbar />
                 <div className="col-md-12 mt-3">
-                <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Настройки пользователя</li>
-                </ol>
-                </nav>
                     <div className="row px-3 mb-5">
                         <div className="col-md-4 bg-light rounded py-3">
                             <div className="col-md-12 alert alert-success">
@@ -187,8 +184,9 @@ const Settings = () => {
                                 <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
                                 <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
                                 <li class="list-group-item"><Link to="/chats">Сообщения</Link></li>
-                                <li class="list-group-item bg-primary text-white"><Link to="/settings">Настройки пользователя</Link></li>
-                                {/* <li class="list-group-item"><Link to="/bussiness_settings">Настройки бизнес профиля</Link></li> */}
+                                <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
+                                <li class="list-group-item"><Link to="/bussiness_profile">Бизнес профиль</Link></li>
+                                <li class="list-group-item bg-primary text-white"><Link to="/bussiness_settings">Настройки бизнес профиля</Link></li>
                             </ul>
                             </div>
                             </div>
@@ -196,11 +194,11 @@ const Settings = () => {
                         </div>
                         <div className="col-md-8 mt-4 mt-md-0">
                             <div className="col-md-12 border rounded py-3">
-                                <label style={{ fontSize: 18 }}>Настройки пользователя</label>
+                                <label style={{ fontSize: 18 }}>Настройки бизнес профиля</label>
                                 <div className="row py-3">
                                     <div className="col-md-12 mb-3">
                                         <Upload
-                                            name="avatar"
+                                            name="banner"
                                             listType="picture-card"
                                             className="avatar-uploader"
                                             showUploadList={false}
@@ -210,12 +208,37 @@ const Settings = () => {
                                         >
                                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                                         </Upload>
+                                    <label>Загрузите Баннер</label>    
                                     </div>
-                                    <div className="col-md-1">
-                                        <label style={{ fontSize: 16 }}>Имя:</label>
+                                    <div className="col-12">
+                                    <div className="row mt-3">
+                                    <div className="col-md-2">
+                                        <label style={{ fontSize: 14 }}><i class="fa-brands fa-whatsapp"></i> Whatsapp</label>
                                     </div>
-                                    <div className="col-md-4">
-                                        <Input placeholder="Имя" onChange={(e) => { setName(e.target.value) }} />
+                                    <div className="col-md-6">
+                                        <Input type="number" placeholder="Whatsapp" onChange={(e) => { setWhatsapp(e.target.value) }} />
+                                    </div>
+                                    </div>
+                                    <div className="row mt-3">
+                                    <div className="col-md-2">
+                                        <label style={{ fontSize: 14 }}><i class="fa-brands fa-instagram"></i> Instagram</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <Input placeholder="Instagram url" onChange={(e) => { setInstagram(e.target.value) }} />
+                                    </div>
+                                    </div>
+                                    <div className="row mt-3">
+                                    <div className="col-md-2">
+                                        <label style={{ fontSize: 14 }}><i class="fa-brands fa-facebook"></i> Facebook</label>
+                                    </div>
+                                    
+                                    <div className="col-md-6">
+                                        <Input placeholder="Facebook url" onChange={(e) => { setFacebook(e.target.value) }} />
+                                    </div>
+                                    </div>
+                                    </div>
+                                    <div className="col-xl-12">
+
                                     </div>
                                     <div className="col-md-12 mt-4">
                                         <Button type="primary" onClick={saveSettings} style={{ backgroundColor: '#184d9f', color: "#fff" }}>Сохранить изменения</Button>
@@ -228,4 +251,4 @@ const Settings = () => {
             </div>
     );
 }
-export default Settings;
+export default BussinessSettings;

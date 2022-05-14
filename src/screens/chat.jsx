@@ -1,121 +1,237 @@
-import React from 'react';
+import React from "react";
+import { Link } from 'react-router-dom';
+import Navbar from "../components/navbar";
+import Footer from "../components/footer";
+import { userDetails } from "../api/user";
+import { useEffect, useState } from "react";
+import Skeleton from '@mui/material/Skeleton';
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../redux/actions/user_actions";
+import { Avatar, Button } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { setProducts } from "../redux/actions/product_actions";
+import * as api from "../api";
+import ProductItem from "../components/product/user_product_item";
+import { Tabs } from 'antd';
+const { TabPane } = Tabs;
+const Chats = () => {
+    console.log(localStorage.getItem('token'));
+    if (!localStorage.getItem('token')) {
+        window.location.href = '/';
+    }
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.user);
+    const { products } = useSelector((state) => state.product);
+    const limit = 20;
+    const [offset, setOffset] = useState(0);
+    const fetchUserDetails = async () => {
+        const user = await userDetails();
+        if (user != null) {
+            dispatch(setUser(user));
+        }
+    };
 
-const Chats = ()=>{
-return(
-    <div>
-<div class="container">
-<div class="row clearfix">
-    <div class="col-lg-12">
-        <div class="card chat-app">
-            <div id="plist" class="people-list">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+    const UserProducts = async () => {
+        let _products = await api.fetchUserProducts({ 'sub': true });
+        if (_products != null) {
+            dispatch(setProducts(_products));
+            setOffset(offset + limit);
+        }
+    };
+    document.title="Личный кабинет";
+    useEffect(() => {
+        fetchUserDetails();
+        UserProducts();
+    }, []);
+
+    return (
+        user === null || user === undefined || user === ""
+            ? <div className="col-md-12 mt-3">
+                <Skeleton variant="rectangular" width={'100%'} height={200} />
+                <div className="row mt-3">
+                    <div className="col-md-4">
+                        <Skeleton variant="text" />
+                        <Skeleton variant="circular" width={40} height={40} />
+                        <Skeleton variant="rectangular" width={210} height={118} />
                     </div>
-                    <input type="text" class="form-control" placeholder="Search..."/>
-                </div>
-                <ul class="list-unstyled chat-list mt-2 mb-0">
-                    <li class="clearfix">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"/>
-                        <div class="about">
-                            <div class="name">Vincent Porter</div>
-                            <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
-                        </div>
-                    </li>
-                    <li class="clearfix active">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar"/>
-                        <div class="about">
-                            <div class="name">Aiden Chavez</div>
-                            <div class="status"> <i class="fa fa-circle online"></i> online </div>
-                        </div>
-                    </li>
-                    <li class="clearfix">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar"/>
-                        <div class="about">
-                            <div class="name">Mike Thomas</div>
-                            <div class="status"> <i class="fa fa-circle online"></i> online </div>
-                        </div>
-                    </li>                                    
-                    <li class="clearfix">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar"/>
-                        <div class="about">
-                            <div class="name">Christian Kelly</div>
-                            <div class="status"> <i class="fa fa-circle offline"></i> left 10 hours ago </div>
-                        </div>
-                    </li>
-                    <li class="clearfix">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar8.png" alt="avatar"/>
-                        <div class="about">
-                            <div class="name">Monica Ward</div>
-                            <div class="status"> <i class="fa fa-circle online"></i> online </div>
-                        </div>
-                    </li>
-                    <li class="clearfix">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar"/>
-                        <div class="about">
-                            <div class="name">Dean Henry</div>
-                            <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="chat">
-                <div class="chat-header clearfix">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar"/>
-                            </a>
-                            <div class="chat-about">
-                                <h6 class="m-b-0">Aiden Chavez</h6>
-                                <small>Last seen: 2 hours ago</small>
+                    <div className="col-md-8">
+                        <div className="row">
+                            <div className="col-md-12 mb-2">
+                                <Skeleton variant="rectangular" width={'100%'} height={50} />
+                            </div>
+                            <div className="col-md-4">
+                                <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                <Skeleton variant="text" />
+                                <Skeleton variant="text" />
+                                <Skeleton variant="text" />
+                            </div>
+                            <div className="col-md-4">
+                                <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                <Skeleton variant="text" />
+                                <Skeleton variant="text" />
+                                <Skeleton variant="text" />
+                            </div>
+                            <div className="col-md-4">
+                                <Skeleton variant="rectangular" width={'100%'} height={100} />
+                                <Skeleton variant="text" />
+                                <Skeleton variant="text" />
+                                <Skeleton variant="text" />
                             </div>
                         </div>
-                        <div class="col-lg-6 hidden-sm text-right">
-                            <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
-                            <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
-                            <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
-                            <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="chat-history">
-                    <ul class="m-b-0">
-                        <li class="clearfix">
-                            <div class="message-data text-right">
-                                <span class="message-data-time">10:10 AM, Today</span>
-                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar"/>
-                            </div>
-                            <div class="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
-                        </li>
-                        <li class="clearfix">
-                            <div class="message-data">
-                                <span class="message-data-time">10:12 AM, Today</span>
-                            </div>
-                            <div class="message my-message">Are we meeting today?</div>                                    
-                        </li>                               
-                        <li class="clearfix">
-                            <div class="message-data">
-                                <span class="message-data-time">10:15 AM, Today</span>
-                            </div>
-                            <div class="message my-message">Project has been already finished and I have results to show you.</div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="chat-message clearfix">
-                    <div class="input-group mb-0">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-send"></i></span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Enter text here..."/>                                    
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-</div>
-    </div>
-);
+            :
+            <div>
+                <Navbar />
+                <div className="col-xl-12 mt-3">
+                <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Сообщения</li>
+                </ol>
+                </nav>
+                    <div className="row px-3 mb-5">
+                        <div className="col-xl-4 bg-light rounded py-3">
+                            <div className="col-xl-12 alert alert-success">
+                                <div className="row">
+                                    <div className="col-12">
+                                    {user.media?.length ?
+                                        <Avatar size={64} icon={<img src={user.media[0].original_url} />} />
+                                        :
+                                        <Avatar size={42} icon={<UserOutlined />} />
+                                    }
+                                        <label className="ml-3">{user.name}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div className="row">
+                            <div className="col-xl-12">
+                            <ul class="list-group">
+                                <li class="list-group-item">+{user.phone}</li>
+                                <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
+                                <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
+                                <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
+                                <li class="list-group-item text-white bg-primary"><Link to="/chats">Сообщения</Link></li>
+                                <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
+                                <li class="list-group-item"><Link to="/bussiness_profile">Бизнес профиль</Link></li>
+                                
+                            </ul>
+                            </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div className="col-xl-8 mt-3 mt-md-0">
+                            <div className="col-xl-12 bg-light px-2 py-2 rounded mb-3">
+                                <label className="text-primary" style={{fontSize:15}}>Сообщения</label>
+                            </div>
+                            <Tabs className="border px-2 py-4 rounded" tabPosition="left">
+                                <TabPane tab={
+                                    <div className="col-10 col-xl-12">
+                                    <div className="row">
+                                        <div className="col-3 col-xl-2">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar" className="rounded-circle" width={30}/>
+                                        </div>
+                                        <div className="col-9 col-xl-10">
+                                        <div class="about">
+                                        <div class="name">Vincent Porter</div>
+                                        <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>                                            
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <hr className="d-none d-md-block"/>
+                                    </div>
+                                } key="1">
+                                    <div className="col-xl-12">
+                                        <div className="row border rounded py-3" style={{height:"300px",overflowY:"scroll"}}>
+                                            <div className="col-12 text-left">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-left">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-left">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                            <div className="col-12 text-right">
+                                                <label className="bg-light px-4 rounded-pill">
+                                                    Text
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="row mt-3">
+                                        <div className="col-xl-12">
+                                        <textarea className="form-control"></textarea>
+                                        </div>
+                                        <div className="col-xl-12 mt-3 text-right">
+                                        <Button type="primary">Отправить</Button>
+                                        </div>
+                                        </div>    
+                                    </div>
+                                </TabPane>
+                                <TabPane tab="Tab 2" key="2">
+                                    Content of Tab 2
+                                </TabPane>
+                                <TabPane tab="Tab 3" key="3">
+                                    Content of Tab 3
+                                </TabPane>
+                            </Tabs>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    );
 }
 export default Chats;

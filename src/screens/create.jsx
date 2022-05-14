@@ -42,7 +42,15 @@ const CreateAd = () => {
   return (
     <div>
       <Navbar />
-      <div className="col-md-8 py-5">
+      <div className="col-12 mt-3">
+      <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Новое объявление</li>
+                </ol>
+     </nav>
+     </div>
+      <div className="col-md-8 p-3">
         <center className="pb-4">
           <label style={{ fontSize: 25 }}>Создать новое объявление</label>
           <p>Поля, обозначенные <span className="text-danger">*</span>  - обязательные. После создания объявления Вы можете редактировать и удалять его в Личном кабинете.</p>

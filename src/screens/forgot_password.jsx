@@ -112,7 +112,7 @@ const ForgotPassword = () => {
     }, []);
 
     const step1 = (
-        <div className="col-xl-12 d-flex justify-content-center">
+        <div className="col-xl-12 d-flex justify-content-center px-0">
             <div className="col-xl-5 py-3 shadow bg-white text-center">
                 <label className="py-3" style={{ fontSize: 20 }}>Восстановление пароля</label><br />
 
@@ -143,9 +143,9 @@ const ForgotPassword = () => {
                     </Form.Item>
                     <div className="my-3" id="recaptcha-container"></div>
                     <Form.Item wrapperCol={{ offset: 0 }}>
-                        <Button style={{ backgroundColor: "#4dab04", color: "#fff" }} className="col-md-7" htmlType="submit" onClick={getAccessCode}>
+                        <button className="col-md-7 btn btn-primary" style={{ backgroundColor: "#184d9f", color: "#fff" }} htmlType="submit" onClick={getAccessCode}>
                             Получить код потверждения
-                        </Button>
+                        </button>
                     </Form.Item>
                 </Form>
             </div>
@@ -153,7 +153,7 @@ const ForgotPassword = () => {
     );
 
     const step2 = (
-        <div className="form-group col-xl-6">
+        <div className="form-group col-xl-6 px-0">
             <Form.Item
                 name="otp"
                 rules={[{ required: true, message: 'Пожалуйста введите код потверждения!' }]}
@@ -165,14 +165,14 @@ const ForgotPassword = () => {
                 <div className="text-secondary">{":" + timer}</div>
                 <a href="/forgot_password" style={{ display: link ? "block" : "none" }}>Вернуться назад</a>
                 <Form.Item wrapperCol={{ offset: 0 }}>
-                    <Button style={{ backgroundColor: "#4dab04", color: "#fff" }} className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
+                    <button className="col-md-7 btn btn-primary" style={{ backgroundColor: "#184d9f", color: "#fff" }} onClick={validateOtp}>Подтвердить</button>
                 </Form.Item>
             </center>
         </div>
     );
 
     const step3 = (
-        <div className="form-group col-xl-6">
+        <div className="form-group col-xl-6 px-0">
             <Form.Item
                 name="password"
                 rules={[{ required: true, message: 'Пожалуйста введите новый пароль!' }]}
@@ -189,7 +189,7 @@ const ForgotPassword = () => {
             </Form.Item>
             <center>
                 <Form.Item wrapperCol={{ offset: 0 }}>
-                    <Button style={{ backgroundColor: "#4dab04", color: "#fff" }} className='col-md-7' onClick={saveChanges}>Сохранить новый пароль</Button>
+                    <button className="col-md-7 btn btn-primary" style={{ backgroundColor: "#184d9f", color: "#fff" }} onClick={saveChanges}>Сохранить новый пароль</button>
                 </Form.Item>
             </center>
         </div>
@@ -213,17 +213,23 @@ const ForgotPassword = () => {
     return (
         <div>
             <Navbar />
-            <div className="col-xl-12" style={{ height: "auto" }}>
-                <div className="col-xl-12 d-flex justify-content-center mt-0 mt-xl-3">
+            <div className="col-xl-12 py-3" style={{ height: "auto" }}>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Забыли пароль</li>
+                </ol>
+                </nav>
+                <div className="col-xl-12 d-flex justify-content-center mt-0 mt-xl-3 px-0">
                     <div className="col-xl-6 bg-white md-rounded-pill py-2 py-3">
-                        <Steps current={current}>
+                        <Steps current={current} size="small">
                             {steps.map(item => (
                                 <Step key={item.title} title={item.title} />
                             ))}
                         </Steps>
                     </div>
                 </div>
-                <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-xl-3">
+                <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-xl-3 px-0">
                     {steps[current].content}
                 </div>
             </div>

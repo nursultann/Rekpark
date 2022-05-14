@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as api from "../api";
 import { TreeSelect } from 'antd';
 import { useHistory } from "react-router-dom";
-import logo from "../../src/img/logo.png";
+import Bussiness from './bussiness';
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
 
@@ -57,14 +57,11 @@ const SearchBar = () => {
       <div class="col-md-12">
         <div class="row">
           <div class="col-md-12">
-            <div className='row py-2 px-3 px-lg-0 d-md-flex align-items-center'>
-              <div className="col-lg-3 text-center d-none d-lg-block">
-                <a className="navbar-brand" href="/" ><img src={logo} style={{ width: "100%" }} /></a>
-              </div>
-              <div className='col-lg-9 mt-3 mt-xl-0 px-0'>
-                <div className='col-12 mr-2 rounded' style={{ backgroundColor: "#fff0bb" }}>
+            <div className='row pt-2 px-3 px-lg-0 d-md-flex align-items-center'>
+              <div className='col-lg-12 mt-3 mt-xl-0 px-3 pt-2'>
+                <div className='col-12 mr-2 rounded alert alert-info'>
                   <div className='row'>
-                    <div className='col-lg-3 px-2 px-lg-1 py-2 py-lg-2'>
+                    {/* <div className='col-lg-3 px-2 px-lg-1 py-2 py-lg-2'>
                       <TreeSelect
                         showSearch
                         style={{ width: '100%' }}
@@ -95,9 +92,9 @@ const SearchBar = () => {
                           )
                         })}
                       </TreeSelect>
-                    </div>
-                    <div className="col-lg-7 px-2 px-lg-1 mt-2 mt-lg-0 py-1 py-lg-2" >
-                      <Input className='col-lg-12' placeholder="Поиск..." onChange={(e) => { setSearch(e.target.value) }} style={{ width: "100%" }} />
+                    </div> */}
+                    <div className="col-lg-10 px-2 px-lg-2 mt-2 mt-lg-0 py-1 py-lg-2" >
+                      <input className='col-lg-12 form-control' placeholder="Поиск..." onChange={(e) => { setSearch(e.target.value) }} style={{ width: "100%" }} />
                     </div>
                     <div className='col-lg-2 px-2 px-lg-1 py-2 py-lg-2'>
                       <button className='btn btn-outline-light text-white col-12 rounded' type="primary" style={{ backgroundColor: '#184d9f' }} onClick={Search}>
@@ -116,7 +113,10 @@ const SearchBar = () => {
             <CategorySlider />
           </center>
         </div>
-
+        <div className='col-xl-12'>
+          <hr/>
+          <Bussiness/>
+        </div>
       </div>
       <hr />
     </div>

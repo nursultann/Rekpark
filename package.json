@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@2gis/mapgl-clusterer": "^2.4.3",
     "@ant-design/icons": "^4.7.0",
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
@@ -19,9 +20,11 @@
     "axios": "^0.24.0",
     "firebase": "^8.3.1",
     "firebaseui": "^5.0.0",
+    "jquery": "^3.6.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",
     "react": "^17.0.2",
+    "react-alice-carousel": "^2.6.0",
     "react-dom": "^17.0.2",
     "react-firebase-hooks": "^4.0.1",
     "react-gallery-carousel": "^0.2.6",
@@ -36,6 +39,7 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.0",
     "rsuite": "^5.2.3",
+    "sass": "^1.51.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

@@ -31,6 +31,9 @@ import Favorites from './screens/favorites';
 import Footer from './components/footer';
 import UserAds from './screens/user_ads';
 import Chats from './screens/chat';
+import BussinessProfile from './screens/bussiness_profile_page';
+import BussinessSettings from './screens/bussiness_profile_settings';
+import 'react-alice-carousel/lib/alice-carousel.css';
 // import SubCategory from './screens/sub_category';
 // import SubSubCategory from './screens/sub_sub_category';
 
@@ -74,8 +77,9 @@ const App = ({match}) => {
               <Route path="/article" component={Article} />
               <Route path="/search_result/:search" component={SearchResult} />
               <Route path={"/userAds/:id"} component={UserAds}/>
-              <Route path={"/chats/:id"} component={Chats}/>
-              {/* <Route path="/search_result/:search/products/:id" component={Ad}/> */}
+              <Route path={"/chats"} component={Chats}/>
+              <Route path="/bussiness_profile" component={BussinessProfile}/>
+              <Route path="/bussiness_settings" component={BussinessSettings}/>
             </Switch>
           </BrowserRouter>
         </div>

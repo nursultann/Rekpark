@@ -77,9 +77,14 @@ const Sign = () => {
                             <Input.Password onChange={(e) => { setPassword(e.target.value) }} placeholder="Пароль" />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 0 }}>
-                            <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="col-md-7" htmlType="submit" onClick={signIn}>
+                            <button className="col-md-10 ml-0 ml-xl-3 btn btn-primary" style={{ backgroundColor: "#184d9f", color: "#fff" }} htmlType="submit" onClick={signIn}>
                                 Войти
-                            </Button>
+                            </button>
+                        </Form.Item>
+                        <label>Вход с помощью</label>
+                        <Form.Item>
+                            <button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="btn btn-primary rounded-pill"><i class="fa-brands fa-google"></i> Google</button>
+                            <button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="btn btn-primary rounded-pill ml-2"><i class="fa-brands fa-facebook"></i> Facebook</button>
                         </Form.Item>
                     </Form>
                     <label>Вы не зарегистрированы?</label>

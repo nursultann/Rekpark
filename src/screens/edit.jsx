@@ -80,6 +80,14 @@ const EditAd = ({ match }) => {
   return (
     <div>
       <Navbar />
+      <div className="col-12 mt-3">
+      <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Редактирование объявления</li>
+                </ol>
+     </nav>
+     </div>
       <div className="col-md-8 py-5">
         <center className="pb-4">
           <label style={{ fontSize: 25 }}>Редактировать объявление</label>

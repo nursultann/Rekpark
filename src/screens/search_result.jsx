@@ -35,7 +35,13 @@ const SearchResult = ({ match }) => {
     return (
         <div>
             <Navbar />
-            <div className="col-md-12">
+            <div className="col-md-12 py-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Поиск</li>
+                </ol>
+                </nav>
                 <label className="pt-3" style={{ fontSize: 20 }}>Результаты поиска: {match.params.search}</label>
                 <hr className="pb-2" />
                 <div className="row mt-6 mb-6">

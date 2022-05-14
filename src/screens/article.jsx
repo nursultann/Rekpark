@@ -2,8 +2,7 @@ import React from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 
-class Article extends React.Component {
-    render() {
+const Article = ()=>{
         return (
             <div>
                 <Navbar />
@@ -45,13 +44,11 @@ class Article extends React.Component {
                                     <hr />
                                 </div>
                             </a>
-
                         </div>
                     </div>
                 </div>
                 <Footer />
             </div>
         );
-    }
 }
 export default Article;

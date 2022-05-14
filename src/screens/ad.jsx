@@ -10,7 +10,7 @@ import { FacebookShareButton, WhatsappShareButton, TelegramShareButton } from "r
 import { FacebookIcon, WhatsappIcon, TelegramIcon } from "react-share";
 import { Modal,Comment, Avatar, Form, Button, List, Input, Tooltip,message,Select } from 'antd';
 import moment from 'moment';
-import { UserOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { createComment } from "../api/product";
 import { setProductUserDetails } from "../redux/actions/user_actions";
 const key = "updateable";
@@ -36,7 +36,8 @@ const Ad = ({ match }) => {
          if (productDetails != null) {
             dispatch(setProductDetails(productDetails));
             setFavorite(productDetails.is_favorite);
-            dispatch(setProductUserDetails(productDetails.user));
+            // dispatch(setProductUserDetails(productDetails.user));
+            setProductUserDetail(productDetails.user);
             document.title = productDetails.title;
         }
         const user = await userDetails();
@@ -70,11 +71,9 @@ const Ad = ({ match }) => {
         }
         setSubmitting(true);
         const result = await createComment(value, productDetails.id, userId);
-        if (result) {
-            setValue('');
-            message.success({ content: 'Добавлен комментарий!', key, duration: 2 });
-            fetchProductDetails();
-        }
+        setValue('');
+        message.success({ content: 'Добавлен комментарий!', key, duration: 2 });
+        fetchProductDetails();
         setSubmitting(false);
     }
     const clickAnswer=(userName,parent)=>{
@@ -118,38 +117,6 @@ const Ad = ({ match }) => {
                 content={item.text}
             />}
         />
-        // <div className="col-xl-12">
-        // <div className="row">
-        //     <div className="col-xl-12 px-0"><b>{productDetails.comments.length+" Комментариев"}</b></div>
-        // <hr/>
-        // {productDetails.comments.length > 0 ? 
-        // <div>
-        //    {productDetails.comments.map((item)=>
-        //    <div className="col-xl-12">
-        //    <div className="row">
-        //        <div className="col-3 px-0 col-xl-1">
-        //             <img className="rounded-circle" src={item.user.media?.length ? item.user.media[0].original_url : 'https://joeschmoe.io/api/v1/random'} 
-        //             width="100%" />            
-        //        </div>
-        //        <div className="col-9 px-2 col-xl-11">
-        //        <label className="text-muted">{item.user.name}</label><br/>
-        //            {item.text}
-        //         <br/>
-        //         <span key="comment-basic-reply-to" onClick={clickAnswer(item.user.name,item.id)}>Ответить</span>
-        //         <span key="comment-basic-reply-to" onClick={deleteComment(item.id)}>Удалить</span>
-        //        </div>   
-        //     <hr className="col-12"/>   
-        //    </div>
-        //    </div>
-        //    )}   
-        // </div>
-        // :
-        // <>
-        //     Нет Комментариев
-        // </>
-        // }
-        // </div>
-        // </div>
     );
 
     const addFav = async () =>{
@@ -201,7 +168,6 @@ const Ad = ({ match }) => {
     console.log('Clicked cancel button');
     setVisible(false);
   };
-
     if (productDetails != null) {
         var time = moment(productDetails.created_at, 'YYYYMMDD, h:mm:ss a');
         moment.locale('ru');
@@ -212,6 +178,13 @@ const Ad = ({ match }) => {
             <Navbar />  
                 {productDetails != null ? <>          
                 <div className="col-xl-12 mt-xl-3 mt-3">
+                <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item"><a className="text-primary" href={"/category/"+productDetails.category_id}>Объявления из категории</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{productDetails.title}</li>
+                </ol>
+                </nav>
                     <div className="row px-xl-3 px-2">
                         <div className="col-xl-8 border rounded py-3">
                             <div className="row">
@@ -408,7 +381,7 @@ const Ad = ({ match }) => {
             : 
                 <div>
                     <center className="py-5">
-                    <div class="spinner-border text-success" role="status">
+                    <div class="spinner-border text-primary" role="status">
                     <span class="sr-only">Loading...</span>
                     </div>
                     </center>

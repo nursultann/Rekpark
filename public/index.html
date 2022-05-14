@@ -62,7 +62,8 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Рекпарк</title>
-  </head>
+    <link rel="stylesheet" type="text/scss" href="dist/App.scss"/>
+   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
@@ -189,3 +190,13 @@
 <!-- <link  href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script> -->
 <script src="assets/js/main.js"></script>
+<script>
+  $(document).ready(function() {
+	
+	$('.card').delay(1800).queue(function(next) {
+		$(this).removeClass('hover');
+		$('a.hover').removeClass('hover');
+		next();
+	});
+});
+</script>

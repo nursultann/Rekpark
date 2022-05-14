@@ -5,7 +5,6 @@ import { fetchUsersProducts } from '../api/product';
 import Navbar from '../components/navbar';
 import ProductItem from "../components/product/product_item";
 import { useDispatch } from 'react-redux';
-
 const UserAds = ({ match }) => {
     const [product, setProducts] = useState()
     const [user,setUser] = useState();
@@ -20,17 +19,22 @@ const UserAds = ({ match }) => {
             console.log(user);
         }
     }
-
+    
     useEffect(() => {
         fetchProducts();
     }, [])
-
     return (
         <div>
             <Navbar />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-xl-12">
+                    <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Объявления пользователя</li>
+                    </ol>
+                    </nav>
                         <div className="row mt-4 px-2">
                             <div className='col-xl-12 border rounded py-3'>
                                 <div className="col-xl-6">

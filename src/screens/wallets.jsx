@@ -60,8 +60,14 @@ const Wallets=()=>{
             :
         <>
                 <Navbar/>
-            <div class="col-md-12">  
-            
+            <div class="col-md-12 mt-3">  
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a className="text-primary" href="/profile">Мои объявления</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Пополнить баланс</li>
+                </ol>
+            </nav>    
             <div class="col-md-12 shadow-sm bg-white py-3">
             <h3>Пополнение баланса</h3>
                 <label>+{user.phone+', '+user.name}</label><br/>

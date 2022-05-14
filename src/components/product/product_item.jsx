@@ -43,8 +43,8 @@ const ProductItem = ({ product }) => {
                 <div class="card-body">
                     <div className="row">
                         <label style={{ fontSize: 17 }} class="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
-                        <label style={{fontSize:13,fontFamily:"sans-serif",whiteSpace:"nowrap",overflow: "hidden", 
-                            columnWidth: "10px",fontWeight:"500 "}} class="card-title label px-0 text-primary py-0 col-md-12">{product.title}</label>
+                        <label style={{fontSize:14,fontFamily:"sans-serif",whiteSpace:"nowrap",overflow: "hidden", 
+                            columnWidth: "10px",fontWeight:"500 "}} class="card-title label text-secondary px-0 py-0 col-md-12">{product.title}</label>
                         {/* <p class="card-text" style={{
                                         display: "-webkit-box",
                                         webkitLineClamp: "1",
@@ -55,11 +55,11 @@ const ProductItem = ({ product }) => {
                     </label> */}
                     </div>
                     <div className="row">
-                        <div className="col-xl-3 mt-5 px-0">
+                        <div className="col-3 mt-5 px-0">
                             <Avatar size="small" icon={<UserOutlined />} />
                         </div>
-                        <div className="col-xl-9 mt-5 px-0 text-right">
-                            <label className="text-muted label" style={{ fontSize: 13 }}>
+                        <div className="col-9 mt-5 px-0 text-right">
+                            <label className="text-dark label" style={{ fontSize: 13 }}>
                             <i class="far fa-clock text-info"></i> {update}<br />
                             <i class="far fa-eye text-info"></i>  {product.views}
                             </label>

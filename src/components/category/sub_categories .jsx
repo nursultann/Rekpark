@@ -353,7 +353,7 @@ const selectRegion = (region) => {
             <div className="row">
               {category?.children?.map((category) =>
                 <div className="col-3 col-md-2 mt-2 mt-md-2">
-                  <a className="text-primary" href={`/category/${category.id}`}>
+                  <a className="cat-link text-primary" href={`/category/${category.id}`}>
                     {category.name}
                   </a>
                 </div>

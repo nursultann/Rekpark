@@ -49,6 +49,14 @@ const Category = ({match})=> {
     return(
         <>
             <Navbar />
+            <div className="col-xl-12 py-3 px-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">По категории</li>
+                </ol>
+            </nav>
+            </div>
             <SubCategories category={category} onSubmit={(form) => {
                 const values = {'filter_attributes': form.getFieldsValue()};
                 console.log(values);
@@ -58,7 +66,7 @@ const Category = ({match})=> {
             {isLoading && !categoryProducts?.length ? 
                 <div>
                     <center className="py-5">
-                    <div class="spinner-border text-success" role="status">
+                    <div class="spinner-border text-primary" role="status">
                     <span class="sr-only">Loading...</span>
                     </div>
                     </center>

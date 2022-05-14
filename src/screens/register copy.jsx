@@ -228,7 +228,7 @@ const Register = () => {
             <div className="col-xl-12" style={{ height: "auto" }}>
                 <div className="col-xl-12 d-flex justify-content-center mt-2 mt-md-3">
                     <div className="col-xl-6 bg-white xl-rounded-pill shadow-sm py-2 py-3">
-                        <Steps current={current} size="small">
+                        <Steps current={current}>
                             {steps.map(item => (
                                 <Step key={item.title} title={item.title} />
                             ))}

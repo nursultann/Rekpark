@@ -86,6 +86,12 @@ const Profile = () => {
             <div>
                 <Navbar />
                 <div className="col-xl-12 mt-3">
+                <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Мои объявления</li>
+                </ol>
+                </nav>
                     <div className="row px-3 mb-5">
                         <div className="col-xl-4 bg-light rounded py-3">
                             <div className="col-xl-12 alert alert-success">
@@ -106,9 +112,11 @@ const Profile = () => {
                             <ul class="list-group">
                                 <li class="list-group-item">+{user.phone}</li>
                                 <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
-                                <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
+                                <li class="list-group-item bg-primary text-white"><Link to="/profile">Мои объявления</Link></li>
                                 <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
-                                <li class="list-group-item"><Link to="/settings">Настройки</Link></li>
+                                <li class="list-group-item"><Link to="/chats">Сообщения</Link></li>
+                                <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
+                                <li class="list-group-item"><Link to="/bussiness_profile">Бизнес профиль</Link></li>
                             </ul>
                             </div>
                             </div>

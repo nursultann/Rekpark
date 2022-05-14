@@ -271,7 +271,8 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         </Form.Item>
         <center>
           <Button
-            style={{ backgroundColor: '#4dab04', color: "#fff" }}
+            className="btn"
+            style={{ backgroundColor: '#184d9f', color: "#fff" }}
             loading={loading}
             onClick={async () => {
               if (onSend != null) onSend({ files: files, currency_id: selectedCurrencyId });

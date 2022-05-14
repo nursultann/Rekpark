@@ -16,7 +16,6 @@ const { SubMenu } = Menu;
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [collapse, setCollapse] = useState(true);
-
   const show = () => {
     setVisible(true);
   }
@@ -73,9 +72,7 @@ const Navbar = () => {
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
               <div className="col-4 col-lg-2 text-center">
-                <a className="navbar-brand" href="/" >
-                  <img src='https://www.bazar.kg/build/images/bazarkg-logo.39b422a5.svg' style={{ width: "100%" }} />
-                </a>
+                <a className="navbar-brand" href="/" ><img src={logo} style={{ width: "100%" }} /></a>
               </div>
               {/*
               <div className='col-5 d-none d-md-block'>
