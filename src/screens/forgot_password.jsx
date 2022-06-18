@@ -115,7 +115,6 @@ const ForgotPassword = () => {
         <div className="col-xl-12 d-flex justify-content-center px-0">
             <div className="col-xl-5 py-3 shadow bg-white text-center">
                 <label className="py-3" style={{ fontSize: 20 }}>Восстановление пароля</label><br />
-
                 <Form
                     name="basic"
                     labelCol={{ span: 5 }}

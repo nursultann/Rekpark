@@ -8,7 +8,7 @@ import {Button,notification,Avatar} from "antd";
 import { deleteAd } from "../../api/user";
 import moment from 'moment';
 import { UserOutlined } from '@ant-design/icons';
-import { activate, deactivate} from "../../api/product";
+import { activate, deactivate, productMakeVip} from "../../api/product";
 const ProductItem = ({product}) => {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -52,6 +52,10 @@ const ProductItem = ({product}) => {
             window.location.href = "/profile";
         }
         setTimeout(reload,1000);
+    }
+    const makeVip = async (id) =>{
+        const vip = await productMakeVip(id);
+        console.log(vip);
     }
     var time = moment(product.created_at, 'YYYYMMDD, h:mm:ss a');
     moment.locale('ru');
@@ -110,6 +114,14 @@ const ProductItem = ({product}) => {
                         </>
                         :<></>
                         }
+                        <div className="row mt-3 mt-xl-5">
+                            <div className="col-12 pl-4">
+                                <a className="text-primary"><i class="fa-solid fa-arrow-up text-muted"></i> Поднять</a><br/>
+                                <a className="text-primary" onClick={()=>makeVip(product.id)}><i class="fa-solid fa-crown text-danger"></i> Сделать VIP</a><br/>
+                                <a className="text-primary"><i class="fa-solid fa-bolt text-warning"></i> Срочно</a><br/>
+                                <a className="text-primary"><i class="fa-solid fa-arrow-up text-success"></i> Auto Up</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

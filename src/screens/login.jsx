@@ -1,17 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { login } from "../api/user";
+import { login, loginGoogle } from "../api/user";
 import { message } from 'antd';
 import { Form, Input, Button, Checkbox, Select } from 'antd';
+import GoogleLogin from "react-google-login";
+import { gapi } from 'gapi-script';
 const { Option } = Select;
 const key = 'updatable';
-
+const clientId = "363682799555-97hlkli04bo0eevlu0br81jtl3vg677a.apps.googleusercontent.com";
 const Sign = () => {
-    const [phoneNumber, setLogin] = useState();
+    const [phoneNumber, setLogin] = useState(0);
     const [password, setPassword] = useState();
     const [countrycode, setCountryCode] = useState();
-
+    
+    const responseGoogle = (response) => {
+        console.log("google response", response);
+        const email = response.profileObj.email;
+        const name = response.profileObj.name;
+        const uid = response.profileObj.googleId;
+        console.log(email, name, uid)
+        loginGoogle(email, name, uid, (data) => {
+            console.log('Success',data);
+        }, (data) => {
+            console.log('error', data);
+        });
+    
+        const onLoginError = (data) => {
+            
+            // message.error({content:'Номер или пароль указан неверно!', duration: 2});
+        };
+    
+    }
+    const onFailure = (response) =>{
+        console.log("Failure!", response);
+    }
     const signIn = async () => {
         if (password === "" || phoneNumber.length < 9) return;
         // console.log('phone', countrycode + phoneNumber);
@@ -29,7 +52,7 @@ const Sign = () => {
 
     const onLoginError = (data) => {
         console.log('error', data);
-        message.error('Номер или пароль указан неверно!', 10);
+        message.error({content:'Номер или пароль указан неверно!', duration: 2});
     };
 
     function onChange(value) {
@@ -37,6 +60,15 @@ const Sign = () => {
         setCountryCode(value);
     }
     document.title="Вход";
+    useEffect(()=>{
+        function start(){
+            gapi.client.init({
+                clientId:clientId,
+                scope:""
+            })
+        };
+        gapi.load('client:auth2',start);
+    });
     return (
         <div>
             <Navbar />
@@ -81,10 +113,16 @@ const Sign = () => {
                                 Войти
                             </button>
                         </Form.Item>
-                        <label>Вход с помощью</label>
-                        <Form.Item>
-                            <button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="btn btn-primary rounded-pill"><i class="fa-brands fa-google"></i> Google</button>
-                            <button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="btn btn-primary rounded-pill ml-2"><i class="fa-brands fa-facebook"></i> Facebook</button>
+                        <label className="text-muted">Вход с помощью</label>
+                        <Form.Item className="d-xl-flex justify-content-center">
+                        <GoogleLogin
+                            clientId={clientId}
+                            buttonText="Войти через Google"
+                            onSuccess={responseGoogle}
+                            onFailure={onFailure}
+                            cookiePolicy={'single_host_origin'}
+                            isSignedIn={true}
+                        />
                         </Form.Item>
                     </Form>
                     <label>Вы не зарегистрированы?</label>

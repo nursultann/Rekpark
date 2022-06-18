@@ -1,15 +1,17 @@
 import React,{useState,useEffect} from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { fetchArticleCategories, fetchArticles } from "../api/articles";
+import { fetchArticleCategories, fetchArticlesByCategories } from "../api/articles";
 import $ from 'jquery';
-const Articles = () =>{
+import moment from "moment";
+const CategoryArticles = ({match}) =>{
     const [articles,setArticles] = useState();
     const [categories,setCategories] = useState();
-    const fetchArticle = async ()=>{
-        const _articles = await fetchArticles({'sub': true});
+    const fetchArticles = async ()=>{
+        const _articles = await fetchArticlesByCategories(match.params.id);
+        console.log(_articles);
         if(_articles!=null){
-        setArticles(_articles);
+        setArticles(_articles.articles);
         }
     }
     const fetchCategories = async ()=>{
@@ -19,8 +21,8 @@ const Articles = () =>{
         }
     }
     useEffect(() => {
-        fetchArticle();
         fetchCategories();
+        fetchArticles();
     }, []);
         return(
             <div>
@@ -92,4 +94,4 @@ const Articles = () =>{
             </div>
         );
 }
-export default Articles;
+export default CategoryArticles;

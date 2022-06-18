@@ -113,7 +113,7 @@ const EditAd = ({ match }) => {
               const response = await api.updateProduct(match.params.id, formData);
               if (response != null && response.success) {
                 openNotification('success', 'Изменения сохранены!', null);
-                history.push(`/products/${match.params.id}`);
+                history.push(`/profile/`);
               } else {
                 openNotification('error', 'Не удалось сохранить!', null);
               }

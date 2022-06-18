@@ -13,7 +13,12 @@ export const setProductDetails = (product) => {
         payload: product,
     }
 }
-
+export const setArticleDetails = (product) => {
+    return {
+        type: ActionTypes.SET_SELECTED_ARTICLE,
+        payload: product,
+    }
+}
 export const setFavoriteProducts = (products)=>{
     return{
         type: ActionTypes.SET_FAVORITES,

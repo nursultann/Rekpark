@@ -2,8 +2,23 @@ import ApiClient from "./ApiClient";
 
 export const login = async (phone, password, onSuccess, onError) => {
     try {
-        const params = { 'phone': phone, 'password': password };
+        const params = { 'login': phone, 'password': password };
         const response = await ApiClient.post('/login', params);
+        if (response.status == 200 || response.status == 201) {
+            if (onSuccess != null) onSuccess(response.data.data);
+        }
+    } catch (error) {
+        if (onError != null) onError(error);
+    }
+};
+export const loginGoogle = async (gmail, name,uid, onSuccess, onError) => {
+    try {
+        const params = { 
+            'email': gmail, 
+            'name': name,
+            'uid':uid, 
+        };
+        const response = await ApiClient.post('/google-auth', params);
         if (response.status == 200 || response.status == 201) {
             if (onSuccess != null) onSuccess(response.data.data);
         }
@@ -39,7 +54,6 @@ export const userDetails = async (params) => {
     } catch (error) {
         console.log('fetch user details error ', error.response);
     }
-
     return null;
 };
 export const checkPhone = async (phone) => {
@@ -67,6 +81,7 @@ export const deleteAd = async (id) => {
 
     return null;
 };
+
 export const userSettings = async (params, onSuccess = null, onError = null) => {
     await ApiClient.post('/user', params, 'multipart/form-data').then(response => {
         if (response.status == 200 || response.status == 201) {
@@ -76,3 +91,53 @@ export const userSettings = async (params, onSuccess = null, onError = null) => 
         if (onError != null) onError(error);
     });
 };
+
+export const getUserChats = async () =>{
+    try {
+        const response = await ApiClient.get('/chats');
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetch user details error ', error.response);
+    }
+
+    return null;
+}
+
+export const getUserMessages = async (params) =>{
+    try {
+        const response = await ApiClient.get('/messages',params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetch user details error ', error.response);
+    }
+
+    return null;
+}
+export const postUserMessage = async (params) =>{
+    try {
+        const response = await ApiClient.post('/messages',params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetch user details error ', error.response);
+    }
+
+    return null;
+}
+export const readMessages = async (params)=>{
+    try {
+        const response = await ApiClient.post('/messages/read',params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetch user details error ', error.response);
+    }
+
+    return null;
+}

@@ -1,7 +1,7 @@
 // import logo from './logo.svg';
 import top from './img/top.png';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Ad from './screens/ad';
 import Main from './screens/main';
 import Login from './screens/login';
@@ -34,10 +34,26 @@ import Chats from './screens/chat';
 import BussinessProfile from './screens/bussiness_profile_page';
 import BussinessSettings from './screens/bussiness_profile_settings';
 import 'react-alice-carousel/lib/alice-carousel.css';
+import { subscribeToPusher } from './helpers/pusher';
+import { userDetails } from './api';
+import CategoryArticles from './screens/category_article';
+import setBussinessProfile from './screens/bussiness';
+import BussinessPlan from './screens/bussiness_plan';
 // import SubCategory from './screens/sub_category';
 // import SubSubCategory from './screens/sub_sub_category';
 
 const App = ({match}) => {
+  const subscribe = async ()=> {
+    const user = await userDetails();
+    if (localStorage.getItem('token')) {
+      subscribeToPusher(user.id);
+    }
+  }
+
+  useEffect(()=>{
+    subscribe();
+  },[]);
+
     return(
       // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
       // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
@@ -74,12 +90,15 @@ const App = ({match}) => {
               <Route path="/wallets" component={Wallets} />
               <Route path="/wallet" component={Wallet} />
               <Route path="/articles" component={Articles} />
-              <Route path="/article" component={Article} />
+              <Route path="/articles_categories/:id" component={CategoryArticles} />
+              <Route path="/article/:id" component={Article} />
               <Route path="/search_result/:search" component={SearchResult} />
               <Route path={"/userAds/:id"} component={UserAds}/>
               <Route path={"/chats"} component={Chats}/>
               <Route path="/bussiness_profile" component={BussinessProfile}/>
               <Route path="/bussiness_settings" component={BussinessSettings}/>
+              <Route path="/bussiness" component={setBussinessProfile}/>
+              <Route path={"/bussiness_plan/:id"} component={BussinessPlan}/>
             </Switch>
           </BrowserRouter>
         </div>
@@ -88,7 +107,8 @@ const App = ({match}) => {
             backgroundSize: "auto",
             backgroundImage: "",
             backgroundRepeat: "no-repeat"
-          }}></div>
+          }}>
+        </div>
       <Footer/>
       </div>
     </div>

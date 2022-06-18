@@ -166,7 +166,7 @@ const Settings = () => {
                 </nav>
                     <div className="row px-3 mb-5">
                         <div className="col-md-4 bg-light rounded py-3">
-                            <div className="col-md-12 alert alert-success">
+                            <div className="col-md-12 text-white alert" style={{backgroundColor:"#184d9f"}}>
                                 <div className="row">
                                     <div className="col-12">
                                     {user.media?.length ?
@@ -187,8 +187,7 @@ const Settings = () => {
                                 <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
                                 <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
                                 <li class="list-group-item"><Link to="/chats">Сообщения</Link></li>
-                                <li class="list-group-item bg-primary text-white"><Link to="/settings">Настройки пользователя</Link></li>
-                                {/* <li class="list-group-item"><Link to="/bussiness_settings">Настройки бизнес профиля</Link></li> */}
+                                <li class="list-group-item text-white" style={{backgroundColor:"#184d9f"}}><Link to="/settings">Настройки пользователя</Link></li>
                             </ul>
                             </div>
                             </div>

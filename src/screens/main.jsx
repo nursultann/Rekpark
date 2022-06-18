@@ -14,6 +14,7 @@ import { Button, BackTop, Tooltip } from "antd";
 import { UpOutlined } from "@ant-design/icons";
 import ProductGridList from "../components/product/product_grid_list";
 import Bussiness_Slider from "../components/bussiness/bussiness_slider";
+import News from "../components/news";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const Main = () => {
   };
 
   const fetchProducts = async () => {
-    let prods = products.concat(await api.fetchProducts({ offset: offset }));
+    let prods = products.concat(await api.fetchProducts({ offset: offset}));
     if (prods != null) {
       dispatch(setProducts(prods));
       setOffset(offset + limit);
@@ -58,6 +59,7 @@ const Main = () => {
     <div>
       <Navbar />
       <SearchBar />
+      <News/>
       <main role="main" className="container-fluid mb-5">
         <div className="row">
           <div className="col-lg-12">

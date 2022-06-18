@@ -12,7 +12,7 @@ const items = [
     <div className='col-xl-12'><img className='rounded' src="https://img3.goodfon.ru/wallpaper/nbig/2/bf/auto-cars-lamborghini-1633.jpg" onDragStart={handleDragStart} role="presentation" width="100%" /></div>,
 
 ];
-const Bussiness = ()=>{
+const BussinessProfiles = ()=>{
     return(
         <>
             <div className="col-xl-12 my-3 px-0 alert">
@@ -49,4 +49,4 @@ const Bussiness = ()=>{
 
     )
 }
-export default Bussiness;
+export default BussinessProfiles;

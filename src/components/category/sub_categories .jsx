@@ -96,7 +96,7 @@ const selectRegion = (region) => {
       <>
         {category?.children?.length ?
           <>
-          <div className="col-md-12 mt-3 pb-3 d-none d-xl-block">
+          <div className="col-md-12 pb-3 d-none d-xl-block">
           <label className="mb-3" style={{fontSize:18}}>Поиск</label>
             <Form
               form={form}
@@ -191,19 +191,6 @@ const selectRegion = (region) => {
                     >
                       {cities.map((item) =>
                         (<Option value={item.id}>{item.name}</Option>)
-                      )}
-                    </Select>
-                  </Form.Item>
-                </div>
-                <div className="col-xl-3">
-                <Form.Item
-                    key="district"
-                    label="Район"
-                    name="district"
-                  >
-                    <Select placeholder="Выберите район">
-                      {districts.map((item) =>
-                        (<Option value={item.name}>{item.name}</Option>)
                       )}
                     </Select>
                   </Form.Item>
@@ -325,19 +312,6 @@ const selectRegion = (region) => {
                     >
                       {cities.map((item) =>
                         (<Option value={item.id}>{item.name}</Option>)
-                      )}
-                    </Select>
-                  </Form.Item>
-                </div>
-                <div className="col-xl-3">
-                <Form.Item
-                    key="district"
-                    label="Район"
-                    name="district"
-                  >
-                    <Select placeholder="Выберите район">
-                      {districts.map((item) =>
-                        (<Option value={item.name}>{item.name}</Option>)
                       )}
                     </Select>
                   </Form.Item>

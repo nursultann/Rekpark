@@ -16,7 +16,6 @@ const ProductItem = ({product}) => {
         dispatch(setProductDetails(product));
         history.push(`products/${product.id}`);
     };
-
     const baseStyle = { height: 'auto' };
     if (typeof product.features === 'object' && !Array.isArray(product.features)) {
         if (product.features.color !== null) {
@@ -29,13 +28,11 @@ const ProductItem = ({product}) => {
             description: description,
         });
     };
-
     const removeFav = async ()=>{
         const addToFav = await removeFromFavorites(product.id);
         message.error({ content: 'Удалено из избранного!', key, duration: 2 });
         window.location.href="/favorites";
     }
-
     var time = moment(product.created_at, 'YYYYMMDD, h:mm:ss a');
     moment.locale('ru');
     var update = time.calendar();

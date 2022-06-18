@@ -8,15 +8,20 @@ import { setProductDetails } from "../redux/actions/product_actions";
 import Carousel from 'react-gallery-carousel';
 import { FacebookShareButton, WhatsappShareButton, TelegramShareButton } from "react-share";
 import { FacebookIcon, WhatsappIcon, TelegramIcon } from "react-share";
-import { Modal,Comment, Avatar, Form, Button, List, Input, Tooltip,message,Select } from 'antd';
+import { Modal,Comment, Avatar, Form, Button, List, Input, Tooltip,message,Select,notification } from 'antd';
 import moment from 'moment';
 import { HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { createComment } from "../api/product";
 import { setProductUserDetails } from "../redux/actions/user_actions";
+import { postUserMessage } from "../api/user";
 const key = "updateable";
 const { TextArea } = Input;
 const { Option } = Select;
-
+const openNotificationWithIcon = (type,info) => {
+    notification[type]({
+        message: info,
+    });
+  };
 const Ad = ({ match }) => {
     const dispatch = useDispatch();
     const { productDetails } = useSelector((state) => state.product);
@@ -29,6 +34,9 @@ const Ad = ({ match }) => {
     const [reason,setReason] = useState();
     const [childrens,setChildrens] = useState();
     const [productUserDetails,setProductUserDetail] = useState();
+    const [loadings,setLoadings] = useState();
+    const [messag,setMessage] = useState();
+    const [chat_id,setChatId] = useState();
     const fetchProductDetails = async () => {
         const productDetails = await fetchProduct(match.params.id, {
             'with': 'category;customAttributeValues.customAttribute;region;city;user;comments.user'
@@ -38,6 +46,7 @@ const Ad = ({ match }) => {
             setFavorite(productDetails.is_favorite);
             // dispatch(setProductUserDetails(productDetails.user));
             setProductUserDetail(productDetails.user);
+            setChatId(productDetails.user_id);
             document.title = productDetails.title;
         }
         const user = await userDetails();
@@ -71,9 +80,9 @@ const Ad = ({ match }) => {
         }
         setSubmitting(true);
         const result = await createComment(value, productDetails.id, userId);
-        setValue('');
-        message.success({ content: 'Добавлен комментарий!', key, duration: 2 });
-        fetchProductDetails();
+            setValue('');
+            message.success({ content: 'Добавлен комментарий!', key, duration: 2 });
+            fetchProductDetails();
         setSubmitting(false);
     }
     const clickAnswer=(userName,parent)=>{
@@ -83,10 +92,8 @@ const Ad = ({ match }) => {
     }
     const deleteComment= async (id) => {
         const result = await deleteComments(id);
-        if (result) {
             message.error({ content: 'Комментарий удалён!', key, duration: 2 });
             fetchProductDetails();
-        }
     }
     const Answer = async ()=>{
         const user = await userDetails();
@@ -95,11 +102,9 @@ const Ad = ({ match }) => {
         }
         setSubmitting(true);
         const result = await answerComment(value, productDetails.id,userId,parentId);
-        if (result) {
             setValue('');
             message.success({ content: 'Добавлен ответ на комментарий!', key, duration: 2 });
             fetchProductDetails();
-        }
         setSubmitting(false);
     }
     const CommentList = (productDetails) => (
@@ -173,6 +178,28 @@ const Ad = ({ match }) => {
         moment.locale('ru');
         var update = time.calendar();
     }
+    const postMessage = async ()=>{
+        setLoadings(true);
+        if(messag != "" && messag != null){
+        const sendMessage = await postUserMessage({'user_id':chat_id,'message':messag});
+        setMessage("");
+        openNotificationWithIcon('success','Сообщение отправлено!');
+        setLoadings(false);
+        }else{
+            openNotificationWithIcon('error','Заполните поле для сообщения!');
+        }
+    }
+    const postQuickMessage = async (messag)=>{
+        setLoadings(true);
+        if(messag != "" && messag != null){
+        const sendMessage = await postUserMessage({'user_id':chat_id,'message':messag});
+        setMessage("");
+        openNotificationWithIcon('success','Сообщение отправлено!');
+        setLoadings(false);
+        }else{
+            openNotificationWithIcon('error','Заполните поле для сообщения!');
+        }
+    }
     return (
         <div>
             <Navbar />  
@@ -202,13 +229,13 @@ const Ad = ({ match }) => {
                                     <div className="row">
                                         <div className="col-xl-12 mt-3" style={{ fontSize: "14px", whiteSpace: "normal" }}>
                                             <div className="row">
-                                                <label className="col-6"><b>Категория:</b></label><label className="col-6 label">{productDetails.category != null ? productDetails.category.name : <></>}</label>
-                                                <label className="col-6"><b>Цена:</b></label><label className="col-6 label">{productDetails.price + " " + productDetails.currency_symbol}</label>
+                                                <label className="col-6">Категория:</label><label className="col-6 label">{productDetails.category != null ? productDetails.category.name : <></>}</label>
+                                                <label className="col-6">Цена:</label><label className="col-6 label">{productDetails.price + " " + productDetails.currency_symbol}</label>
                                                 {productDetails.custom_attribute_values != null ?
                                                     productDetails.custom_attribute_values.map((item) => {
                                                         return (
                                                             <>
-                                                                <label className="col-6"><b>{item.custom_attribute.title}:</b></label>
+                                                                <label className="col-6">{item.custom_attribute.title}:</label>
                                                                 <label className="col-6">{item.value}</label>
                                                             </>
                                                         )
@@ -221,7 +248,7 @@ const Ad = ({ match }) => {
                             </div>
                             <hr />
                             <div className="col-xl-12">
-                                <label style={{ fontSize: "18px", whiteSpace: "normal" }}><b>Описание</b></label>
+                                <label style={{ fontSize: "18px", whiteSpace: "normal" }}>Описание</label>
                                 <p className="label">{productDetails.description}</p>
                             </div>
                         </div>
@@ -313,9 +340,23 @@ const Ad = ({ match }) => {
                                             <i class="far fa-clock"></i> Обновлено: {update}
                                         </label>
                                     </div>
-
                                 </div>
                                 <hr />
+                                {token ?
+                                <div className="col-xl-12 border rounded p-2">
+                                    <div className="col-xl-12 text-center" style={{backgroundColor:"#184d9f"}}>
+                                        <label className="p-2 rounded text-white">Написать сообщение к {productDetails.user.name}</label>
+                                    </div>
+                                    <div className="col-xl-12 mt-2 px-0">
+                                        <textarea rows="10" className="form-control" value={messag} onChange={(e)=>{setMessage(e.target.value)}}></textarea>
+                                        <Button loading={loadings} className="btn text-white rounded col-12 mt-2" style={{backgroundColor:"#184d9f"}} onClick={postMessage}>Отправить</Button>
+                                        <Button className="btn text-white rounded mt-2" style={{backgroundColor:"#184d9f"}} onClick={()=>postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
+                                        <Button className="btn text-white rounded mt-2" style={{backgroundColor:"#184d9f"}} onClick={()=>postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
+                                        <Button className="btn text-white rounded mt-2" style={{backgroundColor:"#184d9f"}} onClick={()=>postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
+                                    </div>
+                                </div>
+                                :<></>
+                                }
                             </div>
                         </div>
                             <div className="col-xl-8 border rounded mt-3 py-3 mb-5">

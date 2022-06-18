@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useState } from "react";
-import { Drawer, Button, Dropdown, Menu, Space, Divider } from 'antd';
+import { Drawer, Button, Dropdown, Menu, Space, Divider, Badge,Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import {
   FileAddOutlined,
@@ -9,9 +9,11 @@ import {
   DesktopOutlined,
   SettingOutlined,
   LogoutOutlined,
-  StarOutlined
+  StarOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 import logo from "../../src/img/logo.png";
+import eventBus from "../helpers/event_bus";
 const { SubMenu } = Menu;
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -36,6 +38,15 @@ const Navbar = () => {
     window.location.href = '/';
   }
 
+  useEffect(() => {
+    eventBus.on('chat-message', (data) => {
+      console.log("Data",data);
+    })
+    return () => {
+      eventBus.remove('chat-message')
+    }
+  }, [])
+
   const menu = (
     <Menu onClick={(menu) => {
       switch (menu.key) {
@@ -45,9 +56,12 @@ const Navbar = () => {
         case 'logout':
           logOut();
           break;
+        case 'chats':
+            navigateTo('/chats');
+          break;
         case 'favorites':
           navigateTo('/favorites');
-          break;    
+          break;
         default:
       }
     }}>
@@ -57,6 +71,10 @@ const Navbar = () => {
       <Menu.Divider />
       <Menu.Item key="favorites">
         Избранные
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="chats">
+        Сообщения
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout">
@@ -133,7 +151,7 @@ const Navbar = () => {
                         onClose={hide}
                         visible={visible}
                       >
-                        <div style={{ width: "100%"}}>
+                        <div style={{ width: "100%" }}>
                           <Menu
                             defaultSelectedKeys={['1']}
                             defaultOpenKeys={['sub1']}
@@ -149,6 +167,9 @@ const Navbar = () => {
                             <Menu.Item onClick={() => navigateTo('/favorites')} key="2" icon={<StarOutlined />}>
                               Избранные
                             </Menu.Item>
+                            <Menu.Item onClick={() => navigateTo('/chats')} key="2" icon={<MessageOutlined />}>
+                              Сообщения
+                            </Menu.Item>
                             <Menu.Item onClick={() => navigateTo('/settings')} key="3" icon={<SettingOutlined />}>
                               Настройки
                             </Menu.Item>
@@ -162,6 +183,11 @@ const Navbar = () => {
                     </div>
                     <div className="d-none d-lg-block">
                       <Space>
+                      <span className="avatar-item mr-2">
+                      <Badge count={1}>
+                      <a href="/chats"><i class="fa-solid fa-envelope fa-2x text-muted"></i></a>
+                      </Badge>
+                      </span>
                         <Dropdown.Button className="" overlay={menu}>
                           <Link to="/profile">Личный кабинет</Link>
                         </Dropdown.Button>

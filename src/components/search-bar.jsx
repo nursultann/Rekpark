@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as api from "../api";
 import { TreeSelect } from 'antd';
 import { useHistory } from "react-router-dom";
-import Bussiness from './bussiness';
+import BussinessProfiles from './bussiness_profiles';
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
 
@@ -115,7 +115,7 @@ const SearchBar = () => {
         </div>
         <div className='col-xl-12'>
           <hr/>
-          <Bussiness/>
+          {/* <Bussiness/> */}
         </div>
       </div>
       <hr />
