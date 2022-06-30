@@ -215,7 +215,6 @@ const Profile = () => {
                                     </div>
                                 </TabPane>
                             </Tabs>
-
                         </div>
                     </div>
                 </div>

@@ -13,6 +13,8 @@ import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
 import ProductItem from "../components/product/user_product_item";
 import { Tabs } from 'antd';
+import { subscriptions } from "../api/product";
+import { setProductPlans } from "../redux/actions/productPlans_actions";
 const { TabPane } = Tabs;
 const Profile = () => {
     console.log(localStorage.getItem('token'));
@@ -33,6 +35,10 @@ const Profile = () => {
     };
 
     const UserProducts = async () => {
+        const plans = await subscriptions();
+        if(plans !=null){
+            dispatch(setProductPlans(plans));           
+        }
         let _products = await api.fetchUserProducts({ 'sub': true });
         if (_products != null) {
             dispatch(setProducts(_products));

@@ -67,18 +67,16 @@ const Register = () => {
         if (otp === null || final === null)
             return;
         final.confirm(otp).then((result) => {
+            console.log("OTP", result);
             message.success('Код потверждения выслан', 10);
             setUuid(result.user.uid);
             setCurrent(current + 1);
             // result.user.uuid;
-
             console.log('success ', result);
-
         }).catch((err) => {
             message.error('Код потверждения введен неверно!', 10);
         })
     }
-
     const addUser = async () => {
         if (userPassword === passwordCheck) {
             const params = {
@@ -107,7 +105,7 @@ const Register = () => {
         console.log(`selected ${value}`);
         setCountryCode(value);
     }
-    document.title="Регистрация";
+    document.title = "Регистрация";
     useEffect(() => {
         window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         window.verify.render();
@@ -175,7 +173,6 @@ const Register = () => {
             </center>
         </div>
     );
-
     const step3 = (
         <div className="form-group col-xl-6 shadow">
             <Form.Item

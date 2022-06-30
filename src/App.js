@@ -30,7 +30,7 @@ import 'moment/locale/ru';
 import Favorites from './screens/favorites';
 import Footer from './components/footer';
 import UserAds from './screens/user_ads';
-import Chats from './screens/chat';
+import Chats from './screens/chats';
 import BussinessProfile from './screens/bussiness_profile_page';
 import BussinessSettings from './screens/bussiness_profile_settings';
 import 'react-alice-carousel/lib/alice-carousel.css';
@@ -39,8 +39,7 @@ import { userDetails } from './api';
 import CategoryArticles from './screens/category_article';
 import setBussinessProfile from './screens/bussiness';
 import BussinessPlan from './screens/bussiness_plan';
-// import SubCategory from './screens/sub_category';
-// import SubSubCategory from './screens/sub_sub_category';
+import ChatUser from './screens/chat';
 
 const App = ({match}) => {
   const subscribe = async ()=> {
@@ -95,6 +94,7 @@ const App = ({match}) => {
               <Route path="/search_result/:search" component={SearchResult} />
               <Route path={"/userAds/:id"} component={UserAds}/>
               <Route path={"/chats"} component={Chats}/>
+              <Route path={"/chat/:id?/:name"} component={ChatUser}/>
               <Route path="/bussiness_profile" component={BussinessProfile}/>
               <Route path="/bussiness_settings" component={BussinessSettings}/>
               <Route path="/bussiness" component={setBussinessProfile}/>

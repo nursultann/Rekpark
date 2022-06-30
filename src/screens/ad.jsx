@@ -229,8 +229,8 @@ const Ad = ({ match }) => {
                                     <div className="row">
                                         <div className="col-xl-12 mt-3" style={{ fontSize: "14px", whiteSpace: "normal" }}>
                                             <div className="row">
-                                                <label className="col-6">Категория:</label><label className="col-6 label">{productDetails.category != null ? productDetails.category.name : <></>}</label>
-                                                <label className="col-6">Цена:</label><label className="col-6 label">{productDetails.price + " " + productDetails.currency_symbol}</label>
+                                                <label className="col-6">Категория:</label><label className="col-6">{productDetails.category != null ? productDetails.category.name : <></>}</label>
+                                                <label className="col-6">Цена:</label><label className="col-6">{productDetails.price + " " + productDetails.currency_symbol}</label>
                                                 {productDetails.custom_attribute_values != null ?
                                                     productDetails.custom_attribute_values.map((item) => {
                                                         return (
@@ -334,8 +334,8 @@ const Ad = ({ match }) => {
                                         </TelegramShareButton>
                                         <hr className="d-none d-xl-block" />
                                     </div>
-                                    <div className="col-6 col-xl-12 mt-0 mt-xl-2">
-                                        <label class="ml-3 text-muted"><i class="far fa-eye"></i> Просмотры: {productDetails.views}<br />
+                                    <div className="col-xl-12 mt-2 mt-xl-2">
+                                        <label class="ml-0 ml-xl-3 text-muted"><i class="far fa-eye"></i> Просмотры: {productDetails.views}<br />
                                             <i class="fas fa-map-marker-alt"></i> Местоположение: {productDetails.region != null ? productDetails.region.name + "," + productDetails.city.name : ""}<br />
                                             <i class="far fa-clock"></i> Обновлено: {update}
                                         </label>
