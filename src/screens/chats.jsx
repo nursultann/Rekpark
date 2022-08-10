@@ -57,10 +57,11 @@ const Chats = () => {
         const userChats = await getUserChats();
         if (userChats != null) {
             setChats(userChats);
+            console.log(userChats);
         }
     }
-    const getUserMessage = async (userid, userName) => {
-        history.push("/chat/" + userid + "/" + userName);
+    const getUserMessage = async (id, userName,partner_id) => {
+        history.push("/chat/" + id + "/" + userName + "/" + partner_id);
     }
     const postMessage = async () => {
         setLoadings(true);
@@ -172,10 +173,10 @@ const Chats = () => {
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                                         <div class="users-container">
                                                             <ul class="users">
-                                                                {chats != null || chats != undefined || chats?.length > 0 ?
+                                                                {chats?.length > 0 ?
                                                                     <>
                                                                         {chats.map((chat) =>
-                                                                            <li class="person" data-chat="person1" onClick={() => getUserMessage(chat.id, chat.name)}>
+                                                                            <li class="person" data-chat="person1" onClick={() => getUserMessage(chat.id, chat.name,chat.room_id)}>
                                                                                 <div class="user">
                                                                                     <img src={chat.image} alt="Retail Admin" />
                                                                                     <span class="status busy"></span>
@@ -185,7 +186,10 @@ const Chats = () => {
                                                                                 </p>
                                                                             </li>
                                                                         )}
-                                                                    </> : <></>
+                                                                    </> :
+                                                                    <div className="col-12 text-center">
+                                                                            Пока нет сообщений
+                                                                    </div>
                                                                 }
                                                             </ul>
                                                         </div>

@@ -24,23 +24,25 @@ const Main = () => {
   const [offset, setOffset] = useState(0);
 
   const fetchInitProducts = async () => {
-    let _products = await api.fetchProducts({ 'sub': true, 'with': 'user' });
+    let _products = await api.fetchProducts({ 'sort': true, 'with': 'user' });
     if (_products != null) {
-      // _products = _products.concat(await api.fetchProducts({ 'with': 'user' }));
+      _products = _products.concat(await api.fetchProducts({ 'with': 'user' }));
       dispatch(setProducts(_products));
-      setOffset(offset + limit);
+      // setOffset(offset + limit);
+      console.log(_products);
     }
   };
-
   const fetchProducts = async () => {
-    let prods = products.concat(await api.fetchProducts({ offset: offset}));
+    let prods = products.concat(await api.fetchProducts({ offset: offset }));
     if (prods != null) {
       dispatch(setProducts(prods));
       setOffset(offset + limit);
     }
+    console.log(prods)
   };
-  document.title="Главная страница";
+
   useEffect(() => {
+    document.title = "Главная страница";
     fetchInitProducts();
   }, []);
 
@@ -59,7 +61,7 @@ const Main = () => {
     <div>
       <Navbar />
       <SearchBar />
-      <News/>
+      <News />
       <main role="main" className="container-fluid mb-5">
         <div className="row">
           <div className="col-lg-12">
@@ -99,8 +101,8 @@ const Main = () => {
                 variant="outlined"
                 onClick={() => {
                   fetchProducts();
-                }} style={{backgroundColor:"#184d9f",color:"#fff"}}>
-                  Показать еще
+                }} style={{ backgroundColor: "#184d9f", color: "#fff" }}>
+                Показать еще
               </Button>
             </center>
           </div>
@@ -114,5 +116,4 @@ const Main = () => {
     </div>
   );
 }
-
 export default Main;

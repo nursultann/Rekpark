@@ -32,6 +32,7 @@ const Profile = () => {
         if (user != null) {
             dispatch(setUser(user));
         }
+        console.log(user);
     };
 
     const UserProducts = async () => {

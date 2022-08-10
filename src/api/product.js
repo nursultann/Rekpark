@@ -1,5 +1,4 @@
 import ApiClient from "./ApiClient";
-
 export const fetchProducts = async (params = { limit: 20, offset: 0 }) => {
     try {
         if (!params.hasOwnProperty('sub')) {
@@ -19,7 +18,6 @@ export const fetchProducts = async (params = { limit: 20, offset: 0 }) => {
 
     return null;
 };
-
 export const fetchProduct = async (id, params) => {
     try {
         const response = await ApiClient.get(`/products/${id}`, params);
@@ -258,9 +256,21 @@ export const fetchUsersProducts = async (params) => {
 
     return null;
 };
-export const productMakeVip = async (id) => {
+export const productMakeVip = async (id, params) => {
+    console.log(params)
     try {
-        const response = await ApiClient.post(`/products/${id}/makevip`);
+        const response = await ApiClient.post(`/products/${id}/makevip`, params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('makevip error ', error);
+    }
+    return null;
+};
+export const productMakeTop = async (id,params) => {
+    try {
+        const response = await ApiClient.post(`/products/${id}/maketop`,params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }
@@ -269,20 +279,9 @@ export const productMakeVip = async (id) => {
     }
     return null;
 };
-export const productMakeTop = async (id) => {
+export const productMakeUrgent = async (id,params) => {
     try {
-        const response = await ApiClient.post(`/products/${id}/maketop`);
-        if (response.status == 200 || response.status == 201) {
-            return response.data.data;
-        }
-    } catch (error) {
-        console.log('fetching products error ', error);
-    }
-    return null;
-};
-export const productMakeUrgent = async (id) => {
-    try {
-        const response = await ApiClient.post(`/products/${id}/makeurgent`);
+        const response = await ApiClient.post(`/products/${id}/makeurgent`,params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }
@@ -292,9 +291,9 @@ export const productMakeUrgent = async (id) => {
 
     return null;
 };
-export const productMakeAutoUp = async (id) => {
+export const productMakeAutoUp = async (id,params) => {
     try {
-        const response = await ApiClient.post(`/products/${id}/makeautoup`);
+        const response = await ApiClient.post(`/products/${id}/makeautoup`,params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }
@@ -302,11 +301,34 @@ export const productMakeAutoUp = async (id) => {
         console.log('fetching products error ', error);
     }
 
+    return null;
+};
+export const productMakeColored = async (id, params) => {
+    console.log(params)
+    try {
+        const response = await ApiClient.post(`/products/${id}/makecolored`, params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('makevip error ', error);
+    }
     return null;
 };
 export const subscriptions = async ()=>{
     try {
         const response = await ApiClient.get(`/subscription/plans`);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetching products error ', error);
+    }
+    return null;
+}
+export const bussinessAccount = async (params)=>{
+    try {
+        const response = await ApiClient.get(`/business/account`,params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }

@@ -38,6 +38,7 @@ const ChatUser = () => {
     const [loadings, setLoadings] = useState();
     const userid = param.id;
     const userName = param.name;
+    const partner_id = param.room;
     const fetchUserDetails = async () => {
         const user = await userDetails();
         if (user != null) {
@@ -61,6 +62,7 @@ const ChatUser = () => {
             setMessages(userMessages.reverse());
             console.log(messages);
         const readMessage = await readMessages({'partner_id':chat_id});
+            console.log(chat_id);
             console.log(readMessage);
         }
     }
@@ -166,7 +168,7 @@ const ChatUser = () => {
                             <div class="container">
                                 <div class="content-wrapper">
                                     <div class="row gutters">
-                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 px-0">
                                             <div class="card m-0">
                                                 <div class="row no-gutters">
                                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -211,17 +213,17 @@ const ChatUser = () => {
                                                                 </>:<></>
                                                             }
                                                             </ul>
-                                                            {chat_id ?
-                                                            <div class="form-group mt-3 mb-0">
+                                                        </div>
+                                                        {chat_id ?
+                                                            <div class="form-group text-right py-2 px-3 mt-3 mb-0">
                                                                 <textarea class="form-control" rows="3" placeholder="Напишите ваше сообщение..." 
                                                                 onChange={(e)=>{setMessage(e.target.value)}} value={message}></textarea>
-                                                                <Button style={{backgroundColor:"#184d9f"}} className="float-right mt-3" type="primary" loading={loadings}  onClick={postMessage}>
+                                                                <button style={{backgroundColor:"#184d9f"}} className="btn btn-primary mt-3 mb-2" type="primary" loading={loadings}  onClick={postMessage}>
                                                                 Отправить
-                                                                </Button>
+                                                                </button>
                                                             </div>
                                                             :<></>
                                                             }
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

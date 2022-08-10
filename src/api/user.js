@@ -141,3 +141,15 @@ export const readMessages = async (params)=>{
 
     return null;
 }
+export const unreadMessages = async ()=>{
+    try {
+        const response = await ApiClient.get('/messages/unread-count');
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetch user details error ', error.response);
+    }
+
+    return null;
+}

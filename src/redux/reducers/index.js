@@ -4,6 +4,7 @@ import { categoryReducer } from "./category_reducer";
 import { userReducer } from "./user_reducer";
 import { ActionTypes } from "../../constants/action_types";
 import { productPlansReducer } from "./product_plans";
+import { bussinessPlanReducer } from "./bussiness_reducer";
 
 const initialState = {
     currencies: [],
@@ -32,5 +33,6 @@ export const reducers = combineReducers({
     category: categoryReducer,
     user: userReducer,
     main: mainReducer,
-    plans:productPlansReducer
+    plans:productPlansReducer,
+    bussiness: bussinessPlanReducer
 });

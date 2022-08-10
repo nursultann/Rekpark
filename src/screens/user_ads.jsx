@@ -17,9 +17,9 @@ const UserAds = ({ match }) => {
         });
         if (_products != null) {
             setProducts(_products);
+            console.log(product[0]);
         }
     }
-
     useEffect(() => {
         fetchProducts();
     }, [])
@@ -47,7 +47,7 @@ const UserAds = ({ match }) => {
                                                         : <img src={product[0].user.image} className="rounded-circle" width='50' height='50' />
                                                     }
                                                 </div>
-                                                <div className='col-9 ml-1'>
+                                                <div className='col-9 ml-1 px-4'>
                                                     <label className='ml-2 text-muted'><span className='text-dark'>{product[0].user.name}</span><br />
                                                         Аккаунт создан {moment(product[0].user.created_at, "YYYYMMDD").fromNow()}
                                                     </label>
@@ -59,6 +59,22 @@ const UserAds = ({ match }) => {
                                         </div>
                                     </> : <></>
                                 }
+                            </div>
+                            <div className='col-xl-12 border rounded my-3 py-3'>
+                            {product != null || product != undefined ?
+                                <>
+                                {
+                                    product[0].user.is_business_account ? 
+                                    <>
+                                    Это бизнес профиль
+                                    
+                                    </>
+                                    :
+                                    <></>
+                                }
+                                </>
+                                :<></>
+                            }
                             </div>
                             <div className='col-xl-12 border rounded py-3 mt-4'>
                                 <label style={{ fontSize: 18 }}><b>Объявления</b></label>

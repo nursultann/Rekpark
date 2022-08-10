@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useState } from "react";
-import { Drawer, Button, Dropdown, Menu, Space, Divider, Badge,Avatar } from 'antd';
+import { Drawer, Button, Dropdown, Menu, Space, Divider, Badge, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import {
   FileAddOutlined,
@@ -14,10 +14,19 @@ import {
 } from '@ant-design/icons';
 import logo from "../../src/img/logo.png";
 import eventBus from "../helpers/event_bus";
+import { unreadMessages } from "../api/user";
 const { SubMenu } = Menu;
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [collapse, setCollapse] = useState(true);
+  const [countMessage,setCountMessage] = useState(0);
+  const fetchUnreadMessages = async ()=>{
+      const fetchChats = await unreadMessages();
+      if(fetchChats != null){
+          setCountMessage(fetchChats.count);
+          console.log(fetchChats.count);
+      }
+  }
   const show = () => {
     setVisible(true);
   }
@@ -32,19 +41,20 @@ const Navbar = () => {
   };
 
   const token = localStorage.getItem('token');
-
+  console.log(token);
   const logOut = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
   }
-
   useEffect(() => {
+    fetchUnreadMessages();
     eventBus.on('chat-message', (data) => {
-      console.log("Data",data);
+      console.log("Data", data);
     })
     return () => {
       eventBus.remove('chat-message')
     }
+    
   }, [])
 
   const menu = (
@@ -57,7 +67,7 @@ const Navbar = () => {
           logOut();
           break;
         case 'chats':
-            navigateTo('/chats');
+          navigateTo('/chats');
           break;
         case 'favorites':
           navigateTo('/favorites');
@@ -183,11 +193,11 @@ const Navbar = () => {
                     </div>
                     <div className="d-none d-lg-block">
                       <Space>
-                      <span className="avatar-item mr-2">
-                      <Badge count={1}>
-                      <a href="/chats"><i class="fa-solid fa-envelope fa-2x text-muted"></i></a>
-                      </Badge>
-                      </span>
+                        <span className="avatar-item mr-2">
+                          <Badge count={countMessage}>
+                            <a href="/chats"><i class="fa-solid fa-envelope fa-2x text-muted"></i></a>
+                          </Badge>
+                        </span>
                         <Dropdown.Button className="" overlay={menu}>
                           <Link to="/profile">Личный кабинет</Link>
                         </Dropdown.Button>

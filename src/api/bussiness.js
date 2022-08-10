@@ -12,3 +12,15 @@ export const fetchBussinessPlans = async () => {
 
     return null;
 };
+export const setBussinessPlan = async (params) => {
+    try {
+        const response = await ApiClient.post('/business/account', params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetching product error ', error);
+    }
+
+    return null;
+};

@@ -12,8 +12,9 @@ const SetBussinessProfile = () => {
         const plan = await fetchBussinessPlans();
         if (plan != null) {
             setPlans(plan);
-            console.log(plans);
+            // console.log(plans);
         }
+        console.log(plans);
     }
     useEffect(() => {
         BussinessPlans();
@@ -44,7 +45,8 @@ const SetBussinessProfile = () => {
                                         <BussinessItem product={item} />
                                     )}
                                 </>
-                                : <>
+                                : 
+                                <>
                                     <div className="col-12 py-5 text-center">
                                         <div class="spinner-border text-primary" role="status">
                                             <span class="sr-only">Loading...</span>

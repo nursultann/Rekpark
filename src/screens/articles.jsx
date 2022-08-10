@@ -10,17 +10,20 @@ const Articles = () =>{
         const _articles = await fetchArticles({'sub': true});
         if(_articles!=null){
         setArticles(_articles);
+        console.log(_articles)
         }
     }
     const fetchCategories = async ()=>{
         const fetchCategory = await fetchArticleCategories();
         if(fetchCategory!=null){
             setCategories(fetchCategory);
+            console.log(fetchCategory)
         }
     }
     useEffect(() => {
         fetchArticle();
         fetchCategories();
+        
     }, []);
         return(
             <div>

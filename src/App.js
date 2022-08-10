@@ -32,7 +32,7 @@ import Footer from './components/footer';
 import UserAds from './screens/user_ads';
 import Chats from './screens/chats';
 import BussinessProfile from './screens/bussiness_profile_page';
-import BussinessSettings from './screens/bussiness_profile_settings';
+import BussinessSettings from './screens/bussiness_settings';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import { subscribeToPusher } from './helpers/pusher';
 import { userDetails } from './api';

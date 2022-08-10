@@ -4,11 +4,11 @@ import { useHistory } from "react-router-dom";
 import '../../dist/css/custom_card.css';
 import { setProductDetails } from "../../redux/actions/product_actions";
 import { AppImage } from "../custom_components";
-import { Button, notification, Avatar, Modal } from "antd";
+import { Button, notification, Avatar, Modal, message, Slider } from "antd";
 import { deleteAd } from "../../api/user";
 import moment from 'moment';
 import { UserOutlined } from '@ant-design/icons';
-import { activate, deactivate, productMakeAutoUp, productMakeTop, productMakeUrgent, productMakeVip, subscriptions } from "../../api/product";
+import { activate, deactivate, productMakeAutoUp, productMakeColored, productMakeTop, productMakeUrgent, productMakeVip, subscriptions } from "../../api/product";
 const ProductItem = ({ product }) => {
     const dispatch = useDispatch();
     const { productsPlans } = useSelector((state) => state.plans);
@@ -20,7 +20,10 @@ const ProductItem = ({ product }) => {
     const [modalImage, setModalImage] = useState();
     const [productId, setProductId] = useState();
     const [interval, setInterval] = useState(null);
-    const [period, setPeriod] = useState();
+    const [periodId, setPeriodId] = useState();
+    const [period, setPeriod] = useState(0);
+    const [itemPrice, setItemPrice] = useState();
+    const [color, setColor] = useState();
     const history = useHistory();
     const navigateToProductDetailsPage = (product) => {
         dispatch(setProductDetails(product));
@@ -73,6 +76,7 @@ const ProductItem = ({ product }) => {
     const makeSubscriptionModal = async (id, name) => {
         var index = subPlans.findIndex(obj => obj.name == name);
         setPlan(subPlans[index]);
+        console.log(plan);
         setProductId(id);
         if (plan != null) {
             if (plan.interval == 'day') {
@@ -85,8 +89,76 @@ const ProductItem = ({ product }) => {
             setIsModalVisible(true);
         }
     }
-    const handleOk = () => {
-        
+    const buyServiceBySelectedPeriod = async (balance, plan) => {
+        if (balance > itemPrice) {
+            const params = {
+                'period_id': periodId
+            }
+            console.log(params);
+            const vip = await productMakeVip(productId, params);
+            console.log(vip);
+            message.success("Успешно подключили услугу!")
+        } else {
+            message.error("Недостаточно средств чтобы подключить услугу!")
+        }
+    };
+    const buyService = async (balance, plan) => {
+        if (plan == "vip") {
+            if (balance > itemPrice) {
+                const params = {
+                    'period': period
+                }
+                console.log(params);
+                const vip = await productMakeVip(productId, params);
+                console.log(vip);
+                if (vip.status == 200) {
+                    message.success("Успешно подключили услугу!")
+                } else {
+                    message.info("Услуга уже подключена!")
+                }
+            } else {
+                message.error("Недостаточно средств чтобы подключить услугу!")
+            }
+        } else if (plan == "urgent") {
+            if (balance > itemPrice) {
+                const params = {
+                    'period': period
+                }
+                console.log(params);
+                const vip = await productMakeUrgent(productId, params);
+                console.log(vip);
+                message.success("Успешно подключили услугу!")
+            } else {
+                message.error("Недостаточно средств чтобы подключить услугу!")
+            }
+        } else if (plan == "colored") {
+            console.log('balance', balance)
+
+            if (balance > itemPrice) {
+                const params = {
+                    'period': period,
+                    'color': color
+                }
+                console.log(params);
+                const vip = await productMakeColored(productId, params);
+                console.log(vip);
+                message.success("Успешно подключили услугу!")
+            } else {
+                message.error("Недостаточно средств чтобы подключить услугу!")
+            }
+        } else if (plan == "make_auto") {
+            if (balance > itemPrice) {
+                const params = {
+                    'period': period
+                }
+                console.log(params);
+                const vip = await productMakeAutoUp(productId, params);
+                console.log(vip);
+                message.success("Успешно подключили услугу!")
+            } else {
+                message.error("Недостаточно средств чтобы подключить услугу!")
+            }
+        }
     };
 
     const handleCancel = () => {
@@ -184,9 +256,20 @@ const ProductItem = ({ product }) => {
                     </>
                 }
                     visible={isModalVisible}
-                    onOk={handleOk}
                     onCancel={handleCancel}
-                    cancelText="Отмена">
+                    // onOk = {false}
+                    cancelText="Отмена"
+                    footer={
+                        plan.periods?.length > 0 ?
+                            <>
+                                <button className="my-2 btn btn-primary" onClick={() => buyServiceBySelectedPeriod(user.balance, plan.name)}>Купить услугу</button>
+                            </>
+                            :
+                            <>
+                                <button className="my-2 btn btn-primary" onClick={() => buyService(user.balance, plan.name)}>Купить услугу 1</button>
+                            </>
+                    }
+                >
                     {plan != null ?
                         <>
                             <p>
@@ -199,21 +282,40 @@ const ProductItem = ({ product }) => {
                                 Ваш баланс: {user.balance}
                             </p>
                             <hr />
-                            {plan.periods != null || plan?.length > 0 ?
+                            {plan.periods?.length > 0 ?
                                 <>
                                     <h6>Выберите период действия услуги:</h6>
                                     <div className="border rounded p-2">
                                         {
                                             plan.periods.map((item) =>
                                                 <div className="border rounded alert alert-light p-2 my-2">
-                                                    <input type="radio" value={item.period} onChange={(e) => { setPeriod(e.target.value) }} name="period" />
+                                                    <input type="radio" value={item.id} onChange={(e) => {
+                                                        if (e.target.checked)
+                                                            setPeriodId(item.id)
+                                                        setItemPrice(item.price)
+                                                    }} name="period" />
                                                     <span className="ml-2 text-primary label">{item.price} {plan.currency}</span> ({item.period + " " + interval})
                                                 </div>
                                             )
                                         }
                                     </div>
                                 </>
-                                : <></>
+                                :
+                                <>
+                                    {plan.name == "colored" ?
+                                        <>
+                                            <p>Выберите цвет для закраски</p>
+                                            <input type="color" onChange={(e) => { setColor(e.target.value) }} />
+                                        </>
+                                        : <></>
+                                    }
+                                    <h6 className="mt-3">Выберите период действия услуги:</h6>
+                                    {plan.price * period} {plan.currency}
+                                    <input type="range" className="range col-12" onChange={(e) => {
+                                        setPeriod(e.target.value)
+                                        setItemPrice(plan.price * period)
+                                    }} /> {period} {interval != null ? interval : <></>}
+                                </>
                             }
                         </>
                         :

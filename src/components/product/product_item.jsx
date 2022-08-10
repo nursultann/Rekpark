@@ -30,6 +30,7 @@ const ProductItem = ({ product }) => {
     const image = product.has_media
         ? product.media[0].original_url
         : '';
+    console.log(product.is_vip);
     return (
         <a onClick={() => navigateToProductDetailsPage(product)}>
             <div className="col-md-12 shadow-sm" style={{ ...baseStyle }}>
@@ -37,7 +38,10 @@ const ProductItem = ({ product }) => {
                 <div className="col-md-12 px-0" style={{ height: 150 }}>
                     <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{objectFit: "cover"}} />
                     {product.is_vip ? 
-                        <div style={{ position: "absolute", left: "10px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
+                        <div style={{ position: "absolute", left: "80px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
+                        : <></>}
+                    {product.is_urgent ? 
+                        <div style={{ position: "absolute", left: "10px", top: "10px",  }}><span className="badge badge-warning p-2">Срочно</span></div> 
                         : <></>}
                 </div>
                 </div>
@@ -73,5 +77,4 @@ const ProductItem = ({ product }) => {
         </a>
     );
 };
-
 export default ProductItem;
