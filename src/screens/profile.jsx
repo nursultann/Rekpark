@@ -15,7 +15,9 @@ import ProductItem from "../components/product/user_product_item";
 import { Tabs } from 'antd';
 import { subscriptions } from "../api/product";
 import { setProductPlans } from "../redux/actions/productPlans_actions";
+
 const { TabPane } = Tabs;
+
 const Profile = () => {
     console.log(localStorage.getItem('token'));
     if (!localStorage.getItem('token')) {
