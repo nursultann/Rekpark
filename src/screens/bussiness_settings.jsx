@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { fetchBussinessPlans } from "../api/bussiness.js";
-import PeriodItem from "../components/bussiness/bussiness_item.jsx";
 import Navbar from "../components/navbar";
 
-const BussinessProfileSettings = () => {
+const BusinessProfileSettings = () => {
     if(localStorage.getItem('token') == null){
         window.location.href = "/";
     }
     const [plans, setPlans] = useState();
-    const BussinessPlans = async () => {
+    const BusinessPlans = async () => {
         const plan = await fetchBussinessPlans();
         if (plan != null) {
             setPlans(plan);
@@ -16,7 +15,7 @@ const BussinessProfileSettings = () => {
         }
     }
     useEffect(() => {
-        BussinessPlans();
+        BusinessPlans();
     })
     return (
         <>
@@ -46,4 +45,5 @@ const BussinessProfileSettings = () => {
         </>
     );
 }
-export default BussinessProfileSettings;
+
+export default BusinessProfileSettings;

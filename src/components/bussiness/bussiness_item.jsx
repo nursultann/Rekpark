@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import '../../dist/css/custom_card.css';
 
-const BussinessItem = ({ plan, periods, period }) => {
+const BusinessItem = ({ plan, periods, period }) => {
     const [item, setItem] = useState(null);
-    const [period_id,setPeriod_id] = useState();    
+    const [period_id, setPeriod_id] = useState();
+
     useEffect(() => {
         const item = periods.find((x) => x.period == period);
-        console.log('item', item, 'period', period, 'periods', periods);
         if(item != null){
             setPeriod_id(item.id)
         }
@@ -30,7 +30,9 @@ const BussinessItem = ({ plan, periods, period }) => {
                           {item != null ? item.price : ""} /
                             <small className="text-muted label">месяц</small>
                         </h6>
-                        <a href={"/bussiness_plan/"+plan.id+"/"+period_id} class="btn btn-primary rounded-pill col-12 text-white">Подключить</a>
+                        <a href={`/business-plan/${plan.id}/${period_id}`} className="btn btn-primary rounded-pill col-12 text-white">
+                            Подключить
+                        </a>
                         <hr />
                         <div className="border p-2 rounded">
                             <span className="label"><strong>Описание</strong></span>
@@ -44,4 +46,4 @@ const BussinessItem = ({ plan, periods, period }) => {
     );
 };
 
-export default BussinessItem;
+export default BusinessItem;

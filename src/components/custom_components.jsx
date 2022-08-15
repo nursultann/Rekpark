@@ -7,7 +7,9 @@ import {
   Switch
 } from "antd";
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+
 const { Option } = Select;
+
 const CustomAttributeField = (item) => {
   const values = JSON.parse(item.values);
   switch (item.type) {
@@ -32,12 +34,12 @@ const CustomAttributeField = (item) => {
       );
     case 'BOOLEAN':
       return (
-        <Switch
-          id={item.name}
-          checkedChildren={<CheckOutlined />}
-          unCheckedChildren={<CloseOutlined />}
-          className="w-100 mb-2"
-        />
+          <Switch
+            id={item.name}
+            checkedChildren={<CheckOutlined />}
+            unCheckedChildren={<CloseOutlined />}
+            className="w-100 mb-2"
+          />
       );
     case 'ARRAY':
       return (<></>);

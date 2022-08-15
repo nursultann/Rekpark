@@ -15,18 +15,21 @@ import {
 import logo from "../../src/img/logo.png";
 import eventBus from "../helpers/event_bus";
 import { unreadMessages } from "../api/user";
+
 const { SubMenu } = Menu;
+
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [collapse, setCollapse] = useState(true);
-  const [countMessage,setCountMessage] = useState(0);
-  const fetchUnreadMessages = async ()=>{
-      const fetchChats = await unreadMessages();
-      if(fetchChats != null){
-          setCountMessage(fetchChats.count);
-          // console.log(fetchChats.count);
-      }
+  const [countMessage, setCountMessage] = useState(0);
+  const fetchUnreadMessages = async () => {
+    const fetchChats = await unreadMessages();
+    if (fetchChats != null) {
+      setCountMessage(fetchChats.count);
+      // console.log(fetchChats.count);
+    }
   }
+
   const show = () => {
     setVisible(true);
   }
@@ -36,15 +39,18 @@ const Navbar = () => {
   }
 
   const history = useHistory();
+
   const navigateTo = (page) => {
     history.push(page);
   };
+
   const token = localStorage.getItem('token');
-  console.log(token);
+
   const logOut = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
   }
+
   useEffect(() => {
     fetchUnreadMessages();
     eventBus.on('chat-message', (data) => {
@@ -53,7 +59,7 @@ const Navbar = () => {
     return () => {
       eventBus.remove('chat-message')
     }
-    
+
   }, [])
 
   const menu = (
@@ -111,16 +117,16 @@ const Navbar = () => {
                 </nav>
               </div> 
               */}
-              <div class="col-6 d-lg-flex justify-content-end align-items-center">
+              <div className="col-6 d-lg-flex justify-content-end align-items-center">
                 {token == null ?
                   <>
                     <div className="d-none d-lg-block">
                       <Button onClick={() => navigateTo('/register')} className="mr-2 rounded-pill" style={{ backgroundColor: '#184d9f', color: "#fff" }}>Регистрация</Button>
                       <Button onClick={() => navigateTo('/login')} className="mr-2 rounded-pill" style={{ borderColor: '#184d9f', color: '#184d9f' }}>Войти</Button>
                     </div>
-                    <div class="d-xs-block d-lg-none text-right">
+                    <div className="d-xs-block d-lg-none text-right">
                       <Button onClick={show}>
-                        <i class="fas fa-bars"></i>
+                        <i className="fas fa-bars"></i>
                       </Button>
                       <Drawer
                         title=""
@@ -149,9 +155,9 @@ const Navbar = () => {
                   </>
                   :
                   <>
-                    <div class="d-xs-block d-lg-none text-right">
+                    <div className="d-xs-block d-lg-none text-right">
                       <Button onClick={show}>
-                        <i class="fas fa-bars"></i>
+                        <i className="fas fa-bars"></i>
                       </Button>
                       <Drawer
                         title=""
@@ -194,7 +200,7 @@ const Navbar = () => {
                       <Space>
                         <span className="avatar-item mr-2">
                           <Badge count={countMessage}>
-                            <a href="/chats"><i class="fa-solid fa-envelope fa-2x text-muted"></i></a>
+                            <a href="/chats"><i className="fa-solid fa-envelope fa-2x text-muted"></i></a>
                           </Badge>
                         </span>
                         <Dropdown.Button className="" overlay={menu}>
@@ -204,7 +210,6 @@ const Navbar = () => {
                           className="rounded-pill"
                           type='primary'
                           onClick={() => navigateTo('/products/create')}
-                          disableElevation
                           style={{ backgroundColor: '#184d9f' }}
                         >
                           + Добавить рекламу

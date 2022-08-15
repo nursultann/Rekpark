@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { fetchBussinessPlans } from "../api/bussiness.js";
-import BussinessItem from "../components/bussiness/bussiness_item.jsx";
+import BusinessItem from "../components/bussiness/bussiness_item.jsx";
 import Navbar from "../components/navbar";
 
-const SetBussinessProfile = () => {
+const SetBusinessProfile = () => {
     if (localStorage.getItem('token') == null) {
         window.location.href = "/";
     }
+
     const [plans, setPlans] = useState();
     const [periodId, setPeriodId] = useState();
     const [planId, setPlanId] = useState();
@@ -15,22 +16,24 @@ const SetBussinessProfile = () => {
     const [phone, setPhone] = useState();
     const [sites, setSite] = useState();
     const [period, setPeriod] = useState(1);
-    const BussinessPlans = async () => {
+
+    const BusinessPlans = async () => {
         const plan = await fetchBussinessPlans();
         if (plan != null) {
             setPlans(plan);
-            // console.log(plans);
         }
-        // console.log(plans);
     }
+
     const setTime = (time) => {
         setPeriod(time);
         console.log(period);
-        BussinessPlans();
+        BusinessPlans();
     }
+
     useEffect(() => {
-        BussinessPlans();
+        BusinessPlans();
     },[])
+
     return (
         <>
             <Navbar />
@@ -69,7 +72,7 @@ const SetBussinessProfile = () => {
                                     {plans != null ?
                                         <>
                                             {plans.map((item) =>
-                                            <BussinessItem
+                                            <BusinessItem
                                             plan={item} 
                                             periods={item.periods}
                                             period={period} 
@@ -94,4 +97,4 @@ const SetBussinessProfile = () => {
         </>
     );
 }
-export default SetBussinessProfile;
+export default SetBusinessProfile;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import {
@@ -13,56 +14,63 @@ import {
     InputNumber,
     Row,
     Select,
+    notification
 } from 'antd';
 // import { DG } from 'https://maps.api.2gis.ru/2.0/loader.js?pkg=full';
-import { useParams } from "react-router-dom";
 import Navbar from "../components/navbar";
+import DragAndDropUploader from "../components/drag_and_drop_uploader";
+import { setBussinessPlan } from "../api/bussiness";
+
 const { Option } = Select;
-const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-};
 
-const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-
-    if (!isJpgOrPng) {
-        message.error('You can only upload JPG/PNG file!');
-    }
-
-    const isLt2M = file.size / 1024 / 1024 < 2;
-
-    if (!isLt2M) {
-        message.error('Image must smaller than 2MB!');
-    }
-
-    return isJpgOrPng && isLt2M;
-};
-const BussinessPlan = () => {
-    const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState();
-    const [form] = Form.useForm();
+const BusinessPlan = () => {
+    const history = useHistory();
     const param = useParams();
     const planId = param.id;
     const periodId = param.period;
-    const [phoneOptions, setPhoneOptions] = useState([]);
-    console.log("planId", planId, "periodId", periodId);
-    const onFinish = (values) => {
-        console.log('Received values of form: ', values);
-    };
-    const handleChange = (info) => {
-        if (info.file.status === 'uploading') {
-            setLoading(true);
-            return;
-        }
 
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, (url) => {
-                setLoading(false);
-                setImageUrl(url);
-            });
+    const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState();
+    const [logotype, setLogotype] = useState();
+    const [cover, setCover] = useState();
+    const [form] = Form.useForm();
+    const [phoneOptions, setPhoneOptions] = useState([]);
+    const [autoCompleteResult, setAutoCompleteResult] = useState([]);
+
+    const onFinish = async (values) => {
+        const isValid = await form.validateFields();
+        if (isValid) {
+            const formData = new FormData();
+            formData.append('plan_id', planId);
+            formData.append('period_id', periodId);
+            formData.append('logotype', logotype);
+            formData.append('cover', cover);
+            for (const key of Object.keys(values)) {
+                formData.append(key, values[key])
+            }
+            if (values['instagram'] || values['facebook'] || values['telegram']) {
+                formData.append('socials', JSON.stringify({
+                    'instagram': values['instagram'],
+                    'facebook': values['facebook'],
+                    'telegram': values['telegram'],
+                }))
+            }
+            formData.append('phones', JSON.stringify(values['phones']))
+
+            setLoading(true)
+            const response = await setBussinessPlan(formData)
+            console.log(response)
+            if (response != null) {
+                notification['success']({
+                    message: 'Успешно сохранено!',
+                });
+                history.push(`/profile`);
+            } else {
+                notification['error']({
+                    message: 'Не удалось сохранить!',
+                });
+            }
+            setLoading(false)
         }
     };
 
@@ -91,10 +99,11 @@ const BussinessPlan = () => {
             </Select>
         </Form.Item>
     );
+
     const Hours = () => {
         let text = [];
         for (let i = 0; i < 24; i++) {
-            text[i] = <Option value={i}>{i}</Option>;
+            text[i] = <Option value={i} key={i}>{i}</Option>;
         }
         const hour = text;
         return (
@@ -107,10 +116,11 @@ const BussinessPlan = () => {
             </Select>
         );
     };
+
     const Minutes = () => {
         let text = [];
         for (let i = 0; i < 60; i++) {
-            text[i] = <Option value={i}>{i}</Option>;
+            text[i] = <Option value={i} key={i}>{i}</Option>;
         }
         const min = text;
         return (
@@ -123,7 +133,6 @@ const BussinessPlan = () => {
             </Select>
         );
     };
-    const [autoCompleteResult, setAutoCompleteResult] = useState([]);
 
     const onWebsiteChange = (value) => {
         if (!value) {
@@ -137,15 +146,7 @@ const BussinessPlan = () => {
         label: website,
         value: website,
     }));
-    // var map;
 
-    // DG.then(function () {
-    //   map = DG.map('map', {
-    //     center: [54.98, 82.89],
-    //     zoom: 13
-    //   });
-    //   DG.marker([54.98, 82.89]).addTo(map);
-    // });
     return (
         <>
             <Navbar />
@@ -179,7 +180,6 @@ const BussinessPlan = () => {
                             >
                                 <Input />
                             </Form.Item>
-
                             <Form.Item
                                 name="description"
                                 label="Описание"
@@ -210,7 +210,6 @@ const BussinessPlan = () => {
                             >
                                 <Input />
                             </Form.Item>
-
                             <Form.Item
                                 name="site"
                                 label="Сайт"
@@ -224,7 +223,6 @@ const BussinessPlan = () => {
                             >
                                 <Input />
                             </Form.Item>
-
                             <Form.Item
                                 name="address"
                                 label="Адрес"
@@ -238,7 +236,6 @@ const BussinessPlan = () => {
                             >
                                 <Input />
                             </Form.Item>
-
                             <Form.Item
                                 key="phones"
                                 label="Телефон"
@@ -249,26 +246,22 @@ const BussinessPlan = () => {
                                     {phoneOptions}
                                 </Select>
                             </Form.Item>
-
                             <Form.Item
                                 name="whatsapp"
                                 label="Whats App"
                                 rules={[
                                     {
-                                        required: true,
                                         message: 'Whats App пусто!',
                                     },
                                 ]}
                             >
                                 <Input />
                             </Form.Item>
-
                             <Form.Item
                                 name="facebook"
                                 label="Facebook ссылка"
                                 rules={[
                                     {
-                                        required: true,
                                         message: 'Facebook ссылка пусто!',
                                     },
                                 ]}
@@ -280,7 +273,6 @@ const BussinessPlan = () => {
                                 label="Instagram ссылка"
                                 rules={[
                                     {
-                                        required: true,
                                         message: 'Instagram ссылка пусто!',
                                     },
                                 ]}
@@ -292,7 +284,6 @@ const BussinessPlan = () => {
                                 label="Telegram ссылка"
                                 rules={[
                                     {
-                                        required: true,
                                         message: 'Telegram ссылка пусто!',
                                     },
                                 ]}
@@ -304,7 +295,6 @@ const BussinessPlan = () => {
                                 label="График работы"
                                 rules={[
                                     {
-                                        required: true,
                                         message: 'График работы пусто!',
                                     },
                                 ]}
@@ -431,51 +421,27 @@ const BussinessPlan = () => {
                             </Form.Item>
                             <Form.Item>
                                 <p>Логотип</p>
-                                <Upload
-                                    name="logotype"
-                                    listType="picture-card"
-                                    className="avatar-uploader"
-                                    showUploadList={false}
-                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    beforeUpload={beforeUpload}
-                                    onChange={handleChange}
-                                >
-                                    {imageUrl ? (
-                                        <img
-                                            src={imageUrl}
-                                            alt="logo"
-                                            style={{
-                                                width: '100%',
-                                            }}
-                                        />
-                                    ) : (
-                                        uploadButton
-                                    )}
-                                </Upload>
+                                <DragAndDropUploader
+                                    multiple={false}
+                                    onChange={(file) => {
+                                        setLogotype(file);
+                                    }}
+                                    onRemove={(f) => {
+                                        setLogotype(null)
+                                    }}
+                                />
                             </Form.Item>
                             <Form.Item>
                                 <p>Баннер</p>
-                                <Upload
-                                    name="banner"
-                                    listType="picture-card"
-                                    className="avatar-uploader"
-                                    showUploadList={false}
-                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    beforeUpload={beforeUpload}
-                                    onChange={handleChange}
-                                >
-                                    {imageUrl ? (
-                                        <img
-                                            src={imageUrl}
-                                            alt="logo"
-                                            style={{
-                                                width: '100%',
-                                            }}
-                                        />
-                                    ) : (
-                                        uploadButton
-                                    )}
-                                </Upload>
+                                <DragAndDropUploader
+                                    multiple={false}
+                                    onChange={(file) => {
+                                        setCover(file);
+                                    }}
+                                    onRemove={(f) => {
+                                        setCover(null)
+                                    }}
+                                />
                             </Form.Item>
                             <Form.Item>
                                 <p>Местоположение</p>
@@ -494,4 +460,5 @@ const BussinessPlan = () => {
         </>
     );
 }
-export default BussinessPlan;
+
+export default BusinessPlan;

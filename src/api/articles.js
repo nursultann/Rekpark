@@ -10,7 +10,7 @@ export const fetchArticles = async (params = { limit: 20, offset: 0 }) => {
         params['sortedBy'] = 'desc';
 
         const response = await ApiClient.get('/articles', params);
-        if (response.status == 200 || response.status == 201) {
+        if (response.status === 200 || response.status === 201) {
             return response.data.data;
         }
     } catch (error) {
@@ -19,6 +19,7 @@ export const fetchArticles = async (params = { limit: 20, offset: 0 }) => {
 
     return null;
 };
+
 export const fetchArticleCategories = async () => {
     try {
         const response = await ApiClient.get('/articles/categories');

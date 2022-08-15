@@ -125,7 +125,7 @@ const Profile = () => {
                                 <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
                                 <li class="list-group-item"><Link to="/chats">Сообщения</Link></li>
                                 <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
-                                <li class="list-group-item"><Link to="/bussiness">Бизнес профиль</Link></li>
+                                <li class="list-group-item"><Link to="/business">Бизнес профиль</Link></li>
                             </ul>
                             </div>
                             </div>

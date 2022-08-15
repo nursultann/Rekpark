@@ -115,8 +115,10 @@ const Profile = () => {
                                 <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
                                 <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
                                 <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
-                                <li class="list-group-item text-white" style={{backgroundColor:"#184d9f"}}><Link to="/bussiness_profile">Бизнес профиль</Link></li>
-                                {/* <li class="list-group-item"><Link to="/bussiness_settings">Настройки бизнес профиля</Link></li> */}
+                                <li class="list-group-item text-white" style={{backgroundColor:"#184d9f"}}>
+                                    <Link to="/business-profile">Бизнес профиль</Link>
+                                </li>
+                                {/* <li class="list-group-item"><Link to="/business-settings">Настройки бизнес профиля</Link></li> */}
                             </ul>
                             </div>
                             </div>

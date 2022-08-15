@@ -14,7 +14,7 @@ function getBase64(file) {
     });
 }
 
-const DragAndDropUploader = ({ style, className, onChange, onRemove }) => {
+const DragAndDropUploader = ({ style, className, onChange, onRemove, multiple = true }) => {
     const [previewVisible, setPreviewVisible] = useState(false);
     const [previewTitle, setPreviewTitle] = useState(false);
     const [previewImage, setPreviewImage] = useState();
@@ -33,7 +33,7 @@ const DragAndDropUploader = ({ style, className, onChange, onRemove }) => {
 
     const props = {
         name: 'file',
-        multiple: true,
+        multiple: multiple,
         listType: "picture-card",
         maxCount: 10,
         beforeUpload: files => {

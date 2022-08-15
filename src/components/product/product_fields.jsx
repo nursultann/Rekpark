@@ -112,7 +112,6 @@ const ProductFields = ({ form, loading = false, onSend }) => {
 
   return (
     <>
-
       <Form
         form={form}
         name="product_create"
@@ -128,7 +127,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             }}
             onRemove={(f) => {
               const index = files.indexOf(f);
-              if (index != -1) {
+              if (index !== -1) {
                 const f = files.splice(index, 1);
                 setFiles(f);
               }
