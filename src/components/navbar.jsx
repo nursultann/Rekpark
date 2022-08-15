@@ -39,7 +39,6 @@ const Navbar = () => {
   const navigateTo = (page) => {
     history.push(page);
   };
-
   const token = localStorage.getItem('token');
   console.log(token);
   const logOut = () => {

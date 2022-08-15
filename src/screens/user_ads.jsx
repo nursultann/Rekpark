@@ -64,7 +64,7 @@ const UserAds = ({ match }) => {
                             {product != null || product != undefined ?
                                 <>
                                 {
-                                    product[0].user.is_business_account ? 
+                                    product[0].user.business_account.business_plan.is_active ? 
                                     <>
                                     Это бизнес профиль
                                     

@@ -109,13 +109,20 @@ const ProductItem = ({ product }) => {
                     'period': period
                 }
                 console.log(params);
-                const vip = await productMakeVip(productId, params);
-                console.log(vip);
-                if (vip.status == 200) {
+                await productMakeVip(productId, params,onSuccess, onError);
+                const onSuccess = (data) => {
+                    console.log('success', data);
                     message.success("Успешно подключили услугу!")
-                } else {
+                };
+                const onError = (data) => {
+                    console.log('error', data);
                     message.info("Услуга уже подключена!")
-                }
+                };
+                // if (vip.status == 200) {
+                //     message.success("Успешно подключили услугу!")
+                // } else{
+                //     message.info("Услуга уже подключена!")
+                // }
             } else {
                 message.error("Недостаточно средств чтобы подключить услугу!")
             }

@@ -38,10 +38,10 @@ const ProductItem = ({ product }) => {
                 <div className="col-md-12 px-0" style={{ height: 150 }}>
                     <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{objectFit: "cover"}} />
                     {product.is_vip ? 
-                        <div style={{ position: "absolute", left: "80px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
+                        <div style={{ position: "absolute", left: "10px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
                         : <></>}
                     {product.is_urgent ? 
-                        <div style={{ position: "absolute", left: "10px", top: "10px",  }}><span className="badge badge-warning p-2">Срочно</span></div> 
+                        <div style={{ position: "absolute", left: "45px", top: "10px",  }}><span className="badge badge-warning p-2">Срочно</span></div> 
                         : <></>}
                 </div>
                 </div>

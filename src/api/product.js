@@ -256,14 +256,15 @@ export const fetchUsersProducts = async (params) => {
 
     return null;
 };
-export const productMakeVip = async (id, params) => {
+export const productMakeVip = async (id, params,onSuccess, onError) => {
     console.log(params)
     try {
         const response = await ApiClient.post(`/products/${id}/makevip`, params);
         if (response.status == 200 || response.status == 201) {
-            return response.data.data;
+            if (onSuccess != null) onSuccess(response.data.data);
         }
     } catch (error) {
+        if (onError != null) onError(error);
         console.log('makevip error ', error);
     }
     return null;
