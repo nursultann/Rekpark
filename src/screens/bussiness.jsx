@@ -14,22 +14,23 @@ const SetBussinessProfile = () => {
     const [email, setEmail] = useState();
     const [phone, setPhone] = useState();
     const [sites, setSite] = useState();
-    const [period,setPeriod] = useState(1);
+    const [period, setPeriod] = useState(1);
     const BussinessPlans = async () => {
         const plan = await fetchBussinessPlans();
         if (plan != null) {
             setPlans(plan);
             // console.log(plans);
         }
-        console.log(plans);
+        // console.log(plans);
     }
-    const setTime = (time)=>{
+    const setTime = (time) => {
         setPeriod(time);
         console.log(period);
+        BussinessPlans();
     }
     useEffect(() => {
         BussinessPlans();
-    })
+    },[])
     return (
         <>
             <Navbar />
@@ -50,52 +51,42 @@ const SetBussinessProfile = () => {
                 <div className="row px-4 pb-3">
                     <div className="col-xl-12 py-3 border rounded">
                         <div className="row">
-                            <div className="col-12 d-flex justify-content-center mb-3">
-                                <div className="col-8 d-flex justify-content-center">
-                                    <div className="col-3">
+                            <div className="col-12 mb-3">
+                                <div className="row py-3">
+                                    <div className="col-2">
+                                    </div>
+                                    <div className="col-12 col-md-8 text-center">
                                         <button className="btn btn-outline-primary" onClick={() => { setTime(1) }}>1 месяц</button>
-                                    </div>
-                                    <div className="col-3">
                                         <button className="btn btn-outline-primary" onClick={() => { setTime(3) }}>3 месяца</button>
-                                    </div>
-                                    <div className="col-3">
                                         <button className="btn btn-outline-primary" onClick={() => { setTime(6) }}>6 месяцев</button>
-                                    </div>
-                                    <div className="col-3">
                                         <button className="btn btn-outline-primary" onClick={() => { setTime(12) }}>1 год</button>
                                     </div>
+                                    <div className="col-2">
+
+                                    </div>
                                 </div>
-                            </div>
-                            {plans != null ?
-                                <>
-                                    {plans.map((item) =>
-                                        <div className="col-lg-4">
-                                            <div className="border">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{item.name}</h5>
-                                                    <hr />
-                                                    <h6 class="card-subtitle mb-2 text-center py-4"><BussinessItem product={item.periods} period = {period}/> / <small className="text-muted label">месяц</small></h6>
-                                                    <a href="#" class="btn btn-primary rounded-pill col-12 text-white">Подключить</a>
-                                                    <hr />
-                                                    <div className="border p-2 rounded">
-                                                        <span className="label"><strong>Описание</strong></span>
-                                                        <p class="card-text label text-muted">{item.description}</p>
-                                                        <hr />
-                                                    </div>
+                                <div className="row mt-3">
+                                    {plans != null ?
+                                        <>
+                                            {plans.map((item) =>
+                                            <BussinessItem
+                                            plan={item} 
+                                            periods={item.periods}
+                                            period={period} 
+                                            />
+                                            )}
+                                        </>
+                                        :
+                                        <>
+                                            <div className="col-12 py-5 text-center">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </>
-                                :
-                                <>
-                                    <div className="col-12 py-5 text-center">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                    </div>
-                                </>
-                            }
+                                        </>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -24,7 +24,7 @@ const Navbar = () => {
       const fetchChats = await unreadMessages();
       if(fetchChats != null){
           setCountMessage(fetchChats.count);
-          console.log(fetchChats.count);
+          // console.log(fetchChats.count);
       }
   }
   const show = () => {

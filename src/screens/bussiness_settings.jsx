@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchBussinessPlans } from "../api/bussiness.js";
-import BussinessItem from "../components/bussiness/bussiness_item.jsx";
+import PeriodItem from "../components/bussiness/bussiness_item.jsx";
 import Navbar from "../components/navbar";
 
 const BussinessProfileSettings = () => {
@@ -38,21 +38,7 @@ const BussinessProfileSettings = () => {
                 <div className="row px-4 pb-3">
                     <div className="col-xl-12 py-3 border rounded">
                         <div className="row">
-                            {plans != null ?
-                                <>
-                                    {plans.map((item) =>
-                                        <BussinessItem product={item} />
-                                    )}
-                                </>
-                                : 
-                                <>
-                                    <div className="col-12 py-5 text-center">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                    </div>
-                                </>
-                            }
+
                         </div>
                     </div>
                 </div>

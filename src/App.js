@@ -98,7 +98,7 @@ const App = ({match}) => {
               <Route path="/bussiness_profile" component={BussinessProfile}/>
               <Route path="/bussiness_settings" component={BussinessSettings}/>
               <Route path="/bussiness" component={setBussinessProfile}/>
-              <Route path={"/bussiness_plan/:id"} component={BussinessPlan}/>
+              <Route path={"/bussiness_plan/:id?/:period"} component={BussinessPlan}/>
             </Switch>
           </BrowserRouter>
         </div>
