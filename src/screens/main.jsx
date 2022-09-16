@@ -38,7 +38,6 @@ const Main = () => {
       dispatch(setProducts(prods));
       setOffset(offset + limit);
     }
-    console.log(prods)
   };
 
   useEffect(() => {

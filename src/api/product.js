@@ -264,7 +264,7 @@ export const productMakeVip = async (id, params) => {
             return response.data.data;
         }
     } catch (error) {
-        console.log('makevip error ', error);
+        console.log('makevip error ', error.response);
     }
     return null;
 };
@@ -311,7 +311,7 @@ export const productMakeColored = async (id, params) => {
             return response.data.data;
         }
     } catch (error) {
-        console.log('makevip error ', error);
+        console.log('makevip error ', error.response);
     }
     return null;
 };

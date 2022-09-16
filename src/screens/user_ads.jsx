@@ -9,6 +9,10 @@ import { useDispatch } from 'react-redux';
 const UserAds = ({ match }) => {
     const [product, setProducts] = useState()
     const [user, setUser] = useState();
+    const [socials, setSocials] = useState(null);
+    const [phones, setPhones] = useState(null);
+    const [schedule, setSchedule] = useState(null);
+    const [location, setLocation] = useState(null);
     const fetchProducts = async () => {
         const _products = await fetchUsersProducts({
             'search': 'user_id:' + match.params.id,
@@ -17,8 +21,31 @@ const UserAds = ({ match }) => {
         });
         if (_products != null) {
             setProducts(_products);
-            console.log(product[0]);
+            console.log(_products[0]);
+            if (_products[0].user.business_account != null) {
+                var str = _products[0].user.business_account.socials;
+                setSocials(JSON.parse(str));
+                var phone = _products[0].user.business_account.phones;
+                setPhones(JSON.parse(phone));
+                var schedules = _products[0].user.business_account.schedule;
+                setSchedule(JSON.parse(schedules));
+                var position = _products[0].user.business_account.location;
+                setLocation(JSON.parse(position));
+            }
         }
+    }
+    if(location != null){
+        //map
+        var DG = require('2gis-maps');
+        var map;
+        var marker;
+        DG.then(function () {
+            map = DG.map('map', {
+                'center': [location.latitude, location.longitude],
+                'zoom': 13
+            });
+            DG.marker([location.latitude, location.longitude]).addTo(map);
+        });
     }
     useEffect(() => {
         fetchProducts();
@@ -42,13 +69,44 @@ const UserAds = ({ match }) => {
                                         <div className="col-xl-6">
                                             <div className='row'>
                                                 <div className='col-1'>
-                                                    {product[0].user.image == null ?
-                                                        <Avatar size={100} icon={<UserOutlined />} />
-                                                        : <img src={product[0].user.image} className="rounded-circle" width='50' height='50' />
+                                                    {product[0].user.business_account != null ?
+                                                        <>
+                                                            {product[0].user.image == null ?
+                                                                <Avatar size={100} icon={<UserOutlined />} />
+                                                                :
+                                                                <div className='rounded-circle'
+                                                                    style={{
+                                                                        backgroundImage: 'url(' + product[0].user.business_account.logoImage + ')',
+                                                                        width: "50px",
+                                                                        height: "50px",
+                                                                        backgroundSize: "cover"
+                                                                    }}>
+                                                                    <span className='badge badge-danger mt-4 ml-4'>pro</span>
+                                                                </div>
+                                                            }
+                                                        </>
+                                                        :
+                                                        <>
+                                                            {product[0].user.image == null ?
+                                                                <Avatar size={100} icon={<UserOutlined />} />
+                                                                : <img src={product[0].user.image} className="rounded-circle" width='50' height='50' />
+                                                            }
+                                                        </>
                                                     }
                                                 </div>
                                                 <div className='col-9 ml-1 px-4'>
-                                                    <label className='ml-2 text-muted'><span className='text-dark'>{product[0].user.name}</span><br />
+                                                    <label className='ml-2 text-muted'>
+                                                        <span className='text-dark'>
+                                                            {product[0].user.business_account != null ?
+                                                                <>
+                                                                    {product[0].user.business_account.name}
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    {product[0].user.name}
+                                                                </>
+                                                            }
+                                                        </span><br />
                                                         Аккаунт создан {moment(product[0].user.created_at, "YYYYMMDD").fromNow()}
                                                     </label>
                                                 </div>
@@ -60,22 +118,185 @@ const UserAds = ({ match }) => {
                                     </> : <></>
                                 }
                             </div>
-                            <div className='col-xl-12 border rounded my-3 py-3'>
+
                             {product != null || product != undefined ?
                                 <>
-                                {
-                                    product[0].user.is_business_account ? 
-                                    <>
-                                    Это бизнес профиль
-                                    
-                                    </>
-                                    :
-                                    <></>
-                                }
-                                </>
-                                :<></>
+                                    {
+                                        product[0].user.business_account != null ?
+                                            <div className='col-12'>
+                                                <div className='row'>
+                                                    <div className='col-xl-4 border rounded my-3 py-3'>
+                                                        <div className='row'>
+                                                            <div className='col-12 mb-2'>
+                                                                <span className='badge badge-primary'>Бизнес профиль</span>
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-solid fa-location-dot text-secondary"></i>
+                                                                <span className='text-secondary'> Адрес: </span>
+                                                                {
+                                                                    product[0].user.business_account.address
+
+                                                                }
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-solid fa-envelope text-secondary"></i>
+                                                                <span className='text-secondary'> Почта: </span>
+                                                                <a href={'mailto:' + product[0].user.business_account.email}>
+                                                                    {
+                                                                        product[0].user.business_account.email
+                                                                    }
+                                                                </a>
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-solid fa-phone text-secondary"></i>
+                                                                <span className='text-secondary'> Телефоны: </span>
+                                                                <br />
+                                                                {phones != null ?
+                                                                    <>
+                                                                        {phones.map((item) =>
+                                                                            <>
+                                                                                <a href={'tel:' + item}>
+                                                                                    {
+                                                                                        item
+                                                                                    }
+                                                                                </a>
+                                                                                <br />
+                                                                            </>
+                                                                        )}
+                                                                    </>
+                                                                    : <></>
+                                                                }
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-brands fa-whatsapp text-secondary"></i>
+                                                                <span className='text-secondary'> Whats App: </span>
+                                                                <a href={'https://wa.me/' + product[0].user.business_account.whatsapp}>
+                                                                    {
+                                                                        product[0].user.business_account.whatsapp
+                                                                    }
+                                                                </a>
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-solid fa-link text-secondary"></i>
+                                                                <span className='text-secondary'> Сайт: </span>
+                                                                <a href={product[0].user.business_account.site}>
+                                                                    {
+                                                                        product[0].user.business_account.site
+                                                                    }
+                                                                </a>
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-brands fa-instagram text-sceondary"></i>
+                                                                <span className='text-secondary'> Instagram: </span>
+                                                                {socials != null ?
+                                                                    <a href={socials.instagram}>
+                                                                        {
+                                                                            socials.instagram
+                                                                        }
+                                                                    </a>
+                                                                    : <></>
+                                                                }
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-brands fa-facebook text-secondary"></i>
+                                                                <span className='text-secondary'> Facebook: </span>
+                                                                {socials != null ?
+                                                                    <a href={socials.facebook}>
+                                                                        {
+                                                                            socials.facebook
+                                                                        }
+                                                                    </a>
+                                                                    : <></>
+                                                                }
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-brands fa-telegram text-secondary"></i>
+                                                                <span className='text-secondary'> Telegram: </span>
+                                                                {socials != null ?
+                                                                    <a href={socials.telegram}>
+                                                                        {
+                                                                            socials.telegram
+                                                                        }
+                                                                    </a>
+                                                                    : <></>
+                                                                }
+                                                            </div>
+                                                            <div className='col-12 mb-2'>
+                                                                <i class="fa-solid fa-calendar-days text-secondary"></i>
+                                                                <span className='text-secondary'> Время работы: </span>
+                                                                <br />
+
+                                                                {schedule != null ?
+                                                                    <>
+                                                                        {schedule.monday != null && schedule.monday.selected != false ?
+                                                                            <>
+                                                                                Пн : {schedule.monday.startTime} - {schedule.monday.endTime} <br />
+                                                                            </>
+                                                                            : <>Пн : Закрыто<br /></>
+                                                                        }
+                                                                        {schedule.tuesday != null && schedule.tuesday.selected != false ?
+                                                                            <>
+                                                                                Вт : {schedule.tuesday.startTime} - {schedule.tuesday.endTime} <br />
+                                                                            </>
+                                                                            : <>Вт : Закрыто<br /></>
+                                                                        }
+                                                                        {schedule.wednesday != null && schedule.wednesday.selected != false ?
+                                                                            <>
+                                                                                Ср : {schedule.wednesday.startTime} - {schedule.wednesday.endTime} <br />
+                                                                            </>
+                                                                            : <>Ср : Закрыто<br /></>
+                                                                        }
+                                                                        {schedule.thursday != null && schedule.thursday.selected != false ?
+                                                                            <>
+                                                                                Чт : {schedule.thursday.startTime} - {schedule.thursday.endTime} <br />
+                                                                            </>
+                                                                            : <>Чт : Закрыто<br /></>
+                                                                        }
+                                                                        {schedule.friday != null && schedule.friday.selected != false ?
+                                                                            <>
+                                                                                Пт : {schedule.friday.startTime} - {schedule.friday.endTime} <br />
+                                                                            </>
+                                                                            : <>Пт : Закрыто<br /></>
+                                                                        }
+                                                                        {schedule.saturday != null && schedule.saturday.selected != false ?
+                                                                            <>
+                                                                                Сб : {schedule.saturday.startTime} - {schedule.saturday.endTime} <br />
+                                                                            </>
+                                                                            : <>Сб : Закрыто<br /></>
+                                                                        }
+                                                                        {schedule.sunday != null && schedule.sunday.selected != false ?
+                                                                            <>
+                                                                                Вс : {schedule.sunday.startTime} - {schedule.sunday.endTime} <br />
+                                                                            </>
+                                                                            : <>Вс : Закрыто<br /></>
+                                                                        }
+                                                                    </>
+                                                                    : <> </>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className='col-xl-8 my-3'>
+                                                        <img src={product[0].user.business_account.coverImage} width="100%" />
+                                                    </div>
+                                                    {location != null ?
+                                                        <div className='col-xl-12 border rounded p-3'>
+                                                            <p>Местоположение</p>
+                                                            <div id="map" style={{ width: "100%", height: "400px" }}></div>
+                                                        </div>
+                                                        : <></>
+                                                    }
+                                                </div>
+                                            </div>
+                                            :
+                                            <>
+                                            </>
+                                    }
+                                </> : <></>
                             }
-                            </div>
+
+
+
                             <div className='col-xl-12 border rounded py-3 mt-4'>
                                 <label style={{ fontSize: 18 }}><b>Объявления</b></label>
                                 <hr />
@@ -86,11 +307,11 @@ const UserAds = ({ match }) => {
                                                 <ProductItem product={item} />
                                             </div>
                                         ))
-                                        : <div className='col-12 text-center py-5'>
-                                            <div class="spinner-border text-success" role="status">
+                                        :
+                                        <div className='col-12 text-center py-5'>
+                                            <div class="spinner-border text-primary" role="status">
                                                 <span class="visually-hidden"></span>
                                             </div>
-
                                         </div>
                                     }
                                 </div>

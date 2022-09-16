@@ -22,8 +22,8 @@ const ProductItem = ({ product }) => {
     const [interval, setInterval] = useState(null);
     const [periodId, setPeriodId] = useState();
     const [period, setPeriod] = useState(0);
-    const [itemPrice, setItemPrice] = useState();
-    const [color, setColor] = useState();
+    const [itemPrice, setItemPrice] = useState(0);
+    const [color, setColor] = useState(null);
     const history = useHistory();
     const navigateToProductDetailsPage = (product) => {
         dispatch(setProductDetails(product));
@@ -89,15 +89,20 @@ const ProductItem = ({ product }) => {
             setIsModalVisible(true);
         }
     }
-    const buyServiceBySelectedPeriod = async (balance, plan) => {
+    const buyServiceBySelectedPeriod = async (balance) => {
         if (balance > itemPrice) {
             const params = {
                 'period_id': periodId
             }
             console.log(params);
             const vip = await productMakeVip(productId, params);
-            console.log(vip);
-            message.success("Успешно подключили услугу!")
+            if (vip != null) {
+                message.success("Успешно подключили услугу!");
+                setIsModalVisible(false);
+            } else {
+                message.warning("Услуга уже подключена!");
+                setIsModalVisible(false);
+            }
         } else {
             message.error("Недостаточно средств чтобы подключить услугу!")
         }
@@ -110,12 +115,18 @@ const ProductItem = ({ product }) => {
                 }
                 console.log(params);
                 const vip = await productMakeVip(productId, params);
-                console.log(vip);
-                if (vip.status == 200) {
-                    message.success("Успешно подключили услугу!")
+                if (vip != null) {
+                    message.success("Успешно подключили услугу!");
+                    setIsModalVisible(false);
                 } else {
-                    message.info("Услуга уже подключена!")
+                    message.warning("Услуга уже подключена!");
+                    setIsModalVisible(false);
                 }
+                // if (vip.status == 200) {
+                //     message.success("Успешно подключили услугу!")
+                // } else{
+                //     message.info("Услуга уже подключена!")
+                // }
             } else {
                 message.error("Недостаточно средств чтобы подключить услугу!")
             }
@@ -127,7 +138,13 @@ const ProductItem = ({ product }) => {
                 console.log(params);
                 const vip = await productMakeUrgent(productId, params);
                 console.log(vip);
-                message.success("Успешно подключили услугу!")
+                if (vip != null) {
+                    message.success("Успешно подключили услугу!");
+                    setIsModalVisible(false);
+                } else {
+                    message.warning("Услуга уже подключена!");
+                    setIsModalVisible(false);
+                }
             } else {
                 message.error("Недостаточно средств чтобы подключить услугу!")
             }
@@ -135,6 +152,7 @@ const ProductItem = ({ product }) => {
             console.log('balance', balance)
 
             if (balance > itemPrice) {
+                if(color != null){
                 const params = {
                     'period': period,
                     'color': color
@@ -142,7 +160,16 @@ const ProductItem = ({ product }) => {
                 console.log(params);
                 const vip = await productMakeColored(productId, params);
                 console.log(vip);
-                message.success("Успешно подключили услугу!")
+                if (vip != null) {
+                    message.success("Успешно подключили услугу!");
+                    setIsModalVisible(false);
+                } else {
+                    message.warning("Услуга уже подключена!");
+                    setIsModalVisible(false);
+                }
+            }else{
+                message.error("Не выбрали цвет!");
+            }
             } else {
                 message.error("Недостаточно средств чтобы подключить услугу!")
             }
@@ -154,7 +181,13 @@ const ProductItem = ({ product }) => {
                 console.log(params);
                 const vip = await productMakeAutoUp(productId, params);
                 console.log(vip);
-                message.success("Успешно подключили услугу!")
+                if (vip != null) {
+                    message.success("Успешно подключили услугу!");
+                    setIsModalVisible(false);
+                } else {
+                    message.warning("Услуга уже подключена!");
+                    setIsModalVisible(false);
+                }
             } else {
                 message.error("Недостаточно средств чтобы подключить услугу!")
             }
@@ -218,13 +251,15 @@ const ProductItem = ({ product }) => {
                             <>
                                 <a style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={deactivateAd}><i class="fas fa-ban text-muted"></i> Деактивировать</a><br />
                             </>
-                            : <></>
+                            :
+                            <></>
                         }
                         {product.status == "inactive" ?
                             <>
                                 <a style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={activateAd}><i class="fas fa-plus-circle text-muted"></i> Активировать</a>
                             </>
-                            : <></>
+                            :
+                            <></>
                         }
                         <div className="row mt-3 mt-xl-5">
                             <div className="col-12 pl-4">
@@ -305,13 +340,19 @@ const ProductItem = ({ product }) => {
                                     {plan.name == "colored" ?
                                         <>
                                             <p>Выберите цвет для закраски</p>
-                                            <input type="color" onChange={(e) => { setColor(e.target.value) }} />
+                                            {/* <input type="color" onChange={(e) => { setColor(e.target.value) }} /> */}
+                                            <button className="btn" style={{ backgroundColor: "#fcc7c7" }} onClick={(e) => { setColor("#fcc7c7") }}>Выбрать цвет</button>
+                                            <button className="btn ml-2" style={{ backgroundColor: "#d8c7fc" }} onClick={() => { setColor("#d8c7fc") }}>Выбрать цвет</button>
+                                            <button className="btn ml-2" style={{ backgroundColor: "#c7fcd6" }} onClick={() => { setColor("#c7fcd6") }}>Выбрать цвет</button>
+                                            <button className="btn mt-2" style={{ backgroundColor: "#b8dcff" }} onClick={() => { setColor("#b8dcff") }}>Выбрать цвет</button>
+                                            <button className="btn mt-2 ml-2" style={{ backgroundColor: "#f7ffbf" }} onClick={() => { setColor("#f7ffbf") }}>Выбрать цвет</button>
+                                            <button className="btn mt-2 ml-2" style={{ backgroundColor: "#e8e8e8" }} onClick={() => { setColor("#e8e8e8") }}>Выбрать цвет</button>
                                         </>
                                         : <></>
                                     }
                                     <h6 className="mt-3">Выберите период действия услуги:</h6>
                                     {plan.price * period} {plan.currency}
-                                    <input type="range" className="range col-12" onChange={(e) => {
+                                    <input defaultValue={1} type="range" className="range col-12" onChange={(e) => {
                                         setPeriod(e.target.value)
                                         setItemPrice(plan.price * period)
                                     }} /> {period} {interval != null ? interval : <></>}

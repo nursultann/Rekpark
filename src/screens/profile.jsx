@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { userDetails } from "../api/user";
@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Skeleton from '@mui/material/Skeleton';
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/actions/user_actions";
-import { Avatar } from 'antd';
+import { Avatar, notification,message } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
@@ -23,6 +23,7 @@ const Profile = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
     }
+    const history = useHistory();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
     const { products } = useSelector((state) => state.product);
@@ -48,12 +49,24 @@ const Profile = () => {
             setOffset(offset + limit);
         }
     };
+    const cancelBussinessAccount = async () => {
+        const cancel = await cancelBussinessAccount();
+        if(cancel != null){
+            notification['success']({
+                message: 'Вы вышли из бизнес профиля!',
+            });
+            history.push(`/profile`);
+        }else{
+            notification['error']({
+                message: 'Не удалось выйти из бизнес профиля!',
+            });
+        }
+    }
     document.title="Личный кабинет";
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
     }, []);
-
     return (
         user === null || user === undefined || user === ""
             ? <div className="col-md-12 mt-3">
@@ -115,6 +128,17 @@ const Profile = () => {
                                     </div>
                                 </div>
                             </div>
+                            <div className="row">
+                                    <div className="col-12">
+                                        {user.business_account != null ? 
+                                            <>
+                                                <button className="btn btn-primary col-12" onClick={cancelBussinessAccount}><i class="fa-solid fa-ban"></i> Отменить бизнес профиль</button>
+                                            </>
+                                            :
+                                            <></>
+                                        }
+                                    </div>
+                            </div>
                             <hr />
                             <div className="row">
                             <div className="col-xl-12">
@@ -124,9 +148,17 @@ const Profile = () => {
                                 <li class="list-group-item text-white" style={{backgroundColor:"#184d9f"}}><Link to="/profile">Мои объявления</Link></li>
                                 <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
                                 <li class="list-group-item"><Link to="/chats">Сообщения</Link></li>
+                                {user.business_account == null ?
+                                <>
                                 <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
-                                <li class="list-group-item"><Link to="/bussiness">Бизнес профиль</Link></li>
-                            </ul>
+                                <li class="list-group-item"><Link to="/business">Бизнес профиль</Link></li>
+                                </>
+                                :
+                                <>
+                                <li class="list-group-item"><Link to="/business-settings">Настройки бизнес профиля</Link></li>
+                                </>
+                                }
+                                </ul>
                             </div>
                             </div>
                             <hr />
@@ -206,7 +238,6 @@ const Profile = () => {
                                         <>
                                         {products.map((product) => {
                                             if (product.status !== 'disabled') return;
-
                                             return (
                                                 <>
                                                     <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">

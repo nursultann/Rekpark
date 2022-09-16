@@ -16,40 +16,40 @@ import Article from './screens/article';
 import Wallet from './screens/wallet';
 import Contacts from './screens/contacts';
 import Register from './screens/register';
-import './dist/css/bootstrap.min.css';
-import './blog.css';
-import 'antd/dist/antd.css';
-import "./App.css";
 import 'react-gallery-carousel/dist/index.css';
 import Settings from './screens/userSettings';
 import 'antd/dist/antd.css';
 import Wallets from './screens/wallets';
 import ForgotPassword from './screens/forgot_password';
 import SearchResult from './screens/search_result';
-import 'moment/locale/ru';
 import Favorites from './screens/favorites';
 import Footer from './components/footer';
 import UserAds from './screens/user_ads';
 import Chats from './screens/chats';
-import BussinessProfile from './screens/bussiness_profile_page';
-import BussinessSettings from './screens/bussiness_settings';
-import 'react-alice-carousel/lib/alice-carousel.css';
+import BusinessProfile from './screens/bussiness_profile_page';
+import BusinessSettings from './screens/bussiness_settings';
 import { subscribeToPusher } from './helpers/pusher';
 import { userDetails } from './api';
 import CategoryArticles from './screens/category_article';
-import setBussinessProfile from './screens/bussiness';
-import BussinessPlan from './screens/bussiness_plan';
+import SetBusinessProfile from './screens/bussiness';
+import BusinessPlan from './screens/bussiness_plan';
 import ChatUser from './screens/chat';
+import './dist/css/bootstrap.min.css';
+import './blog.css';
+import 'antd/dist/antd.css';
+import 'react-alice-carousel/lib/alice-carousel.css';
+import "./App.css";
+import 'moment/locale/ru';
 
-const App = ({match}) => {
-  const subscribe = async ()=> {
+const App = ({ match }) => {
+  const subscribe = async () => {
     const user = await userDetails();
     if (localStorage.getItem('token')) {
       subscribeToPusher(user.id);
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     subscribe();
   },[]);
 
@@ -95,10 +95,10 @@ const App = ({match}) => {
               <Route path={"/userAds/:id"} component={UserAds}/>
               <Route path={"/chats"} component={Chats}/>
               <Route path={"/chat/:id?/:name"} component={ChatUser}/>
-              <Route path="/bussiness_profile" component={BussinessProfile}/>
-              <Route path="/bussiness_settings" component={BussinessSettings}/>
-              <Route path="/bussiness" component={setBussinessProfile}/>
-              <Route path={"/bussiness_plan/:id"} component={BussinessPlan}/>
+              <Route path="/business-profile" component={BusinessProfile}/>
+              <Route path="/business-settings" component={BusinessSettings}/>
+              <Route path="/business" component={SetBusinessProfile}/>
+              <Route path={"/business-plan/:id/:period"} component={BusinessPlan}/>
             </Switch>
           </BrowserRouter>
         </div>
