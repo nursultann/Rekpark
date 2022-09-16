@@ -17,6 +17,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "2gis-maps": "^3.7.1",
     "antd": "^4.20.5",
     "axios": "^0.24.0",
     "firebase": "^8.3.1",

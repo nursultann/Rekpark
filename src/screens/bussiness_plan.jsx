@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
+// import { DG } from '2gis-maps'; 
 import {
     AutoComplete,
     Button,
@@ -16,10 +17,10 @@ import {
     Select,
     notification
 } from 'antd';
-// import { DG } from 'https://maps.api.2gis.ru/2.0/loader.js?pkg=full';
 import Navbar from "../components/navbar";
 import DragAndDropUploader from "../components/drag_and_drop_uploader";
-import { setBussinessPlan } from "../api/bussiness";
+import { setBussinessPlan, setBussinessSettings } from "../api/bussiness";
+import { userDetails } from "../api/user";
 
 const { Option } = Select;
 
@@ -28,15 +29,75 @@ const BusinessPlan = () => {
     const param = useParams();
     const planId = param.id;
     const periodId = param.period;
-
     const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState();
     const [logotype, setLogotype] = useState();
     const [cover, setCover] = useState();
+    const [location,setLocation] = useState();
+    const [schedule, setSchedule] = useState({
+        monday: null,
+        tuesday: null,
+        wednesday: null,
+        thursday: null,
+        friday: null,
+        saturday: null,
+        sunday: null
+    })
+    //2gis map
+    var DG = require('2gis-maps');
+    var map;
+    var marker;
+    var lat,lng;
+    // marker.on('drag', function(e) {
+    //      lat = e.target._latlng.lat.toFixed(3),
+    //      lng = e.target._latlng.lng.toFixed(3);
+    // });
+    // console.log(lat + ":" + lng);
+    const fetchUserDetails = async () =>{
+        const userDetail = await userDetails();
+        if(userDetail != null){
+            console.log(userDetail);
+            //2gis map 
+            DG.then(function() {
+                map = DG.map('map', {
+                    'center': [40.500305, 72.814718],
+                    'zoom': 13
+                });
+                marker = DG.marker([40.500305, 72.814718], {
+                    draggable: true
+                }).addTo(map);
+                marker.on('drag', function(e) {
+                        lat = e.target._latlng.lat.toFixed(3);
+                        lng = e.target._latlng.lng.toFixed(3);
+                        setLocation({latitude:lat,longitude:lng});
+                });   
+            });
+        }
+        else{
+            console.log("Fetch user details error!");
+        }
+    }
+    console.log("location:"+location);
+    useEffect(()=>{
+        fetchUserDetails();
+    },[])
     const [form] = Form.useForm();
     const [phoneOptions, setPhoneOptions] = useState([]);
     const [autoCompleteResult, setAutoCompleteResult] = useState([]);
 
+    function _setSchedule(key, value) {
+        setSchedule(prev => ({
+            ...prev,
+            [key]: { ...prev[key], ...value }
+        }))
+    }
+
+    function _setScheduleSelected(key, value) {
+        setSchedule(prev => ({
+            ...prev, 
+            [key]: { ...prev[key], selected: value}
+        }))
+    }
+    console.log(schedule);
     const onFinish = async (values) => {
         const isValid = await form.validateFields();
         if (isValid) {
@@ -45,6 +106,8 @@ const BusinessPlan = () => {
             formData.append('period_id', periodId);
             formData.append('logotype', logotype);
             formData.append('cover', cover);
+            formData.append('schedule',JSON.stringify(schedule));
+            formData.append('location',JSON.stringify(location));
             for (const key of Object.keys(values)) {
                 formData.append(key, values[key])
             }
@@ -56,7 +119,6 @@ const BusinessPlan = () => {
                 }))
             }
             formData.append('phones', JSON.stringify(values['phones']))
-
             setLoading(true)
             const response = await setBussinessPlan(formData)
             console.log(response)
@@ -82,7 +144,7 @@ const BusinessPlan = () => {
                     marginTop: 8,
                 }}
             >
-                Upload
+                загрузить
             </div>
         </div>
     );
@@ -99,41 +161,6 @@ const BusinessPlan = () => {
             </Select>
         </Form.Item>
     );
-
-    const Hours = () => {
-        let text = [];
-        for (let i = 0; i < 24; i++) {
-            text[i] = <Option value={i} key={i}>{i}</Option>;
-        }
-        const hour = text;
-        return (
-            <Select defaultValue={0}>
-                {hour.map((i) =>
-                    <>
-                        {i}
-                    </>
-                )}
-            </Select>
-        );
-    };
-
-    const Minutes = () => {
-        let text = [];
-        for (let i = 0; i < 60; i++) {
-            text[i] = <Option value={i} key={i}>{i}</Option>;
-        }
-        const min = text;
-        return (
-            <Select defaultValue={0}>
-                {min.map((i) =>
-                    <>
-                        {i}
-                    </>
-                )}
-            </Select>
-        );
-    };
-
     const onWebsiteChange = (value) => {
         if (!value) {
             setAutoCompleteResult([]);
@@ -146,14 +173,13 @@ const BusinessPlan = () => {
         label: website,
         value: website,
     }));
-
     return (
         <>
             <Navbar />
             <div className="container-fluid">
                 <div className="row mt-4 mb-4">
                     <div className="col-12">
-                        <h5>Регистрация бизнес профиля - Заполните поля*</h5>
+                        <h5>Настройки бизнес профиля</h5>
                         <hr />
                     </div>
                     <div className="col-2"></div>
@@ -178,7 +204,7 @@ const BusinessPlan = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="название компании или название бизнеса" />
                             </Form.Item>
                             <Form.Item
                                 name="description"
@@ -186,12 +212,12 @@ const BusinessPlan = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your password!',
+                                        message: 'Описание пусто!',
                                     },
                                 ]}
                                 hasFeedback
                             >
-                                <Input.TextArea />
+                                <Input.TextArea placeholder="описание" />
                             </Form.Item>
 
                             <Form.Item
@@ -200,15 +226,15 @@ const BusinessPlan = () => {
                                 rules={[
                                     {
                                         type: 'email',
-                                        message: 'The input is not valid E-mail!',
+                                        message: 'Неправильно введен еmail!',
                                     },
                                     {
                                         required: true,
-                                        message: 'Please input your E-mail!',
+                                        message: 'Email пусто!',
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="email" />
                             </Form.Item>
                             <Form.Item
                                 name="site"
@@ -221,7 +247,7 @@ const BusinessPlan = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="сайт" />
                             </Form.Item>
                             <Form.Item
                                 name="address"
@@ -234,7 +260,7 @@ const BusinessPlan = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="адрес" />
                             </Form.Item>
                             <Form.Item
                                 key="phones"
@@ -255,7 +281,7 @@ const BusinessPlan = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="996555555555 в таком формате" />
                             </Form.Item>
                             <Form.Item
                                 name="facebook"
@@ -266,7 +292,7 @@ const BusinessPlan = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="ссылка на Facebook страницу" />
                             </Form.Item>
                             <Form.Item
                                 name="instagram"
@@ -277,7 +303,7 @@ const BusinessPlan = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="ссылка на instagram страницу" />
                             </Form.Item>
                             <Form.Item
                                 name="telegram"
@@ -288,7 +314,7 @@ const BusinessPlan = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="ссылка на telegram" />
                             </Form.Item>
                             <Form.Item
                                 name="schedules"
@@ -300,122 +326,66 @@ const BusinessPlan = () => {
                                 ]}
                             >
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Пн"} />&nbsp;Пн</Col>
+                                    <Col span={2}><Checkbox value={"Пн"} onChange={(e)=>{
+                                        _setScheduleSelected('monday', e.target.checked)
+                                    }} />&nbsp;Пн</Col>
                                     &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
-                                    </Col>
-                                    &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
+                                    <Col span={12} xs={12} lg={12}>
+                                    <input type="time" onChange={(e)=>{_setSchedule('monday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('monday', { endTime: e.target.value })}}/>
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Вт"} />&nbsp;Вт</Col>
+                                    <Col span={2}><Checkbox value={"Вт"} onChange={(e)=>{
+                                        _setScheduleSelected('tuesday', e.target.checked)
+                                    }} />&nbsp;Вт</Col>
                                     &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
-                                    </Col>
-                                    &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
+                                    <Col span={12} xs={12} lg={12}>
+                                    <input type="time" onChange={(e)=>{_setSchedule('tuesday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('tuesday', { endTime: e.target.value })}}/>
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Ср"} />&nbsp;Ср</Col>
+                                    <Col span={2}><Checkbox value={"Ср"} onChange={(e)=>{
+                                        _setScheduleSelected('wednesday', e.target.checked)
+                                    }} />&nbsp;Ср</Col>
                                     &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
-                                    </Col>
-                                    &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
+                                    <Col span={12} xs={12} lg={12}>
+                                    <input type="time" onChange={(e)=>{_setSchedule('wednesday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('wednesday', { endTime: e.target.value })}}/>
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Чт"} />&nbsp;Чт</Col>
+                                    <Col span={2}><Checkbox value={"Чт"} onChange={(e)=>{
+                                        _setScheduleSelected('thursday', e.target.checked)
+                                    }} />&nbsp;Чт</Col>
                                     &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
-                                    </Col>
-                                    &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
+                                    <Col span={12} xs={12} lg={12}>
+                                    <input type="time" onChange={(e)=>{_setSchedule('thursday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('thursday', { endTime: e.target.value })}}/>
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Пт"} />&nbsp;Пт</Col>
+                                    <Col span={2}><Checkbox value={"Пт"} onChange={(e)=>{
+                                        _setScheduleSelected('friday', e.target.checked)
+                                    }} />&nbsp;Пт</Col>
                                     &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
-                                    </Col>
-                                    &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
+                                    <Col span={12} xs={12} lg={12}>
+                                    <input type="time" onChange={(e)=>{_setSchedule('friday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('friday', { endTime: e.target.value })}}/>
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Сб"} />&nbsp;Сб</Col>
+                                    <Col span={2}><Checkbox value={"Сб"} onChange={(e)=>{
+                                        _setScheduleSelected('saturday', e.target.checked)
+                                    }} />&nbsp;Сб</Col>
                                     &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
-                                    </Col>
-                                    &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
+                                    <Col span={12} xs={12} lg={12}>
+                                    <input type="time" onChange={(e)=>{_setSchedule('saturday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('saturday', { endTime: e.target.value })}}/>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col span={2}><Checkbox value={"Вс"} />&nbsp;Вс</Col>
+                                    <Col span={2}><Checkbox value={"Вс"} onChange={(e)=>{
+                                        _setScheduleSelected('sunday', e.target.checked)
+                                    }} />&nbsp;Вс</Col>
                                     &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
-                                    </Col>
-                                    &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Hours />
-                                    </Col>&nbsp; : &nbsp;
-                                    <Col span={2} xs={4} lg={2}>
-                                        <Minutes />
+                                    <Col span={12} xs={12} lg={12}>
+                                    <input type="time" onChange={(e)=>{_setSchedule('sunday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('sunday', { endTime: e.target.value })}}/>
                                     </Col>
                                 </Row>
                             </Form.Item>
@@ -439,7 +409,7 @@ const BusinessPlan = () => {
                                         setCover(file);
                                     }}
                                     onRemove={(f) => {
-                                        setCover(null)
+                                        setCover(null);
                                     }}
                                 />
                             </Form.Item>
@@ -449,7 +419,7 @@ const BusinessPlan = () => {
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit">
-                                    Зарегистрировать бизнес аккаунт
+                                    Подключиться к бизнес профилю
                                 </Button>
                             </Form.Item>
                         </Form>

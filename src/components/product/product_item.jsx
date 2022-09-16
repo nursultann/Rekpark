@@ -34,22 +34,24 @@ const ProductItem = ({ product }) => {
     return (
         <a onClick={() => navigateToProductDetailsPage(product)}>
             <div className="col-md-12 shadow-sm" style={{ ...baseStyle }}>
-                <div className="row">    
-                <div className="col-md-12 px-0" style={{ height: 150 }}>
-                    <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{objectFit: "cover"}} />
-                    {product.is_vip ? 
-                        <div style={{ position: "absolute", left: "10px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
-                        : <></>}
-                    {product.is_urgent ? 
-                        <div style={{ position: "absolute", left: "45px", top: "10px",  }}><span className="badge badge-warning p-2">Срочно</span></div> 
-                        : <></>}
+                <div className="row">
+                    <div className="col-md-12 px-0" style={{ height: 150 }}>
+                        <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{ objectFit: "cover" }} />
+                        {product.is_vip ?
+                            <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-2">VIP</span></div>
+                            : <></>}
+                        {product.is_urgent ?
+                            <div style={{ position: "absolute", left: "45px", top: "10px", }}><span className="badge badge-warning p-2">Срочно</span></div>
+                            : <></>}
+                    </div>
                 </div>
-                </div>
-                <div class="card-body">
+                <div class="card-body px-2 px-md-3">
                     <div className="row">
                         <label style={{ fontSize: 17 }} class="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
-                        <label style={{fontSize:14,fontFamily:"sans-serif",whiteSpace:"nowrap",overflow: "hidden", 
-                            columnWidth: "10px"}} class="card-title label1 text-secondary px-0 py-0 col-md-12">{product.title}</label>
+                        <label style={{
+                            fontSize: 14, fontFamily: "sans-serif", whiteSpace: "nowrap", overflow: "hidden",
+                            columnWidth: "10px"
+                        }} class="card-title label1 text-secondary px-0 py-0 col-md-12">{product.title}</label>
                         {/* <p class="card-text" style={{
                                         display: "-webkit-box",
                                         webkitLineClamp: "1",
@@ -61,16 +63,36 @@ const ProductItem = ({ product }) => {
                     </div>
                     <div className="row">
                         <div className="col-3 mt-5 px-0">
-                            <Avatar size="small" icon={<UserOutlined />} />
+                            {product.user?.media?.length ?
+                                <>
+                                    {product.user.business_account != null ?
+                                        <>
+                                            <div className='rounded-circle p-0'
+                                                style={{
+                                                    backgroundImage: 'url(' + product.user.business_account.logoImage + ')',
+                                                    width: "30px",
+                                                    height: "30px",
+                                                    backgroundSize: "cover"
+                                                }}>
+                                                <span className='badge badge-danger mt-4 ml-3' style={{fontSize:10}}>pro</span>
+                                            </div>
+                                        </>
+                                        :
+                                        <img className="mb-3" src={product.user.media[0].original_url} style={{ borderRadius: "50%", width: "30px", height: "30px" }} />
+                                    }
+                                </>
+                                :
+                                <Avatar size={42} icon={<UserOutlined />} />
+                            }
                         </div>
-                        <div className="col-9 mt-5 px-0 text-right">
-                            <img src={calendar} width="20" height="20" /> {update}<br/>
+                        <div className="col-9 mt-5 px-0 text-right" style={{fontSize:11}}>
+                            <i class="fa-solid fa-calendar-days text-info"></i> {update}<br />
                             {/* <img src={views} width="18" height="18" /> {product.views}<br/> */}
-                            <label className="text-dark label" style={{ fontSize: 13 }}>
-                            {/* <i class="far fa-clock text-info"></i> {update}<br /> */}
-                            <i class="far fa-eye text-info"></i>  {product.views}
+                            <label className="text-dark label" style={{ fontSize: 11 }}>
+                                {/* <i class="far fa-clock text-info"></i> {update}<br /> */}
+                                <i class="far fa-eye text-info"></i>  {product.views}
                             </label>
-                        </div>    
+                        </div>
                     </div>
                 </div>
             </div>

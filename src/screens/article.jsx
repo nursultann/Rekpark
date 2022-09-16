@@ -8,7 +8,7 @@ import { setArticleDetails } from "../redux/actions/product_actions";
 
 const Article = ({match})=>{
     const dispatch = useDispatch();
-    const { articleDetails } = useSelector((state) => state.product);
+    // const { articleDetails } = useSelector((state) => state.product);
     const [article,setArticle] = useState();
     const [articles,setArticles] = useState();
     const [update, setUpdate] = useState();
@@ -33,6 +33,7 @@ const Article = ({match})=>{
     useEffect(() => {
         getArticle();
         getArticles();
+        console.log(article);
     }, []);
         return (
             <div>
@@ -74,7 +75,7 @@ const Article = ({match})=>{
                                     {
                                     articles.map((article)=>
                                     <>
-                            <a class="nav-link" href={"/article/"}>
+                            <a class="nav-link" href={"/article/"+article.id}>
                                 <div className="col-md-12 shadow-sm">
                                    
                                     <div className="row">

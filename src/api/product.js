@@ -256,16 +256,15 @@ export const fetchUsersProducts = async (params) => {
 
     return null;
 };
-export const productMakeVip = async (id, params,onSuccess, onError) => {
+export const productMakeVip = async (id, params) => {
     console.log(params)
     try {
         const response = await ApiClient.post(`/products/${id}/makevip`, params);
         if (response.status == 200 || response.status == 201) {
-            if (onSuccess != null) onSuccess(response.data.data);
+            return response.data.data;
         }
     } catch (error) {
-        if (onError != null) onError(error);
-        console.log('makevip error ', error);
+        console.log('makevip error ', error.response);
     }
     return null;
 };
@@ -312,7 +311,7 @@ export const productMakeColored = async (id, params) => {
             return response.data.data;
         }
     } catch (error) {
-        console.log('makevip error ', error);
+        console.log('makevip error ', error.response);
     }
     return null;
 };
