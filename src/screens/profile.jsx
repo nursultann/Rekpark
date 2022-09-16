@@ -133,7 +133,7 @@ const Profile = () => {
                         </div>
                         <div className="col-xl-8 mt-3 mt-md-0">
                             <Tabs className="border rounded px-2 pb-3 py-1" defaultActiveKey="1">
-                                <TabPane tab="Активные" key="2">
+                                <TabPane tab="Активные" key="2">    
                                     <div className="row">
                                     {products?.length>0  ? 
                                         <>
