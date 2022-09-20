@@ -38,6 +38,7 @@ const Ad = ({ match }) => {
     const [messag, setMessage] = useState();
     const [chat_id, setChatId] = useState();
     const [phones, setPhones] = useState();
+    const [location, setLocation] = useState(null);
     const fetchProductDetails = async () => {
         const productDetails = await fetchProduct(match.params.id, {
             'with': 'category;customAttributeValues.customAttribute;region;city;user;comments.user'
@@ -49,6 +50,8 @@ const Ad = ({ match }) => {
             setProductUserDetail(productDetails.user);
             setChatId(productDetails.user_id);
             setPhones(productDetails.phones);
+            var position = productDetails.location;
+            setLocation(JSON.parse(position));
             console.log(productDetails);
             document.title = productDetails.title;
         }
@@ -58,6 +61,18 @@ const Ad = ({ match }) => {
             setUserId(user.id);
         }
     };
+    if(location != null){
+        //map
+        var DG = require('2gis-maps');
+        var map;
+        DG.then(function () {
+            map = DG.map('map', {
+                'center': [location.latitude, location.longitude],
+                'zoom': 13
+            });
+            DG.marker([location.latitude, location.longitude]).addTo(map);
+        });
+    }
     //reason
     const fetchComplaints = async () => {
         const complaints = await getComplaints();
@@ -329,7 +344,7 @@ const Ad = ({ match }) => {
                                                 : <></>
                                             }
                                         </div>
-                                        <div className="col-10">
+                                        <div className="col-10 px-4">
                                             <a href={"/userAds/" + productDetails.user_id}>
                                                 {productDetails.user.business_account != null ?
                                                 <>
@@ -341,7 +356,7 @@ const Ad = ({ match }) => {
                                                 </>
                                                 }
                                             </a>
-                                            <p className="border rounded bg-light px-1  text-secondary">{productDetails.user.active_count} объявления пользователя</p>
+                                            <p className="border rounded bg-light px-1 text-secondary">{productDetails.user.active_count} объявлений пользователя</p>
                                         </div>
                                     </div>
                                     <hr />
@@ -392,13 +407,21 @@ const Ad = ({ match }) => {
                                     </div>
                                     <div className="col-xl-12 mt-2 px-0">
                                         <textarea rows="10" className="form-control" value={messag} onChange={(e) => { setMessage(e.target.value) }}></textarea>
-                                        <Button loading={loadings} className="btn text-white rounded col-12 mt-2" style={{ backgroundColor: "#184d9f" }} onClick={postMessage}>Отправить</Button>
-                                        <Button className="btn text-white rounded mt-2" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
-                                        <Button className="btn text-white rounded mt-2 ml-2" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
-                                        <Button className="btn text-white rounded mt-2" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
+                                        <Button loading={loadings} className="btn btn-outline-primary rounded col-12 mt-2" onClick={postMessage}>Отправить</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
                                     </div>
                                 </div>
                                 : <></>
+                            }
+                            <hr/>
+                            {location != null ?
+                            <div className="col-xl-12">
+                                <p>Местоположение</p>
+                                <div id="map" style={{ width: "100%", height: "400px" }}></div>
+                            </div>
+                            :<></>
                             }
                         </div>
                     </div>
@@ -432,13 +455,11 @@ const Ad = ({ match }) => {
                                                                     <Button className="rounded-pill" htmlType="submit" loading={submitting} onClick={Answer} style={{ backgroundColor: "#184d9f", color: "#fff" }}>
                                                                         Ответить на комментарий
                                                                     </Button>
-
                                                                 }
                                                             </Form.Item>
                                                         </>
                                                     }
                                                 />
-
                                             </div>
                                             :
                                             <></>

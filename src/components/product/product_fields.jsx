@@ -27,7 +27,27 @@ const ProductFields = ({ form, loading = false, onSend }) => {
   const [districts, setDistricts] = useState([]);
   const [files, setFiles] = useState([]);
   const [phoneOptions, setPhoneOptions] = useState([]);
-
+  const [location, setLocation] = useState();
+  //2gis map
+  var DG = require('2gis-maps');
+  var map;
+  var marker;
+  var lat, lng;
+  //2gis map 
+  DG.then(function () {
+    map = DG.map('map', {
+      'center': [40.500305, 72.814718],
+      'zoom': 13
+    });
+    marker = DG.marker([40.500305, 72.814718], {
+      draggable: true
+    }).addTo(map);
+    marker.on('drag', function (e) {
+      lat = e.target._latlng.lat.toFixed(3);
+      lng = e.target._latlng.lng.toFixed(3);
+      setLocation({ latitude: lat, longitude: lng });
+    });
+  });
   const fetchCategoriesTree = async () => {
     const categories = await api.fetchCategoriesTree();
     if (categories != null) {
@@ -39,7 +59,6 @@ const ProductFields = ({ form, loading = false, onSend }) => {
       }
     }
   };
-
   const fetchData = async () => {
     const currencies = await api.fetchCurrencies();
     if (currencies != null) {
@@ -267,6 +286,12 @@ const ProductFields = ({ form, loading = false, onSend }) => {
           <Select mode="tags" placeholder="Введите телефон" tokenSeparators={[',']}>
             {phoneOptions}
           </Select>
+        </Form.Item>
+        <Form.Item
+         label="Местоположение"
+        
+        >
+          <div id="map" style={{ width: "100%", height: "400px" }}></div>
         </Form.Item>
         <center>
           <Button
