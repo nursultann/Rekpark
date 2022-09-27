@@ -3,7 +3,7 @@ import Footer from '../components/footer';
 import Navbar from '../components/navbar';
 import { Card } from 'antd';
 import { userDetails } from "../api/user";
-import { useEffect,useState } from "react";
+import { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/actions/user_actions";
 import Skeleton from '@mui/material/Skeleton';

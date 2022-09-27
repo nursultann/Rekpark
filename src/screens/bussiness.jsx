@@ -21,9 +21,9 @@ const SetBusinessProfile = () => {
         const plan = await fetchBussinessPlans();
         if (plan != null) {
             setPlans(plan);
+            console.log(plan);
         }
     }
-
     const setTime = (time) => {
         setPeriod(time);
         console.log(period);

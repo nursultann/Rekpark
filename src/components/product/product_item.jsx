@@ -16,6 +16,7 @@ const ProductItem = ({ product }) => {
     const navigateToProductDetailsPage = (product) => {
         dispatch(setProductDetails(product));
         history.push(`/products/${product.id}`);
+        // window.location.href = `/products/${product.id}`;
     };
     const baseStyle = { height: 'auto' };
     if (typeof product.features === 'object' && !Array.isArray(product.features)) {
