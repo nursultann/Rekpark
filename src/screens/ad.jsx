@@ -341,7 +341,7 @@ const Ad = ({ match }) => {
                                                 </>
                                                 }
                                             </a>
-                                            <p className="border rounded bg-light px-1  text-secondary">{productDetails.user.active_count} объявления пользователя</p>
+                                            <p className="border rounded bg-light px-1  text-secondary">{productDetails.user.active_count} объявлений пользователя</p>
                                         </div>
                                     </div>
                                     <hr />
@@ -393,9 +393,9 @@ const Ad = ({ match }) => {
                                     <div className="col-xl-12 mt-2 px-0">
                                         <textarea rows="10" className="form-control" value={messag} onChange={(e) => { setMessage(e.target.value) }}></textarea>
                                         <Button loading={loadings} className="btn text-white rounded col-12 mt-2" style={{ backgroundColor: "#184d9f" }} onClick={postMessage}>Отправить</Button>
-                                        <Button className="btn text-white rounded mt-2" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
-                                        <Button className="btn text-white rounded mt-2 ml-2" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
-                                        <Button className="btn text-white rounded mt-2" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
                                     </div>
                                 </div>
                                 : <></>
