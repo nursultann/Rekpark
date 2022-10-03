@@ -1,44 +1,44 @@
 import React from "react";
 
-const Footer  = ()=>{
+const Footer= ()=>{
     return(
         <footer class="footer-14398 col-xl-12">
       
         <div class="container">
           <div class="row mb-5">
             <div class="col-md-3">
-              <a href="#" class="footer-site-logo">РЕКПАРК</a>
-              <p>Сайт объявлений,купить,продать,сдать,аредовать </p>
+              <a href="/" class="footer-site-logo">РЕКПАРК</a>
+              <p>Сайт объявлений Кыргызстана</p>
             </div>
             <div class="col-md-2 ml-auto">
-              <h3>Недвижимость</h3>
-              <ul class="list-unstyled links">
-                <li><a href="#">Квартиры</a></li>
+              <a className="text-white" href="#">Для бизнеса</a>
+              {/* <ul class="list-unstyled links">
+                <li><a href="/category/6">Квартиры</a></li>
                 <li><a href="#">Коммерческое помещение</a></li>
                 <li><a href="#">Дома и дача</a></li>
                 <li><a href="#">Частные сектора</a></li>
                 <li><a href="#">Земельные участки</a></li>
-              </ul>
+              </ul> */}
             </div>
             <div class="col-md-2 ml-auto">
-              <h3>Авто</h3>
-              <ul class="list-unstyled links">
+              <a className="text-white" href="#">О проекте</a>
+              {/* <ul class="list-unstyled links">
                 <li><a href="#">Легковые</a></li>
                 <li><a href="#">Спец.Техника</a></li>
                 <li><a href="#">Мотоциклы</a></li>
                 <li><a href="#">Запчасти</a></li>
                 <li><a href="#"></a></li>
-              </ul>
+              </ul> */}
             </div>
             <div class="col-md-2 ml-auto">
-              <h3>О нас</h3>
-              <ul class="list-unstyled links">
+              <a className="text-white" href="#">Помощь</a>
+              {/* <ul class="list-unstyled links">
                 <li><a href="#">О проекте</a></li>
                 <li><a href="#">Обратная связь</a></li>
                 <li><a href="#">Пользовательское соглашение</a></li>
                 <li><a href="#">Помощь</a></li>
                 <li><a href="#">Для бизнеса</a></li>
-              </ul>
+              </ul> */}
             </div>
           </div>
 
@@ -49,7 +49,7 @@ const Footer  = ()=>{
             <div class="col-md-6 text-md-left">
               <ul class="list-unstyled link-menu nav-left">
                 <li><a href="#">Конфидециальность</a></li>
-                <li><a href="#">О сайте</a></li>
+                <li><a href="/about">О сайте</a></li>
                 <li><a href="#">Объявления</a></li>
               </ul>
             </div>

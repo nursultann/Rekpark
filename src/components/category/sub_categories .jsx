@@ -4,8 +4,10 @@ import { setCurrencies, setRegions } from "../../redux/actions/main_actions";
 import { Form, Button, Input,InputNumber,Modal,Select } from 'antd';
 import { CustomAttributeField } from "../custom_components";
 import * as api from "../../api";
+import { Link, useHistory } from "react-router-dom";
 const { Option } = Select;
 const SubCategories = ({category, onSubmit}) => {
+    const history = useHistory();
     const dispatch = useDispatch();
     const [visible, setVisible] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -84,7 +86,11 @@ const selectRegion = (region) => {
       setConfirmLoading(false);
     }, 2000);
   };
-
+  const newCategory = (category)=>{
+    history.push(category);
+    fetchRegions();
+    document.location.reload();
+  }
   const handleCancel = () => {
     console.log('Clicked cancel button');
     setVisible(false);
@@ -327,9 +333,9 @@ const selectRegion = (region) => {
             <div className="row">
               {category?.children?.map((category) =>
                 <div className="col-3 col-md-2 mt-2 mt-md-2">
-                  <a className="cat-link text-primary" href={`/category/${category.id}`}>
+                  <Link className="cat-link text-primary" onClick={()=>newCategory(`/category/${category.id}`)}>
                     {category.name}
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>    

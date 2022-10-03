@@ -334,11 +334,11 @@ const BusinessProfileSettings = () => {
                             <Form.Item
                                 name="schedules"
                                 label="График работы"
-                                rules={[
-                                    {
-                                        message: 'График работы пусто!',
-                                    },
-                                ]}
+                                // rules={[
+                                //     {
+                                //         message: 'График работы пусто!',
+                                //     },
+                                // ]}
                             >
                                 <Row className="mb-2">
                                     <Col span={2}><Checkbox value={"Пн"} onChange={(e) => {

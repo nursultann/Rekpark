@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import '../../dist/css/custom_card.css';
 import { setProductDetails } from "../../redux/actions/product_actions";
 import { AppImage } from "../custom_components";
@@ -245,18 +245,18 @@ const ProductItem = ({ product }) => {
                         </div>
                     </div>
                     <div className="col-xl-6 py-2 bg-light">
-                        <a style={{ fontSize: 14 }} className="ml-1 mt-4" href={"/products/" + product.id + "/edit"}><i class="far fa-edit text-muted"></i> Редактировать</a><br />
-                        <a style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={removeAd}><i class="fas fa-trash-alt text-muted"></i> Удалить</a><br />
+                        <Link style={{ fontSize: 14 }} className="ml-1 mt-4" to={"/products/" + product.id + "/edit"}><i class="far fa-edit text-muted"></i> Редактировать</Link><br />
+                        <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={removeAd}><i class="fas fa-trash-alt text-muted"></i> Удалить</Link><br />
                         {product.status == "active" ?
                             <>
-                                <a style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={deactivateAd}><i class="fas fa-ban text-muted"></i> Деактивировать</a><br />
+                                <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={deactivateAd}><i class="fas fa-ban text-muted"></i> Деактивировать</Link><br />
                             </>
                             :
                             <></>
                         }
                         {product.status == "inactive" ?
                             <>
-                                <a style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={activateAd}><i class="fas fa-plus-circle text-muted"></i> Активировать</a>
+                                <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={activateAd}><i class="fas fa-plus-circle text-muted"></i> Активировать</Link>
                             </>
                             :
                             <></>
@@ -301,7 +301,7 @@ const ProductItem = ({ product }) => {
                             </>
                             :
                             <>
-                                <button className="my-2 btn btn-primary" onClick={() => buyService(user.balance, plan.name)}>Купить услугу 1</button>
+                                <button className="my-2 btn btn-primary" onClick={() => buyService(user.balance, plan.name)}>Купить услугу</button>
                             </>
                     }
                 >

@@ -6,12 +6,14 @@ import * as firebaseui from "firebaseui";
 import { Steps, Button, message, Form, Input, Select, InputNumber } from 'antd';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
+import { useHistory } from 'react-router-dom';
 
 const { Option } = Select;
 const { Step } = Steps;
 const key = 'updatable';
 
 const ForgotPassword = () => {
+    const history = useHistory();
     const [phoneNumber, setPhoneNumber] = useState();
     const [countryСode, setCountryCode] = useState();
     const [current, setCurrent] = useState(0);
@@ -87,10 +89,10 @@ const ForgotPassword = () => {
                 // localStorage.setItem('token', params['api_token']); 
                 const loginResult = await login(countryСode + phoneNumber, password, function (user) {
                     localStorage.setItem('token', user.api_token);
-                    window.location.href = '/profile';
+                    history.push('/profile');
                 }, function (data) {
                     message.loading({ content: 'Пароль успешно обновлен!', key });
-                    window.location.href = '/login';
+                    history.push('/login');
                 });
             }, function (data) {
                 console.log("Error", data);

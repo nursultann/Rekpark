@@ -12,7 +12,7 @@ import { Modal, Comment, Avatar, Form, Button, List, Input, message, Select, not
 import moment from 'moment';
 import { HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { createComment } from "../api/product";
-import { setProductUserDetails } from "../redux/actions/user_actions";
+import {Link} from 'react-router-dom';
 import { postUserMessage } from "../api/user";
 const key = "updateable";
 const { TextArea } = Input;
@@ -240,7 +240,7 @@ const Ad = ({ match }) => {
                             <div className="row">
                                 <div className="col-xl-12">
                                     <label style={{ fontSize: "22px", whiteSpace: "normal" }}>{productDetails.title}</label><br />
-                                    {productDetails.media.length < 0 ?
+                                    {productDetails.media.length > 0 ?
                                         <Carousel
                                             images={productDetails.media.map((item) => ({
                                                 src: `${item.original_url}`
@@ -361,7 +361,7 @@ const Ad = ({ match }) => {
                                             }
                                         </div>
                                         <div className="col-10 px-4">
-                                            <a href={"/userAds/" + productDetails.user_id}>
+                                            <Link to={"/userAds/" + productDetails.user_id}>
                                                 {productDetails.user.business_account != null ?
                                                     <>
                                                         {productDetails.user.business_account.name}
@@ -371,7 +371,7 @@ const Ad = ({ match }) => {
                                                         {productDetails.user != null ? productDetails.user.name : <></>}
                                                     </>
                                                 }
-                                            </a>
+                                            </Link>
                                             <p className="border rounded bg-light px-1 text-secondary">{productDetails.user.active_count} объявлений пользователя</p>
                                         </div>
                                     </div>
