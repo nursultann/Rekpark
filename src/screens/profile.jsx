@@ -15,7 +15,7 @@ import ProductItem from "../components/product/user_product_item";
 import { Tabs } from 'antd';
 import { subscriptions } from "../api/product";
 import { setProductPlans } from "../redux/actions/productPlans_actions";
-
+import moment from "moment/moment";
 const { TabPane } = Tabs;
 
 const Profile = () => {
@@ -35,7 +35,7 @@ const Profile = () => {
         if (user != null) {
             dispatch(setUser(user));
         }
-        console.log(user);
+        console.log("User",user);
     };
 
     const UserProducts = async () => {
@@ -132,6 +132,7 @@ const Profile = () => {
                                     <div className="col-12">
                                         {user.business_account != null ? 
                                             <>
+                                                <label className="alert alert-primary col-12">Окончание: {moment(user.business_account.end_at).fromNow()}</label>
                                                 <button className="btn btn-primary col-12" onClick={cancelBussinessAccount}><i class="fa-solid fa-ban"></i> Отменить бизнес профиль</button>
                                             </>
                                             :
@@ -165,7 +166,7 @@ const Profile = () => {
                         </div>
                         <div className="col-xl-8 mt-3 mt-md-0">
                             <Tabs className="border rounded px-2 pb-3 py-1" defaultActiveKey="1">
-                                <TabPane tab="Активные" key="2">    
+                                <TabPane tab="Активные" key="2">
                                     <div className="row">
                                     {products?.length>0  ? 
                                         <>
@@ -262,5 +263,4 @@ const Profile = () => {
             </div>
     );
 }
-
 export default Profile;

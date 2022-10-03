@@ -15,10 +15,9 @@ const CreateAd = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const {user} = useSelector((state) => state.user);
-
     const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    const [location, setLocation] = useState(null);
     const [form] = Form.useForm();
 
     const fetchUserDetails = async () => {
@@ -27,7 +26,27 @@ const CreateAd = () => {
             dispatch(setUser(userDetails));
         }
     };
-
+    useEffect(()=>{
+        var DG = require('2gis-maps');
+        var marker;
+        var map = null;
+        //2gis map
+        DG.then(function () {
+          map = DG.map('map', {
+            'center': [40.500305, 72.814718],
+            'zoom': 13
+          });
+          marker = DG.marker([40.500305, 72.814718], {
+            draggable: true
+          }).addTo(map);
+          marker.on('drag', function (e) {
+            var lat = e.target._latlng.lat.toFixed(3);
+            var lng = e.target._latlng.lng.toFixed(3);
+            setLocation({ latitude: lat, longitude: lng });
+          });
+        });
+      },[]);
+      console.log("location",location);
     useEffect(() => {
         fetchUserDetails();
     }, []);
@@ -68,7 +87,7 @@ const CreateAd = () => {
                             const formData = new FormData();
                             formData.append('user_id', user.id);
                             formData.append('currency_id', model.currency_id);
-
+                            formData.append('location',JSON.stringify(location));
                             model.files.forEach(file => {
                                 formData.append('images[]', file);
                             });
@@ -79,6 +98,7 @@ const CreateAd = () => {
                             const response = await api.createProduct(formData);
                             if (response != null && response.success) {
                                 openNotification('success', 'Успешно сохранено!', null);
+                                console.log();
                                 history.push(`/`);
                             } else {
                                 openNotification('error', 'Не удалось сохранить!', null);

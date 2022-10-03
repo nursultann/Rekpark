@@ -6,10 +6,12 @@ import { message } from 'antd';
 import { Form, Input, Button, Checkbox, Select } from 'antd';
 import GoogleLogin from "react-google-login";
 import { gapi } from 'gapi-script';
+import { Link, useHistory } from "react-router-dom";
 const { Option } = Select;
 const key = 'updatable';
 const clientId = "363682799555-97hlkli04bo0eevlu0br81jtl3vg677a.apps.googleusercontent.com";
 const Sign = () => {
+    const history = useHistory();
     const [phoneNumber, setLogin] = useState(0);
     const [password, setPassword] = useState();
     const [countrycode, setCountryCode] = useState();
@@ -47,7 +49,7 @@ const Sign = () => {
         setTimeout(() => {
             message.success({ content: 'Успешно!', key, duration: 2 });
         }, 1000);
-        window.location.href = "/profile";
+        history.push("/profile");
     };
 
     const onLoginError = (data) => {
@@ -126,8 +128,8 @@ const Sign = () => {
                         </Form.Item>
                     </Form>
                     <label>Вы не зарегистрированы?</label>
-                    <a style={{ color: "#184d9f" }} className="ml-2" href="/register">Зарегистроваться</a><br />
-                    <a style={{ color: "#184d9f" }} className="ml-2" href="/forgot_password">Забыли пароль</a>
+                    <Link style={{ color: "#184d9f" }} className="ml-2" href="/register">Зарегистроваться</Link><br />
+                    <Link style={{ color: "#184d9f" }} className="ml-2" href="/forgot_password">Забыли пароль</Link>
                 </div>
             </div>
         </div>

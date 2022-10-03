@@ -4,6 +4,7 @@ import Footer from "../components/footer";
 import { fetchArticleCategories, fetchArticlesByCategories } from "../api/articles";
 import $ from 'jquery';
 import moment from "moment";
+import { Link } from "react-router-dom";
 const CategoryArticles = ({match}) =>{
     const [articles,setArticles] = useState();
     const [categories,setCategories] = useState();
@@ -48,7 +49,7 @@ const CategoryArticles = ({match}) =>{
                    {categories != null || categories != undefined || categories?.length > 0 ?
                    <>
                    {categories.map((category)=> 
-                   <a className="text-white p-2" href={"/articles_categories/"+category.id}>{category.name}</a>
+                   <Link className="text-white p-2" to={"/articles_categories/"+category.id}>{category.name}</Link>
                    )
                    }
                    </>
@@ -61,7 +62,7 @@ const CategoryArticles = ({match}) =>{
                {articles != null || articles != undefined || articles?.length > 0  ?
                <>
                {articles.map((article)=>
-               <a class="nav-link" href={'/article/'+article.id}>
+               <Link class="nav-link" to={'/article/'+article.id}>
                 <div className="col-md-12 shadow-sm px-3 py-3">
                     <div className="row">
                         <div className="col-md-3">
@@ -81,7 +82,7 @@ const CategoryArticles = ({match}) =>{
                     </div>
                 <hr/>    
                 </div>
-                </a>
+                </Link>
                )}
                 </>
                 :<>Загрузка</>

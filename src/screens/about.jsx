@@ -7,39 +7,15 @@ class About extends React.Component {
         return (
             <div>
                 <Navbar />
-                <div className="col-md-12 px-3">
+                <div className="col-md-12 p-4">
                     <div className="row">
-                        <div className="col-md-10">
+                        <div className="col-md-12 bg-light text-center border rounded p-3">
                             <label style={{ fontSize: 28 }}>О нас</label>
                             <p>
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                It has survived not only five centuries, but also the leap into electronic typesetting,
-                                remaining essentially unchanged. It was popularised in the 1960s with the release of
-                                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
-                                software like Aldus PageMaker including versions of Lorem Ipsum.
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                It has survived not only five centuries, but also the leap into electronic typesetting,
-                                remaining essentially unchanged. It was popularised in the 1960s with the release of
-                                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
-                                software like Aldus PageMaker including versions of Lorem Ipsum.
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                It has survived not only five centuries, but also the leap into electronic typesetting,
-                                remaining essentially unchanged. It was popularised in the 1960s with the release of
-                                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
-                                software like Aldus PageMaker including versions of Lorem Ipsum.
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                It has survived not only five centuries, but also the leap into electronic typesetting,
-                                remaining essentially unchanged. It was popularised in the 1960s with the release of
-                                Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
-                                software like Aldus PageMaker including versions of Lorem Ipsum.
+                                «Рек-ПАРК» - электронная версия популярной рекламно-информационной газеты «Ош-ПАРК»,  это отечественный онлайн сервис по продаже новых и вторичных товаров различных категорий, предоставление услуг во сферах жизни, незаменимый помощник для ведения бизнеса. Наша команда постаралась сделать сайт максимально удобным и продуктивным для пользователей, а также готовы развивать ее вместе с ваши пожеланиями.
+                                На сайте имеется отдельная категория для владельцев компаний, где вы с сможете развивать свой бизнес вместе с нами. Оформите на сайте онлайн магазин или офис, получите расширенный доступ к инструментам продвижении вашей страницы и новых клиентов.
+                                Интересные статьи про нашу Родину, афиша, фотогалерея и много познавательного.
+                                Если у вас имеются замечания или пожелания по сайту непременно обращайтесь, будем рады каждому вашему отзыву, ведь мы хотим сделать удобным для наших соотечественников!
                             </p>
                         </div>
                         <div className="col-md-2"></div>

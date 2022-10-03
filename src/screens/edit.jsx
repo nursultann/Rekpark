@@ -17,9 +17,9 @@ const EditAd = ({ match }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [ready, setReady] = useState(false);
-
+  const [location, setLocation] = useState(null);
   const [form] = Form.useForm();
-
+  const [product,setProduct] = useState();
   const fetchProductDetails = async () => {
     const productDetails = await api.fetchProduct(match.params.id, {
       'with': 'category;customAttributeValues.customAttribute'
@@ -27,17 +27,39 @@ const EditAd = ({ match }) => {
     if (productDetails != null) {
       dispatch(setProductDetails(productDetails));
       setFields(productDetails);
+      setProduct(productDetails);
+      setLocation(JSON.parse(productDetails.location));
     }
     setReady(true);
   };
-
+  if(ready == true){
+    var DG = require('2gis-maps');
+        var marker;
+        var map = null;
+        //2gis map
+        DG.then(function () {
+          map = DG.map('map', {
+            'center': [location.latitude,location.longitude],
+            'zoom': 13
+          });
+          marker = DG.marker([location.latitude,location.longitude], {
+            draggable: true
+          }).addTo(map);
+          marker.on('drag', function (e) {
+            var lat = e.target._latlng.lat.toFixed(3);
+            var lng = e.target._latlng.lng.toFixed(3);
+            setLocation({ latitude: lat, longitude: lng });
+          });
+        });
+      }
   const fetchUserDetails = async () => {
     const userDetails = await api.userDetails();
     if (userDetails != null) {
       dispatch(setUser(userDetails));
     }
   };
-
+  console.log("location",location);
+  console.log("productDetails",product);
   useEffect(() => {
     fetchUserDetails();
     fetchProductDetails();
@@ -101,7 +123,7 @@ const EditAd = ({ match }) => {
             if (valid) {
               const formData = new FormData();
               formData.append('currency_id', model.currency_id);
-
+              formData.append('location',JSON.stringify(location));
               model.files.forEach(file => {
                 formData.append('images[]', file);
               });

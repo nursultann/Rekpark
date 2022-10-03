@@ -14,7 +14,6 @@ function SampleArrow(props) {
         />
     );
 }
-
 const Bussiness_Slider = () => {
     const dispatch = useDispatch();
     const { categories } = useSelector((state) => state.category);

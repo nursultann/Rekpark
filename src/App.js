@@ -40,7 +40,6 @@ import 'antd/dist/antd.css';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import "./App.css";
 import 'moment/locale/ru';
-
 const App = ({ match }) => {
   const subscribe = async () => {
     const user = await userDetails();
@@ -48,7 +47,6 @@ const App = ({ match }) => {
       subscribeToPusher(user.id);
     }
   }
-
   useEffect(() => {
     subscribe();
   },[]);
@@ -99,6 +97,7 @@ const App = ({ match }) => {
               <Route path="/business-settings" component={BusinessSettings}/>
               <Route path="/business" component={SetBusinessProfile}/>
               <Route path={"/business-plan/:id/:period"} component={BusinessPlan}/>
+              <Route path={"/about"} component={About}/>
             </Switch>
           </BrowserRouter>
         </div>

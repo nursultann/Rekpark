@@ -13,7 +13,6 @@ const Category = ({match})=> {
     const [categoryProducts,setProducts] = useState();
     const [category, setCategory] = useState();
     const [formValues, setFormValues] = useState({});
-
     const limit = 20;
     const [offset, setOffset] = useState(0);
     const [isLoading, setIsLoading] = useState(false);

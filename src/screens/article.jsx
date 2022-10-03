@@ -5,6 +5,7 @@ import { fetchArticle, fetchArticles } from "../api/articles";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { setArticleDetails } from "../redux/actions/product_actions";
+import { Link } from "react-router-dom";
 
 const Article = ({match})=>{
     const dispatch = useDispatch();
@@ -75,7 +76,7 @@ const Article = ({match})=>{
                                     {
                                     articles.map((article)=>
                                     <>
-                            <a class="nav-link" href={"/article/"+article.id}>
+                            <Link class="nav-link" to={"/article/"+article.id}>
                                 <div className="col-md-12 shadow-sm">
                                    
                                     <div className="row">
@@ -101,7 +102,7 @@ const Article = ({match})=>{
                                     <hr />
                                    
                                 </div>
-                            </a>
+                            </Link>
                             </>
                             )}
                             </>:<></>

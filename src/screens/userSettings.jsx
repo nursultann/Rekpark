@@ -60,10 +60,8 @@ const Settings = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
     }
-
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
-    const { products } = useSelector((state) => state.product);
     const limit = 20;
     const [offset, setOffset] = useState(0);
 
@@ -170,7 +168,7 @@ const Settings = () => {
                                 <div className="row">
                                     <div className="col-12">
                                     {user.media?.length ?
-                                        <Avatar size={64} icon={<img src={user.media[0].original_url} />} />
+                                        <Avatar size={64} icon={<img src={user.media[0].original_url} alt="" />} />
                                         :
                                         <Avatar size={42} icon={<UserOutlined />} />
                                     }
