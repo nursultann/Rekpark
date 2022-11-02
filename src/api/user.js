@@ -138,7 +138,6 @@ export const readMessages = async (params)=>{
     } catch (error) {
         console.log('fetch user details error ', error.response);
     }
-
     return null;
 }
 export const unreadMessages = async ()=>{
@@ -150,6 +149,5 @@ export const unreadMessages = async ()=>{
     } catch (error) {
         console.log('fetch user details error ', error.response);
     }
-
     return null;
 }

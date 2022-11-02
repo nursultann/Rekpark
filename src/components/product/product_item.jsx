@@ -7,8 +7,7 @@ import { AppImage } from "../custom_components";
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import calendar from '../../img/calendar.png';
-import views from '../../img/views.png';
+import AliceCarousel from 'react-alice-carousel';
 
 const ProductItem = ({ product }) => {
     const dispatch = useDispatch();
@@ -31,33 +30,70 @@ const ProductItem = ({ product }) => {
     const image = product.has_media
         ? product.media[0].original_url
         : '';
-    console.log(product.is_vip);
+    console.log(product.media);
+    var items = [];
+    product.media != null || product.media != undefined || product.media?.length > 0 ?
+        <>
+            {product.media.map((item) =>
+                items.push(
+                    <img src={item.original_url} width="100%" height={170} />)
+            )}
+        </> : <></>
     return (
-        <a onClick={() => navigateToProductDetailsPage(product)}>
-            <div className="col-md-12 shadow-sm" style={{ ...baseStyle }}>
-                <div className="row">
-                    <div className="col-md-12 px-0" style={{ height: 150 }}>
-                        <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{ objectFit: "cover" }} />
-                        {product.is_vip ?
-                            <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-2">VIP</span></div>
-                            : <></>}
-                        {product.is_urgent ?
-                            <div style={{ position: "absolute", left: "45px", top: "10px", }}><span className="badge badge-warning p-2">Срочно</span></div>
-                            : <></>}
-                    </div>
+        <div className="col-md-12 shadow" style={{ ...baseStyle }}>
+            <div className="row">
+                <div className="col-md-12 px-0" style={{ height: 180 }}>
+                    {/* <AppImage height={150} width="100%" src={image} className="card-img-top rounded" style={{ objectFit: "cover" }} /> */}
+                    {product.media != null || product.media?.length > 0 ?
+                        <>
+                            <AliceCarousel
+                                mouseTracking
+                                items={items}
+                                ArrowLeft={false}
+                                ArrowRight={false}
+                                disableButtonsControls
+                                // disableDotsControls
+                                responsive={{
+                                    0: {
+                                        items: 1,
+                                    },
+                                    1024: {
+                                        items: 1
+                                    },
+                                    1280: {
+                                        items: 1
+                                    },
+                                    1920: {
+                                        items: 1
+                                    }
+                                }}
+                            />
+                        </>
+                        : <></>
+                    }
+                    {product.is_vip ?
+                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-2">VIP</span></div>
+                        : <></>}
+                    {product.is_urgent ?
+                        <div style={{ position: "absolute", left: "45px", top: "10px", }}><span className="badge badge-warning p-2">Срочно</span></div>
+                        : <></>}
                 </div>
+            </div>
+            <a onClick={() => navigateToProductDetailsPage(product)}>
                 <div class="card-body px-2 px-md-3">
                     <div className="row">
-                        <label style={{ fontSize: 17 }} class="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
+                        <label style={{ fontSize: 15 }} class="card-title px-0 col-md-12 py-0">{product.price + " " + product.currency_symbol}</label>
                         <label style={{
-                            fontSize: 14, fontFamily: "sans-serif", whiteSpace: "nowrap", overflow: "hidden",
+                            fontSize: 14, whiteSpace: "nowrap", overflow: "hidden",
                             columnWidth: "10px"
-                        }} class="card-title label1 text-secondary px-0 py-0 col-md-12">{product.title}</label>
-                        {/* <p class="card-text" style={{
-                                        display: "-webkit-box",
-                                        webkitLineClamp: "1",
-                                        webkitBoxOrient: "vertical",
-                                        overflow: "hidden"}}>{product.description}</p> */}
+                        }} class="px-0 py-0 col-md-12">{product.title}</label>
+                        <p class="card-text text-secondary" style={{
+                            display: "-webkit-box",
+                            fontSize: 13,
+                            webkitLineClamp: "1",
+                            webkitBoxOrient: "vertical",
+                            overflow: "hidden"
+                        }}>{product.description}</p>
                         {/* <label className="text-muted" style={{fontSize:15}}>
                         Опубликовано: {allDate}
                     </label> */}
@@ -75,7 +111,7 @@ const ProductItem = ({ product }) => {
                                                     height: "30px",
                                                     backgroundSize: "cover"
                                                 }}>
-                                                <span className='badge badge-danger mt-4 ml-3' style={{fontSize:10}}>pro</span>
+                                                <span className='badge badge-danger mt-4 ml-3' style={{ fontSize: 10 }}>pro</span>
                                             </div>
                                         </>
                                         :
@@ -86,7 +122,7 @@ const ProductItem = ({ product }) => {
                                 <Avatar size={42} icon={<UserOutlined />} />
                             }
                         </div>
-                        <div className="col-9 mt-5 px-0 text-right" style={{fontSize:11}}>
+                        <div className="col-9 mt-5 px-0 text-right" style={{ fontSize: 11 }}>
                             <i class="fa-solid fa-calendar-days text-info"></i> {update}<br />
                             {/* <img src={views} width="18" height="18" /> {product.views}<br/> */}
                             <label className="text-dark label" style={{ fontSize: 11 }}>
@@ -96,8 +132,8 @@ const ProductItem = ({ product }) => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
     );
 };
 export default ProductItem;

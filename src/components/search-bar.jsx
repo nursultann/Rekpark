@@ -94,7 +94,7 @@ const SearchBar = () => {
                       </TreeSelect>
                     </div> */}
                     <div className="col-lg-10 px-0 px-lg-2 mt-2 mt-lg-0 py-1 py-lg-2" >
-                      <input className='col-lg-12 form-control' placeholder="Поиск..." onChange={(e) => { setSearch(e.target.value) }} style={{ width: "100%" }} />
+                      <input type={"search"} className='col-lg-12 form-control' placeholder="Поиск..." onChange={(e) => { setSearch(e.target.value) }} style={{ width: "100%" }} />
                     </div>
                     <div className='col-lg-2 px-0 px-lg-1 py-2 py-lg-2'>
                       <button className='btn btn-outline-light text-white col-12 rounded' type="primary" style={{ backgroundColor: '#184d9f' }} onClick={Search}>

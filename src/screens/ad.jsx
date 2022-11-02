@@ -103,6 +103,7 @@ const Ad = ({ match }) => {
         }
         setSubmitting(true);
         const result = await createComment(value, productDetails.id, userId);
+        console.log(result)
         setValue('');
         message.success({ content: 'Добавлен комментарий!', key, duration: 2 });
         fetchProductDetails();
@@ -125,6 +126,7 @@ const Ad = ({ match }) => {
         }
         setSubmitting(true);
         const result = await answerComment(value, productDetails.id, userId, parentId);
+        console.log(result)
         setValue('');
         message.success({ content: 'Добавлен ответ на комментарий!', key, duration: 2 });
         fetchProductDetails();

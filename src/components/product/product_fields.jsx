@@ -28,27 +28,6 @@ const ProductFields = ({ form, loading = false, onSend }) => {
   const [files, setFiles] = useState([]);
   const [phoneOptions, setPhoneOptions] = useState([]);
   const [map1, setMap1] = useState(<div id="map" style={{ width: "100%", height: "400px" }}></div>);
-//   useEffect(()=>{
-//   var DG = require('2gis-maps');
-//   var marker;
-//   var map = null;
-//   //2gis map
-//   DG.then(function () {
-//     map = DG.map('map', {
-//       'center': [40.500305, 72.814718],
-//       'zoom': 13
-//     });
-//     marker = DG.marker([40.500305, 72.814718], {
-//       draggable: true
-//     }).addTo(map);
-//     marker.on('drag', function (e) {
-//       var lat = e.target._latlng.lat.toFixed(3);
-//       var lng = e.target._latlng.lng.toFixed(3);
-//       setLocation({ latitude: lat, longitude: lng });
-//     });
-//   });
-// },[]);
-  // console.log("location:", location);
   const fetchCategoriesTree = async () => {
     const categories = await api.fetchCategoriesTree();
     if (categories != null) {
@@ -289,8 +268,16 @@ const ProductFields = ({ form, loading = false, onSend }) => {
           </Select>
         </Form.Item>
         <Form.Item
+          key="video"
+          label="Прямая ссылка на видео"
+          name="video"
+        >
+          <Input allowClear placeholder="Прямая ссылка на видео" />
+        </Form.Item>
+        <Form.Item
           label="Местоположение"
         >
+          <span className="ant-form-text mt-1 text-primary">Поставьте курсор на карте о местоположении товара или услуги</span>
           {map1}
           {/* <Input type="text" value={JSON.stringify(location)} /> */}
         </Form.Item>
