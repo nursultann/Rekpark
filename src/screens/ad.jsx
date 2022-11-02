@@ -206,7 +206,7 @@ const Ad = ({ match }) => {
     const postMessage = async () => {
         setLoadings(true);
         if (messag != "" && messag != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag });
+            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag, 'advertisement_id' : match.params.id});
             setMessage("");
             openNotificationWithIcon('success', 'Сообщение отправлено!');
             setLoadings(false);
@@ -217,7 +217,7 @@ const Ad = ({ match }) => {
     const postQuickMessage = async (messag) => {
         setLoadings(true);
         if (messag != "" && messag != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag });
+            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag, 'advertisement_id' : match.params.id });
             setMessage("");
             openNotificationWithIcon('success', 'Сообщение отправлено!');
             setLoadings(false);

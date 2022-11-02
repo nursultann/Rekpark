@@ -82,7 +82,7 @@ const CreateAd = () => {
                     loading={loading}
                     onSend={async (model) => {
                         console.log('phones', form.getFieldValue('phones'));
-                        console.log('video', form.getFieldValue('video '));
+                        console.log('video', form.getFieldValue('video'));
                         const valid = await form.validateFields();
                         if (valid) {
                             const formData = new FormData();

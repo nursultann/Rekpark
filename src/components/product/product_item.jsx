@@ -43,7 +43,6 @@ const ProductItem = ({ product }) => {
         <div className="col-md-12 shadow" style={{ ...baseStyle }}>
             <div className="row">
                 <div className="col-md-12 px-0" style={{ height: 180 }}>
-                    {/* <AppImage height={150} width="100%" src={image} className="card-img-top rounded" style={{ objectFit: "cover" }} /> */}
                     {product.media != null || product.media?.length > 0 ?
                         <>
                             <AliceCarousel
@@ -69,7 +68,10 @@ const ProductItem = ({ product }) => {
                                 }}
                             />
                         </>
-                        : <></>
+                        :
+                        <>
+                        <AppImage height={150} width="100%" src={''} className="card-img-top rounded" style={{ objectFit: "cover" }} />
+                        </>
                     }
                     {product.is_vip ?
                         <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-2">VIP</span></div>
