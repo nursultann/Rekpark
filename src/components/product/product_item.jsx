@@ -36,7 +36,7 @@ const ProductItem = ({ product }) => {
         <>
             {product.media.map((item) =>
                 items.push(
-                    <img src={item.original_url} width="100%" height={170} />)
+                    <div style={{backgroundImage:"url("+item.original_url+")", height:170, width:"100%",backgroundSize:"cover"}}/>)
             )}
         </> : <></>
     return (
