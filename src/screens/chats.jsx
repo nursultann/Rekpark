@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useHistory } from 'react-router-dom';
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { getUserChats, getUserMessages, postUserMessage, readMessages, userDetails } from "../api/user";
+import { deleteChat, getUserChats, getUserMessages, postUserMessage, readMessages, userDetails } from "../api/user";
 import { useEffect, useState } from "react";
 import Skeleton from '@mui/material/Skeleton';
 import { useDispatch, useSelector } from "react-redux";
@@ -28,12 +28,9 @@ const Chats = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
-    const { products } = useSelector((state) => state.product);
     const [chats, setChats] = useState();
     const limit = 20;
     const [offset, setOffset] = useState(0);
-    const [params, setParams] = useState();
-    const [messages, setMessages] = useState();
     const [chat_id, setChatId] = useState();
     const [chat_name, setChatName] = useState();
     const [chat_image, setChatImage] = useState();
@@ -45,7 +42,13 @@ const Chats = () => {
             dispatch(setUser(user));
         }
     };
-
+    const removeChat = async (id) =>{
+       const remove = await deleteChat(id);
+       console.log(remove);
+        if(remove != null){
+            openNotificationWithIcon('success', 'Чат успешно удалён!');
+        }
+    }
     const UserProducts = async () => {
         let _products = await api.fetchUserProducts({ 'sub': true });
         if (_products != null) {
@@ -176,14 +179,17 @@ const Chats = () => {
                                                                 {chats?.length > 0 ?
                                                                     <>
                                                                         {chats.map((chat) =>
-                                                                            <li class="person" data-chat="person1" onClick={() => getUserMessage(chat.id, chat.name,chat.room_id)}>
-                                                                                <div class="user">
+                                                                            <li class="person" data-chat="person1">
+                                                                                <div class="user" onClick={() => getUserMessage(chat.id, chat.name,chat.room_id)}>
                                                                                     <img src={chat.image} alt="Retail Admin" />
                                                                                     <span class="status busy"></span>
                                                                                 </div>
-                                                                                <p class="name-time">
+                                                                                <p class="name-time" onClick={() => getUserMessage(chat.id, chat.name,chat.room_id)}>
                                                                                     <span class="name">{chat.name}</span>
                                                                                 </p>
+                                                                                <div className="float-right">
+                                                                                    <span><i class="fa-solid fa-trash-can text-primary" onClick={() => removeChat(chat.id)}></i></span>
+                                                                                </div>
                                                                             </li>
                                                                         )}
                                                                     </> :

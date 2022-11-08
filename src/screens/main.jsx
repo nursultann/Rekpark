@@ -29,7 +29,7 @@ const Main = () => {
       _products = _products.concat(await api.fetchProducts({ 'with': 'user' }));
       dispatch(setProducts(_products));
       // setOffset(offset + limit);
-      console.log(_products);
+      console.table(_products);
     }
   };
   const fetchProducts = async () => {

@@ -46,10 +46,10 @@ const BusinessProfileSettings = () => {
     const fetchUserDetails = async () => {
         const userDetail = await userDetails();
         if (userDetail != null) {
+            console.table("user detail",userDetail);
             setPlanId(userDetail.business_account.id);
             setUser(userDetail);
             setLocation(JSON.parse(userDetail.business_account.location));
-            console.log(planId);
             const data = {
                 name: userDetail.business_account.name,
                 description:userDetail.business_account.description,
@@ -67,6 +67,7 @@ const BusinessProfileSettings = () => {
             form.setFieldsValue({
                 ...data,
             });
+            // console.log(form);
         }
         else {
             console.log("Fetch user details error!");
@@ -90,8 +91,6 @@ const BusinessProfileSettings = () => {
             });   
         });
         }
-    console.log(location);
-    console.log('user', user);
     useEffect(() => {
         fetchUserDetails();
     }, [])
@@ -112,7 +111,6 @@ const BusinessProfileSettings = () => {
             [key]: { ...prev[key], selected: value }
         }))
     }
-    console.log(schedule);
     const onFinish = async (values) => {
         const isValid = await form.validateFields();
         if (isValid) {

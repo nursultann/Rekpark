@@ -16,10 +16,10 @@ import { Tabs } from 'antd';
 import { subscriptions } from "../api/product";
 import { setProductPlans } from "../redux/actions/productPlans_actions";
 import moment from "moment/moment";
+import { cancelBussinessAccount } from "../api/bussiness";
 const { TabPane } = Tabs;
 
 const Profile = () => {
-    console.log(localStorage.getItem('token'));
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
     }
@@ -35,7 +35,6 @@ const Profile = () => {
         if (user != null) {
             dispatch(setUser(user));
         }
-        console.log("User",user);
     };
 
     const UserProducts = async () => {
@@ -49,10 +48,11 @@ const Profile = () => {
             setOffset(offset + limit);
         }
     };
-    const cancelBussinessAccount = async () => {
+    const cancelBussiness = async () => {
         const cancel = await cancelBussinessAccount();
+        console.log(cancel);
         if(cancel != null){
-            notification['success']({
+           notification['success']({
                 message: 'Вы вышли из бизнес профиля!',
             });
             history.push(`/profile`);
@@ -133,7 +133,7 @@ const Profile = () => {
                                         {user.business_account != null ? 
                                             <>
                                                 <label className="alert alert-primary col-12">Окончание: {moment(user.business_account.end_at).fromNow()}</label>
-                                                <button className="btn btn-primary col-12" onClick={cancelBussinessAccount}><i class="fa-solid fa-ban"></i> Отменить бизнес профиль</button>
+                                                <button className="btn btn-primary col-12" onClick={cancelBussiness}><i class="fa-solid fa-ban"></i> Отменить бизнес профиль</button>
                                             </>
                                             :
                                             <></>

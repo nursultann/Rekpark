@@ -14,11 +14,11 @@ import * as api from "../api";
 import ProductItem from "../components/product/user_product_item";
 import { notification } from 'antd';
 import moment from "moment-timezone";
-const openNotificationWithIcon = (type,info) => {
+const openNotificationWithIcon = (type, info) => {
     notification[type]({
         message: info,
     });
-  };
+};
 const ChatUser = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
@@ -26,16 +26,14 @@ const ChatUser = () => {
     const param = useParams();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
-    const { products } = useSelector((state) => state.product);
-    const limit = 20;
-    const [offset, setOffset] = useState(0);
-    const [params, setParams] = useState();
-    const [messages, setMessages] = useState();
-    const [chat_id,setChatId] = useState();
-    const [chat_name,setChatName] = useState();
-    const [chat_image,setChatImage] = useState();
-    const [message,setMessage] = useState();
+    const [messages, setMessages] = useState(null);
+    const [chat_id, setChatId] = useState();
+    const [chat_name, setChatName] = useState();
+    const [chat_image, setChatImage] = useState();
+    const [message, setMessage] = useState();
     const [loadings, setLoadings] = useState();
+    const [postId, setPostId] = useState();
+    const [product, setProduct] = useState(null);
     const userid = param.id;
     const userName = param.name;
     const partner_id = param.room;
@@ -45,44 +43,44 @@ const ChatUser = () => {
             dispatch(setUser(user));
         }
     };
-
-    const UserProducts = async () => {
-        let _products = await api.fetchUserProducts({ 'sub': true });
-        if (_products != null) {
-            dispatch(setProducts(_products));
-            setOffset(offset + limit);
-        }
-    };
     const getUserMessage = async () => {
         console.log(userid);
         setChatId(userid);
         setChatName(userName);
-        const userMessages = await getUserMessages({ 'chat_user_id' : userid, 'with' : 'sender' });
+        const userMessages = await getUserMessages({ 'chat_user_id': userid, 'with': 'sender' });
         if (userMessages != null) {
             setMessages(userMessages.reverse());
-            console.log(messages);
-        const readMessage = await readMessages({'partner_id':chat_id});
-            console.log(chat_id);
-            console.log(readMessage);
+            setPostId(messages[0].advertisement_id);
+            console.log('messages', messages);
         }
     }
-    const postMessage = async ()=>{
+    const postMessage = async () => {
         setLoadings(true);
-        if(message != "" && message != null){
-        const sendMessage = await postUserMessage({'user_id':chat_id,'message':message});
-        getUserMessage(chat_id);
-        setMessage("");
-        openNotificationWithIcon('success','Сообщение отправлено!');
-        setLoadings(false);
-        }else{
-            openNotificationWithIcon('error','Заполните поле для сообщения!');
+        if (message != "" && message != null) {
+            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message, 'advertisement_id': postId });
+            getUserMessage(chat_id);
+            setMessage("");
+            openNotificationWithIcon('success', 'Сообщение отправлено!');
+            setLoadings(false);
+        } else {
+            openNotificationWithIcon('error', 'Заполните поле для сообщения!');
         }
     }
+    if(product == null){
+    if(messages != null){
+        const productDetails = async () =>{
+            const _product = await api.fetchProduct(messages[0].advertisement_id);
+            const readMessage = await readMessages({ 'partner_id': chat_id });
+            setProduct(_product);
+            console.log("read",readMessage);
+        }
+        productDetails();
+    }
+}
     moment.locale('ru');
     useEffect(() => {
         document.title = "Сообщение пользователя";
         fetchUserDetails();
-        UserProducts();
         getUserMessage();
     }, []);
     return (
@@ -134,7 +132,7 @@ const ChatUser = () => {
                     </nav>
                     <div className="row px-3 mb-5">
                         <div className="col-xl-4 bg-light rounded py-3">
-                            <div className="col-xl-12 alert text-white" style={{backgroundColor:"#184d9f"}}>
+                            <div className="col-xl-12 alert text-white" style={{ backgroundColor: "#184d9f" }}>
                                 <div className="row">
                                     <div className="col-12">
                                         {user.media?.length ?
@@ -154,7 +152,7 @@ const ChatUser = () => {
                                         <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
                                         <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
                                         <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
-                                        <li class="list-group-item text-white" style={{backgroundColor:"#184d9f"}}><Link to="/chats">Сообщения</Link></li>
+                                        <li class="list-group-item text-white" style={{ backgroundColor: "#184d9f" }}><Link to="/chats">Сообщения</Link></li>
                                         <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
                                     </ul>
                                 </div>
@@ -162,7 +160,7 @@ const ChatUser = () => {
                             <hr />
                         </div>
                         <div className="col-xl-8 mt-3 mt-md-0">
-                            <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{backgroundColor:"#184d9f"}}>
+                            <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{ backgroundColor: "#184d9f" }}>
                                 <label className="text-white" style={{ fontSize: 15 }}>Сообщения</label>
                             </div>
                             <div class="container">
@@ -175,55 +173,67 @@ const ChatUser = () => {
                                                         <div class="selected-user">
                                                             <span>Сообщения от <span class="name">{chat_name}</span></span>
                                                         </div>
+                                                        <div className="col-12 alert alert-primary">
+                                                        {product != null ?
+                                                            <>
+                                                                <img src={product.image} width="50px" />
+                                                                <a href={"/products/"+ product.id}><span className="ml-2">{product.title}</span></a>
+                                                            </>
+                                                            :
+                                                            <>
+
+                                                            </>
+                                                        }
+                                                        </div>
                                                         <div class="chat-container">
                                                             <ul class="chat-box chatContainerScroll">
-                                                               {
-                                                                messages?.length > 0 ? 
-                                                                <>
-                                                                { 
-                                                                messages.map((item)=>
-                                                                <>
-                                                                {item.sender_id == chat_id ? 
-                                                                <li class="chat-left">
-                                                                    <div class="chat-avatar">
-                                                                        <img src={item.sender.image} alt="Retail Admin" />
-                                                                        <div class="chat-name">{item.sender.name}</div>
-                                                                    </div>
-                                                                    <div class="chat-text">
-                                                                        {item.message}
-                                                                    </div>
-                                                                    <div class="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div>
-                                                                </li>
-                                                                :
-                                                                <li class="chat-right">
-                                                                    <div class="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')} 
-                                                                    {item.sender.read_at != null ? <span class="fa fa-check-circle"></span> : <></>}
-                                                                    </div>
-                                                                    <div class="chat-text">
-                                                                        {item.message}
-                                                                    </div>
-                                                                    <div class="chat-avatar">
-                                                                        <img src={item.sender.image} alt="Retail Admin" />
-                                                                        <div class="chat-name">{item.sender.name}</div>
-                                                                    </div>
-                                                                </li>
+                                                                {
+                                                                    messages?.length > 0 ?
+                                                                        <>
+                                                                            {
+                                                                                messages.map((item) =>
+                                                                                    <>
+                                                                                        {item.sender_id == chat_id ?
+                                                                                            <li class="chat-left">
+                                                                                                <div class="chat-avatar">
+                                                                                                    <img src={item.sender.image} alt="Retail Admin" />
+                                                                                                    <div class="chat-name">{item.sender.name}</div>
+                                                                                                </div>
+                                                                                                <div class="chat-text">
+                                                                                                    {item.message}
+                                                                                                </div>
+                                                                                                <div class="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div>
+                                                                                            </li>
+                                                                                            :
+                                                                                            <li class="chat-right">
+                                                                                                <div class="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}
+                                                                                                    {item.sender.read_at != null ? <span class="fa fa-check-circle"></span> : <></>}
+                                                                                                </div>
+                                                                                                <div class="chat-text">
+                                                                                                    {item.message}
+                                                                                                </div>
+                                                                                                <div class="chat-avatar">
+                                                                                                    <img src={item.sender.image} alt="Retail Admin" />
+                                                                                                    <div class="chat-name">{item.sender.name}</div>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        }
+                                                                                    </>
+                                                                                )}
+                                                                        </> : <></>
                                                                 }
-                                                                </>
-                                                                )}
-                                                                </>:<></>
-                                                            }
                                                             </ul>
                                                         </div>
                                                         {chat_id ?
                                                             <div class="form-group text-right py-2 px-3 mt-3 mb-0">
-                                                                <textarea class="form-control" rows="3" placeholder="Напишите ваше сообщение..." 
-                                                                onChange={(e)=>{setMessage(e.target.value)}} value={message}></textarea>
-                                                                <button style={{backgroundColor:"#184d9f"}} className="btn btn-primary mt-3 mb-2" type="primary" loading={loadings}  onClick={postMessage}>
-                                                                Отправить
+                                                                <textarea class="form-control" rows="3" placeholder="Напишите ваше сообщение..."
+                                                                    onChange={(e) => { setMessage(e.target.value) }} value={message}></textarea>
+                                                                <button style={{ backgroundColor: "#184d9f" }} className="btn btn-primary mt-3 mb-2" type="primary" loading={loadings} onClick={postMessage}>
+                                                                    Отправить
                                                                 </button>
                                                             </div>
-                                                            :<></>
-                                                            }
+                                                            : <></>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
