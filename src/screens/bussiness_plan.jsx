@@ -20,9 +20,11 @@ import {
 import Navbar from "../components/navbar";
 import DragAndDropUploader from "../components/drag_and_drop_uploader";
 import { setBussinessPlan, setBussinessSettings } from "../api/bussiness";
-import { userDetails } from "../api/user";
+import { userDetails } from "../api";
 
 const { Option } = Select;
+
+const DG = require('2gis-maps');
 
 const BusinessPlan = () => {
     const history = useHistory();
@@ -32,7 +34,7 @@ const BusinessPlan = () => {
     const [loading, setLoading] = useState(false);
     const [logotype, setLogotype] = useState();
     const [cover, setCover] = useState();
-    const [location,setLocation] = useState();
+    const [location, setLocation] = useState();
     const [schedule, setSchedule] = useState({
         monday: null,
         tuesday: null,
@@ -42,22 +44,24 @@ const BusinessPlan = () => {
         saturday: null,
         sunday: null
     })
+
     //2gis map
-    var DG = require('2gis-maps');
-    var map;
-    var marker;
-    var lat,lng;
+    let map;
+    let marker;
+    let lat, lng;
+
     // marker.on('drag', function(e) {
     //      lat = e.target._latlng.lat.toFixed(3),
     //      lng = e.target._latlng.lng.toFixed(3);
     // });
     // console.log(lat + ":" + lng);
-    const fetchUserDetails = async () =>{
+
+    const fetchUserDetails = async () => {
         const userDetail = await userDetails();
-        if(userDetail != null){
+        if (userDetail != null) {
             console.log(userDetail);
             //2gis map 
-            DG.then(function() {
+            DG.then(function () {
                 map = DG.map('map', {
                     'center': [40.500305, 72.814718],
                     'zoom': 13
@@ -65,21 +69,23 @@ const BusinessPlan = () => {
                 marker = DG.marker([40.500305, 72.814718], {
                     draggable: true
                 }).addTo(map);
-                marker.on('drag', function(e) {
-                        lat = e.target._latlng.lat.toFixed(3);
-                        lng = e.target._latlng.lng.toFixed(3);
-                        setLocation({latitude:lat,longitude:lng});
-                });   
+                marker.on('drag', function (e) {
+                    lat = e.target._latlng.lat.toFixed(3);
+                    lng = e.target._latlng.lng.toFixed(3);
+                    setLocation({ latitude: lat, longitude: lng });
+                });
             });
         }
-        else{
+        else {
             console.log("Fetch user details error!");
         }
     }
-    console.log("location:"+location);
-    useEffect(()=>{
+    console.log("location:" + location);
+
+    useEffect(() => {
         fetchUserDetails();
-    },[])
+    }, [])
+
     const [form] = Form.useForm();
     const [phoneOptions, setPhoneOptions] = useState([]);
     const [autoCompleteResult, setAutoCompleteResult] = useState([]);
@@ -93,8 +99,8 @@ const BusinessPlan = () => {
 
     function _setScheduleSelected(key, value) {
         setSchedule(prev => ({
-            ...prev, 
-            [key]: { ...prev[key], selected: value}
+            ...prev,
+            [key]: { ...prev[key], selected: value }
         }))
     }
     console.log(schedule);
@@ -106,8 +112,8 @@ const BusinessPlan = () => {
             formData.append('period_id', periodId);
             formData.append('logotype', logotype);
             formData.append('cover', cover);
-            formData.append('schedule',JSON.stringify(schedule));
-            formData.append('location',JSON.stringify(location));
+            formData.append('schedule', JSON.stringify(schedule));
+            formData.append('location', JSON.stringify(location));
             for (const key of Object.keys(values)) {
                 formData.append(key, values[key])
             }
@@ -326,66 +332,66 @@ const BusinessPlan = () => {
                                 ]}
                             >
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Пн"} onChange={(e)=>{
+                                    <Col span={2}><Checkbox value={"Пн"} onChange={(e) => {
                                         _setScheduleSelected('monday', e.target.checked)
                                     }} />&nbsp;Пн</Col>
                                     &nbsp;
                                     <Col span={12} xs={12} lg={12}>
-                                    <input type="time" onChange={(e)=>{_setSchedule('monday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('monday', { endTime: e.target.value })}}/>
+                                        <input type="time" onChange={(e) => { _setSchedule('monday', { startTime: e.target.value }) }} /> : <input type="time" onChange={(e) => { _setSchedule('monday', { endTime: e.target.value }) }} />
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Вт"} onChange={(e)=>{
+                                    <Col span={2}><Checkbox value={"Вт"} onChange={(e) => {
                                         _setScheduleSelected('tuesday', e.target.checked)
                                     }} />&nbsp;Вт</Col>
                                     &nbsp;
                                     <Col span={12} xs={12} lg={12}>
-                                    <input type="time" onChange={(e)=>{_setSchedule('tuesday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('tuesday', { endTime: e.target.value })}}/>
+                                        <input type="time" onChange={(e) => { _setSchedule('tuesday', { startTime: e.target.value }) }} /> : <input type="time" onChange={(e) => { _setSchedule('tuesday', { endTime: e.target.value }) }} />
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Ср"} onChange={(e)=>{
+                                    <Col span={2}><Checkbox value={"Ср"} onChange={(e) => {
                                         _setScheduleSelected('wednesday', e.target.checked)
                                     }} />&nbsp;Ср</Col>
                                     &nbsp;
                                     <Col span={12} xs={12} lg={12}>
-                                    <input type="time" onChange={(e)=>{_setSchedule('wednesday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('wednesday', { endTime: e.target.value })}}/>
+                                        <input type="time" onChange={(e) => { _setSchedule('wednesday', { startTime: e.target.value }) }} /> : <input type="time" onChange={(e) => { _setSchedule('wednesday', { endTime: e.target.value }) }} />
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Чт"} onChange={(e)=>{
+                                    <Col span={2}><Checkbox value={"Чт"} onChange={(e) => {
                                         _setScheduleSelected('thursday', e.target.checked)
                                     }} />&nbsp;Чт</Col>
                                     &nbsp;
                                     <Col span={12} xs={12} lg={12}>
-                                    <input type="time" onChange={(e)=>{_setSchedule('thursday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('thursday', { endTime: e.target.value })}}/>
+                                        <input type="time" onChange={(e) => { _setSchedule('thursday', { startTime: e.target.value }) }} /> : <input type="time" onChange={(e) => { _setSchedule('thursday', { endTime: e.target.value }) }} />
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Пт"} onChange={(e)=>{
+                                    <Col span={2}><Checkbox value={"Пт"} onChange={(e) => {
                                         _setScheduleSelected('friday', e.target.checked)
                                     }} />&nbsp;Пт</Col>
                                     &nbsp;
                                     <Col span={12} xs={12} lg={12}>
-                                    <input type="time" onChange={(e)=>{_setSchedule('friday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('friday', { endTime: e.target.value })}}/>
+                                        <input type="time" onChange={(e) => { _setSchedule('friday', { startTime: e.target.value }) }} /> : <input type="time" onChange={(e) => { _setSchedule('friday', { endTime: e.target.value }) }} />
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
-                                    <Col span={2}><Checkbox value={"Сб"} onChange={(e)=>{
+                                    <Col span={2}><Checkbox value={"Сб"} onChange={(e) => {
                                         _setScheduleSelected('saturday', e.target.checked)
                                     }} />&nbsp;Сб</Col>
                                     &nbsp;
                                     <Col span={12} xs={12} lg={12}>
-                                    <input type="time" onChange={(e)=>{_setSchedule('saturday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('saturday', { endTime: e.target.value })}}/>
+                                        <input type="time" onChange={(e) => { _setSchedule('saturday', { startTime: e.target.value }) }} /> : <input type="time" onChange={(e) => { _setSchedule('saturday', { endTime: e.target.value }) }} />
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col span={2}><Checkbox value={"Вс"} onChange={(e)=>{
+                                    <Col span={2}><Checkbox value={"Вс"} onChange={(e) => {
                                         _setScheduleSelected('sunday', e.target.checked)
                                     }} />&nbsp;Вс</Col>
                                     &nbsp;
                                     <Col span={12} xs={12} lg={12}>
-                                    <input type="time" onChange={(e)=>{_setSchedule('sunday', { startTime: e.target.value })}} /> : <input type="time" onChange={(e)=>{_setSchedule('sunday', { endTime: e.target.value })}}/>
+                                        <input type="time" onChange={(e) => { _setSchedule('sunday', { startTime: e.target.value }) }} /> : <input type="time" onChange={(e) => { _setSchedule('sunday', { endTime: e.target.value }) }} />
                                     </Col>
                                 </Row>
                             </Form.Item>

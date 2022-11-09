@@ -25,6 +25,7 @@ export const setBussinessPlan = async (params) => {
 
     return null;
 };
+
 export const setBussinessSettings = async (id,params) => {
     try {
         const response = await ApiClient.post(`/business/${id}/update`, params, 'multipart/form-data');
@@ -36,14 +37,28 @@ export const setBussinessSettings = async (id,params) => {
     }
     return null;
 };
+
 export const cancelBussinessAccount = async () =>{
     try {
         const response = await ApiClient.post(`/business/account/cancel`);
-        if (response.status == 200 || response.status == 201) {
+        if (response.status === 200 || response.status === 201) {
             return response.data.data;
         }
     } catch (error) {
         console.log('business account api error ', error);
     }
+    return null;
+};
+
+export const sendPhotoGallery = async (params) => {
+    try {
+        const response = await ApiClient.post('/business/account/photogallery', params, 'multipart/form-data');
+        if (response.status == 200 || response.status == 201) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log('photogallery ', error.response);
+    }
+
     return null;
 };

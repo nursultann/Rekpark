@@ -11,10 +11,12 @@ import ProductFields from "../components/product/product_fields";
 import {setUser} from "../redux/actions/user_actions";
 import Footer from "../components/footer";
 
+const DG = require('2gis-maps');
+
 const CreateAd = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const {user} = useSelector((state) => state.user);
+    const { user } = useSelector((state) => state.user);
     const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
     const [loading, setLoading] = useState(false);
     const [location, setLocation] = useState(null);
@@ -26,27 +28,29 @@ const CreateAd = () => {
             dispatch(setUser(userDetails));
         }
     };
-    useEffect(()=>{
-        var DG = require('2gis-maps');
-        var marker;
-        var map = null;
+
+    useEffect(() => {
+        let marker;
+        let map = null;
         //2gis map
         DG.then(function () {
-          map = DG.map('map', {
-            'center': [40.500305, 72.814718],
-            'zoom': 13
-          });
-          marker = DG.marker([40.500305, 72.814718], {
-            draggable: true
-          }).addTo(map);
-          marker.on('drag', function (e) {
-            var lat = e.target._latlng.lat.toFixed(3);
-            var lng = e.target._latlng.lng.toFixed(3);
-            setLocation({ latitude: lat, longitude: lng });
-          });
+            map = DG.map('map', {
+                'center': [40.500305, 72.814718],
+                'zoom': 13
+            });
+            marker = DG.marker([40.500305, 72.814718], {
+                draggable: true
+            }).addTo(map);
+            marker.on('drag', function (e) {
+                let lat = e.target._latlng.lat.toFixed(3);
+                let lng = e.target._latlng.lng.toFixed(3);
+                setLocation({latitude: lat, longitude: lng});
+            });
         });
-      },[]);
-      console.log("location",location);
+    }, []);
+
+    console.log("location", location);
+
     useEffect(() => {
         fetchUserDetails();
     }, []);
@@ -65,7 +69,7 @@ const CreateAd = () => {
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item"><a className="text-primary" href="/">
-                            <i className="fa-solid fa-house" /> Главная страница</a>
+                            <i className="fa-solid fa-house"/> Главная страница</a>
                         </li>
                         <li className="breadcrumb-item active" aria-current="page">Новое объявление</li>
                     </ol>
@@ -88,7 +92,7 @@ const CreateAd = () => {
                             const formData = new FormData();
                             formData.append('user_id', user.id);
                             formData.append('currency_id', model.currency_id);
-                            formData.append('location',JSON.stringify(location));
+                            formData.append('location', JSON.stringify(location));
                             model.files.forEach(file => {
                                 formData.append('images[]', file);
                             });
