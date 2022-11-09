@@ -47,3 +47,14 @@ export const cancelBussinessAccount = async () =>{
     }
     return null;
 };
+export const uploadGallery = async (params) =>{
+    try {
+        const response = await ApiClient.post(`business/account/photogallery`,params, 'multipart/form-data');
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('upload photo gallery error ', error);
+    }
+    return null;
+};
