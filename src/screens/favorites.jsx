@@ -113,7 +113,7 @@ const Favorites = () => {
                                 <li class="list-group-item">+{user.phone}</li>
                                 <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
                                 <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
-                                <li class="list-group-item text-white" style={{backgroundColor:"#184d9f"}}><Link to="/favorites">Избранные</Link></li>
+                                <li class="list-group-item text-white" style={{backgroundColor:"rgb(9, 72, 130)"}}><Link to="/favorites">Избранные</Link></li>
                                 <li class="list-group-item"><Link to="/chats">Сообщения</Link></li>
                                 <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
                             </ul>

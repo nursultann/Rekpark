@@ -1,4 +1,4 @@
-import { Avatar } from 'antd';
+import { Avatar, Button, Carousel, Image } from 'antd';
 import { UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { fetchUsersProducts } from '../api/product';
@@ -13,6 +13,8 @@ const UserAds = ({ match }) => {
     const [phones, setPhones] = useState(null);
     const [schedule, setSchedule] = useState(null);
     const [location, setLocation] = useState(null);
+    const [photoGallery, setPhotoGallery] = useState(null);
+    const [visible,setVisible] = useState(false);
     const fetchProducts = async () => {
         const _products = await fetchUsersProducts({
             'search': 'user_id:' + match.params.id,
@@ -21,7 +23,7 @@ const UserAds = ({ match }) => {
         });
         if (_products != null) {
             setProducts(_products);
-            console.log(_products[0]);
+            console.log("product", _products[0]);
             if (_products[0].user.business_account != null) {
                 var str = _products[0].user.business_account.socials;
                 setSocials(JSON.parse(str));
@@ -31,10 +33,15 @@ const UserAds = ({ match }) => {
                 setSchedule(JSON.parse(schedules));
                 var position = _products[0].user.business_account.location;
                 setLocation(JSON.parse(position));
+                var gallery = _products[0].user.business_account.photogallery;
+                setPhotoGallery(gallery);
             }
         }
     }
-    if(location != null){
+    if (photoGallery != null) {
+        console.log("photos", photoGallery);
+    }
+    if (location != null) {
         //map
         var DG = require('2gis-maps');
         var map;
@@ -280,9 +287,71 @@ const UserAds = ({ match }) => {
                                                         <img src={product[0].user.business_account.coverImage} width="100%" />
                                                     </div>
                                                     {location != null ?
-                                                        <div className='col-xl-12 border rounded p-3'>
-                                                            <p>Местоположение</p>
-                                                            <div id="map" style={{ width: "100%", height: "400px" }}></div>
+                                                        <div className='col-xl-12 p-3'>
+                                                            <h4 className='text-muted' style={{ fontSize: "20px" }}>Местоположение</h4>
+                                                            <hr />
+                                                            <div id="map" style={{ width: "100%", height: "500px" }}></div>
+                                                        </div>
+                                                        : <></>
+                                                    }
+                                                    {photoGallery != null ?
+                                                        <div className='col-xl-12'>
+                                                            {
+                                                                photoGallery != null ?
+                                                                    <div className="col-12 text-center py-4 mb-5">
+                                                                        <h4 className="text-left text-muted" style={{ fontSize: "20px" }}>Галерея</h4>
+                                                                        <hr />
+                                                                        <div className="row">
+                                                                            {photoGallery.map((item) =>
+                                                                                <div className="col-6 col-lg-3 mt-2">
+                                                                                    <div className="col-12 py-3 border rounded">
+                                                                                        <Image
+                                                                                            preview={{
+                                                                                                visible: false,
+                                                                                            }}
+                                                                                            width={"100%"}
+                                                                                            src={item.cover}
+                                                                                            onClick={() => setVisible(true)}
+                                                                                        />
+                                                                                        <div
+                                                                                            style={{
+                                                                                                display: 'none',
+                                                                                            }}
+                                                                                        >
+                                                                                            <Image.PreviewGroup
+                                                                                                preview={{
+                                                                                                    visible,
+                                                                                                    onVisibleChange: (vis) => setVisible(vis),
+                                                                                                }}
+                                                                                            >
+                                                                                            {
+                                                                                            item.media.length > 0 ?
+                                                                                            <>
+                                                                                            {item.media.map((i)=>
+                                                                                                <Image src={i.original_url} />
+                                                                                                )
+                                                                                            }
+                                                                                            </>
+                                                                                            :<></>
+                                                                                            }
+                                                                                            {/* <Image src={item.media[0].original_url} /> */}
+                                                                                            </Image.PreviewGroup>
+                                                                                        </div>
+                                                                                        <p className="py-1 text-left" style={{ fontSize: "15px" }}>Название галереи: {item.title}</p>
+                                                                                        <p className="text-muted text-left" style={{ fontSize: "12px" }}>{moment(item.media[0].created_at, 'YYYYMMDD, H:mm:ss', 'Asia/Bishkek').fromNow()}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            )
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                    :
+                                                                    <div className="col-12 text-center py-3">
+                                                                        <div class="spinner-border text-primary" role="status">
+                                                                            <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                    </div>
+                                                            }
                                                         </div>
                                                         : <></>
                                                     }
@@ -298,7 +367,7 @@ const UserAds = ({ match }) => {
 
 
                             <div className='col-xl-12 border rounded py-3 mt-4'>
-                                <label style={{ fontSize: 18 }}><b>Объявления</b></label>
+                                <h4 className='text-muted' style={{ fontSize: 20 }}>Объявления</h4>
                                 <hr />
                                 <div className='row'>
                                     {product != null && product != undefined ?

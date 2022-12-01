@@ -56,7 +56,7 @@ a {
 
 .footer-14398 {
   padding: 7rem 0;
-  background: #184d9f;
+  background: rgb(9, 72, 130);
   color: rgb(255, 255, 255); }
   .footer-14398 .footer-site-logo {
     color: #fff;
@@ -190,7 +190,7 @@ a {
       font-size: 14px;
       color: rgb(255, 255, 255); }
       .footer-95942 .nav-links li a:hover {
-        color: #4200ff; }
+        color: rgb(9, 72, 130); }
   .footer-95942 .social.app {
     font-size: 13px; }
   .footer-95942 .social li {
@@ -200,7 +200,7 @@ a {
       padding: 10px;
       color: rgb(255, 255, 255); }
       .footer-95942 .social li a:hover {
-        color: #4200ff; }
+        color: rgb(9, 72, 130); }
   .footer-95942 .social.nav-left li:first-child a {
     padding-left: 0px; }
   .footer-95942 .social.nav-right li:last-child a {
@@ -295,7 +295,7 @@ a {
     font-size: 2rem;
     font-weight: 900; }
     .footer-16371 .footer-site-logo a {
-      color: #4200ff; }
+      color: rgb(9, 72, 130); }
   .footer-16371 .nav-links {
     padding: 0;
     margin: 0; }
@@ -608,7 +608,7 @@ body{margin-top:20px;}
     -webkit-border-radius: 0 3px 0 0;
     -moz-border-radius: 0 3px 0 0;
     border-radius: 0 3px 0 0;
-    background-color: #184d9f;
+    background-color: rgb(9,72,130);
     color:#fff;
 }
 

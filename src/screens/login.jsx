@@ -16,14 +16,15 @@ const Sign = () => {
     const [password, setPassword] = useState();
     const [countrycode, setCountryCode] = useState();
     
-    const responseGoogle = (response) => {
+    const responseGoogle = async (response) => {
         console.log("google response", response);
         const email = response.profileObj.email;
         const name = response.profileObj.name;
         const uid = response.profileObj.googleId;
-        console.log(email, name, uid)
-        loginGoogle(email, name, uid, (data) => {
+        console.log('datas',email, name, uid)
+        await loginGoogle(email, name, uid, (data) => {
             console.log('Success',data);
+
         }, (data) => {
             console.log('error', data);
         });

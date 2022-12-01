@@ -3,11 +3,11 @@ import Navbar from "../components/navbar";
 import { firebase, auth } from "../config/firebase_config";
 import * as firebaseui from "firebaseui";
 import ApiClient from "../api/ApiClient";
-import { checkPhone, register } from "../api/user";
+import { checkPhone, loginGoogle, register } from "../api/user";
 import Footer from "../components/footer";
 import { Steps, Button, message, Form, Input, Select, InputNumber } from 'antd';
 import { Alert } from 'antd';
-
+const clientId = "363682799555-97hlkli04bo0eevlu0br81jtl3vg677a.apps.googleusercontent.com";
 // const countryCodes = [
 //     {"value": "+996", "label": "+996"},
 //     {"value": "+7", "label": "+7"},
@@ -29,7 +29,25 @@ const Register = () => {
     const [countrycode, setCountryCode] = useState();
     const [current, setCurrent] = useState(0);
     const [link, setLink] = useState(false);
-
+    const responseGoogle = (response) => {
+        console.log("google response", response);
+        const email = response.profileObj.email;
+        const name = response.profileObj.name;
+        const uid = response.profileObj.googleId;
+        console.log(email, name, uid)
+        loginGoogle(email, name, uid, (data) => {
+            console.log('Success',data);
+            
+        }, (data) => {
+            console.log('error', data);
+        });
+    
+        const onLoginError = (data) => {
+            
+            // message.error({content:'Номер или пароль указан неверно!', duration: 2});
+        };
+    
+    }
     const signIn = async () => {
         const check = await checkPhone(countrycode + phoneNumber);
         if (check == true) {

@@ -27,7 +27,7 @@ const News = ()=>{
             <div className='rounded' style={{backgroundImage:"url("+article.image+")",backgroundSize:"cover",height:"150px"}} 
             onDragStart={handleDragStart}></div>
             <p className='text-center mt-2' style={{fontSize:"12pt"}}>
-                <Link className='text-dark' to={'/article/'+article.id}>{article.title}</Link></p>
+                <Link style={{color: "rgb(9, 72, 130)"}} to={'/article/'+article.id}>{article.title}</Link></p>
             <p className='text-muted' style={{fontSize:"10pt"}}><i class="far fa-clock"></i>&nbsp;
              {moment(article.created_at, 'YYYYMMDD, h:mm:ss a,').calendar()}</p>
             </div>
@@ -40,7 +40,7 @@ const News = ()=>{
     return(
         <>
             <div className="col-xl-12 my-3">
-            <label className='rounded-pill bg-light px-3 mb-3' style={{fontSize:"18px"}}><Link to="/articles">Новости и статьи</Link></label>
+            <h6 className='px-3 mb-3 text-muted' style={{fontSize:"18px"}}><Link to="/articles">Новости и статьи</Link></h6>
             <AliceCarousel 
             mouseTracking 
             items={items} 

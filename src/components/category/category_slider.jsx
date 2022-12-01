@@ -21,7 +21,6 @@ function SampleArrow(props) {
 const CategorySlider = () => {
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
-
   const fetchCategoriesTree = async () => {
     const categories = await api.fetchCategoriesTree();
     if (categories != null) {
@@ -94,7 +93,7 @@ const CategorySlider = () => {
 
   const popoverContent = (children) => (
     <div style={{ width: '250px' }}>
-      {children.map((item) => (<><a className="text-primary" href={`/category/${item.id}`}>{item.name}</a><br /></>))}
+      {children.map((item) => (<><a style={{color: "rgb(9, 72, 130)"}} href={`/category/${item.id}`}>{item.name}</a><br /></>))}
     </div>
   );
 

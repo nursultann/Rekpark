@@ -34,6 +34,7 @@ const ProductItem = ({ product }) => {
         if (plans != null) {
             setSubPlans(plans);
         }
+        window.reload();
         // console.log('plans',subPlans);
     }
     const baseStyle = { height: 'auto' };
@@ -263,10 +264,6 @@ const ProductItem = ({ product }) => {
                         }
                         <div className="row mt-3 mt-xl-5">
                             <div className="col-12 pl-4">
-                                {/* <a className="text-primary" onClick={()=>makeTop(product.id)}><i class="fa-solid fa-arrow-up text-muted"></i> Поднять</a><br/>
-                                <a className="text-primary" onClick={()=>makeVip(product.id)}><i class="fa-solid fa-crown text-danger"></i> Сделать VIP</a><br/>
-                                <a className="text-primary" onClick={()=>makeUrgent(product.id)}><i class="fa-solid fa-bolt text-warning"></i> Срочно</a><br/>
-                                <a className="text-primary" onClick={()=>makeAutoUp(product.id)}><i class="fa-solid fa-arrow-up text-success"></i> Auto Up</a> */}
                                 {subPlans != null ?
                                     <>
                                         {
@@ -297,11 +294,11 @@ const ProductItem = ({ product }) => {
                     footer={
                         plan.periods?.length > 0 ?
                             <>
-                                <button className="my-2 btn btn-primary" onClick={() => buyServiceBySelectedPeriod(user.balance, plan.name)}>Купить услугу</button>
+                                <button className="my-2 btn text-white" style={{backgroundColor: "rgb(9, 72, 130)"}} onClick={() => buyServiceBySelectedPeriod(user.balance, plan.name)}>Подключить услугу</button>
                             </>
                             :
                             <>
-                                <button className="my-2 btn btn-primary" onClick={() => buyService(user.balance, plan.name)}>Купить услугу</button>
+                                <button className="my-2 btn text-white" style={{backgroundColor: "rgb(9, 72, 130)"}} onClick={() => buyService(user.balance, plan.name)}>Подключить услугу</button>
                             </>
                     }
                 >

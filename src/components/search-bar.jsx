@@ -61,7 +61,7 @@ const SearchBar = () => {
               <div className='col-lg-12 mt-3 mt-xl-0 px-3 pt-2'>
                 <div className='col-12 mr-2 rounded alert alert-info'>
                   <div className='row'>
-                    {/* <div className='col-lg-3 px-2 px-lg-1 py-2 py-lg-2'>
+                    <div className='col-lg-2 px-2 px-lg-1 py-2 py-lg-2'>
                       <TreeSelect
                         showSearch
                         style={{ width: '100%' }}
@@ -71,6 +71,7 @@ const SearchBar = () => {
                         allowClear
                         treeDefaultExpandAll
                         onChange={onChange}
+                        className="py-0"
                       >
                         {categories.map((category) => {
                           return (
@@ -92,12 +93,12 @@ const SearchBar = () => {
                           )
                         })}
                       </TreeSelect>
-                    </div> */}
-                    <div className="col-lg-10 px-0 px-lg-2 mt-2 mt-lg-0 py-1 py-lg-2" >
+                    </div>
+                    <div className="col-lg-8 px-0 px-lg-2 mt-2 mt-lg-0 py-1 py-lg-2" >
                       <input type={"search"} className='col-lg-12 form-control' placeholder="Поиск..." onChange={(e) => { setSearch(e.target.value) }} style={{ width: "100%" }} />
                     </div>
                     <div className='col-lg-2 px-0 px-lg-1 py-2 py-lg-2'>
-                      <button className='btn btn-outline-light text-white col-12 rounded' type="primary" style={{ backgroundColor: '#184d9f' }} onClick={Search}>
+                      <button className='btn btn-outline-light text-white col-12 rounded' type="primary" style={{ backgroundColor: 'rgb(9, 72, 130)' }} onClick={Search}>
                         Найти
                       </button>
                     </div>
@@ -108,7 +109,8 @@ const SearchBar = () => {
           </div>
         </div>
         <div className="col-md-12 pb-4 px-0">
-          <hr />
+          <h6 className='text-muted'>Категории</h6>
+          <hr/>
           <center>
             <CategorySlider />
           </center>

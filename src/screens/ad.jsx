@@ -199,9 +199,9 @@ const Ad = ({ match }) => {
         setVisible(false);
     };
     if (productDetails != null) {
-        var time = moment(productDetails.created_at, 'YYYYMMDD, h:mm:ss a');
+        var time = moment(productDetails.created_at, 'YYYYMMDD, H:mm:ss');
         moment.locale('ru');
-        var update = time.calendar();
+        var update = time.fromNow();
     }
     const postMessage = async () => {
         setLoadings(true);
@@ -232,8 +232,8 @@ const Ad = ({ match }) => {
                 <div className="col-xl-12 mt-xl-3 mt-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li class="breadcrumb-item"><a className="text-primary" href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
+                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
                             <li class="breadcrumb-item active" aria-current="page">{productDetails.title}</li>
                         </ol>
                     </nav>
@@ -241,7 +241,7 @@ const Ad = ({ match }) => {
                         <div className="col-xl-8 border rounded py-3">
                             <div className="row">
                                 <div className="col-xl-12">
-                                    <label style={{ fontSize: "22px", whiteSpace: "normal" }}>{productDetails.title}</label><br />
+                                    <label style={{ fontSize: "22px", whiteSpace: "normal", color: "rgb(9, 72, 130)" }}>{productDetails.title}</label><br />
                                     {productDetails.media.length > 0 ?
                                         <Carousel
                                             images={productDetails.media.map((item) => ({
@@ -263,7 +263,7 @@ const Ad = ({ match }) => {
                                 <div className="col-xl-12">
                                     <hr className="d-block d-xl-none" />
                                     <div className="row">
-                                        <div className="col-xl-12 mt-3" style={{ fontSize: "14px", whiteSpace: "normal" }}>
+                                        <div className="col-xl-12 mt-3" style={{ fontSize: "14px", whiteSpace: "normal", color: "rgb(9, 72, 130)" }}>
                                             <div className="row">
                                                 <label className="col-6">Категория:</label><label className="col-6">{productDetails.category != null ? productDetails.category.name : <></>}</label>
                                                 <label className="col-6">Цена:</label><label className="col-6">{productDetails.price + " " + productDetails.currency_symbol}</label>
@@ -293,7 +293,7 @@ const Ad = ({ match }) => {
                                 <div className="row">
                                     <div className="col-xl-12 mt-xl-4">
                                         <hr className="d-block d-xl-none" />
-                                        <button class="btn col-xl-12 text-white" style={{ backgroundColor: "#184d9f" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i class="fas fa-phone-volume"></i> Показать номер</button>
+                                        <button class="btn col-xl-12 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i class="fas fa-phone-volume"></i> Показать номер</button>
                                         <div class="collapse multi-collapse" id="multiCollapseExample1">
                                             <div class="card card-body">
                                                 {phones != null && phones.length > 12 ?
@@ -317,7 +317,7 @@ const Ad = ({ match }) => {
                                                 <hr className="d-block d-xl-none" />
 
                                                 {favorite ?
-                                                    <button class="btn col-xl-12 text-white" style={{ backgroundColor: "#184d9f" }} onClick={removeFav}><i class="far fa-heart"></i>Удалить из избранного</button>
+                                                    <button class="btn col-xl-12 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={removeFav}><i class="far fa-heart"></i>Удалить из избранного</button>
                                                     :
                                                     <button class="btn btn-outline-secondary col-xl-12" onClick={addFav}><i class="far fa-heart"></i> Добавить в избранное</button>
                                                 }
@@ -420,15 +420,15 @@ const Ad = ({ match }) => {
                             <hr />
                             {token ?
                                 <div className="col-xl-12 border rounded p-2">
-                                    <div className="col-xl-12 text-center" style={{ backgroundColor: "#184d9f" }}>
+                                    <div className="col-xl-12 text-center" style={{ backgroundColor: "rgb(9, 72, 130)" }}>
                                         <label className="p-2 rounded text-white">Написать сообщение к {productDetails.user.name}</label>
                                     </div>
                                     <div className="col-xl-12 mt-2 px-0">
                                         <textarea rows="10" className="form-control" value={messag} onChange={(e) => { setMessage(e.target.value) }}></textarea>
                                         <Button loading={loadings} className="btn btn-outline-primary rounded col-12 mt-2" onClick={postMessage}>Отправить</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "#184d9f" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
                                     </div>
                                 </div>
                                 : <></>

@@ -52,7 +52,7 @@ const ProductItem = ({product}) => {
             <div class="card-body">
                 <div className="row">    
                 <label style={{fontSize:17}} class="card-title px-0 col-md-12 py-0 label">{product.price +" "+ product.currency_symbol}</label>
-                <p style={{fontSize:15,fontFamily:"sans-serif",whiteSpace:"nowrap"}} class="card-title label px-0 text-primary py-0 col-md-12">{product.title}</p>
+                <p style={{fontSize:15,fontFamily:"sans-serif",whiteSpace:"nowrap", color: "rgb(9, 72, 130)"}} class="card-title px-0 py-0 col-md-12">{product.title}</p>
                 </div>
                 <div className="row px-0 d-flex justify-content-between">
                 <Avatar size="small" icon={<UserOutlined />} />
@@ -61,7 +61,7 @@ const ProductItem = ({product}) => {
                 <i class="far fa-eye"></i>  {product.views}
                 </label>
                 </div>
-                <i class="fa-solid fa-heart text-danger"></i> <a style={{fontSize:15}} className="mt-2" onClick={removeFav}>Удалить из избранного</a>
+                <i class="fa-solid fa-heart text-danger"></i> <a style={{fontSize:15, color: "rgb(9, 72, 130)"}} className="mt-2" onClick={removeFav}>Удалить из избранного</a>
             </div>
         </div>
     );

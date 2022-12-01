@@ -62,3 +62,14 @@ export const sendPhotoGallery = async (params) => {
 
     return null;
 };
+export const deleteGallery = async (id) => {
+    try {
+        const response = await ApiClient.delete('business/account/photogallery/' + id);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetch user details error ', error.response);
+    }
+    return null;
+};

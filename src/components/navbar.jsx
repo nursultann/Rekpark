@@ -45,7 +45,6 @@ const Navbar = () => {
   };
 
   const token = localStorage.getItem('token');
-
   const logOut = () => {
     localStorage.removeItem('token');
     window.location.href = '/';
@@ -121,8 +120,8 @@ const Navbar = () => {
                 {token == null ?
                   <>
                     <div className="d-none d-lg-block">
-                      <Button onClick={() => navigateTo('/register')} className="mr-2 rounded-pill" style={{ backgroundColor: '#184d9f', color: "#fff" }}>Регистрация</Button>
-                      <Button onClick={() => navigateTo('/login')} className="mr-2 rounded-pill" style={{ borderColor: '#184d9f', color: '#184d9f' }}>Войти</Button>
+                      <Button onClick={() => navigateTo('/register')} className="mr-2 rounded-pill" style={{ backgroundColor: 'rgb(9, 72, 130)', color: "#fff" }}>Регистрация</Button>
+                      <Button onClick={() => navigateTo('/login')} className="mr-2 rounded-pill" style={{ borderColor: 'rgb(9, 72, 130)', color: 'rgb(9, 72, 130)' }}>Войти</Button>
                     </div>
                     <div className="d-xs-block d-lg-none text-right">
                       <Button onClick={show}>
@@ -210,7 +209,7 @@ const Navbar = () => {
                           className="rounded-pill"
                           type='primary'
                           onClick={() => navigateTo('/products/create')}
-                          style={{ backgroundColor: '#184d9f' }}
+                          style={{ backgroundColor: 'rgb(9, 72, 130)' }}
                         >
                           + Добавить рекламу
                         </Button>
