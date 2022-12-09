@@ -36,13 +36,16 @@ const Chats = () => {
     const [chat_image, setChatImage] = useState();
     const [message, setMessage] = useState();
     const [loadings, setLoadings] = useState();
+    const [user_id, setUserId] = useState();
     const fetchUserDetails = async () => {
         const user = await userDetails();
         if (user != null) {
             dispatch(setUser(user));
+            setUserId(user.id);
         }
     };
     const removeChat = async (id) =>{
+        console.log('id chat', id);
        const remove = await deleteChat(id);
        console.log(remove);
         if(remove != null){
@@ -64,7 +67,8 @@ const Chats = () => {
         }
     }
     const getUserMessage = async (id, userName,partner_id) => {
-        history.push("/chat/" + id + "/" + userName + "/" + partner_id);
+        // console.log('id', id , 'userName', userName);
+        history.push("/chat/" + id + "/" + userName);
     }
     const postMessage = async () => {
         setLoadings(true);
@@ -180,12 +184,12 @@ const Chats = () => {
                                                                     <>
                                                                         {chats.map((chat) =>
                                                                             <li class="person" data-chat="person1">
-                                                                                <div class="user" onClick={() => getUserMessage(chat.id, chat.name,chat.room_id)}>
-                                                                                    <img src={chat.image} alt="Retail Admin" />
+                                                                                <div class="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id ,chat.advertisement_id)}>
+                                                                                    <img src={chat.advertisement.image} alt="Retail Admin" />
                                                                                     <span class="status busy"></span>
                                                                                 </div>
-                                                                                <p class="name-time" onClick={() => getUserMessage(chat.id, chat.name,chat.room_id)}>
-                                                                                    <span class="name">{chat.name}</span>
+                                                                                <p class="name-time" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id ,chat.advertisement_id)}>
+                                                                                    <span class="name">{chat.advertisement.title}</span>
                                                                                 </p>
                                                                                 <div className="float-right">
                                                                                     <span><i class="fa-solid fa-trash-can text-primary" onClick={() => removeChat(chat.id)}></i></span>

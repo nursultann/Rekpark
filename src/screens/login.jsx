@@ -129,8 +129,8 @@ const Sign = () => {
                         </Form.Item>
                     </Form>
                     <label>Вы не зарегистрированы?</label>
-                    <Link style={{ color: "#184d9f" }} className="ml-2" href="/register">Зарегистроваться</Link><br />
-                    <Link style={{ color: "#184d9f" }} className="ml-2" href="/forgot_password">Забыли пароль</Link>
+                    <Link style={{ color: "#184d9f" }} className="ml-2" to="/register">Зарегистроваться</Link><br />
+                    <Link style={{ color: "#184d9f" }} className="ml-2" to="/forgot_password">Забыли пароль</Link>
                 </div>
             </div>
         </div>

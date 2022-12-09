@@ -6,7 +6,7 @@ import { Input } from 'antd';
 import { setCategories } from "../redux/actions/category_actions";
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "../api";
-import { TreeSelect } from 'antd';
+import { TreeSelect, Select } from 'antd';
 import { useHistory } from "react-router-dom";
 import BussinessProfiles from './bussiness_profiles';
 const { Search } = Input;
@@ -26,32 +26,45 @@ const SearchBar = () => {
   const Search = () => {
     history.push(`search_result/${search}`);
   }
-
+  const [options, setOptions] = useState([]);
   const fetchCategoriesTree = async () => {
     const categories = await api.fetchCategoriesTree();
     if (categories != null) {
       dispatch(setCategories(categories));
+      {
+        categories.map((category) => {
+          category.children != null && category.children.length > 0 ?
+          <>
+            {setOptions(prevState => [...prevState, {
+              label: category.name,
+              value: category.id
+              // options: [
+              //   category.children.map((item)=>
+              //   {
+              //     label: item.name,
+              //     value: item.id,
+              //   },
+              //   )
+              // ],
+            }])
+            }
+          </>
+          :
+          <>
+          </>
+          console.log('options', options);
+        }
+        )
+      }
     }
   };
-
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+    window.location.href = "/category/"+value;
+  };
   useEffect(() => {
     fetchCategoriesTree();
   }, []);
-
-  const childrenContent = (children) => (
-    <>
-      {children.map((item) => (<>
-        <TreeNode
-          id={item.id}
-          value={item.name}
-          title={item.name}
-        >
-        </TreeNode>
-      </>))}
-
-    </>
-  );
-
   return (
     <div>
       <div class="col-md-12">
@@ -62,40 +75,21 @@ const SearchBar = () => {
                 <div className='col-12 mr-2 rounded alert alert-info'>
                   <div className='row'>
                     <div className='col-lg-2 px-2 px-lg-1 py-2 py-lg-2'>
-                      <TreeSelect
-                        showSearch
-                        style={{ width: '100%' }}
-                        value={value}
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                        placeholder="Категории"
-                        allowClear
-                        treeDefaultExpandAll
-                        onChange={onChange}
-                        className="py-0"
-                      >
-                        {categories.map((category) => {
-                          return (
-                            category.children != null && category.children.length > 0 ?
-                              <TreeNode
-                                placement="bottom"
-                                id={category.id}
-                                value={category.name}
-                                title={category.name}
-                              >
-                                {childrenContent(category.children)}
-                              </TreeNode>
-                              :
-                              <TreeNode
-                                id={category.id}
-                                value={category.name}
-                                title={category.name}>
-                              </TreeNode>
-                          )
-                        })}
-                      </TreeSelect>
+                      {options != null ?
+                        <Select
+                          defaultValue="Категории"
+                          size="default"
+                          style={{
+                            width: "100%",
+                          }}
+                          onChange={handleChange}
+                          options={options}
+                        />
+                        : <></>
+                      }
                     </div>
                     <div className="col-lg-8 px-0 px-lg-2 mt-2 mt-lg-0 py-1 py-lg-2" >
-                      <input type={"search"} className='col-lg-12 form-control' placeholder="Поиск..." onChange={(e) => { setSearch(e.target.value) }} style={{ width: "100%" }} />
+                      <input type={"search"} className='col-lg-12 form-control' placeholder="Я ищу..." onChange={(e) => { setSearch(e.target.value) }} style={{ width: "100%" }} />
                     </div>
                     <div className='col-lg-2 px-0 px-lg-1 py-2 py-lg-2'>
                       <button className='btn btn-outline-light text-white col-12 rounded' type="primary" style={{ backgroundColor: 'rgb(9, 72, 130)' }} onClick={Search}>
@@ -108,9 +102,9 @@ const SearchBar = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-12 pb-4 px-0">
+        <div className="col-md-12 pb-4 px-0 d-none d-md-block">
           <h6 className='text-muted'>Категории</h6>
-          <hr/>
+          <hr />
           <center>
             <CategorySlider />
           </center>

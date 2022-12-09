@@ -88,11 +88,17 @@ const ProductItem = ({ product }) => {
                             />
                         </>
                     }
-                    {product.is_vip ?
-                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-2">VIP</span></div>
+                    {product.is_vip && product.is_urgent ?
+                        <>
+                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1">VIP</span></div>
+                        <div style={{ position: "absolute", left: "40px", top: "10px", }}><span className="badge badge-warning p-1">Срочно</span></div>
+                        </>
                         : <></>}
-                    {product.is_urgent ?
-                        <div style={{ position: "absolute", left: "50px", top: "10px", }}><span className="badge badge-warning p-2">Срочно</span></div>
+                    {product.is_urgent && product.is_vip == false ?
+                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1">Срочно</span></div>
+                        : <></>}
+                    {product.is_vip && product.is_urgent == false ?
+                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1">VIP</span></div>
                         : <></>}
                 </div>
             </div>

@@ -55,7 +55,7 @@ const Ad = ({ match }) => {
             if (position != undefined) {
                 setLocation(JSON.parse(position));
             }
-            console.log(productDetails);
+            // console.log('product',productDetails);
             document.title = productDetails.title;
         }
         const user = await userDetails();

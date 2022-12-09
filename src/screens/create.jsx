@@ -9,7 +9,6 @@ import {
 } from "antd";
 import ProductFields from "../components/product/product_fields";
 import {setUser} from "../redux/actions/user_actions";
-import Footer from "../components/footer";
 
 const DG = require('2gis-maps');
 
@@ -102,11 +101,11 @@ const CreateAd = () => {
                             setLoading(true);
                             const response = await api.createProduct(formData);
                             if (response != null && response.success) {
-                                openNotification('success', 'Успешно сохранено!', null);
+                                openNotification('success', 'Объявление отправлено на модерацию!', null);
                                 console.log();
                                 history.push(`/`);
                             } else {
-                                openNotification('error', 'Не удалось сохранить!', null);
+                                openNotification('error', 'Не удалось опубликовать!', null);
                             }
                             setLoading(false);
                         }

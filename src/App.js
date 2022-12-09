@@ -93,7 +93,7 @@ const App = ({ match }) => {
               <Route path="/search_result/:search" component={SearchResult} />
               <Route path={"/userAds/:id"} component={UserAds}/>
               <Route path={"/chats"} component={Chats}/>
-              <Route path={"/chat/:id?/:name"} component={ChatUser}/>
+              <Route path={"/chat/:id?/:ad_id"} component={ChatUser}/>
               <Route path="/business-profile" component={BusinessProfile}/>
               <Route path="/business-settings" component={BusinessSettings}/>
               <Route path="/business" component={SetBusinessProfile}/>

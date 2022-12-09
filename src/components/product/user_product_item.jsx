@@ -32,9 +32,8 @@ const ProductItem = ({ product }) => {
     const subscriptionPlans = async () => {
         const plans = productsPlans;
         if (plans != null) {
-            setSubPlans(plans);
+            dispatch(setSubPlans(plans));
         }
-        window.reload();
         // console.log('plans',subPlans);
     }
     const baseStyle = { height: 'auto' };
@@ -153,24 +152,24 @@ const ProductItem = ({ product }) => {
             console.log('balance', balance)
 
             if (balance > itemPrice) {
-                if(color != null){
-                const params = {
-                    'period': period,
-                    'color': color
-                }
-                console.log(params);
-                const vip = await productMakeColored(productId, params);
-                console.log(vip);
-                if (vip != null) {
-                    message.success("Успешно подключили услугу!");
-                    setIsModalVisible(false);
+                if (color != null) {
+                    const params = {
+                        'period': period,
+                        'color': color
+                    }
+                    console.log(params);
+                    const vip = await productMakeColored(productId, params);
+                    console.log(vip);
+                    if (vip != null) {
+                        message.success("Успешно подключили услугу!");
+                        setIsModalVisible(false);
+                    } else {
+                        message.warning("Услуга уже подключена!");
+                        setIsModalVisible(false);
+                    }
                 } else {
-                    message.warning("Услуга уже подключена!");
-                    setIsModalVisible(false);
+                    message.error("Не выбрали цвет!");
                 }
-            }else{
-                message.error("Не выбрали цвет!");
-            }
             } else {
                 message.error("Недостаточно средств чтобы подключить услугу!")
             }
@@ -215,8 +214,17 @@ const ProductItem = ({ product }) => {
                         <div className="row">
                             <div className="col-md-12 px-1 py-1" style={{ height: 150 }}>
                                 <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{ objectFit: "cover" }} />
-                                {product.is_vip ?
-                                    <div style={{ position: "absolute", left: "30px", top: "10px", }}><span className="badge badge-danger p-2">VIP</span></div>
+                                {product.is_vip && product.is_urgent ?
+                                    <>
+                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1">VIP</span></div>
+                                        <div style={{ position: "absolute", left: "40px", top: "10px", }}><span className="badge badge-warning p-1">Срочно</span></div>
+                                    </>
+                                    : <></>}
+                                {product.is_urgent && product.is_vip == false ?
+                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1">Срочно</span></div>
+                                    : <></>}
+                                {product.is_vip && product.is_urgent == false ?
+                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1">VIP</span></div>
                                     : <></>}
                             </div>
                         </div>
@@ -294,11 +302,11 @@ const ProductItem = ({ product }) => {
                     footer={
                         plan.periods?.length > 0 ?
                             <>
-                                <button className="my-2 btn text-white" style={{backgroundColor: "rgb(9, 72, 130)"}} onClick={() => buyServiceBySelectedPeriod(user.balance, plan.name)}>Подключить услугу</button>
+                                <button className="my-2 btn text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => buyServiceBySelectedPeriod(user.balance, plan.name)}>Подключить услугу</button>
                             </>
                             :
                             <>
-                                <button className="my-2 btn text-white" style={{backgroundColor: "rgb(9, 72, 130)"}} onClick={() => buyService(user.balance, plan.name)}>Подключить услугу</button>
+                                <button className="my-2 btn text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => buyService(user.balance, plan.name)}>Подключить услугу</button>
                             </>
                     }
                 >
@@ -336,7 +344,8 @@ const ProductItem = ({ product }) => {
                                 <>
                                     {plan.name == "colored" ?
                                         <>
-                                            <p>Выберите цвет для закраски</p>
+                                            <div className="">Выберите цвет для закраски 
+                                            </div> 
                                             {/* <input type="color" onChange={(e) => { setColor(e.target.value) }} /> */}
                                             <button className="btn" style={{ backgroundColor: "#fcc7c7" }} onClick={(e) => { setColor("#fcc7c7") }}>Выбрать цвет</button>
                                             <button className="btn ml-2" style={{ backgroundColor: "#d8c7fc" }} onClick={() => { setColor("#d8c7fc") }}>Выбрать цвет</button>
@@ -344,6 +353,11 @@ const ProductItem = ({ product }) => {
                                             <button className="btn mt-2" style={{ backgroundColor: "#b8dcff" }} onClick={() => { setColor("#b8dcff") }}>Выбрать цвет</button>
                                             <button className="btn mt-2 ml-2" style={{ backgroundColor: "#f7ffbf" }} onClick={() => { setColor("#f7ffbf") }}>Выбрать цвет</button>
                                             <button className="btn mt-2 ml-2" style={{ backgroundColor: "#e8e8e8" }} onClick={() => { setColor("#e8e8e8") }}>Выбрать цвет</button>
+                                            {color != null ? 
+                                            <div className="d-flex mt-2">
+                                            выбранный цвет: <div className="rounded-circle" style={{width : 20, height : 20, backgroundColor : color}} ></div>
+                                            </div> 
+                                            : <></>}
                                         </>
                                         : <></>
                                     }

@@ -584,12 +584,12 @@ body{margin-top:20px;}
         width: 30px;
         height: 30px;
     }
-    .users .person p.name-time {
+    /* .users .person p.name-time {
         display: none;
     }
     .users .person p.name-time .time {
         display: none;
-    }
+    } */
 }
 
 

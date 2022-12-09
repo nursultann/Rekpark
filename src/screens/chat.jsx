@@ -35,8 +35,7 @@ const ChatUser = () => {
     const [postId, setPostId] = useState();
     const [product, setProduct] = useState(null);
     const userid = param.id;
-    const userName = param.name;
-    const partner_id = param.room;
+    const advertisement_id = param.ad_id;
     const fetchUserDetails = async () => {
         const user = await userDetails();
         if (user != null) {
@@ -46,8 +45,8 @@ const ChatUser = () => {
     const getUserMessage = async () => {
         console.log(userid);
         setChatId(userid);
-        setChatName(userName);
-        const userMessages = await getUserMessages({ 'chat_user_id': userid, 'with': 'sender' });
+        // setChatName(userName);
+        const userMessages = await getUserMessages({ 'chat_user_id': userid, 'advertisement_id' : advertisement_id, 'with': 'sender' });
         if (userMessages != null) {
             setMessages(userMessages.reverse());
             setPostId(messages[0].advertisement_id);
@@ -57,7 +56,7 @@ const ChatUser = () => {
     const postMessage = async () => {
         setLoadings(true);
         if (message != "" && message != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message, 'advertisement_id': postId });
+            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message, 'advertisement_id': advertisement_id });
             getUserMessage(chat_id);
             setMessage("");
             openNotificationWithIcon('success', 'Сообщение отправлено!');
