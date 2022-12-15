@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import top from './img/top.png';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import React, { useEffect } from 'react';
@@ -50,36 +49,36 @@ const App = ({ match }) => {
   }
   useEffect(() => {
     subscribe();
-  },[]);
+  }, []);
 
-    return(
-      // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
-      // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
-      <div className="container-fluid">
-        <div className="row">
-            <div className="col-lg-1 px-0 d-none d-lg-block text-white text-center" 
-              style={{backgroundSize : "auto", backgroundPosition: "right top", 
-                backgroundImage: "",
-                backgroundRepeat: "no-repeat"}}>
-            </div>
-            <div className="col-lg-10 px-0" style={{ backgroundColor: '#fff',minHeight:"500px"}}>
-            <div className="col-lg-12 bg-success px-0 text-white text-center">
-                <img src={top} width="100%"/>
-            </div>
-            <BrowserRouter>
-              <Switch>
-                <Route exact path="/" component={Main}/>
-                <Route path="/products/create" component={CreateAd}/>
-                <Route path="/products/:id/edit" component={EditAd} />
-                <Route path="/products/:id" component={Ad}/>
-                <Route path="/products" component={Ads}/>
-                <Route path="/products/create" component={CreateAd} />
-                <Route path="/register" component={Register}/>
-                <Route path="/profile"  component={Profile}/>
-                <Route path="/favorites" component={Favorites}/>
-                <Route path="/category/:id" component={Category}/>
-                {/* <Route path="/sub_category/:id" component={SubCategory}/>
-                <Route path="/sub_sub_category/:id" component={SubSubCategory}/> */}
+  return (
+    // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
+    // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-lg-1 px-0 d-none d-lg-block text-white text-center"
+          style={{
+            backgroundSize: "auto", backgroundPosition: "right top",
+            backgroundImage: "",
+            backgroundRepeat: "no-repeat"
+          }}>
+        </div>
+        <div className="col-lg-10 px-0" style={{ backgroundColor: '#fff', minHeight: "500px" }}>
+          <div className="col-lg-12 bg-success px-0 text-white text-center">
+            <img src={top} width="100%" />
+          </div>
+          <BrowserRouter>
+            <Switch>
+              <Route exact path="/" component={Main} />
+              <Route path="/products/create" component={CreateAd} />
+              <Route path="/products/:id/edit" component={EditAd} />
+              <Route path="/products/:id" component={Ad} />
+              <Route path="/products" component={Ads} />
+              <Route path="/products/create" component={CreateAd} />
+              <Route path="/register" component={Register} />
+              <Route path="/profile" component={Profile} />
+              <Route path="/favorites" component={Favorites} />
+              <Route path="/category/:id" component={Category} />
               <Route path="/about_us" component={About} />
               <Route path="/contacts" component={Contacts} />
               <Route path="/login" component={Login} />
@@ -91,15 +90,15 @@ const App = ({ match }) => {
               <Route path="/articles_categories/:id" component={CategoryArticles} />
               <Route path="/article/:id" component={Article} />
               <Route path="/search_result/:search" component={SearchResult} />
-              <Route path={"/userAds/:id"} component={UserAds}/>
-              <Route path={"/chats"} component={Chats}/>
-              <Route path={"/chat/:id?/:ad_id"} component={ChatUser}/>
-              <Route path="/business-profile" component={BusinessProfile}/>
-              <Route path="/business-settings" component={BusinessSettings}/>
-              <Route path="/business" component={SetBusinessProfile}/>
-              <Route path={"/business-plan/:id/:period"} component={BusinessPlan}/>
-              <Route path={"/about"} component={About}/>
-              <Route path={"/gallery"} component={Gallery}/>
+              <Route path={"/userAds/:id"} component={UserAds} />
+              <Route path={"/chats"} component={Chats} />
+              <Route path={"/chat/:id?/:ad_id"} component={ChatUser} />
+              <Route path="/business-profile" component={BusinessProfile} />
+              <Route path="/business-settings" component={BusinessSettings} />
+              <Route path="/business" component={SetBusinessProfile} />
+              <Route path={"/business-plan/:id/:period"} component={BusinessPlan} />
+              <Route path={"/about"} component={About} />
+              <Route path={"/gallery"} component={Gallery} />
             </Switch>
           </BrowserRouter>
         </div>
@@ -110,7 +109,7 @@ const App = ({ match }) => {
             backgroundRepeat: "no-repeat"
           }}>
         </div>
-      <Footer/>
+        <Footer />
       </div>
     </div>
   );

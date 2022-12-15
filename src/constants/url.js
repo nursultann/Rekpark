@@ -1,2 +1,2 @@
-export const BASE_URL = "http://91.207.28.132:8000/";
-export const API_BASE_URL = "http://91.207.28.132:8000/api";
+export const BASE_URL = "https://rekpark.kg";
+export const API_BASE_URL = "https://rekpark.kg/api";

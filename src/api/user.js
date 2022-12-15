@@ -11,7 +11,6 @@ export const login = async (phone, password, onSuccess, onError) => {
         if (onError != null) onError(error);
     }
 };
-
 export const loginGoogle = async (gmail, name, uid, onSuccess, onError) => {
     try {
         const params = {

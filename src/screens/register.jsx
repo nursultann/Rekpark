@@ -37,7 +37,6 @@ const Register = () => {
         console.log(email, name, uid)
         loginGoogle(email, name, uid, (data) => {
             console.log('Success',data);
-            
         }, (data) => {
             console.log('error', data);
         });
