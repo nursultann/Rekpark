@@ -85,17 +85,14 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     form.setFieldsValue({
       city_id: city.id
     });
-
     setDistricts(city.districts);
   };
-
   useEffect(() => {
     if (categories == null || !categories.length) {
       fetchCategoriesTree();
     }
     fetchData();
   }, []);
-
   const currencySelect = (
     <Select value={selectedCurrencyId} onChange={(value) => setSelectedCurrencyId(value)} className="select-after">
       {currencies.map((item) => {
@@ -103,12 +100,11 @@ const ProductFields = ({ form, loading = false, onSend }) => {
       })}
     </Select>
   );
-
   const categoryTree = (tree) => {
     if (!tree?.length) return;
     return tree.map((item) => (<TreeNode value={item.id} title={item.name}>{categoryTree(item.children)}</TreeNode>));
   };
-
+  console.log('custom',selectedCategory);
   return (
     <>
       <Form
@@ -148,8 +144,10 @@ const ProductFields = ({ form, loading = false, onSend }) => {
               setSelectedCategory(category);
             }}
             allowClear
-            treeDefaultExpandAll
             value={selectedCategory?.id}
+            filterTreeNode={(search, item) => {
+              return item.title.toLowerCase().indexOf(search.toLowerCase()) >= 0;
+            }}
           >
             {categories.map((item) => {
               return (
@@ -245,7 +243,10 @@ const ProductFields = ({ form, loading = false, onSend }) => {
                 </Form.Item>
               ))}
             </>
-            : <></>
+            : 
+            <>
+            
+            </>
         }
         <Form.Item
           key="can_comment"

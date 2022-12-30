@@ -132,7 +132,7 @@ const Chats = () => {
                 <div className="col-xl-12 mt-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Сообщения</li>
                         </ol>
                     </nav>

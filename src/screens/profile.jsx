@@ -17,7 +17,6 @@ import { setProductPlans } from "../redux/actions/productPlans_actions";
 import moment from "moment/moment";
 import { cancelBussinessAccount } from "../api/bussiness";
 const { TabPane } = Tabs;
-
 const Profile = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
@@ -27,7 +26,6 @@ const Profile = () => {
     const { products } = useSelector((state) => state.product);
     const limit = 20;
     const [offset, setOffset] = useState(0);
-
     const fetchUserDetails = async () => {
         const user = await userDetails();
         if (user != null) {
@@ -104,7 +102,7 @@ const Profile = () => {
                 <div className="col-xl-12 mt-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Мои объявления</li>
                         </ol>
                     </nav>
@@ -127,7 +125,7 @@ const Profile = () => {
                                     {user.business_account != null ?
                                         <>
                                             <label className="alert alert-primary col-12">Окончание: {moment(user.business_account.end_at).fromNow()}</label>
-                                            <button className="btn btn-primary col-12" onClick={cancelBussiness}><i class="fa-solid fa-ban"></i> Отменить бизнес профиль</button>
+                                            <button className="btn btn-primary col-12" style={{backgroundColor: "rgb(9, 72, 130)"}} onClick={cancelBussiness}><i class="fa-solid fa-ban"></i> Отменить бизнес профиль</button>
                                         </>
                                         :
                                         <>

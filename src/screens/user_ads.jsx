@@ -62,10 +62,10 @@ const UserAds = ({ match }) => {
             <Navbar />
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-xl-12">
+                    <div className="col-xl-12 mt-3">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                                <li class="breadcrumb-item" ><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Объявления пользователя</li>
                             </ol>
                         </nav>

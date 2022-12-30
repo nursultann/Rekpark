@@ -67,7 +67,7 @@ const CreateAd = () => {
             <div className="col-12 mt-3">
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a className="text-primary" href="/">
+                        <li className="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/">
                             <i className="fa-solid fa-house"/> Главная страница</a>
                         </li>
                         <li className="breadcrumb-item active" aria-current="page">Новое объявление</li>

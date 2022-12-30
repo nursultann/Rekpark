@@ -67,18 +67,13 @@ const SubCategories = ({ category, onSubmit }) => {
 
     setDistricts(city.districts);
   };
-
-
   const onChange = () => {
     if (onSubmit != null) onSubmit(form);
     setVisible(false);
   };
-
-
   const showModal = () => {
     setVisible(true);
   };
-
   const handleOk = () => {
     setConfirmLoading(true);
     setTimeout(() => {
@@ -294,7 +289,7 @@ const SubCategories = ({ category, onSubmit }) => {
                       <div className="col-xl-6">
                         <Form.Item
                           key={"currency_id"}
-                          label={"Цена до:"}
+                          label={"Валюта:"}
                           name={"currency_id"}
                           rules={[{ required: "", message: "" }]}
                         >
