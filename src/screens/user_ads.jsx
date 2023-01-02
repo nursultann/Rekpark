@@ -283,9 +283,12 @@ const UserAds = ({ match }) => {
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    {product[0].user.business_account.coverImage != null & product[0].user.business_account.coverImage != undefined ?
                                                     <div className='col-xl-8 my-3'>
                                                         <img src={product[0].user.business_account.coverImage} width="100%" />
                                                     </div>
+                                                    :<></>
+                                                    }
                                                     {location != null ?
                                                         <div className='col-xl-12 p-3'>
                                                             <h4 className='text-muted' style={{ fontSize: "20px" }}>Местоположение</h4>
@@ -294,7 +297,7 @@ const UserAds = ({ match }) => {
                                                         </div>
                                                         : <></>
                                                     }
-                                                    {photoGallery != null ?
+                                                    {photoGallery != null && photoGallery?.length > 0 ?
                                                         <div className='col-xl-12'>
                                                             {
                                                                 photoGallery != null ?

@@ -12,7 +12,7 @@ import { Modal, Comment, Avatar, Form, Button, List, Input, message, Select, not
 import moment from 'moment';
 import { HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { createComment } from "../api/product";
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { postUserMessage } from "../api/user";
 const key = "updateable";
 const { TextArea } = Input;
@@ -139,11 +139,11 @@ const Ad = ({ match }) => {
             itemLayout="horizontal"
             renderItem={item => <Comment
                 actions={[
-                    <span key="comment-basic-reply-to" onClick={() => clickAnswer(item.user.name, item.id)}>{token != null ? <>Ответить</> : <></>}</span>,
-                    <span key="comment-basic-reply-to" onClick={() => deleteComment(item.id)}>{item.user.id == userId ? <>Удалить</> : <></>}</span>
+                    <span key="comment-basic-reply-to" onClick={() => clickAnswer(item.user != null ? (item.user.name, item.id) : "Удаленный пользователь")}>{token != null ? <>Ответить</> : <></>}</span>,
+                    <span key="comment-basic-reply-to" onClick={() => deleteComment(item.id)}>{item.user != null ? (item.user.id == userId ? <>Удалить</> : <></>) : <></>}</span>
                 ]}
-                avatar={<Avatar src={item.user.media?.length ? item.user.media[0].original_url : 'https://joeschmoe.io/api/v1/random'} />}
-                author={item.user.name}
+                avatar={<Avatar src={item.user?.media?.length ? item.user.media[0].original_url : 'https://joeschmoe.io/api/v1/random'} />}
+                author={item.user != null ? item.user.name : "Удаленный пользователь"}
                 content={item.text}
             />}
         />
@@ -206,7 +206,7 @@ const Ad = ({ match }) => {
     const postMessage = async () => {
         setLoadings(true);
         if (messag != "" && messag != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag, 'advertisement_id' : match.params.id});
+            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag, 'advertisement_id': match.params.id });
             setMessage("");
             openNotificationWithIcon('success', 'Сообщение отправлено!');
             setLoadings(false);
@@ -217,7 +217,7 @@ const Ad = ({ match }) => {
     const postQuickMessage = async (messag) => {
         setLoadings(true);
         if (messag != "" && messag != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag, 'advertisement_id' : match.params.id });
+            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag, 'advertisement_id': match.params.id });
             setMessage("");
             openNotificationWithIcon('success', 'Сообщение отправлено!');
             setLoadings(false);
@@ -232,8 +232,8 @@ const Ad = ({ match }) => {
                 <div className="col-xl-12 mt-xl-3 mt-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
+                            <li class="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li class="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
                             <li class="breadcrumb-item active" aria-current="page">{productDetails.title}</li>
                         </ol>
                     </nav>
@@ -363,18 +363,23 @@ const Ad = ({ match }) => {
                                             }
                                         </div>
                                         <div className="col-10 px-4">
-                                            <Link to={"/userAds/" + productDetails.user_id}>
-                                                {productDetails.user.business_account != null ?
-                                                    <>
-                                                        {productDetails.user.business_account.name}
-                                                    </>
-                                                    :
-                                                    <>
-                                                        {productDetails.user != null ? productDetails.user.name : <></>}
-                                                    </>
-                                                }
-                                            </Link>
-                                            <p className="border rounded bg-light px-1 text-secondary">{productDetails.user.active_count} объявлений пользователя</p>
+                                            {productDetails.user != null ?
+                                                <>
+                                                    <Link to={"/userAds/" + productDetails.user_id}>
+                                                        {productDetails.user.business_account != null ?
+                                                            <>
+                                                                {productDetails.user.business_account.name}
+                                                            </>
+                                                            :
+                                                            <>
+                                                                {productDetails.user != null ? productDetails.user.name : <></>}
+                                                            </>
+                                                        }
+                                                    </Link>
+                                                    <p className="border rounded bg-light px-1 text-secondary">{productDetails.user.active_count} объявлений пользователя</p>
+                                                </>
+                                                : <></>
+                                            }
                                         </div>
                                     </div>
                                     <hr />

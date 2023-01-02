@@ -14,7 +14,6 @@ const News = () => {
         if (_articles != null) {
             setArticles(_articles);
             console.log(articles);
-
         }
     }
     moment.locale('ru');
