@@ -142,7 +142,6 @@ const UserAds = ({ match }) => {
                                                                 <span className='text-secondary'> Адрес: </span>
                                                                 {
                                                                     product[0].user.business_account.address
-
                                                                 }
                                                             </div>
                                                             <div className='col-12 mb-2'>
