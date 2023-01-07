@@ -100,7 +100,7 @@ const Register = () => {
                 'name': userName,
                 'password': userPassword,
                 'phone': countrycode + phoneNumber,
-                'uuid': uuid,
+                'uid': uuid,
             };
             console.log('params', params);
             message.loading({ content: 'Загрузка...', key });
