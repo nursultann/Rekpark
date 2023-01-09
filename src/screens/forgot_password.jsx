@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect, Link } from 'react';
 import { checkPhone, passwordChange, login } from "../api/user";
 import { firebase, auth } from "../config/firebase_config";
-import * as firebaseui from "firebaseui";
 import { Steps, Button, message, Form, Input, Select, InputNumber } from 'antd';
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
@@ -80,7 +79,7 @@ const ForgotPassword = () => {
         if (password == passwordCheck) {
             const params = {
                 'new_password': password,
-                'uuid': uuid,
+                'uid': uuid,
                 'phone': countryСode + phoneNumber,
             };
             message.loading({ content: 'Загрузка...', key });
