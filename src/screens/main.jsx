@@ -64,8 +64,8 @@ const Main = () => {
       <main role="main" className="container-fluid mb-5">
         <div className="row">
           <div className="col-lg-12">
-            <h3 className="px-2 py-1" style={{ fontSize: 19, color : "#424242"  }}>Новые объявления в Кыргызстане</h3>
-            <hr/>
+            <h3 className="px-2" style={{ fontSize: 19, color : "#424242"  }}>Новые объявления в Кыргызстане</h3>
+            <div className='ml-2 mb-3' style={{width : "320px", height : 3, backgroundColor : "rgb(9, 72, 130)"}}></div>
             <div className="row mt-6 mb-6">
               {products === null || products === undefined || products.length === 0 ?
                 <Grid container spacing={2} className="pl-4 pl-lg-3 pt-4 pb-4">

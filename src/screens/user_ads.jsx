@@ -369,8 +369,8 @@ const UserAds = ({ match }) => {
 
 
                             <div className='col-xl-12 border rounded py-3 mt-4'>
-                                <h4 className='text-muted' style={{ fontSize: 20 }}>Объявления</h4>
-                                <hr />
+                                <h4 className='' style={{ fontSize: 20 }}>Объявления</h4>
+                                <div style={{'width' : '120px', 'height' : '3px', 'backgroundColor' : 'rgb(9, 72, 130)' }}></div>
                                 <div className='row'>
                                     {product != null && product != undefined ?
                                         product.map((item) => (

@@ -42,7 +42,8 @@ const SearchResult = ({ match }) => {
                     <li class="breadcrumb-item active" aria-current="page">Поиск</li>
                 </ol>
                 </nav>
-                <label className="pt-3" style={{ fontSize: 20, color: "rgb(9, 72, 130)" }}>Результаты поиска: {match.params.search}</label>
+                <label className="pt-3" style={{ fontSize: 20, color: "black" }}>Результаты поиска: {match.params.search}</label>
+                <div style={{'width' : '185px', 'height' : '3px', 'backgroundColor' : 'rgb(9, 72, 130)' }}></div>
                 <hr className="pb-2" />
                 <div className="row mt-6 mb-6">
                     {products === null || products === undefined || products.length === 0 ?

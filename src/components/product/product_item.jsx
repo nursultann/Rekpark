@@ -106,10 +106,10 @@ const ProductItem = ({ product }) => {
             <a onClick={() => navigateToProductDetailsPage(product)}>
                 <div class="card-body px-2 px-md-3">
                     <div className="row">
-                        <label style={{ fontSize: 16, fontWeight : "500" }} class="card-title px-0 col-md-12 py-0">{product.price + " " + product.currency_symbol}</label>
+                        <label style={{ fontSize: 16, fontWeight : "450" }} class="card-title px-0 col-md-12 py-0">{product.price + " " + product.currency_symbol}</label>
                         <label style={{
                             fontSize: 14, whiteSpace: "nowrap", overflow: "hidden",
-                            columnWidth: "10px", color: "rgb(9, 72, 130)"
+                            columnWidth: "10px", color: "rgb(9, 72, 130)",fontWeight : '420'
                         }} class="px-0 py-0 col-md-12">{product.title}</label>
                         <p class="card-text text-secondary" style={{
                             display: "-webkit-box",

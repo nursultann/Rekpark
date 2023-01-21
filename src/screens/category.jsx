@@ -48,7 +48,7 @@ const Category = ({match})=> {
     return(
         <>
             <Navbar />
-            <div className="col-xl-12 py-3 px-3">
+            <div className="col-xl-12 pt-3 py-md-3 px-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
@@ -74,6 +74,7 @@ const Category = ({match})=> {
                 <div className="row mx-0 mt-3">
                     <div className="col-md-12">
                         <label style={{fontSize:18}}>По категории</label>
+                        <div style={{'width' : '115px', 'height' : '3px', 'backgroundColor' : 'rgb(9, 72, 130)' }}></div>
                     </div>
                     {(!categoryProducts?.length) ?
                         <div className="col-md-12 py-5">

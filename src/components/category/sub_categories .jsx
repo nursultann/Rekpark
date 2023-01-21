@@ -124,7 +124,8 @@ const SubCategories = ({ category, onSubmit }) => {
       {category?.children?.length ?
         <>
           <div className="col-md-12 pb-3 d-none d-xl-block">
-            <label className="mb-3" style={{ fontSize: 18 }}>Поиск</label>
+            <label className="" style={{ fontSize: 18 }}>Поиск</label>
+            <div className="mb-3" style={{'width' : '55px', 'height' : '3px', 'backgroundColor' : 'rgb(9, 72, 130)' }}></div>
             <Form
               form={form}
               name="advanced_search"
@@ -349,7 +350,7 @@ const SubCategories = ({ category, onSubmit }) => {
               </Form>
             </Modal>
           </div>
-          <div className="col-md-12 py-2 bg-light d-none d-md-block">
+          <div className="col-md-12 py-0 py-md-2 bg-light d-none d-md-block">
             <label>По категориям</label>
             <div className="row">
               {category?.children?.map((category) =>
