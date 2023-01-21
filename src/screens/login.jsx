@@ -76,13 +76,14 @@ const Sign = () => {
         <div>
             <Navbar />
             <div className="col-xl-12 d-flex justify-content-center">
-                <div className="col-xl-5 py-4 shadow my-3 bg-white text-center">
-                    <label className="py-2" style={{ fontSize: 20 }}>Вход</label>
+                <div className="col-xl-5 py-4 shadow rounded-lg my-3 bg-white text-center">
+                    <label className="py-2 label" style={{ fontSize: 20 }}>Вход на сайт</label>
                     <br />
                     <Form
                         name="basic"
                         labelCol={{ span: 5 }}
-                        wrapperCol={{ span: 18 }}
+                        wrapperCol={{ span: 19 }}
+                        layout="vertical"
                         initialValues={{ remember: true }}
                         autoComplete="off"
                     >
@@ -90,6 +91,7 @@ const Sign = () => {
                             label="Телефон"
                             name="phone"
                             rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
+                            wrapperCol={{ offset: 0 }}
                         >
                             <Input addonBefore={<Select
                                 placeholder="код страны"
@@ -108,6 +110,7 @@ const Sign = () => {
                             label="Пароль"
                             name="password"
                             rules={[{ required: true, message: 'Пожалуйста введите пароль!' }]}
+                            wrapperCol={{ offset: 0 }}
                         >
                             <Input.Password onChange={(e) => { setPassword(e.target.value) }} placeholder="Пароль" />
                         </Form.Item>
@@ -117,7 +120,7 @@ const Sign = () => {
                             </button>
                         </Form.Item>
                         <label className="text-muted">Вход с помощью</label>
-                        <Form.Item className="d-xl-flex justify-content-center">
+                        <Form.Item wrapperCol={{ offset: 0 }} className="d-xl-flex justify-content-center">
                         <GoogleLogin
                             clientId={clientId}
                             buttonText="Войти через Google"

@@ -72,7 +72,7 @@ const SearchBar = () => {
           <div class="col-md-12">
             <div className='row pt-2 px-0 px-lg-0 d-md-flex align-items-center'>
               <div className='col-lg-12 mt-3 mt-xl-0 px-3 pt-2'>
-                <div className='col-12 mr-2 rounded alert alert-info'>
+                <div className='col-12 mr-2 alert alert-info' style={{borderRadius : "10px"}}>
                   <div className='row'>
                     <div className='col-lg-2 px-2 px-lg-1 py-2 py-lg-2'>
                       {options != null ?
@@ -103,8 +103,8 @@ const SearchBar = () => {
           </div>
         </div>
         <div className="col-md-12 pb-4 px-0 d-none d-md-block">
-          <h6 className='text-muted'>Категории</h6>
-          <hr />
+          {/* <h3 style={{color : "#424242", fontSize : "19px" }}>Категории</h3> */}
+          {/* <hr /> */}
           <center>
             <CategorySlider />
           </center>

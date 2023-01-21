@@ -40,6 +40,7 @@ import 'react-alice-carousel/lib/alice-carousel.css';
 import "./App.css";
 import 'moment/locale/ru';
 import Gallery from './screens/photo_gallery';
+import Agreement from './screens/agreement';
 const App = ({ match }) => {
   const subscribe = async () => {
     const user = await userDetails();
@@ -99,6 +100,7 @@ const App = ({ match }) => {
               <Route path={"/business-plan/:id/:period"} component={BusinessPlan} />
               <Route path={"/about"} component={About} />
               <Route path={"/gallery"} component={Gallery} />
+              <Route path={'/agreement'} component={Agreement}/>
             </Switch>
           </BrowserRouter>
         </div>

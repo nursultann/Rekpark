@@ -93,17 +93,17 @@ const CategorySlider = () => {
 
   const popoverContent = (children) => (
     <div style={{ width: '250px' }}>
-      {children.map((item) => (<><a style={{color: "rgb(9, 72, 130)"}} href={`/category/${item.id}`}>{item.name}</a><br /></>))}
+      {children.map((item) => (<><a className="cat-link" style={{color: "rgb(9, 72, 130)"}} href={`/category/${item.id}`}>{item.name}</a><br /></>))}
     </div>
   );
-
+  console.log('categories', categories);
   const content = (category) => {
-    const image = category.media.length > 0
-      ? category.media[0].original_url
+    const image = category.image != null 
+      ? category.image
       : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
     return (
       <div id={category.id}>
-        <Link to={`category/${category.id}`} style={{ color: "black" }}>
+        <Link className="cat-link" to={`category/${category.id}`} style={{ color: "black" }}>
           <div className="col-md-12 px-0 mb-3 d-flex flex-column align-items-center justify-content-center">
             <img className="mx-3 mb-1 rounded-circle" src={image} width="50px" height="50px" />
             <p style={{ fontSize: 13, width: 100 }}>{category.name}</p>

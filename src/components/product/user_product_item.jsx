@@ -32,7 +32,7 @@ const ProductItem = ({ product }) => {
     const subscriptionPlans = async () => {
         const plans = productsPlans;
         if (plans != null) {
-            dispatch(setSubPlans(plans));
+            setSubPlans(plans);
         }
         // console.log('plans',subPlans);
     }

@@ -64,7 +64,7 @@ const Main = () => {
       <main role="main" className="container-fluid mb-5">
         <div className="row">
           <div className="col-lg-12">
-            <label className="px-2 py-1 text-muted" style={{ fontSize: 20 }}>Новые объявления в Кыргызстане</label>
+            <h3 className="px-2 py-1" style={{ fontSize: 19, color : "#424242"  }}>Новые объявления в Кыргызстане</h3>
             <hr/>
             <div className="row mt-6 mb-6">
               {products === null || products === undefined || products.length === 0 ?
@@ -91,7 +91,9 @@ const Main = () => {
                 : products.map((product) => {
                   return (
                     <div className="col-6 col-sm-6 col-xl-3 mt-3">
+                      <div className="row px-1">
                       <ProductItem product={product} />
+                      </div>
                     </div>
                   )
                 })}
@@ -101,7 +103,10 @@ const Main = () => {
                 variant="outlined"
                 onClick={() => {
                   fetchProducts();
-                }} style={{ backgroundColor: "#184d9f", color: "#fff" }}>
+                }}
+                style={{ backgroundColor: "#184d9f", color: "#fff" }}
+                className = "rounded-pill"
+                >
                 Показать еще
               </Button>
             </center>

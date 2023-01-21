@@ -80,7 +80,7 @@ const ForgotPassword = () => {
         if (password == passwordCheck) {
             const params = {
                 'new_password': password,
-                'uuid': uuid,
+                'uid': uuid,
                 'phone': countryСode + phoneNumber,
             };
             message.loading({ content: 'Загрузка...', key });

@@ -42,7 +42,7 @@ const News = () => {
     return (
         <>
             <div className="col-xl-12 my-3">
-                <h6 className='px-3 mb-3 text-muted' style={{ fontSize: "18px" }}><Link to="/articles">Новости и статьи</Link></h6>
+                <h3 className='px-3 mb-3' style={{ fontSize: "19px", color : "#424242" }}><Link to="/articles">Новости и статьи</Link></h3>
                 {articles != null || articles != undefined || articles?.length > 0 ?
                     <AliceCarousel
                         mouseTracking

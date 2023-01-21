@@ -48,9 +48,9 @@ const Footer= ()=>{
             </div>
             <div class="col-md-6 text-md-left">
               <ul class="list-unstyled link-menu nav-left">
-                <li><a href="#">Конфидециальность</a></li>
+                <li><a href="/agreement">Пользовательское соглашение</a></li>
                 <li><a href="/about">О сайте</a></li>
-                <li><a href="#">Объявления</a></li>
+                <li><a href="/">Объявления</a></li>
               </ul>
             </div>
             <div class="col-md-6 text-md-right">
