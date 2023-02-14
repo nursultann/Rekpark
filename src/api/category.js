@@ -2,7 +2,7 @@ import ApiClient from "./ApiClient";
 
 export const fetchCategoriesTree = async (params = {}) => {
     try {
-        const response = await ApiClient.get('/categories/tree', params);
+        const response = await ApiClient.get('/categories/tree', {...params, cache: { maxAge: 60 * 60 * 1000, }});
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }

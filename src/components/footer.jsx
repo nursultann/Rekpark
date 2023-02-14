@@ -2,17 +2,17 @@ import React from "react";
 
 const Footer= ()=>{
     return(
-        <footer class="footer-14398 col-xl-12">
+        <footer className="footer-14398 col-xl-12">
       
-        <div class="container">
-          <div class="row mb-5">
-            <div class="col-md-3">
-              <a href="/" class="footer-site-logo">РЕКПАРК</a>
+        <div className="container">
+          <div className="row mb-5">
+            <div className="col-md-3">
+              <a href="/" className="footer-site-logo">РЕКПАРК</a>
               <p>Сайт объявлений Кыргызстана</p>
             </div>
-            <div class="col-md-2 ml-auto">
+            <div className="col-md-2 ml-auto">
               <a className="text-white" href="#">Для бизнеса</a>
-              {/* <ul class="list-unstyled links">
+              {/* <ul className="list-unstyled links">
                 <li><a href="/category/6">Квартиры</a></li>
                 <li><a href="#">Коммерческое помещение</a></li>
                 <li><a href="#">Дома и дача</a></li>
@@ -20,9 +20,9 @@ const Footer= ()=>{
                 <li><a href="#">Земельные участки</a></li>
               </ul> */}
             </div>
-            <div class="col-md-2 ml-auto">
+            <div className="col-md-2 ml-auto">
               <a className="text-white" href="#">О проекте</a>
-              {/* <ul class="list-unstyled links">
+              {/* <ul className="list-unstyled links">
                 <li><a href="#">Легковые</a></li>
                 <li><a href="#">Спец.Техника</a></li>
                 <li><a href="#">Мотоциклы</a></li>
@@ -30,9 +30,9 @@ const Footer= ()=>{
                 <li><a href="#"></a></li>
               </ul> */}
             </div>
-            <div class="col-md-2 ml-auto">
+            <div className="col-md-2 ml-auto">
               <a className="text-white" href="#">Помощь</a>
-              {/* <ul class="list-unstyled links">
+              {/* <ul className="list-unstyled links">
                 <li><a href="#">О проекте</a></li>
                 <li><a href="#">Обратная связь</a></li>
                 <li><a href="#">Пользовательское соглашение</a></li>
@@ -42,29 +42,29 @@ const Footer= ()=>{
             </div>
           </div>
 
-          <div class="row mb-4">
-            <div class="col-12 pb-4">
-              <div class="line"></div>
+          <div className="row mb-4">
+            <div className="col-12 pb-4">
+              <div className="line"></div>
             </div>
-            <div class="col-md-6 text-md-left">
-              <ul class="list-unstyled link-menu nav-left">
+            <div className="col-md-6 text-md-left">
+              <ul className="list-unstyled link-menu nav-left">
                 <li><a href="/agreement">Пользовательское соглашение</a></li>
                 <li><a href="/about">О сайте</a></li>
                 <li><a href="/">Объявления</a></li>
               </ul>
             </div>
-            <div class="col-md-6 text-md-right">
-              <ul class="list-unstyled social nav-right">
-                <li><a href="#"><span class="icon-twitter"></span></a></li>
-                <li><a href="#"><span class="icon-instagram"></span></a></li>
-                <li><a href="#"><span class="icon-facebook"></span></a></li>
-                <li><a href="#"><span class="icon-pinterest"></span></a></li>
+            <div className="col-md-6 text-md-right">
+              <ul className="list-unstyled social nav-right">
+                <li><a href="#"><span className="icon-twitter"></span></a></li>
+                <li><a href="#"><span className="icon-instagram"></span></a></li>
+                <li><a href="#"><span className="icon-facebook"></span></a></li>
+                <li><a href="#"><span className="icon-pinterest"></span></a></li>
               </ul>
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-7">
+          <div className="row">
+            <div className="col-md-7">
               <p><small>Все права защищены</small></p>
             </div>
           </div>

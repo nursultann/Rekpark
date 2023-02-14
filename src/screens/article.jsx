@@ -41,10 +41,10 @@ const Article = ({match})=>{
                 <Navbar />
                 <div className="col-xl-12 mt-3">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                        <li class="breadcrumb-item"><a className="text-primary" href="/articles">Статьи и новости</a></li>
-                        <li class="breadcrumb-item">Статья</li>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                        <li className="breadcrumb-item"><a className="text-primary" href="/articles">Статьи и новости</a></li>
+                        <li className="breadcrumb-item">Статья</li>
                     </ol>
                 </nav>
                 </div>
@@ -53,7 +53,7 @@ const Article = ({match})=>{
                         <div className="col-md-8 shadow-sm">
                             {article != null ? 
                             <div className="col-md-12">
-                                <img src={article.image} width="100%" class="rounded" />
+                                <img src={article.image} width="100%" className="rounded" />
                                 <label className="text-muted pt-3">Дата публикации: {update}</label>
                                 <br />
                                 <label style={{ fontSize: 24 }}>{article.title}</label>
@@ -62,8 +62,8 @@ const Article = ({match})=>{
                                           }}></p>
 
                             </div>
-                            :<div className="col-12 text-center"><div class="spinner-border text-primary" role="status">
-                            <span class="sr-only">Loading...</span>
+                            :<div className="col-12 text-center"><div className="spinner-border text-primary" role="status">
+                            <span className="sr-only">Loading...</span>
                           </div></div>
                             }
                         </div>
@@ -76,12 +76,11 @@ const Article = ({match})=>{
                                     {
                                     articles.map((article)=>
                                     <>
-                            <Link class="nav-link" to={"/article/"+article.id}>
+                            <Link className="nav-link" to={"/article/"+article.id}>
                                 <div className="col-md-12 shadow-sm">
-                                   
                                     <div className="row">
                                         <div className="col-md-4">
-                                            <img src={article.image} width="100%" class="rounded" />
+                                            <img src={article.image} width="100%" className="rounded" />
                                         </div>
                                         <div className="col-md-8">
                                             <label>{article.title}</label>

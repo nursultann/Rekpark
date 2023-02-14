@@ -1,9 +1,18 @@
+// import axios from "axios";
+import { setup } from 'axios-cache-adapter';
 import { API_BASE_URL } from "../constants/url";
-import axios from "axios";
 
-const client = axios.create({
+const client = setup({
     baseUrl: API_BASE_URL,
-});
+    cache: {
+        maxAge: 15 * 60 * 1000
+    }
+})
+
+// const client = axios.create({
+//     baseUrl: API_BASE_URL,
+//     adapter: cache.adapter,
+// });
 
 client.defaults.baseURL = API_BASE_URL;
 

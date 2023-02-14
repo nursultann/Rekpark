@@ -62,14 +62,16 @@ const SearchBar = () => {
     console.log(`selected ${value}`);
     window.location.href = "/category/"+value;
   };
+
   useEffect(() => {
     fetchCategoriesTree();
   }, []);
+
   return (
     <div>
-      <div class="col-md-12">
-        <div class="row">
-          <div class="col-md-12">
+      <div className="col-md-12">
+        <div className="row">
+          <div className="col-md-12">
             <div className='row pt-2 px-0 px-lg-0 d-md-flex align-items-center'>
               <div className='col-lg-12 mt-3 mt-xl-0 px-3 pt-2'>
                 <div className='col-12 mr-2 alert alert-info' style={{borderRadius : "10px"}}>

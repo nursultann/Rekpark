@@ -6,7 +6,6 @@ import React, { useEffect } from "react";
 import Slider from "react-slick";
 import { Popover } from 'antd';
 
-
 function SampleArrow(props) {
   const { className, style, onClick } = props;
   return (
@@ -98,7 +97,7 @@ const CategorySlider = () => {
   );
   console.log('categories', categories);
   const content = (category) => {
-    const image = category.image != null 
+    const image = category.image != null
       ? category.image
       : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
     return (
@@ -113,25 +112,26 @@ const CategorySlider = () => {
     );
   };
 
-  return (
-    <Slider {...sliderSettings}>
-      {categories.map((category) => {
-        return (
-          category.children != null && category.children.length > 0 ?
-            <Popover
-              className="col-md-4"
-              content={() => popoverContent(category.children)}
-              placement="bottom"
-            >
-              {content(category)}
-            </Popover>
-            : <div className="col-md-4">
-              {content(category)}
-            </div>
-        )
-      })}
-    </Slider>
-  );
+    return (
+        <Slider {...sliderSettings}>
+            {categories.map((category) => {
+                return (
+                    category.children != null && category.children.length > 0 ?
+                        <Popover
+                            key={category.id}
+                            className="col-md-4"
+                            content={() => popoverContent(category.children)}
+                            placement="bottom"
+                        >
+                            {content(category)}
+                        </Popover>
+                        : <div className="col-md-4" key={category.id}>
+                            {content(category)}
+                        </div>
+                )
+            })}
+        </Slider>
+    );
 
 };
 

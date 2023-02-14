@@ -29,6 +29,7 @@ const Register = () => {
     const [countrycode, setCountryCode] = useState();
     const [current, setCurrent] = useState(0);
     const [link, setLink] = useState(false);
+
     const responseGoogle = (response) => {
         console.log("google response", response);
         const email = response.profileObj.email;
