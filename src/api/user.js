@@ -2,7 +2,7 @@ import ApiClient from "./ApiClient";
 
 export const login = async (phone, password, onSuccess, onError) => {
     try {
-        const params = {'login': phone, 'password': password};
+        const params = { 'login': phone, 'password': password };
         const response = await ApiClient.post('/login', params);
         if (response.status == 200 || response.status == 201) {
             if (onSuccess != null) onSuccess(response.data.data);
@@ -11,14 +11,15 @@ export const login = async (phone, password, onSuccess, onError) => {
         if (onError != null) onError(error);
     }
 };
-export const loginGoogle = async (gmail, name, uid, onSuccess, onError) => {
+
+export const loginGoogle = async (gmail, name, idToken, onSuccess, onError) => {
     try {
         const params = {
             'email': gmail,
             'name': name,
-            'uid': uid,
+            'id_token': idToken,
         };
-        const response = await ApiClient.post('/google-auth', params);
+        const response = await ApiClient.post('/firebase-auth', params);
         if (response.status == 200 || response.status == 201) {
             if (onSuccess != null) onSuccess(response.data.data);
         }
@@ -62,7 +63,7 @@ export const userDetails = async (params) => {
 
 export const checkPhone = async (phone) => {
     try {
-        const response = await ApiClient.get('/user/check', {'phone': phone});
+        const response = await ApiClient.get('/user/check', { 'phone': phone });
         if (response.status == 200 || response.status == 201) {
             return true;
         }
@@ -172,7 +173,7 @@ export const unreadMessages = async () => {
     }
     return null;
 }
-export const depositAmount = async (params) =>{
+export const depositAmount = async (params) => {
     try {
         const response = await ApiClient.post('/user/create-payment', params);
         if (response.status == 200 || response.status == 201) {

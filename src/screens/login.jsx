@@ -1,47 +1,70 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
-import { login, loginGoogle } from "../api/user";
 import { message } from 'antd';
-import { Form, Input, Button, Checkbox, Select } from 'antd';
-import GoogleLogin from "react-google-login";
+import { Form, Input, Select } from 'antd';
 import { gapi } from 'gapi-script';
 import { Link, useHistory } from "react-router-dom";
+import GoogleLogin from "react-google-login";
+
+import { login, loginGoogle } from "../api/user";
+import Navbar from "../components/navbar";
+import { auth, clientId, googleAuthProvider } from '../config/firebase_config';
+
 const { Option } = Select;
 const key = 'updatable';
-const clientId = "363682799555-97hlkli04bo0eevlu0br81jtl3vg677a.apps.googleusercontent.com";
+
 const Sign = () => {
     const history = useHistory();
     const [phoneNumber, setLogin] = useState(0);
     const [password, setPassword] = useState();
-    const [countrycode, setCountryCode] = useState();
-    
+    const [countryCode, setCountryCode] = useState();
+
     const responseGoogle = async (response) => {
         console.log("google response", response);
         const email = response.profileObj.email;
         const name = response.profileObj.name;
         const uid = response.profileObj.googleId;
-        console.log('datas',email, name, uid)
-        await loginGoogle(email, name, uid, (data) => {
-            console.log('Success',data);
 
-        }, (data) => {
-            console.log('error', data);
-        });
-    
+        // const credential = await auth.signInWithEmailAndPassword(email, uid);
+
+        console.log(clientId, email, name)
+
+        const credential = await auth.signInWithCredential(googleAuthProvider.credential(
+            response.tokenId,
+            response.accessToken,
+        ))
+
+        console.log('credential', credential)
+
+        const idToken = await credential.user.getIdToken(true);
+        // credential.user.displayName;
+        // credential.user.email;
+
+
+        console.log('datas', email, name, idToken)
+        await loginGoogle(
+            email, name, idToken,
+            (data) => {
+                console.log('Success', data);
+            },
+            (data) => {
+                console.log('error', data);
+            },
+        );
+
         const onLoginError = (data) => {
-            
             // message.error({content:'Номер или пароль указан неверно!', duration: 2});
         };
-    
+
     }
-    const onFailure = (response) =>{
+
+    const onFailure = (response) => {
         console.log("Failure!", response);
     }
+
     const signIn = async () => {
         if (password === "" || phoneNumber.length < 9) return;
-        // console.log('phone', countrycode + phoneNumber);
-        login(countrycode + phoneNumber, password, onLoginSuccess, onLoginError);
+        // console.log('phone', countryCode + phoneNumber);
+        await login(countryCode + phoneNumber, password, onLoginSuccess, onLoginError);
     }
 
     const onLoginSuccess = (data) => {
@@ -55,23 +78,25 @@ const Sign = () => {
 
     const onLoginError = (data) => {
         console.log('error', data);
-        message.error({content:'Номер или пароль указан неверно!', duration: 2});
+        message.error({ content: 'Номер или пароль указан неверно!', duration: 2 });
     };
 
     function onChange(value) {
         // console.log(`selected ${value}`);
         setCountryCode(value);
     }
-    document.title="Вход";
-    useEffect(()=>{
-        function start(){
+
+    useEffect(() => {
+        document.title = "Вход";
+        function start() {
             gapi.client.init({
-                clientId:clientId,
-                scope:""
+                clientId: clientId,
+                scope: ""
             })
-        };
-        gapi.load('client:auth2',start);
+        }
+        gapi.load('client:auth2', start);
     });
+
     return (
         <div>
             <Navbar />
@@ -93,18 +118,27 @@ const Sign = () => {
                             rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
                             wrapperCol={{ offset: 0 }}
                         >
-                            <Input addonBefore={<Select
-                                placeholder="код страны"
-                                showSearch
-                                optionFilterProp="children"
-                                onChange={onChange}
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            <Input
+                                addonBefore={
+                                    <Select
+                                        placeholder="код страны"
+                                        showSearch
+                                        optionFilterProp="children"
+                                        onChange={onChange}
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                    >
+                                        <Option value="996">+996</Option>
+                                        <Option value="7">+7</Option>
+                                    </Select>
                                 }
-                            >
-                                <Option value="996">+996</Option>
-                                <Option value="7">+7</Option>
-                            </Select>} onChange={(e) => { setLogin(e.target.value) }} type="number" placeholder="Номер телефона" />
+                                onChange={(e) => {
+                                    setLogin(e.target.value)
+                                }}
+                                type="number"
+                                placeholder="Номер телефона"
+                            />
                         </Form.Item>
                         <Form.Item
                             label="Пароль"
@@ -112,23 +146,31 @@ const Sign = () => {
                             rules={[{ required: true, message: 'Пожалуйста введите пароль!' }]}
                             wrapperCol={{ offset: 0 }}
                         >
-                            <Input.Password onChange={(e) => { setPassword(e.target.value) }} placeholder="Пароль" />
+                            <Input.Password onChange={(e) => {
+                                setPassword(e.target.value)
+                            }} placeholder="Пароль" />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 0 }}>
-                            <button className="col-md-10 ml-0 ml-xl-3 btn btn-primary" style={{ backgroundColor: "#184d9f", color: "#fff" }} htmlType="submit" onClick={signIn}>
+                            <button
+                                className="col-md-10 ml-0 ml-xl-3 btn btn-primary"
+                                style={{ backgroundColor: "#184d9f", color: "#fff" }}
+                                htmltype="submit"
+                                onClick={signIn}
+                            >
                                 Войти
                             </button>
                         </Form.Item>
                         <label className="text-muted">Вход с помощью</label>
                         <Form.Item wrapperCol={{ offset: 0 }} className="d-xl-flex justify-content-center">
-                        <GoogleLogin
-                            clientId={clientId}
-                            buttonText="Войти через Google"
-                            onSuccess={responseGoogle}
-                            onFailure={onFailure}
-                            cookiePolicy={'single_host_origin'}
-                            isSignedIn={true}
-                        />
+                            <GoogleLogin
+                                clientId={clientId}
+                                buttonText="Войти через Google"
+                                onSuccess={responseGoogle}
+                                onFailure={onFailure}
+                                // cookiePolicy={'single_host_origin'}
+                                isSignedIn={false}
+                                scope='https://www.googleapis.com/auth/userinfo.profile'
+                            />
                         </Form.Item>
                     </Form>
                     <label>Вы не зарегистрированы?</label>
