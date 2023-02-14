@@ -12,7 +12,7 @@ const SearchResult = ({ match }) => {
     const [offset, setOffset] = useState(0);
 
     const fetchInitProducts = async () => {
-        let _products = await fetchSearchProducts({ 'search': match.params.search });
+        let _products = await fetchSearchProducts({ 'searchText': match.params.search });
         if (_products != null) {
             _products = _products.concat(await fetchSearchProducts({ 'with': 'user' }));
             setProducts(_products);

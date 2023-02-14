@@ -199,8 +199,9 @@ const ProductItem = ({ product }) => {
     };
     var time = moment(product.created_at, 'YYYYMMDD, h:mm:ss a');
     moment.locale('ru');
+    console.log('product', product);
     var update = time.calendar();
-    const image = product.has_media
+    const image = product.media?.length > 0
         ? product.media[0].original_url
         : '';
     useEffect(() => {
@@ -216,15 +217,15 @@ const ProductItem = ({ product }) => {
                                 <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{ objectFit: "cover" }} />
                                 {product.is_vip && product.is_urgent ?
                                     <>
-                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1">VIP</span></div>
-                                        <div style={{ position: "absolute", left: "40px", top: "10px", }}><span className="badge badge-warning p-1">Срочно</span></div>
+                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i class="fa-solid fa-crown"></i> VIP</span></div>
+                                        <div style={{ position: "absolute", left: "52px", top: "10px", }}><span className="badge badge-warning p-1"><i class="fa-solid fa-bolt"></i> Срочно</span></div>
                                     </>
                                     : <></>}
                                 {product.is_urgent && product.is_vip == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1">Срочно</span></div>
+                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1"><i class="fa-solid fa-bolt"></i> Срочно</span></div>
                                     : <></>}
                                 {product.is_vip && product.is_urgent == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1">VIP</span></div>
+                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i class="fa-solid fa-crown"></i> VIP</span></div>
                                     : <></>}
                             </div>
                         </div>
@@ -235,14 +236,6 @@ const ProductItem = ({ product }) => {
                                     fontSize: 13, fontFamily: "sans-serif", whiteSpace: "nowrap", overflow: "hidden",
                                     columnWidth: "200px"
                                 }} class="card-title label px-0 text-primary py-0">{product.title}</span>
-                                {/* <p class="card-text" style={{
-                                                display: "-webkit-box",
-                                                webkitLineClamp: "1",
-                                                webkitBoxOrient: "vertical",
-                                                overflow: "hidden"}}>{product.description}</p> */}
-                                {/* <label className="text-muted" style={{fontSize:15}}>
-                                Опубликовано: {allDate}
-                            </label> */}
                             </div>
                             <div className="row px-0 d-flex justify-content-between">
                                 <Avatar size="small" icon={<UserOutlined />} />
@@ -319,7 +312,7 @@ const ProductItem = ({ product }) => {
                                 Промежуток: {interval != null ? interval : <></>}
                             </p>
                             <p>
-                                Ваш баланс: {user.balance}
+                                Ваш баланс: {user.balance} сом
                             </p>
                             <hr />
                             {plan.periods?.length > 0 ?
