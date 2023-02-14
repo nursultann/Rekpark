@@ -21,6 +21,7 @@ const Category = ({match})=> {
         setIsLoading(true);
         const category = await fetchCategoryDetails(match.params.id);
         const products = await fetchCategoryProducts(match.params.id, searchAttributes ?? {});
+        console.log('attr', searchAttributes);
         if (products != null) {
             setCategory(category);
             setProducts(products);

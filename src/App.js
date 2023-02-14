@@ -1,4 +1,4 @@
-import top from './img/top.png';
+import top from './img/topbanner.png';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import Ad from './screens/ad';
@@ -12,7 +12,6 @@ import Category from './screens/category';
 import About from './screens/about';
 import Articles from './screens/articles';
 import Article from './screens/article';
-import Wallet from './screens/wallet';
 import Contacts from './screens/contacts';
 import Register from './screens/register';
 import 'react-gallery-carousel/dist/index.css';
@@ -41,6 +40,7 @@ import "./App.css";
 import 'moment/locale/ru';
 import Gallery from './screens/photo_gallery';
 import Agreement from './screens/agreement';
+import Complete from './screens/complete';
 const App = ({ match }) => {
   const subscribe = async () => {
     const user = await userDetails();
@@ -86,7 +86,7 @@ const App = ({ match }) => {
               <Route path="/settings" component={Settings} />
               <Route path="/forgot_password" component={ForgotPassword} />
               <Route path="/wallets" component={Wallets} />
-              <Route path="/wallet" component={Wallet} />
+              <Route path="/complete" component={Complete} />
               <Route path="/articles" component={Articles} />
               <Route path="/articles_categories/:id" component={CategoryArticles} />
               <Route path="/article/:id" component={Article} />

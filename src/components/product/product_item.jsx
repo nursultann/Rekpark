@@ -91,15 +91,15 @@ const ProductItem = ({ product }) => {
                     }
                     {product.is_vip && product.is_urgent ?
                         <>
-                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1">VIP</span></div>
-                        <div style={{ position: "absolute", left: "40px", top: "10px", }}><span className="badge badge-warning p-1">Срочно</span></div>
+                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i class="fa-solid fa-crown"></i> VIP</span></div>
+                        <div style={{ position: "absolute", left: "57px", top: "10px", }}><span className="badge badge-warning p-1"><i class="fa-solid fa-bolt"></i> Срочно</span></div>
                         </>
                         : <></>}
                     {product.is_urgent && product.is_vip == false ?
-                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1">Срочно</span></div>
+                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1"><i class="fa-solid fa-bolt"></i> Срочно</span></div>
                         : <></>}
                     {product.is_vip && product.is_urgent == false ?
-                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1">VIP</span></div>
+                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i class="fa-solid fa-crown"></i> VIP</span></div>
                         : <></>}
                 </div>
             </div>
@@ -118,9 +118,6 @@ const ProductItem = ({ product }) => {
                             webkitBoxOrient: "vertical",
                             overflow: "hidden"
                         }}>{product.description}</p>
-                        {/* <label className="text-muted" style={{fontSize:15}}>
-                        Опубликовано: {allDate}
-                    </label> */}
                     </div>
                     <div className="row">
                         <div className="col-3 mt-5 px-0">

@@ -58,6 +58,8 @@ a {
   height: 70vh; }
 
 .footer-14398 {
+  border-top:3px !important;
+  border-top-color: rgb(192, 12, 12) !important;
   padding: 7rem 0;
   background: rgb(9, 72, 130);
   color: rgb(255, 255, 255); }

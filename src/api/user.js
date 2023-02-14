@@ -172,3 +172,14 @@ export const unreadMessages = async () => {
     }
     return null;
 }
+export const depositAmount = async (params) =>{
+    try {
+        const response = await ApiClient.post('/user/create-payment', params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetch user details error ', error.response);
+    }
+    return null;
+}

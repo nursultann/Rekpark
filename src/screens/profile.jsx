@@ -24,6 +24,9 @@ const Profile = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
     const { products } = useSelector((state) => state.product);
+    const [active,setActive] = useState([]);
+    const [inactive,setInactive] = useState([]);
+    const [moderation,setModeration] = useState([]);
     const limit = 20;
     const [offset, setOffset] = useState(0);
     const fetchUserDetails = async () => {
@@ -32,16 +35,33 @@ const Profile = () => {
             dispatch(setUser(user));
         }
     };
-
-    const UserProducts = async () => {
+    const fetchPlans = async () =>{
         const plans = await subscriptions();
         if (plans != null) {
             dispatch(setProductPlans(plans));
         }
-        let _products = await api.fetchUserProducts({ 'sub': true });
+    }
+    const UserProducts = async () => {
+        let _products = await api.fetchUserProducts({ 'sub': true, 'sort' : 'active' });
+        let inactive_products = await api.fetchUserProducts({ 'sub': true, 'sort' : 'inactive' });
+        let moderation_products = await api.fetchUserProducts({ 'sub': true, 'sort' : 'moderation' });
+        let disabled_products = await api.fetchUserProducts({ 'sub': true});
         if (_products != null) {
-            dispatch(setProducts(_products));
+            setActive(_products);
+            console.log('active', _products)
             setOffset(offset + limit);
+        }
+        if(inactive_products != null){
+            console.log('inactive', inactive_products);
+            setInactive(inactive_products);
+        }
+        if(moderation_products != null){
+            console.log('moderation', moderation_products);
+            setModeration(moderation_products);
+        }
+        if(disabled_products != null){
+            console.log('disabled', disabled_products);
+            dispatch(setProducts(disabled_products));
         }
     };
     const cancelBussiness = async () => {
@@ -58,6 +78,7 @@ const Profile = () => {
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
+        fetchPlans();
     }, []);
     return (
         user === null || user === undefined || user === ""
@@ -250,7 +271,6 @@ const Profile = () => {
                                     </div>
                                 </TabPane>
                             </Tabs>
-
                         </div>
                     </div>
                 </div>

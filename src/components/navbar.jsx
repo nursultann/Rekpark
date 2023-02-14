@@ -15,6 +15,9 @@ import {
 import logo from "../../src/img/logo.png";
 import eventBus from "../helpers/event_bus";
 import { unreadMessages } from "../api/user";
+import { subscriptions } from "../api/product";
+import { useDispatch } from "react-redux";
+import { setProductPlans } from "../redux/actions/productPlans_actions";
 
 const { SubMenu } = Menu;
 
@@ -22,6 +25,7 @@ const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const [collapse, setCollapse] = useState(true);
   const [countMessage, setCountMessage] = useState(0);
+  const dispatch = useDispatch();
   const fetchUnreadMessages = async () => {
     const fetchChats = await unreadMessages();
     if (fetchChats != null) {
@@ -29,7 +33,12 @@ const Navbar = () => {
       // console.log(fetchChats.count);
     }
   }
-
+  const fetchPlans = async () =>{
+    const plans = await subscriptions();
+    if (plans != null) {
+        dispatch(setProductPlans(plans));
+    }
+}
   const show = () => {
     setVisible(true);
   }
@@ -52,6 +61,7 @@ const Navbar = () => {
 
   useEffect(() => {
     fetchUnreadMessages();
+    fetchPlans();
     eventBus.on('chat-message', (data) => {
       console.log("Data", data);
     })
@@ -96,7 +106,6 @@ const Navbar = () => {
       </Menu.Item>
     </Menu>
   );
-
   return (
     <div>
       <div className="container-fluid shadow-sm">
@@ -220,9 +229,6 @@ const Navbar = () => {
               </div>
             </div>
           </header>
-          {/* <div className="nav-scroller mb-2 rounded px-2 py-1" > */}
-
-          {/* </div> */}
         </div>
       </div>
 

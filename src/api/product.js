@@ -15,7 +15,6 @@ export const fetchProducts = async (params = { limit: 20, offset: 0 }) => {
     } catch (error) {
         console.log('fetching products error ', error);
     }
-
     return null;
 };
 export const fetchProduct = async (id, params) => {
