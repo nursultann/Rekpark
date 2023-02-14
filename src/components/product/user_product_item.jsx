@@ -217,48 +217,48 @@ const ProductItem = ({ product }) => {
                                 <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{ objectFit: "cover" }} />
                                 {product.is_vip && product.is_urgent ?
                                     <>
-                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i class="fa-solid fa-crown"></i> VIP</span></div>
-                                        <div style={{ position: "absolute", left: "52px", top: "10px", }}><span className="badge badge-warning p-1"><i class="fa-solid fa-bolt"></i> Срочно</span></div>
+                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
+                                        <div style={{ position: "absolute", left: "52px", top: "10px", }}><span className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
                                     </>
                                     : <></>}
                                 {product.is_urgent && product.is_vip == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1"><i class="fa-solid fa-bolt"></i> Срочно</span></div>
+                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
                                     : <></>}
                                 {product.is_vip && product.is_urgent == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i class="fa-solid fa-crown"></i> VIP</span></div>
+                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
                                     : <></>}
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div className="card-body">
                             <div className="row px-1">
-                                <label style={{ fontSize: 17 }} class="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
+                                <label style={{ fontSize: 17 }} className="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
                                 <span style={{
                                     fontSize: 13, fontFamily: "sans-serif", whiteSpace: "nowrap", overflow: "hidden",
                                     columnWidth: "200px"
-                                }} class="card-title label px-0 text-primary py-0">{product.title}</span>
+                                }} className="card-title label px-0 text-primary py-0">{product.title}</span>
                             </div>
                             <div className="row px-0 d-flex justify-content-between">
                                 <Avatar size="small" icon={<UserOutlined />} />
                                 <label className="text-muted label" style={{ fontSize: 11 }}>
-                                    <i class="far fa-clock"></i> {update}<br />
-                                    <i class="far fa-eye"></i>  {product.views}
+                                    <i className="far fa-clock"></i> {update}<br />
+                                    <i className="far fa-eye"></i>  {product.views}
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div className="col-xl-6 py-2 bg-light">
-                        <Link style={{ fontSize: 14 }} className="ml-1 mt-4" to={"/products/" + product.id + "/edit"}><i class="far fa-edit text-muted"></i> Редактировать</Link><br />
-                        <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={removeAd}><i class="fas fa-trash-alt text-muted"></i> Удалить</Link><br />
+                        <Link style={{ fontSize: 14 }} className="ml-1 mt-4" to={"/products/" + product.id + "/edit"}><i className="far fa-edit text-muted"></i> Редактировать</Link><br />
+                        <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={removeAd}><i className="fas fa-trash-alt text-muted"></i> Удалить</Link><br />
                         {product.status == "active" ?
                             <>
-                                <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={deactivateAd}><i class="fas fa-ban text-muted"></i> Деактивировать</Link><br />
+                                <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={deactivateAd}><i className="fas fa-ban text-muted"></i> Деактивировать</Link><br />
                             </>
                             :
                             <></>
                         }
                         {product.status == "inactive" ?
                             <>
-                                <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={activateAd}><i class="fas fa-plus-circle text-muted"></i> Активировать</Link>
+                                <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={activateAd}><i className="fas fa-plus-circle text-muted"></i> Активировать</Link>
                             </>
                             :
                             <></>
@@ -337,8 +337,8 @@ const ProductItem = ({ product }) => {
                                 <>
                                     {plan.name == "colored" ?
                                         <>
-                                            <div className="">Выберите цвет для закраски 
-                                            </div> 
+                                            <div className="">Выберите цвет для закраски
+                                            </div>
                                             {/* <input type="color" onChange={(e) => { setColor(e.target.value) }} /> */}
                                             <button className="btn" style={{ backgroundColor: "#fcc7c7" }} onClick={(e) => { setColor("#fcc7c7") }}>Выбрать цвет</button>
                                             <button className="btn ml-2" style={{ backgroundColor: "#d8c7fc" }} onClick={() => { setColor("#d8c7fc") }}>Выбрать цвет</button>
@@ -346,11 +346,11 @@ const ProductItem = ({ product }) => {
                                             <button className="btn mt-2" style={{ backgroundColor: "#b8dcff" }} onClick={() => { setColor("#b8dcff") }}>Выбрать цвет</button>
                                             <button className="btn mt-2 ml-2" style={{ backgroundColor: "#f7ffbf" }} onClick={() => { setColor("#f7ffbf") }}>Выбрать цвет</button>
                                             <button className="btn mt-2 ml-2" style={{ backgroundColor: "#e8e8e8" }} onClick={() => { setColor("#e8e8e8") }}>Выбрать цвет</button>
-                                            {color != null ? 
-                                            <div className="d-flex mt-2">
-                                            выбранный цвет: <div className="rounded-circle" style={{width : 20, height : 20, backgroundColor : color}} ></div>
-                                            </div> 
-                                            : <></>}
+                                            {color != null ?
+                                                <div className="d-flex mt-2">
+                                                    выбранный цвет: <div className="rounded-circle" style={{ width: 20, height: 20, backgroundColor: color }} ></div>
+                                                </div>
+                                                : <></>}
                                         </>
                                         : <></>
                                     }

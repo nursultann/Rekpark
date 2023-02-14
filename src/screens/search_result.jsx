@@ -27,7 +27,7 @@ const SearchResult = ({ match }) => {
             setOffset(offset + limit);
         }
     };
-    document.title="Поиск";
+    document.title = "Поиск";
     useEffect(() => {
         fetchInitProducts();
     }, []);
@@ -36,14 +36,14 @@ const SearchResult = ({ match }) => {
         <div>
             <Navbar />
             <div className="col-md-12 py-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Поиск</li>
-                </ol>
+                <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                        <li className="breadcrumb-item active" aria-current="page">Поиск</li>
+                    </ol>
                 </nav>
                 <label className="pt-3" style={{ fontSize: 20, color: "black" }}>Результаты поиска: {match.params.search}</label>
-                <div style={{'width' : '185px', 'height' : '3px', 'backgroundColor' : 'rgb(9, 72, 130)' }}></div>
+                <div style={{ 'width': '185px', 'height': '3px', 'backgroundColor': 'rgb(9, 72, 130)' }}></div>
                 <hr className="pb-2" />
                 <div className="row mt-6 mb-6">
                     {products === null || products === undefined || products.length === 0 ?

@@ -13,7 +13,7 @@ const Gallery = () => {
     const [files, setFiles] = useState([]);
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(false);
-    const [load,setLoad] = useState(false);
+    const [load, setLoad] = useState(false);
     const UserDetails = async () => {
         const user = await userDetails();
         if (user != null) {
@@ -129,14 +129,14 @@ const Gallery = () => {
                                 {gallery.map((item) =>
                                     <div className="col-6 col-lg-3 mt-2">
                                         <div className="col-12 py-3 border rounded">
-                                        <Image src={item.cover} width="100%" />
-                                        <p className="py-1 text-left" style={{fontSize : "15px"}}>Название галереи: {item.title}</p>
-                                        <p className="text-muted text-left" style={{fontSize : "12px"}}>{moment(item.media[0].created_at, 'YYYYMMDD, H:mm:ss', 'Asia/Bishkek').fromNow()}</p>
-                                        <div className="row">
-                                            <div className="col-12 text-left py-3">
-                                                <i class="fa-regular fa-trash-can" style={{fontSize : "12px"}}></i> <Button style={{fontSize : "12px"}} loading={load} onClick={() => Deletegallery(item.id)}>Удалить галерею</Button>
+                                            <Image src={item.cover} width="100%" />
+                                            <p className="py-1 text-left" style={{ fontSize: "15px" }}>Название галереи: {item.title}</p>
+                                            <p className="text-muted text-left" style={{ fontSize: "12px" }}>{moment(item.media[0].created_at, 'YYYYMMDD, H:mm:ss', 'Asia/Bishkek').fromNow()}</p>
+                                            <div className="row">
+                                                <div className="col-12 text-left py-3">
+                                                    <i className="fa-regular fa-trash-can" style={{ fontSize: "12px" }}></i> <Button style={{ fontSize: "12px" }} loading={load} onClick={() => Deletegallery(item.id)}>Удалить галерею</Button>
+                                                </div>
                                             </div>
-                                        </div>
                                         </div>
                                     </div>
                                 )
@@ -145,8 +145,8 @@ const Gallery = () => {
                         </div>
                         :
                         <div className="col-12 text-center py-3">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="sr-only">Loading...</span>
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="sr-only">Loading...</span>
                             </div>
                         </div>
                 }

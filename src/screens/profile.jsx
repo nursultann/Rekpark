@@ -1,12 +1,12 @@
 import React from "react";
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from "../components/navbar";
 import { userDetails } from "../api/user";
 import { useEffect, useState } from "react";
 import Skeleton from '@mui/material/Skeleton';
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/actions/user_actions";
-import { Avatar, notification} from 'antd';
+import { Avatar, notification } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
@@ -24,9 +24,9 @@ const Profile = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
     const { products } = useSelector((state) => state.product);
-    const [active,setActive] = useState([]);
-    const [inactive,setInactive] = useState([]);
-    const [moderation,setModeration] = useState([]);
+    const [active, setActive] = useState([]);
+    const [inactive, setInactive] = useState([]);
+    const [moderation, setModeration] = useState([]);
     const limit = 20;
     const [offset, setOffset] = useState(0);
     const fetchUserDetails = async () => {
@@ -35,31 +35,31 @@ const Profile = () => {
             dispatch(setUser(user));
         }
     };
-    const fetchPlans = async () =>{
+    const fetchPlans = async () => {
         const plans = await subscriptions();
         if (plans != null) {
             dispatch(setProductPlans(plans));
         }
     }
     const UserProducts = async () => {
-        let _products = await api.fetchUserProducts({ 'sub': true, 'sort' : 'active' });
-        let inactive_products = await api.fetchUserProducts({ 'sub': true, 'sort' : 'inactive' });
-        let moderation_products = await api.fetchUserProducts({ 'sub': true, 'sort' : 'moderation' });
-        let disabled_products = await api.fetchUserProducts({ 'sub': true});
+        let _products = await api.fetchUserProducts({ 'sub': true, 'sort': 'active' });
+        let inactive_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'inactive' });
+        let moderation_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'moderation' });
+        let disabled_products = await api.fetchUserProducts({ 'sub': true });
         if (_products != null) {
             setActive(_products);
             console.log('active', _products)
             setOffset(offset + limit);
         }
-        if(inactive_products != null){
+        if (inactive_products != null) {
             console.log('inactive', inactive_products);
             setInactive(inactive_products);
         }
-        if(moderation_products != null){
+        if (moderation_products != null) {
             console.log('moderation', moderation_products);
             setModeration(moderation_products);
         }
-        if(disabled_products != null){
+        if (disabled_products != null) {
             console.log('disabled', disabled_products);
             dispatch(setProducts(disabled_products));
         }
@@ -122,9 +122,9 @@ const Profile = () => {
                 <Navbar />
                 <div className="col-xl-12 mt-3">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Мои объявления</li>
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li className="breadcrumb-item active" aria-current="page">Мои объявления</li>
                         </ol>
                     </nav>
                     <div className="row px-3 mb-5">
@@ -146,11 +146,11 @@ const Profile = () => {
                                     {user.business_account != null ?
                                         <>
                                             <label className="alert alert-primary col-12">Окончание: {moment(user.business_account.end_at).fromNow()}</label>
-                                            <button className="btn btn-primary col-12" style={{backgroundColor: "rgb(9, 72, 130)"}} onClick={cancelBussiness}><i class="fa-solid fa-ban"></i> Отменить бизнес профиль</button>
+                                            <button className="btn btn-primary col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={cancelBussiness}><i className="fa-solid fa-ban"></i> Отменить бизнес профиль</button>
                                         </>
                                         :
                                         <>
-                                        
+
                                         </>
                                     }
                                 </div>
@@ -158,20 +158,20 @@ const Profile = () => {
                             <hr />
                             <div className="row">
                                 <div className="col-xl-12">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">+{user.phone}</li>
-                                        <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
-                                        <li class="list-group-item text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }}><Link to="/profile">Мои объявления</Link></li>
-                                        <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
-                                        <li class="list-group-item"><Link to="/chats">Сообщения</Link></li>
+                                    <ul className="list-group">
+                                        <li className="list-group-item">+{user.phone}</li>
+                                        <li className="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
+                                        <li className="list-group-item text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }}><Link to="/profile">Мои объявления</Link></li>
+                                        <li className="list-group-item"><Link to="/favorites">Избранные</Link></li>
+                                        <li className="list-group-item"><Link to="/chats">Сообщения</Link></li>
                                         {user.business_account == null ?
                                             <>
-                                                <li class="list-group-item"><Link to="/business">Бизнес профиль</Link></li>
+                                                <li className="list-group-item"><Link to="/business">Бизнес профиль</Link></li>
                                             </>
                                             :
                                             <>
-                                                <li class="list-group-item"><Link to="/business-settings">Настройки бизнес профиля</Link></li>
-                                                <li class="list-group-item"><Link to="/gallery">Галерея</Link></li>
+                                                <li className="list-group-item"><Link to="/business-settings">Настройки бизнес профиля</Link></li>
+                                                <li className="list-group-item"><Link to="/gallery">Галерея</Link></li>
                                             </>
                                         }
                                     </ul>

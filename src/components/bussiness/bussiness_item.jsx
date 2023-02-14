@@ -8,26 +8,26 @@ const BusinessItem = ({ plan, periods, period }) => {
 
     useEffect(() => {
         const item = periods.find((x) => x.period == period);
-        if(item != null){
+        if (item != null) {
             setPeriod_id(item.id)
         }
-        setItem(item);    
+        setItem(item);
     }, [period])
 
     return (
         <>
             <div className="col-lg-4 mt-3 mt-lg-0">
                 <div className="border">
-                    <div class="card-body">
-                        <h5 class="card-title">{plan.name}</h5>
+                    <div className="card-body">
+                        <h5 className="card-title">{plan.name}</h5>
                         <hr />
-                        <h6 class="card-subtitle mb-2 text-center py-4">
-                          <del>{item != null ? item.old_price : ""} /
-                            <small className="text-muted label">месяц</small>
-                          </del>
+                        <h6 className="card-subtitle mb-2 text-center py-4">
+                            <del>{item != null ? item.old_price : ""} /
+                                <small className="text-muted label">месяц</small>
+                            </del>
                         </h6>
-                        <h6 class="card-subtitle mb-2 text-center py-4">
-                          {item != null ? item.price : ""} /
+                        <h6 className="card-subtitle mb-2 text-center py-4">
+                            {item != null ? item.price : ""} /
                             <small className="text-muted label">месяц</small>
                         </h6>
                         <a href={`/business-plan/${plan.id}/${period_id}`} className="btn btn-primary rounded-pill col-12 text-white">
@@ -36,7 +36,7 @@ const BusinessItem = ({ plan, periods, period }) => {
                         <hr />
                         <div className="border p-2 rounded">
                             <span className="label"><strong>Описание</strong></span>
-                            <p class="card-text label text-muted">{plan.description}</p>
+                            <p className="card-text label text-muted">{plan.description}</p>
                             <hr />
                         </div>
                     </div>

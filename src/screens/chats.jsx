@@ -44,11 +44,11 @@ const Chats = () => {
             setUserId(user.id);
         }
     };
-    const removeChat = async (id) =>{
+    const removeChat = async (id) => {
         console.log('id chat', id);
-       const remove = await deleteChat(id);
-       console.log(remove);
-        if(remove != null){
+        const remove = await deleteChat(id);
+        console.log(remove);
+        if (remove != null) {
             openNotificationWithIcon('success', 'Чат успешно удалён!');
         }
     }
@@ -66,7 +66,7 @@ const Chats = () => {
             console.log(userChats);
         }
     }
-    const getUserMessage = async (id, userName,partner_id) => {
+    const getUserMessage = async (id, userName, partner_id) => {
         // console.log('id', id , 'userName', userName);
         history.push("/chat/" + id + "/" + userName);
     }
@@ -131,9 +131,9 @@ const Chats = () => {
                 <Navbar />
                 <div className="col-xl-12 mt-3">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Сообщения</li>
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li className="breadcrumb-item active" aria-current="page">Сообщения</li>
                         </ol>
                     </nav>
                     <div className="row px-3 mb-5">
@@ -153,13 +153,13 @@ const Chats = () => {
                             <hr />
                             <div className="row">
                                 <div className="col-xl-12">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">+{user.phone}</li>
-                                        <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
-                                        <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
-                                        <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
-                                        <li class="list-group-item text-white" style={{ backgroundColor: "#184d9f" }}><Link to="/chats">Сообщения</Link></li>
-                                        <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
+                                    <ul className="list-group">
+                                        <li className="list-group-item">+{user.phone}</li>
+                                        <li className="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
+                                        <li className="list-group-item"><Link to="/profile">Мои объявления</Link></li>
+                                        <li className="list-group-item"><Link to="/favorites">Избранные</Link></li>
+                                        <li className="list-group-item text-white" style={{ backgroundColor: "#184d9f" }}><Link to="/chats">Сообщения</Link></li>
+                                        <li className="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
                                     </ul>
                                 </div>
                             </div>
@@ -169,36 +169,36 @@ const Chats = () => {
                             <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{ backgroundColor: "#184d9f" }}>
                                 <label className="text-white" style={{ fontSize: 15 }}>Сообщения</label>
                             </div>
-                            <div class="container">
-                                <div class="content-wrapper">
-                                    <div class="row gutters">
+                            <div className="container">
+                                <div className="content-wrapper">
+                                    <div className="row gutters">
 
-                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
-                                            <div class="card m-0">
-                                                <div class="row no-gutters">
-                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                        <div class="users-container">
-                                                            <ul class="users">
+                                            <div className="card m-0">
+                                                <div className="row no-gutters">
+                                                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <div className="users-container">
+                                                            <ul className="users">
                                                                 {chats?.length > 0 ?
                                                                     <>
                                                                         {chats.map((chat) =>
-                                                                            <li class="person" data-chat="person1">
-                                                                                <div class="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id ,chat.advertisement_id)}>
+                                                                            <li className="person" data-chat="person1">
+                                                                                <div className="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
                                                                                     <img src={chat.advertisement.image} alt="Retail Admin" />
-                                                                                    <span class="status busy"></span>
+                                                                                    <span className="status busy"></span>
                                                                                 </div>
-                                                                                <p class="name-time" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id ,chat.advertisement_id)}>
-                                                                                    <span class="name">{chat.advertisement.title}</span>
+                                                                                <p className="name-time" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
+                                                                                    <span className="name">{chat.advertisement.title}</span>
                                                                                 </p>
                                                                                 <div className="float-right">
-                                                                                    <span><i class="fa-solid fa-trash-can text-primary" onClick={() => removeChat(chat.id)}></i></span>
+                                                                                    <span><i className="fa-solid fa-trash-can text-primary" onClick={() => removeChat(chat.id)}></i></span>
                                                                                 </div>
                                                                             </li>
                                                                         )}
                                                                     </> :
                                                                     <div className="col-12 text-center">
-                                                                            Пока нет сообщений
+                                                                        Пока нет сообщений
                                                                     </div>
                                                                 }
                                                             </ul>
@@ -221,8 +221,8 @@ const Chats = () => {
                                         <Avatar size={"100%"} icon={<UserOutlined />} />
                                         </div>
                                         <div className="col-9 col-xl-10">
-                                        <div class="about">
-                                        <div class="name"><a href="#" onClick={()=>getUserMessage(chat.id)}>{chat.name}</a></div>                                            
+                                        <div className="about">
+                                        <div className="name"><a href="#" onClick={()=>getUserMessage(chat.id)}>{chat.name}</a></div>                                            
                                         </div>
                                         </div>
                                     </div>

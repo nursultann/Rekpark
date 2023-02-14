@@ -15,9 +15,9 @@ const Wallets = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
     }
-    const [amount,setAmount] = useState(0);
-    const [isModal,setModal] =useState(false);
-    const [depositType,setDepositType] = useState(null);
+    const [amount, setAmount] = useState(0);
+    const [isModal, setModal] = useState(false);
+    const [depositType, setDepositType] = useState(null);
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
 
@@ -27,42 +27,42 @@ const Wallets = () => {
             dispatch(setUser(user));
         }
     };
-    const closeModal = ()=>{
+    const closeModal = () => {
         setModal(false);
         setAmount(0);
     }
-    const deposit = async ()=>{
-        if(amount > 0 || amount != ''){
-            if(depositType == 'bankcard'){
+    const deposit = async () => {
+        if (amount > 0 || amount != '') {
+            if (depositType == 'bankcard') {
                 const data = await depositAmount({
-                    amount:amount,
-                    success_url:'https://rekpark.kg/complete',
-                    payment_method:depositType
+                    amount: amount,
+                    success_url: 'https://rekpark.kg/complete',
+                    payment_method: depositType
                 })
                 // console.log('data',data);
-                if(data.redirect_url != null){
+                if (data.redirect_url != null) {
                     window.location.href = data.redirect_url;
                 }
             }
-            if(depositType == 'wallet'){
+            if (depositType == 'wallet') {
                 const data = await depositAmount({
-                    amount:amount,
-                    success_url:'https://rekpark.kg/complete',
-                    payment_method:depositType
+                    amount: amount,
+                    success_url: 'https://rekpark.kg/complete',
+                    payment_method: depositType
                 })
                 // console.log('data',data);
-                if(data.redirect_url != null){
+                if (data.redirect_url != null) {
                     window.location.href = data.redirect_url;
                 }
             }
         }
     }
-    const openModal = (type)=>{
-        if(type == 'bankcard'){
+    const openModal = (type) => {
+        if (type == 'bankcard') {
             setModal(true);
             setDepositType(type);
         }
-        if(type == 'wallet'){
+        if (type == 'wallet') {
             setModal(true);
             setDepositType(type);
         }
@@ -106,22 +106,22 @@ const Wallets = () => {
             :
             <>
                 <Navbar />
-                <div class="col-md-12 mt-3">
+                <div className="col-md-12 mt-3">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i
-                                class="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li class="breadcrumb-item" aria-current="page"><a style={{ color: "rgb(9, 72, 130)" }} href="/profile">Мои
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i
+                                className="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li className="breadcrumb-item" aria-current="page"><a style={{ color: "rgb(9, 72, 130)" }} href="/profile">Мои
                                 объявления</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Пополнить баланс</li>
+                            <li className="breadcrumb-item active" aria-current="page">Пополнить баланс</li>
                         </ol>
                     </nav>
                     <div className='row py-3 px-3'>
-                        <div class="col-md-4 alert alert-primary py-3">
+                        <div className="col-md-4 alert alert-primary py-3">
                             <h5>Пополнение баланса</h5>
-                            <label><i class="fa-solid fa-user text-secondary"></i> Имя пользователя: {user.name}</label><br />
-                            <label><i class="fa-solid fa-user text-secondary"></i> Пользователь: +{user.phone}</label><br />
-                            <label><i class="fa-solid fa-money-check-dollar text-secondary"></i> Баланс: {user.balance} сом</label>
+                            <label><i className="fa-solid fa-user text-secondary"></i> Имя пользователя: {user.name}</label><br />
+                            <label><i className="fa-solid fa-user text-secondary"></i> Пользователь: +{user.phone}</label><br />
+                            <label><i className="fa-solid fa-money-check-dollar text-secondary"></i> Баланс: {user.balance} сом</label>
                         </div>
 
                         <div className='col-md-8'>
@@ -129,12 +129,12 @@ const Wallets = () => {
                             <div className='row px-3'>
                                 <div className='col-md-4'>
                                     <div className='col-12 shadow p-5 d-flex justify-content-center align-items-center'>
-                                        <h6 className='text-center'><a onClick={()=>{openModal('bankcard')}}><i class="fa-solid fa-money-check-dollar"></i>Банковской картой</a></h6>
+                                        <h6 className='text-center'><a onClick={() => { openModal('bankcard') }}><i className="fa-solid fa-money-check-dollar"></i>Банковской картой</a></h6>
                                     </div>
                                 </div>
                                 <div className='col-md-4'>
                                     <div className='col-12 shadow p-5 d-flex justify-content-center align-items-center'>
-                                        <h6 className='text-center'><a onClick={()=>{openModal('wallet')}}><i class="fa-solid fa-money-check"></i> Электронные кошельки</a></h6>
+                                        <h6 className='text-center'><a onClick={() => { openModal('wallet') }}><i className="fa-solid fa-money-check"></i> Электронные кошельки</a></h6>
                                     </div>
                                 </div>
                             </div>
@@ -142,25 +142,25 @@ const Wallets = () => {
                     </div>
                 </div>
                 <Footer />
-                <Modal 
-                title="Пополнение счета" 
-                visible={isModal} 
-                onCancel={closeModal} 
-                okText="пополнить сумму" 
-                cancelText='отмена операции'
-                onOk={deposit}>
+                <Modal
+                    title="Пополнение счета"
+                    visible={isModal}
+                    onCancel={closeModal}
+                    okText="пополнить сумму"
+                    cancelText='отмена операции'
+                    onOk={deposit}>
                     <div className='col-12'>
                         <div className='alert alert-primary'>
                             Введите пополнения сумму пополнения
                         </div>
-                        <input 
-                        value={amount}
-                        type={'number'} 
-                        placeholder='сумма пополнения'
-                        className='form-control'
-                        onChange={(e)=>setAmount(e.target.value)}
+                        <input
+                            value={amount}
+                            type={'number'}
+                            placeholder='сумма пополнения'
+                            className='form-control'
+                            onChange={(e) => setAmount(e.target.value)}
                         />
-                    </div>     
+                    </div>
                 </Modal>
             </>
     );

@@ -48,7 +48,7 @@ const Bussiness_Slider = () => {
                     : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
 
                 return (
-                    <div class="col-md-4">
+                    <div className="col-md-4">
                         <div id={category.id}>
                             <a href={`/category/${category.id}`}>
                                 <div className="col-md-12 px-2 mb-3 d-flex flex-column align-items-center justify-content-center">

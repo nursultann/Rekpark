@@ -51,9 +51,9 @@ const Category = ({ match }) => {
             <Navbar />
             <div className="col-xl-12 pt-3 py-md-3 px-3">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">По категории</li>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                        <li className="breadcrumb-item active" aria-current="page">По категории</li>
                     </ol>
                 </nav>
             </div>
@@ -69,8 +69,8 @@ const Category = ({ match }) => {
             {isLoading && !categoryProducts?.length ?
                 <div>
                     <center className="py-5">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="sr-only">Loading...</span>
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="sr-only">Loading...</span>
                         </div>
                     </center>
                 </div>

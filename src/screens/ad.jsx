@@ -231,10 +231,10 @@ const Ad = ({ match }) => {
             {productDetails != null ? <>
                 <div className="col-xl-12 mt-xl-3 mt-3">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li class="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{productDetails.title}</li>
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
+                            <li className="breadcrumb-item active" aria-current="page">{productDetails.title}</li>
                         </ol>
                     </nav>
                     <div className="row px-xl-3 px-2">
@@ -293,9 +293,9 @@ const Ad = ({ match }) => {
                                 <div className="row">
                                     <div className="col-xl-12 mt-xl-4">
                                         <hr className="d-block d-xl-none" />
-                                        <button class="btn col-xl-12 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i class="fas fa-phone-volume"></i> Показать номер</button>
-                                        <div class="collapse multi-collapse" id="multiCollapseExample1">
-                                            <div class="card card-body">
+                                        <button className="btn col-xl-12 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fas fa-phone-volume"></i> Показать номер</button>
+                                        <div className="collapse multi-collapse" id="multiCollapseExample1">
+                                            <div className="card card-body">
                                                 {phones != null && phones.length > 12 ?
                                                     <>
                                                         {phones.split(",").map((item) =>
@@ -317,9 +317,9 @@ const Ad = ({ match }) => {
                                                 <hr className="d-block d-xl-none" />
 
                                                 {favorite ?
-                                                    <button class="btn col-xl-12 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={removeFav}><i class="far fa-heart"></i>Удалить из избранного</button>
+                                                    <button className="btn col-xl-12 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={removeFav}><i className="far fa-heart"></i>Удалить из избранного</button>
                                                     :
-                                                    <button class="btn btn-outline-secondary col-xl-12" onClick={addFav}><i class="far fa-heart"></i> Добавить в избранное</button>
+                                                    <button className="btn btn-outline-secondary col-xl-12" onClick={addFav}><i className="far fa-heart"></i> Добавить в избранное</button>
                                                 }
 
                                             </div>
@@ -328,7 +328,7 @@ const Ad = ({ match }) => {
                                     }
                                     <div className="col-xl-12 mt-xl-2">
                                         <hr className="d-block d-xl-none" />
-                                        <button class="btn btn-outline-danger col-xl-12" onClick={showModal}><i class="fas fa-exclamation-triangle"></i> Пожаловаться</button>
+                                        <button className="btn btn-outline-danger col-xl-12" onClick={showModal}><i className="fas fa-exclamation-triangle"></i> Пожаловаться</button>
                                     </div>
                                 </div>
                                 <div className="col-xl-12 mt-xl-2">
@@ -416,9 +416,9 @@ const Ad = ({ match }) => {
                                     <hr className="d-none d-xl-block" />
                                 </div>
                                 <div className="col-xl-12 mt-2 mt-xl-2">
-                                    <label class="ml-0 ml-xl-3 text-muted"><i class="far fa-eye"></i> Просмотры: {productDetails.views}<br />
-                                        <i class="fas fa-map-marker-alt"></i> Местоположение: {productDetails.region != null ? productDetails.region.name + "," + productDetails.city.name : ""}<br />
-                                        <i class="far fa-clock"></i> Обновлено: {update}
+                                    <label className="ml-0 ml-xl-3 text-muted"><i className="far fa-eye"></i> Просмотры: {productDetails.views}<br />
+                                        <i className="fas fa-map-marker-alt"></i> Местоположение: {productDetails.region != null ? productDetails.region.name + "," + productDetails.city.name : ""}<br />
+                                        <i className="far fa-clock"></i> Обновлено: {update}
                                     </label>
                                 </div>
                             </div>
@@ -509,8 +509,8 @@ const Ad = ({ match }) => {
                 :
                 <div>
                     <center className="py-5">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="sr-only">Loading...</span>
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="sr-only">Loading...</span>
                         </div>
                     </center>
                 </div>

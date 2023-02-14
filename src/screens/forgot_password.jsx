@@ -106,7 +106,7 @@ const ForgotPassword = () => {
         console.log(`selected ${value}`);
         setCountryCode(value);
     }
-    document.title="Восстановление пароля";
+    document.title = "Восстановление пароля";
     useEffect(() => {
         window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         window.verify.render();
@@ -214,11 +214,11 @@ const ForgotPassword = () => {
         <div>
             <Navbar />
             <div className="col-xl-12 py-3" style={{ height: "auto" }}>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Забыли пароль</li>
-                </ol>
+                <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                        <li className="breadcrumb-item active" aria-current="page">Забыли пароль</li>
+                    </ol>
                 </nav>
                 <div className="col-xl-12 d-flex justify-content-center mt-0 mt-xl-3 px-0">
                     <div className="col-xl-6 bg-white md-rounded-pill py-2 py-3">

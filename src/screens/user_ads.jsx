@@ -14,7 +14,7 @@ const UserAds = ({ match }) => {
     const [schedule, setSchedule] = useState(null);
     const [location, setLocation] = useState(null);
     const [photoGallery, setPhotoGallery] = useState(null);
-    const [visible,setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
     const fetchProducts = async () => {
         const _products = await fetchUsersProducts({
             'search': 'user_id:' + match.params.id,
@@ -64,9 +64,9 @@ const UserAds = ({ match }) => {
                 <div className="row">
                     <div className="col-xl-12 mt-3">
                         <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item" ><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Объявления пользователя</li>
+                            <ol className="breadcrumb">
+                                <li className="breadcrumb-item" ><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                                <li className="breadcrumb-item active" aria-current="page">Объявления пользователя</li>
                             </ol>
                         </nav>
                         <div className="row mt-4 px-2">
@@ -138,14 +138,14 @@ const UserAds = ({ match }) => {
                                                                 <span className='badge badge-primary'>Бизнес профиль</span>
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-solid fa-location-dot text-secondary"></i>
+                                                                <i className="fa-solid fa-location-dot text-secondary"></i>
                                                                 <span className='text-secondary'> Адрес: </span>
                                                                 {
                                                                     product[0].user.business_account.address
                                                                 }
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-solid fa-envelope text-secondary"></i>
+                                                                <i className="fa-solid fa-envelope text-secondary"></i>
                                                                 <span className='text-secondary'> Почта: </span>
                                                                 <a href={'mailto:' + product[0].user.business_account.email}>
                                                                     {
@@ -154,7 +154,7 @@ const UserAds = ({ match }) => {
                                                                 </a>
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-solid fa-phone text-secondary"></i>
+                                                                <i className="fa-solid fa-phone text-secondary"></i>
                                                                 <span className='text-secondary'> Телефоны: </span>
                                                                 <br />
                                                                 {phones != null ?
@@ -174,7 +174,7 @@ const UserAds = ({ match }) => {
                                                                 }
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-brands fa-whatsapp text-secondary"></i>
+                                                                <i className="fa-brands fa-whatsapp text-secondary"></i>
                                                                 <span className='text-secondary'> Whats App: </span>
                                                                 <a href={'https://wa.me/' + product[0].user.business_account.whatsapp}>
                                                                     {
@@ -183,7 +183,7 @@ const UserAds = ({ match }) => {
                                                                 </a>
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-solid fa-link text-secondary"></i>
+                                                                <i className="fa-solid fa-link text-secondary"></i>
                                                                 <span className='text-secondary'> Сайт: </span>
                                                                 <a href={product[0].user.business_account.site}>
                                                                     {
@@ -192,7 +192,7 @@ const UserAds = ({ match }) => {
                                                                 </a>
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-brands fa-instagram text-sceondary"></i>
+                                                                <i className="fa-brands fa-instagram text-sceondary"></i>
                                                                 <span className='text-secondary'> Instagram: </span>
                                                                 {socials != null ?
                                                                     <a href={socials.instagram}>
@@ -204,7 +204,7 @@ const UserAds = ({ match }) => {
                                                                 }
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-brands fa-facebook text-secondary"></i>
+                                                                <i className="fa-brands fa-facebook text-secondary"></i>
                                                                 <span className='text-secondary'> Facebook: </span>
                                                                 {socials != null ?
                                                                     <a href={socials.facebook}>
@@ -216,7 +216,7 @@ const UserAds = ({ match }) => {
                                                                 }
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-brands fa-telegram text-secondary"></i>
+                                                                <i className="fa-brands fa-telegram text-secondary"></i>
                                                                 <span className='text-secondary'> Telegram: </span>
                                                                 {socials != null ?
                                                                     <a href={socials.telegram}>
@@ -228,7 +228,7 @@ const UserAds = ({ match }) => {
                                                                 }
                                                             </div>
                                                             <div className='col-12 mb-2'>
-                                                                <i class="fa-solid fa-calendar-days text-secondary"></i>
+                                                                <i className="fa-solid fa-calendar-days text-secondary"></i>
                                                                 <span className='text-secondary'> Время работы: </span>
                                                                 <br />
 
@@ -283,10 +283,10 @@ const UserAds = ({ match }) => {
                                                         </div>
                                                     </div>
                                                     {product[0].user.business_account.coverImage != null & product[0].user.business_account.coverImage != undefined ?
-                                                    <div className='col-xl-8 my-3'>
-                                                        <img src={product[0].user.business_account.coverImage} width="100%" />
-                                                    </div>
-                                                    :<></>
+                                                        <div className='col-xl-8 my-3'>
+                                                            <img src={product[0].user.business_account.coverImage} width="100%" />
+                                                        </div>
+                                                        : <></>
                                                     }
                                                     {location != null ?
                                                         <div className='col-xl-12 p-3'>
@@ -326,17 +326,17 @@ const UserAds = ({ match }) => {
                                                                                                     onVisibleChange: (vis) => setVisible(vis),
                                                                                                 }}
                                                                                             >
-                                                                                            {
-                                                                                            item.media.length > 0 ?
-                                                                                            <>
-                                                                                            {item.media.map((i)=>
-                                                                                                <Image src={i.original_url} />
-                                                                                                )
-                                                                                            }
-                                                                                            </>
-                                                                                            :<></>
-                                                                                            }
-                                                                                            {/* <Image src={item.media[0].original_url} /> */}
+                                                                                                {
+                                                                                                    item.media.length > 0 ?
+                                                                                                        <>
+                                                                                                            {item.media.map((i) =>
+                                                                                                                <Image src={i.original_url} />
+                                                                                                            )
+                                                                                                            }
+                                                                                                        </>
+                                                                                                        : <></>
+                                                                                                }
+                                                                                                {/* <Image src={item.media[0].original_url} /> */}
                                                                                             </Image.PreviewGroup>
                                                                                         </div>
                                                                                         <p className="py-1 text-left" style={{ fontSize: "15px" }}>Название галереи: {item.title}</p>
@@ -349,8 +349,8 @@ const UserAds = ({ match }) => {
                                                                     </div>
                                                                     :
                                                                     <div className="col-12 text-center py-3">
-                                                                        <div class="spinner-border text-primary" role="status">
-                                                                            <span class="sr-only">Loading...</span>
+                                                                        <div className="spinner-border text-primary" role="status">
+                                                                            <span className="sr-only">Loading...</span>
                                                                         </div>
                                                                     </div>
                                                             }
@@ -370,7 +370,7 @@ const UserAds = ({ match }) => {
 
                             <div className='col-xl-12 border rounded py-3 mt-4'>
                                 <h4 className='' style={{ fontSize: 20 }}>Объявления</h4>
-                                <div style={{'width' : '120px', 'height' : '3px', 'backgroundColor' : 'rgb(9, 72, 130)' }}></div>
+                                <div style={{ 'width': '120px', 'height': '3px', 'backgroundColor': 'rgb(9, 72, 130)' }}></div>
                                 <div className='row'>
                                     {product != null && product != undefined ?
                                         product.map((item) => (
@@ -380,8 +380,8 @@ const UserAds = ({ match }) => {
                                         ))
                                         :
                                         <div className='col-12 text-center py-5'>
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden"></span>
+                                            <div className="spinner-border text-primary" role="status">
+                                                <span className="visually-hidden"></span>
                                             </div>
                                         </div>
                                     }

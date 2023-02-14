@@ -109,7 +109,7 @@ const Settings = () => {
             });
         }
     }
-    document.title="Настройки пользователя";
+    document.title = "Настройки пользователя";
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
@@ -156,38 +156,38 @@ const Settings = () => {
             <div>
                 <Navbar />
                 <div className="col-md-12 mt-3">
-                <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Настройки пользователя</li>
-                </ol>
-                </nav>
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li className="breadcrumb-item active" aria-current="page">Настройки пользователя</li>
+                        </ol>
+                    </nav>
                     <div className="row px-3 mb-5">
                         <div className="col-md-4 bg-light rounded py-3">
-                            <div className="col-md-12 text-white alert" style={{backgroundColor:"#184d9f"}}>
+                            <div className="col-md-12 text-white alert" style={{ backgroundColor: "#184d9f" }}>
                                 <div className="row">
                                     <div className="col-12">
-                                    {user.media?.length ?
-                                        <Avatar size={64} icon={<img src={user.media[0].original_url} alt="" />} />
-                                        :
-                                        <Avatar size={42} icon={<UserOutlined />} />
-                                    }
+                                        {user.media?.length ?
+                                            <Avatar size={64} icon={<img src={user.media[0].original_url} alt="" />} />
+                                            :
+                                            <Avatar size={42} icon={<UserOutlined />} />
+                                        }
                                         <label className="ml-3">{user.name}</label>
                                     </div>
                                 </div>
                             </div>
                             <hr />
                             <div className="row">
-                            <div className="col-xl-12">
-                            <ul class="list-group">
-                                <li class="list-group-item">+{user.phone}</li>
-                                <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
-                                <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
-                                <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
-                                <li class="list-group-item"><Link to="/chats">Сообщения</Link></li>
-                                <li class="list-group-item text-white" style={{backgroundColor:"#184d9f"}}><Link to="/settings">Настройки пользователя</Link></li>
-                            </ul>
-                            </div>
+                                <div className="col-xl-12">
+                                    <ul className="list-group">
+                                        <li className="list-group-item">+{user.phone}</li>
+                                        <li className="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
+                                        <li className="list-group-item"><Link to="/profile">Мои объявления</Link></li>
+                                        <li className="list-group-item"><Link to="/favorites">Избранные</Link></li>
+                                        <li className="list-group-item"><Link to="/chats">Сообщения</Link></li>
+                                        <li className="list-group-item text-white" style={{ backgroundColor: "#184d9f" }}><Link to="/settings">Настройки пользователя</Link></li>
+                                    </ul>
+                                </div>
                             </div>
                             <hr />
                         </div>

@@ -46,7 +46,7 @@ const Ads = () => {
       <Navbar />
       <SearchBar />
       <div className="col-md-12">
-        <div class="row mt-6 mb-6">
+        <div className="row mt-6 mb-6">
           {products === null || products === undefined || products.length === 0 ?
             <Grid container spacing={2} className="pl-3 pt-4 pb-4">
               <Grid item xs={4}>

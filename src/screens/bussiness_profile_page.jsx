@@ -39,7 +39,7 @@ const Profile = () => {
             setOffset(offset + limit);
         }
     };
-    document.title="Личный кабинет";
+    document.title = "Личный кабинет";
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
@@ -86,41 +86,41 @@ const Profile = () => {
             <div>
                 <Navbar />
                 <div className="col-xl-12 mt-3">
-                <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Мои объявления</li>
-                </ol>
-                </nav>
+                    <nav aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li className="breadcrumb-item active" aria-current="page">Мои объявления</li>
+                        </ol>
+                    </nav>
                     <div className="row px-3 mb-5">
                         <div className="col-xl-4 bg-light rounded py-3">
-                            <div className="col-xl-12 alert text-white" style={{backgroundColor:"#184d9f"}}>
+                            <div className="col-xl-12 alert text-white" style={{ backgroundColor: "#184d9f" }}>
                                 <div className="row">
                                     <div className="col-12">
-                                    {user.media?.length ?
-                                        <Avatar size={64} icon={<img src={user.media[0].original_url} />} />
-                                        :
-                                        <Avatar size={42} icon={<UserOutlined />} />
-                                    }
+                                        {user.media?.length ?
+                                            <Avatar size={64} icon={<img src={user.media[0].original_url} />} />
+                                            :
+                                            <Avatar size={42} icon={<UserOutlined />} />
+                                        }
                                         <label className="ml-3">{user.name}</label>
                                     </div>
                                 </div>
                             </div>
                             <hr />
                             <div className="row">
-                            <div className="col-xl-12">
-                            <ul class="list-group">
-                                <li class="list-group-item">+{user.phone}</li>
-                                <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
-                                <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
-                                <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
-                                <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
-                                <li class="list-group-item text-white" style={{backgroundColor:"#184d9f"}}>
-                                    <Link to="/business-profile">Бизнес профиль</Link>
-                                </li>
-                                {/* <li class="list-group-item"><Link to="/business-settings">Настройки бизнес профиля</Link></li> */}
-                            </ul>
-                            </div>
+                                <div className="col-xl-12">
+                                    <ul className="list-group">
+                                        <li className="list-group-item">+{user.phone}</li>
+                                        <li className="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
+                                        <li className="list-group-item"><Link to="/profile">Мои объявления</Link></li>
+                                        <li className="list-group-item"><Link to="/favorites">Избранные</Link></li>
+                                        <li className="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
+                                        <li className="list-group-item text-white" style={{ backgroundColor: "#184d9f" }}>
+                                            <Link to="/business-profile">Бизнес профиль</Link>
+                                        </li>
+                                        {/* <li className="list-group-item"><Link to="/business-settings">Настройки бизнес профиля</Link></li> */}
+                                    </ul>
+                                </div>
                             </div>
                             <hr />
                         </div>
@@ -128,92 +128,92 @@ const Profile = () => {
                             <Tabs className="border rounded px-2 pb-3 py-1" defaultActiveKey="1">
                                 <TabPane tab="Активные" key="2">
                                     <div className="row">
-                                    {products?.length>0  ? 
-                                        <>
-                                        {products.map((product) => {
-                                            if (product.status !== 'active') return;
-                                            return (
-                                                <>
-                                                    <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                        <ProductItem product={product} />
-                                                    </div>
-                                                </>
-                                            );
-                                        })}
-                                        </>
-                                        :
-                                        <div className="col-xl-12 text-center py-5">
-                                        <label>Нет объявлений</label>
-                                        </div>
-                                    }
+                                        {products?.length > 0 ?
+                                            <>
+                                                {products.map((product) => {
+                                                    if (product.status !== 'active') return;
+                                                    return (
+                                                        <>
+                                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
+                                                                <ProductItem product={product} />
+                                                            </div>
+                                                        </>
+                                                    );
+                                                })}
+                                            </>
+                                            :
+                                            <div className="col-xl-12 text-center py-5">
+                                                <label>Нет объявлений</label>
+                                            </div>
+                                        }
                                     </div>
                                 </TabPane>
                                 <TabPane tab="Неактивные" key="3">
                                     <div className="row">
-                                    {products?.length>0 ? 
-                                        <>
-                                        {products.map((product) => {
-                                            if (product.status !== 'inactive') return;
-                                            return (
-                                                <>
-                                                    <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                        <ProductItem product={product} />
-                                                    </div>
-                                                </>
-                                            );
-                                        })}
-                                        </>
-                                        :
-                                        <div className="col-xl-12 text-center py-5">
-                                        <label>Нет объявлений</label>
-                                        </div>
-                                    }
+                                        {products?.length > 0 ?
+                                            <>
+                                                {products.map((product) => {
+                                                    if (product.status !== 'inactive') return;
+                                                    return (
+                                                        <>
+                                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
+                                                                <ProductItem product={product} />
+                                                            </div>
+                                                        </>
+                                                    );
+                                                })}
+                                            </>
+                                            :
+                                            <div className="col-xl-12 text-center py-5">
+                                                <label>Нет объявлений</label>
+                                            </div>
+                                        }
                                     </div>
                                 </TabPane>
                                 <TabPane tab="На модерации" key="4">
                                     <div className="row">
-                                    {products?.length>0 ? 
-                                        <>
-                                        {products.map((product) => {
-                                            if (product.status !== 'moderation') return;
+                                        {products?.length > 0 ?
+                                            <>
+                                                {products.map((product) => {
+                                                    if (product.status !== 'moderation') return;
 
-                                            return (
-                                                <>
-                                                    <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                        <ProductItem product={product} />
-                                                    </div>
-                                                </>
-                                            );
-                                        })}
-                                        </>
-                                        :
-                                        <div className="col-xl-12 text-center py-5">
-                                        <label>Нет объявлений</label>
-                                        </div>
-                                    }
+                                                    return (
+                                                        <>
+                                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
+                                                                <ProductItem product={product} />
+                                                            </div>
+                                                        </>
+                                                    );
+                                                })}
+                                            </>
+                                            :
+                                            <div className="col-xl-12 text-center py-5">
+                                                <label>Нет объявлений</label>
+                                            </div>
+                                        }
                                     </div>
                                 </TabPane>
                                 <TabPane tab="Отключенные" key="5">
                                     <div className="row">
-                                    {products?.length>0 ? 
-                                        <>
-                                        {products.map((product) => {
-                                            if (product.status !== 'disabled') return;
+                                        {products?.length > 0 ?
+                                            <>
+                                                {products.map((product) => {
+                                                    if (product.status !== 'disabled') return;
 
-                                            return (
-                                                <>
-                                                    <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                        <ProductItem product={product} />
-                                                    </div>
-                                                </>
-                                            );
-                                        })}
-                                        </>
-                                        :
-                                        <div className="col-xl-12 text-center py-5">
-                                        <label>Нет объявлений</label>
-                                        </div>
-                                    }
+                                                    return (
+                                                        <>
+                                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
+                                                                <ProductItem product={product} />
+                                                            </div>
+                                                        </>
+                                                    );
+                                                })}
+                                            </>
+                                            :
+                                            <div className="col-xl-12 text-center py-5">
+                                                <label>Нет объявлений</label>
+                                            </div>
+                                        }
                                     </div>
                                 </TabPane>
                             </Tabs>

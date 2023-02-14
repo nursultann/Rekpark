@@ -32,17 +32,17 @@ const SetBusinessProfile = () => {
 
     useEffect(() => {
         BusinessPlans();
-    },[])
+    }, [])
 
     return (
         <>
             <Navbar />
             <div className="col-xl-12 py-3">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a className="text-primary" href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><a className="text-primary" href="/profile">Профиль</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Бизнес профиль</li>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                        <li className="breadcrumb-item active" aria-current="page"><a className="text-primary" href="/profile">Профиль</a></li>
+                        <li className="breadcrumb-item active" aria-current="page">Бизнес профиль</li>
                     </ol>
                 </nav>
                 <div className="row pt-2">
@@ -72,18 +72,18 @@ const SetBusinessProfile = () => {
                                     {plans != null ?
                                         <>
                                             {plans.map((item) =>
-                                            <BusinessItem
-                                            plan={item} 
-                                            periods={item.periods}
-                                            period={period} 
-                                            />
+                                                <BusinessItem
+                                                    plan={item}
+                                                    periods={item.periods}
+                                                    period={period}
+                                                />
                                             )}
                                         </>
                                         :
                                         <>
                                             <div className="col-12 py-5 text-center">
-                                                <div class="spinner-border text-primary" role="status">
-                                                    <span class="sr-only">Loading...</span>
+                                                <div className="spinner-border text-primary" role="status">
+                                                    <span className="sr-only">Loading...</span>
                                                 </div>
                                             </div>
                                         </>

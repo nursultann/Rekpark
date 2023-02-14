@@ -27,8 +27,8 @@ const News = () => {
                             <div className='rounded' style={{ backgroundImage: "url(" + article.image + ")", backgroundSize: "cover", height: "150px" }}
                                 onDragStart={handleDragStart}></div>
                             <p className='text-center mt-2' style={{ fontSize: "12pt" }}>
-                                <Link style={{ color: "rgb(9, 72, 130)", fontWeight : '420' }} to={'/article/' + article.id}>{article.title}</Link></p>
-                            <p className='text-muted' style={{ fontSize: "10pt" }}><i class="far fa-clock"></i>&nbsp;
+                                <Link style={{ color: "rgb(9, 72, 130)", fontWeight: '420' }} to={'/article/' + article.id}>{article.title}</Link></p>
+                            <p className='text-muted' style={{ fontSize: "10pt" }}><i className="far fa-clock"></i>&nbsp;
                                 {moment(article.created_at, 'YYYYMMDD, h:mm:ss a,').fromNow()}</p>
                         </div>
                     </div>)
@@ -42,8 +42,8 @@ const News = () => {
     return (
         <>
             <div className="col-xl-12 my-3">
-                <h3 className='px-3 pb-0'><Link to="/articles" style={{ fontSize: "19px", color : "#424242" }}>Новости и статьи</Link></h3>
-                <div className='ml-3 mb-3' style={{width : "160px", height : 3, backgroundColor : "rgb(9, 72, 130)"}}></div>
+                <h3 className='px-3 pb-0'><Link to="/articles" style={{ fontSize: "19px", color: "#424242" }}>Новости и статьи</Link></h3>
+                <div className='ml-3 mb-3' style={{ width: "160px", height: 3, backgroundColor: "rgb(9, 72, 130)" }}></div>
                 {articles != null || articles != undefined || articles?.length > 0 ?
                     <AliceCarousel
                         mouseTracking
@@ -53,7 +53,7 @@ const News = () => {
                         disableDotsControls
                         // renderPrevButton={() => {
                         //     return <div className='bg-dark rounded-circle arrowLeft' >
-                        //         <i class="fa-solid fa-circle-left text-white fa-2x"></i></div>
+                        //         <i className="fa-solid fa-circle-left text-white fa-2x"></i></div>
                         //   }}
                         //   renderNextButton={() => {
                         //     return <div className="position-absolute top-0 end-0">Next Item</div>

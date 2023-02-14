@@ -46,7 +46,7 @@ const ChatUser = () => {
         console.log(userid);
         setChatId(userid);
         // setChatName(userName);
-        const userMessages = await getUserMessages({ 'chat_user_id': userid, 'advertisement_id' : advertisement_id, 'with': 'sender' });
+        const userMessages = await getUserMessages({ 'chat_user_id': userid, 'advertisement_id': advertisement_id, 'with': 'sender' });
         if (userMessages != null) {
             setMessages(userMessages.reverse());
             setPostId(messages[0].advertisement_id);
@@ -65,17 +65,17 @@ const ChatUser = () => {
             openNotificationWithIcon('error', 'Заполните поле для сообщения!');
         }
     }
-    if(product == null){
-    if(messages != null){
-        const productDetails = async () =>{
-            const _product = await api.fetchProduct(messages[0].advertisement_id);
-            const readMessage = await readMessages({ 'partner_id': chat_id });
-            setProduct(_product);
-            console.log("read",readMessage);
+    if (product == null) {
+        if (messages != null) {
+            const productDetails = async () => {
+                const _product = await api.fetchProduct(messages[0].advertisement_id);
+                const readMessage = await readMessages({ 'partner_id': chat_id });
+                setProduct(_product);
+                console.log("read", readMessage);
+            }
+            productDetails();
         }
-        productDetails();
     }
-}
     moment.locale('ru');
     useEffect(() => {
         document.title = "Сообщение пользователя";
@@ -124,9 +124,9 @@ const ChatUser = () => {
                 <Navbar />
                 <div className="col-xl-12 mt-3">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a style={{color: "rgb(9, 72, 130)"}} href="/"><i class="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Сообщения</li>
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li className="breadcrumb-item active" aria-current="page">Сообщения</li>
                         </ol>
                     </nav>
                     <div className="row px-3 mb-5">
@@ -146,13 +146,13 @@ const ChatUser = () => {
                             <hr />
                             <div className="row">
                                 <div className="col-xl-12">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">+{user.phone}</li>
-                                        <li class="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
-                                        <li class="list-group-item"><Link to="/profile">Мои объявления</Link></li>
-                                        <li class="list-group-item"><Link to="/favorites">Избранные</Link></li>
-                                        <li class="list-group-item text-white" style={{ backgroundColor: "#184d9f" }}><Link to="/chats">Сообщения</Link></li>
-                                        <li class="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
+                                    <ul className="list-group">
+                                        <li className="list-group-item">+{user.phone}</li>
+                                        <li className="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
+                                        <li className="list-group-item"><Link to="/profile">Мои объявления</Link></li>
+                                        <li className="list-group-item"><Link to="/favorites">Избранные</Link></li>
+                                        <li className="list-group-item text-white" style={{ backgroundColor: "#184d9f" }}><Link to="/chats">Сообщения</Link></li>
+                                        <li className="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
                                     </ul>
                                 </div>
                             </div>
@@ -162,30 +162,30 @@ const ChatUser = () => {
                             <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{ backgroundColor: "#184d9f" }}>
                                 <label className="text-white" style={{ fontSize: 15 }}>Сообщения</label>
                             </div>
-                            <div class="container">
-                                <div class="content-wrapper">
-                                    <div class="row gutters">
-                                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 px-0">
-                                            <div class="card m-0">
-                                                <div class="row no-gutters">
-                                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                        <div class="selected-user">
-                                                            <span>Сообщения от <span class="name">{chat_name}</span></span>
+                            <div className="container">
+                                <div className="content-wrapper">
+                                    <div className="row gutters">
+                                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 px-0">
+                                            <div className="card m-0">
+                                                <div className="row no-gutters">
+                                                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <div className="selected-user">
+                                                            <span>Сообщения от <span className="name">{chat_name}</span></span>
                                                         </div>
                                                         <div className="col-12 alert alert-primary">
-                                                        {product != null ?
-                                                            <>
-                                                                <img src={product.image} width="50px" />
-                                                                <a href={"/products/"+ product.id}><span className="ml-2">{product.title}</span></a>
-                                                            </>
-                                                            :
-                                                            <>
+                                                            {product != null ?
+                                                                <>
+                                                                    <img src={product.image} width="50px" />
+                                                                    <a href={"/products/" + product.id}><span className="ml-2">{product.title}</span></a>
+                                                                </>
+                                                                :
+                                                                <>
 
-                                                            </>
-                                                        }
+                                                                </>
+                                                            }
                                                         </div>
-                                                        <div class="chat-container">
-                                                            <ul class="chat-box chatContainerScroll">
+                                                        <div className="chat-container">
+                                                            <ul className="chat-box chatContainerScroll">
                                                                 {
                                                                     messages?.length > 0 ?
                                                                         <>
@@ -193,27 +193,27 @@ const ChatUser = () => {
                                                                                 messages.map((item) =>
                                                                                     <>
                                                                                         {item.sender_id == chat_id ?
-                                                                                            <li class="chat-left">
-                                                                                                <div class="chat-avatar">
+                                                                                            <li className="chat-left">
+                                                                                                <div className="chat-avatar">
                                                                                                     <img src={item.sender.image} alt="Retail Admin" />
-                                                                                                    <div class="chat-name">{item.sender.name}</div>
+                                                                                                    <div className="chat-name">{item.sender.name}</div>
                                                                                                 </div>
-                                                                                                <div class="chat-text">
+                                                                                                <div className="chat-text">
                                                                                                     {item.message}
                                                                                                 </div>
-                                                                                                <div class="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div>
+                                                                                                <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div>
                                                                                             </li>
                                                                                             :
-                                                                                            <li class="chat-right">
-                                                                                                <div class="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}
-                                                                                                    {item.sender.read_at != null ? <span class="fa fa-check-circle"></span> : <></>}
+                                                                                            <li className="chat-right">
+                                                                                                <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}
+                                                                                                    {item.sender.read_at != null ? <span className="fa fa-check-circle"></span> : <></>}
                                                                                                 </div>
-                                                                                                <div class="chat-text">
+                                                                                                <div className="chat-text">
                                                                                                     {item.message}
                                                                                                 </div>
-                                                                                                <div class="chat-avatar">
+                                                                                                <div className="chat-avatar">
                                                                                                     <img src={item.sender.image} alt="Retail Admin" />
-                                                                                                    <div class="chat-name">{item.sender.name}</div>
+                                                                                                    <div className="chat-name">{item.sender.name}</div>
                                                                                                 </div>
                                                                                             </li>
                                                                                         }
@@ -224,8 +224,8 @@ const ChatUser = () => {
                                                             </ul>
                                                         </div>
                                                         {chat_id ?
-                                                            <div class="form-group text-right py-2 px-3 mt-3 mb-0">
-                                                                <textarea class="form-control" rows="3" placeholder="Напишите ваше сообщение..."
+                                                            <div className="form-group text-right py-2 px-3 mt-3 mb-0">
+                                                                <textarea className="form-control" rows="3" placeholder="Напишите ваше сообщение..."
                                                                     onChange={(e) => { setMessage(e.target.value) }} value={message}></textarea>
                                                                 <button style={{ backgroundColor: "#184d9f" }} className="btn btn-primary mt-3 mb-2" type="primary" loading={loadings} onClick={postMessage}>
                                                                     Отправить
@@ -251,8 +251,8 @@ const ChatUser = () => {
                                         <Avatar size={"100%"} icon={<UserOutlined />} />
                                         </div>
                                         <div className="col-9 col-xl-10">
-                                        <div class="about">
-                                        <div class="name"><a href="#" onClick={()=>getUserMessage(chat.id)}>{chat.name}</a></div>                                            
+                                        <div className="about">
+                                        <div className="name"><a href="#" onClick={()=>getUserMessage(chat.id)}>{chat.name}</a></div>                                            
                                         </div>
                                         </div>
                                     </div>

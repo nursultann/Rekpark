@@ -4,12 +4,12 @@ import { useHistory } from "react-router-dom";
 import '../../dist/css/custom_card.css';
 import { setProductDetails } from "../../redux/actions/product_actions";
 import { AppImage } from "../custom_components";
-import {Button,notification,Avatar,message} from "antd";
-import { removeFromFavorites} from "../../api/product";
+import { Button, notification, Avatar, message } from "antd";
+import { removeFromFavorites } from "../../api/product";
 import moment from 'moment';
 import { UserOutlined } from '@ant-design/icons';
 const key = "updateable";
-const ProductItem = ({product}) => {
+const ProductItem = ({ product }) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const navigateToProductDetailsPage = (product) => {
@@ -28,10 +28,10 @@ const ProductItem = ({product}) => {
             description: description,
         });
     };
-    const removeFav = async ()=>{
+    const removeFav = async () => {
         const addToFav = await removeFromFavorites(product.id);
         message.error({ content: 'Удалено из избранного!', key, duration: 2 });
-        window.location.href="/favorites";
+        window.location.href = "/favorites";
     }
     var time = moment(product.created_at, 'YYYYMMDD, h:mm:ss a');
     moment.locale('ru');
@@ -40,28 +40,28 @@ const ProductItem = ({product}) => {
         ? product.media[0].original_url
         : '';
     return (
-            <div className="col-md-12 shadow-sm" style={{ ...baseStyle }}>
-            <div className="row">    
-            <div className="col-md-12 px-0" style={{ height: 150 }}>
-                <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{objectFit: "cover"}} />
-                {product.is_vip ? 
-                    <div style={{ position: "absolute", left: "30px", top: "10px",  }}><span className="badge badge-danger p-2">VIP</span></div> 
-                    : <></>}
+        <div className="col-md-12 shadow-sm" style={{ ...baseStyle }}>
+            <div className="row">
+                <div className="col-md-12 px-0" style={{ height: 150 }}>
+                    <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{ objectFit: "cover" }} />
+                    {product.is_vip ?
+                        <div style={{ position: "absolute", left: "30px", top: "10px", }}><span className="badge badge-danger p-2">VIP</span></div>
+                        : <></>}
+                </div>
             </div>
-            </div>
-            <div class="card-body">
-                <div className="row">    
-                <label style={{fontSize:17}} class="card-title px-0 col-md-12 py-0 label">{product.price +" "+ product.currency_symbol}</label>
-                <p style={{fontSize:15,fontFamily:"sans-serif",whiteSpace:"nowrap", color: "rgb(9, 72, 130)"}} class="card-title px-0 py-0 col-md-12">{product.title}</p>
+            <div className="card-body">
+                <div className="row">
+                    <label style={{ fontSize: 17 }} className="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
+                    <p style={{ fontSize: 15, fontFamily: "sans-serif", whiteSpace: "nowrap", color: "rgb(9, 72, 130)" }} className="card-title px-0 py-0 col-md-12">{product.title}</p>
                 </div>
                 <div className="row px-0 d-flex justify-content-between">
-                <Avatar size="small" icon={<UserOutlined />} />
-                <label className="text-muted label" style={{fontSize:11}}>
-                <i class="far fa-clock"></i> {update}<br/>
-                <i class="far fa-eye"></i>  {product.views}
-                </label>
+                    <Avatar size="small" icon={<UserOutlined />} />
+                    <label className="text-muted label" style={{ fontSize: 11 }}>
+                        <i className="far fa-clock"></i> {update}<br />
+                        <i className="far fa-eye"></i>  {product.views}
+                    </label>
                 </div>
-                <i class="fa-solid fa-heart text-danger"></i> <a style={{fontSize:15, color: "rgb(9, 72, 130)"}} className="mt-2" onClick={removeFav}>Удалить из избранного</a>
+                <i className="fa-solid fa-heart text-danger"></i> <a style={{ fontSize: 15, color: "rgb(9, 72, 130)" }} className="mt-2" onClick={removeFav}>Удалить из избранного</a>
             </div>
         </div>
     );
