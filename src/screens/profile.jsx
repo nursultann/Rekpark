@@ -42,7 +42,7 @@ const Profile = () => {
         }
     }
     const UserProducts = async () => {
-        let _products = await api.fetchUserProducts({ 'sub': true, 'sort': 'active' });
+        let _products = await api.fetchUserProducts({ 'sub': true});
         let inactive_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'inactive' });
         let moderation_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'moderation' });
         let disabled_products = await api.fetchUserProducts({ 'sub': true });
@@ -185,7 +185,7 @@ const Profile = () => {
                                     <div className="row">
                                         {products?.length > 0 ?
                                             <>
-                                                {products.map((product) => {
+                                                {active.map((product) => {
                                                     if (product.status !== 'active') return;
                                                     return (
                                                         <>
@@ -207,7 +207,7 @@ const Profile = () => {
                                     <div className="row">
                                         {products?.length > 0 ?
                                             <>
-                                                {products.map((product) => {
+                                                {inactive.map((product) => {
                                                     if (product.status !== 'inactive') return;
                                                     return (
                                                         <>
@@ -229,7 +229,7 @@ const Profile = () => {
                                     <div className="row">
                                         {products?.length > 0 ?
                                             <>
-                                                {products.map((product) => {
+                                                {moderation.map((product) => {
                                                     if (product.status !== 'moderation') return;
 
                                                     return (

@@ -23,7 +23,7 @@ const Sign = () => {
         const email = response.profileObj.email;
         const name = response.profileObj.name;
         const uid = response.profileObj.googleId;
-
+        
         // const credential = await auth.signInWithEmailAndPassword(email, uid);
 
         console.log(clientId, email, name)
@@ -88,13 +88,13 @@ const Sign = () => {
 
     useEffect(() => {
         document.title = "Вход";
-        function start() {
-            gapi.client.init({
-                clientId: clientId,
-                scope: ""
-            })
-        }
-        gapi.load('client:auth2', start);
+        // function start() {
+        //     gapi.client.init({
+        //         clientId: clientId,
+        //         scope: ""
+        //     })
+        // }
+        // gapi.load('client:auth2', start);
     });
 
     return (
