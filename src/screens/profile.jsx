@@ -21,49 +21,38 @@ const Profile = () => {
     if (!localStorage.getItem('token')) {
         window.location.href = '/';
     }
+
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
-    const { products } = useSelector((state) => state.product);
-    const [active, setActive] = useState([]);
-    const [inactive, setInactive] = useState([]);
-    const [moderation, setModeration] = useState([]);
+    // const { products } = useSelector((state) => state.product);
+    const [products, setProducts] = useState([]);
     const limit = 20;
     const [offset, setOffset] = useState(0);
+
     const fetchUserDetails = async () => {
         const user = await userDetails();
         if (user != null) {
             dispatch(setUser(user));
         }
     };
+
     const fetchPlans = async () => {
         const plans = await subscriptions();
         if (plans != null) {
             dispatch(setProductPlans(plans));
         }
     }
-    const UserProducts = async () => {
-        let _products = await api.fetchUserProducts({ 'sub': true});
-        let inactive_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'inactive' });
-        let moderation_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'moderation' });
-        let disabled_products = await api.fetchUserProducts({ 'sub': true });
-        if (_products != null) {
-            setActive(_products);
-            console.log('active', _products)
+
+    const userProducts = async () => {
+        let data = await api.fetchUserProducts({'with': 'user'});
+
+        if (data != null) {
+            setProducts(data);
+            // console.log('active', _products)
             setOffset(offset + limit);
         }
-        if (inactive_products != null) {
-            console.log('inactive', inactive_products);
-            setInactive(inactive_products);
-        }
-        if (moderation_products != null) {
-            console.log('moderation', moderation_products);
-            setModeration(moderation_products);
-        }
-        if (disabled_products != null) {
-            console.log('disabled', disabled_products);
-            dispatch(setProducts(disabled_products));
-        }
     };
+
     const cancelBussiness = async () => {
         const cancel = await cancelBussinessAccount();
         console.log(cancel);
@@ -74,12 +63,15 @@ const Profile = () => {
             window.location.href = `/profile`;
         }, 1200);
     }
+
     document.title = "Личный кабинет";
+
     useEffect(() => {
         fetchUserDetails();
-        UserProducts();
+        userProducts();
         fetchPlans();
     }, []);
+
     return (
         user === null || user === undefined || user === ""
             ? <div className="col-md-12 mt-3">
@@ -185,7 +177,7 @@ const Profile = () => {
                                     <div className="row">
                                         {products?.length > 0 ?
                                             <>
-                                                {active.map((product) => {
+                                                {products.map((product) => {
                                                     if (product.status !== 'active') return;
                                                     return (
                                                         <>
@@ -207,7 +199,7 @@ const Profile = () => {
                                     <div className="row">
                                         {products?.length > 0 ?
                                             <>
-                                                {inactive.map((product) => {
+                                                {products.map((product) => {
                                                     if (product.status !== 'inactive') return;
                                                     return (
                                                         <>
@@ -229,7 +221,7 @@ const Profile = () => {
                                     <div className="row">
                                         {products?.length > 0 ?
                                             <>
-                                                {moderation.map((product) => {
+                                                {products.map((product) => {
                                                     if (product.status !== 'moderation') return;
 
                                                     return (

@@ -21,9 +21,8 @@ const Ads = () => {
 
 
   const fetchInitProducts = async () => {
-    let _products = await api.fetchProducts({ 'sub': true });
+    let _products = await api.fetchProducts({ 'with': 'user' });
     if (_products != null) {
-      _products = _products.concat(await api.fetchProducts());
       dispatch(setProducts(_products));
       setOffset(offset + limit);
     }

@@ -24,9 +24,8 @@ const Main = () => {
   const [offset, setOffset] = useState(0);
 
   const fetchInitProducts = async () => {
-    let _products = await api.fetchProducts({ 'sort': true, 'with': 'user' });
+    let _products = await api.fetchProducts({ 'with': 'user' });
     if (_products != null) {
-      _products = _products.concat(await api.fetchProducts({ 'with': 'user' }));
       dispatch(setProducts(_products));
       // setOffset(offset + limit);
       console.table(_products);
