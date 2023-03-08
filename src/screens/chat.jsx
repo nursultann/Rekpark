@@ -201,13 +201,13 @@ const ChatUser = () => {
                                                                                                 <div className="chat-text">
                                                                                                     {item.message}
                                                                                                 </div>
-                                                                                                <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div>
+                                                                                                {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div> */}
                                                                                             </li>
                                                                                             :
                                                                                             <li className="chat-right">
-                                                                                                <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}
+                                                                                                {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}
                                                                                                     {item.sender.read_at != null ? <span className="fa fa-check-circle"></span> : <></>}
-                                                                                                </div>
+                                                                                                </div> */}
                                                                                                 <div className="chat-text">
                                                                                                     {item.message}
                                                                                                 </div>

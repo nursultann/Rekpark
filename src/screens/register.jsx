@@ -136,9 +136,8 @@ const Register = () => {
 
                 <Form
                     name="basic"
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 18 }}
                     initialValues={{ remember: true }}
+                    layout="vertical"
                     autoComplete="off"
                 >
                     <Form.Item
@@ -159,7 +158,7 @@ const Register = () => {
                             <Option value="7">+7</Option>
                         </Select>} onChange={(e) => { setPhoneNumber(e.target.value) }} type="number" placeholder="(XXX) XXX XXX" />
                     </Form.Item>
-                    <div className="my-3" id="recaptcha-container"></div>
+                    <div className="my-3 ml-xl-5" id="recaptcha-container"></div>
                     <Form.Item wrapperCol={{ offset: 0 }}>
                         <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="col-xl-7" htmlType="submit" onClick={signIn}>
                             Зарегистрироваться

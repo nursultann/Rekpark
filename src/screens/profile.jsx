@@ -42,7 +42,7 @@ const Profile = () => {
         }
     }
     const UserProducts = async () => {
-        let _products = await api.fetchUserProducts({ 'sub': true});
+        let _products = await api.fetchUserProducts({ 'sub': true, 'sort' : 'active'});
         let inactive_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'inactive' });
         let moderation_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'moderation' });
         let disabled_products = await api.fetchUserProducts({ 'sub': true });
@@ -167,6 +167,7 @@ const Profile = () => {
                                         {user.business_account == null ?
                                             <>
                                                 <li className="list-group-item"><Link to="/business">Бизнес профиль</Link></li>
+                                                <li className="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
                                             </>
                                             :
                                             <>
@@ -183,7 +184,7 @@ const Profile = () => {
                             <Tabs className="border rounded px-2 pb-3 py-1" defaultActiveKey="1">
                                 <TabPane tab="Активные" key="2">
                                     <div className="row">
-                                        {products?.length > 0 ?
+                                        {active?.length > 0 ?
                                             <>
                                                 {active.map((product) => {
                                                     if (product.status !== 'active') return;
@@ -193,7 +194,7 @@ const Profile = () => {
                                                                 <ProductItem product={product} />
                                                             </div>
                                                         </>
-                                                    );
+                                                    ); 
                                                 })}
                                             </>
                                             :
@@ -205,7 +206,7 @@ const Profile = () => {
                                 </TabPane>
                                 <TabPane tab="Неактивные" key="3">
                                     <div className="row">
-                                        {products?.length > 0 ?
+                                        {inactive?.length > 0 ?
                                             <>
                                                 {inactive.map((product) => {
                                                     if (product.status !== 'inactive') return;
@@ -227,7 +228,7 @@ const Profile = () => {
                                 </TabPane>
                                 <TabPane tab="На модерации" key="4">
                                     <div className="row">
-                                        {products?.length > 0 ?
+                                        {moderation?.length > 0 ?
                                             <>
                                                 {moderation.map((product) => {
                                                     if (product.status !== 'moderation') return;

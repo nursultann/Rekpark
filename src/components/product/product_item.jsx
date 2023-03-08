@@ -32,7 +32,7 @@ const ProductItem = ({ product }) => {
     var update = time.fromNow();
 
     return (
-        <div className="col-md-12 shadow-sm" style={{ ...baseStyle, borderRadius: "10px" }}>
+        <div className="col-md-12 shadow" style={{ ...baseStyle, borderRadius: "10px" }}>
             <div className="row">
                 <div className="col-md-12 px-0" style={{ height: 180 }}>
                     {product.media?.length > 0 ?
@@ -127,7 +127,7 @@ const ProductItem = ({ product }) => {
                         </p>
                     </div>
                     <div className="row">
-                        <div className="col-3 mt-5 px-0">
+                        <div className="col-3 mt-3 px-0">
                             {product.user?.media?.length ?
                                 <>
                                     {product.user.business_account != null ?
@@ -150,7 +150,7 @@ const ProductItem = ({ product }) => {
                                 <Avatar size={42} icon={<UserOutlined />} />
                             }
                         </div>
-                        <div className="col-9 mt-5 px-0 text-right" style={{ fontSize: 11, color: "rgb(9, 72, 130)" }}>
+                        <div className="col-9 mt-3 px-0 text-right" style={{ fontSize: 11, color: "rgb(9, 72, 130)" }}>
                             <i className="fa-solid fa-calendar-days text-danger"></i> {update}<br />
                             {/* <img src={views} width="18" height="18" /> {product.views}<br/> */}
                             <label className="text-dark label" style={{ fontSize: 11 }}>
@@ -164,5 +164,4 @@ const ProductItem = ({ product }) => {
         </div>
     );
 };
-
 export default ProductItem;

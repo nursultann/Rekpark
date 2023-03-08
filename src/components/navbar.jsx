@@ -33,12 +33,12 @@ const Navbar = () => {
       // console.log(fetchChats.count);
     }
   }
-  const fetchPlans = async () =>{
+  const fetchPlans = async () => {
     const plans = await subscriptions();
     if (plans != null) {
-        dispatch(setProductPlans(plans));
+      dispatch(setProductPlans(plans));
     }
-}
+  }
   const show = () => {
     setVisible(true);
   }
@@ -115,16 +115,27 @@ const Navbar = () => {
               <div className="col-4 col-lg-2 text-center">
                 <a className="navbar-brand" href="/" ><img src={logo} style={{ width: "100%" }} /></a>
               </div>
-              {/*
-              <div className='col-5 d-none d-md-block'>
-                <nav className="nav d-flex justify-content-center">
-                  <a className="p-2 px-4" href="/about_us">О нас</a>
-                  <a className="p-2 px-4" href="/articles">Статьи</a>
-                  <a className="p-2 px-4" href="/contacts">Контакты</a>
-                  <a className="p-2 px-4" href="/ad_manage">Рекламодателям</a>
-                </nav>
+              
+              <div className='col-2 px-0 d-block d-md-none'>
+                        {token !=null ?
+                        <Button
+                          className="rounded-pill text-white"
+                          onClick={() => navigateTo('/products/create')}
+                          style={{ backgroundColor: 'rgb(9, 72, 130)' }}
+                        >
+                          + Подать объявление
+                        </Button>
+                        :
+                        <Button
+                        className="rounded-pill text-white"
+                        onClick={() => navigateTo('/login')}
+                        style={{ backgroundColor: 'rgb(9, 72, 130)' }}
+                      >
+                        + Подать объявление
+                      </Button>
+                        }
               </div> 
-              */}
+             
               <div className="col-6 d-lg-flex justify-content-end align-items-center">
                 {token == null ?
                   <>
@@ -182,7 +193,7 @@ const Navbar = () => {
                             theme="light"
                           >
                             <Menu.Item onClick={() => navigateTo('/products/create')} key="1" icon={<FileAddOutlined />}>
-                              + Добавить рекламу
+                              + Подать объявление
                             </Menu.Item>
                             <Menu.Item onClick={() => navigateTo('/profile')} key="2" icon={<DesktopOutlined />}>
                               Личный кабинет
@@ -215,12 +226,12 @@ const Navbar = () => {
                           <Link to="/profile">Личный кабинет</Link>
                         </Dropdown.Button>
                         <Button
-                          className="rounded-pill"
-                          type='primary'
+                          className="rounded-pill text-white border-0"
+                          type=''
                           onClick={() => navigateTo('/products/create')}
                           style={{ backgroundColor: 'rgb(9, 72, 130)' }}
                         >
-                          + Добавить рекламу
+                          + Подать объявление
                         </Button>
                       </Space>
                     </div>
@@ -231,7 +242,6 @@ const Navbar = () => {
           </header>
         </div>
       </div>
-
     </div>
   );
 }

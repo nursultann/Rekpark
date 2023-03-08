@@ -231,15 +231,14 @@ const ProductItem = ({ product }) => {
                         </div>
                         <div className="card-body">
                             <div className="row px-1">
-                                <label style={{ fontSize: 17 }} className="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
+                                <label style={{ fontSize: 15 }} className="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
                                 <span style={{
                                     fontSize: 13, fontFamily: "sans-serif", whiteSpace: "nowrap", overflow: "hidden",
                                     columnWidth: "200px"
-                                }} className="card-title label px-0 text-primary py-0">{product.title}</span>
+                                }} className="card-title label px-0 text-muted py-0">{product.title}</span>
                             </div>
-                            <div className="row px-0 d-flex justify-content-between">
-                                <Avatar size="small" icon={<UserOutlined />} />
-                                <label className="text-muted label" style={{ fontSize: 11 }}>
+                            <div className="row">
+                                <label className="text-muted label ml-1" style={{ fontSize: 11 }}>
                                     <i className="far fa-clock"></i> {update}<br />
                                     <i className="far fa-eye"></i>  {product.views}
                                 </label>
@@ -247,24 +246,28 @@ const ProductItem = ({ product }) => {
                         </div>
                     </div>
                     <div className="col-xl-6 py-2 bg-light">
-                        <Link style={{ fontSize: 14 }} className="ml-1 mt-4" to={"/products/" + product.id + "/edit"}><i className="far fa-edit text-muted"></i> Редактировать</Link><br />
-                        <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={removeAd}><i className="fas fa-trash-alt text-muted"></i> Удалить</Link><br />
+                        <Link style={{ fontSize: 12 }} className="ml-1 mt-4" to={"/products/" + product.id + "/edit"}><i className="far fa-edit text-success"></i> Редактировать</Link><br />
+                        <Link style={{ fontSize: 12 }} className="ml-1 mt-4" onClick={removeAd}><i className="fas fa-trash-alt text-danger"></i> Удалить</Link><br />
                         {product.status == "active" ?
                             <>
-                                <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={deactivateAd}><i className="fas fa-ban text-muted"></i> Деактивировать</Link><br />
+                                <Link style={{ fontSize: 12 }} className="ml-1 mt-4" onClick={deactivateAd}><i className="fas fa-ban text-warning"></i>Деактивировать</Link><br />
                             </>
                             :
                             <></>
                         }
                         {product.status == "inactive" ?
                             <>
-                                <Link style={{ fontSize: 14 }} className="ml-1 mt-4" onClick={activateAd}><i className="fas fa-plus-circle text-muted"></i> Активировать</Link>
+                                <Link style={{ fontSize: 12 }} className="ml-1 mt-4" onClick={activateAd}><i className="fas fa-plus-circle text-muted"></i> Активировать</Link>
                             </>
                             :
                             <></>
                         }
                         <div className="row mt-3 mt-xl-5">
                             <div className="col-12 pl-4">
+                               {product.status != 'disabled' && product.status != 'inactive' 
+                               && product.status != 'moderation' ?
+                                <>
+                               <span className="text-muted" style={{fontSize : 13}}>Платные услуги</span><br/>
                                 {subPlans != null ?
                                     <>
                                         {
@@ -276,6 +279,8 @@ const ProductItem = ({ product }) => {
                                         }
                                     </>
                                     : <></>
+                                }
+                                </> : <></>
                                 }
                             </div>
                         </div>

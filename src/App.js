@@ -58,14 +58,14 @@ const App = ({ match }) => {
     // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
     <div className="container-fluid">
       <div className="row">
-        <div className="col-lg-1 px-0 d-none d-lg-block text-white text-center"
+        <div className="col-1-5 px-0 d-none d-lg-block text-white text-center"
           style={{
             backgroundSize: "auto", backgroundPosition: "right top",
             backgroundImage: "",
             backgroundRepeat: "no-repeat"
           }}>
         </div>
-        <div className="col-lg-10 px-0" style={{ backgroundColor: '#fff', minHeight: "500px" }}>
+        <div className="col-lg-9 px-0" style={{ backgroundColor: '#fff', minHeight: "500px" }}>
           <div className="col-lg-12 bg-success px-0 text-white text-center">
             <img src={top} width="100%" />
           </div>
@@ -105,7 +105,7 @@ const App = ({ match }) => {
             </Switch>
           </BrowserRouter>
         </div>
-        <div className="col-lg-1 px-0 d-none d-lg-block text-white text-center"
+        <div className="col-1-5 px-0 d-none d-lg-block text-white text-center"
           style={{
             backgroundSize: "auto",
             backgroundImage: "",

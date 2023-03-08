@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Skeleton from '@mui/material/Skeleton';
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/actions/user_actions";
-import { Avatar, Button } from 'antd';
+import { Avatar, Button, Image } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
@@ -185,8 +185,16 @@ const Chats = () => {
                                                                         {chats.map((chat) =>
                                                                             <li className="person" data-chat="person1">
                                                                                 <div className="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
-                                                                                    <img src={chat.advertisement.image} alt="Retail Admin" />
+                                                                                    {chat.advertisement.image != null ?
+                                                                                    <>
+                                                                                    <img src={chat.advertisement.image} />
                                                                                     <span className="status busy"></span>
+                                                                                    </>
+                                                                                    :
+                                                                                    <>
+                                                                                    <Image />
+                                                                                    </>
+                                                                                    }
                                                                                 </div>
                                                                                 <p className="name-time" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
                                                                                     <span className="name">{chat.advertisement.title}</span>

@@ -23,11 +23,12 @@ const News = () => {
             {articles.map((article) =>
                 items.push(
                     <div className='col-xl-12'>
-                        <div className='border px-2 py-2 rounded'>
+                        <div className='border px-2 py-2 rounded shadow'>
                             <div className='rounded' style={{ backgroundImage: "url(" + article.image + ")", backgroundSize: "cover", height: "150px" }}
-                                onDragStart={handleDragStart}></div>
+                                onDragStart={handleDragStart}>  
+                            </div>
                             <p className='text-center mt-2' style={{ fontSize: "12pt" }}>
-                                <Link style={{ color: "rgb(9, 72, 130)", fontWeight: '420' }} to={'/article/' + article.id}>{article.title}</Link></p>
+                                <Link style={{ color: "rgb(9, 72, 130)"}} to={'/article/' + article.id}>{article.title}</Link></p>
                             <p className='text-muted' style={{ fontSize: "10pt" }}><i className="far fa-clock"></i>&nbsp;
                                 {moment(article.created_at, 'YYYYMMDD, h:mm:ss a,').fromNow()}</p>
                         </div>
