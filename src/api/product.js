@@ -1,14 +1,10 @@
 import ApiClient from "./ApiClient";
 export const fetchProducts = async (params = { limit: 20, offset: 0 }) => {
     try {
-        if (!params.hasOwnProperty('sub')) {
-            if (!params.hasOwnProperty('offset')) params['offset'] = 0;
-            if (!params.hasOwnProperty('limit')) params['limit'] = 20;
-        }
-        params['orderBy'] = 'id';
-        params['sortedBy'] = 'desc';
+        if (!params.hasOwnProperty('offset')) params['offset'] = 0;
+        if (!params.hasOwnProperty('limit')) params['limit'] = 20;
 
-        const response = await ApiClient.get('/products', params);
+        const response = await ApiClient.get('/products-list', params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }
@@ -104,15 +100,13 @@ export const updateProduct = async (id, params) => {
 
 export const fetchUserProducts = async (params = { limit: 20, offset: 0 }) => {
     try {
-        if (!params.hasOwnProperty('sub')) {
-            if (!params.hasOwnProperty('offset')) params['offset'] = 0;
-            if (!params.hasOwnProperty('limit')) params['limit'] = 20;
-        }
-        params['orderBy'] = 'id';
-        params['sortedBy'] = 'desc';
+        if (!params.hasOwnProperty('offset')) params['offset'] = 0;
+        if (!params.hasOwnProperty('limit')) params['limit'] = 20;
+        // params['orderBy'] = 'id';
+        // params['sortedBy'] = 'desc';
         
-        const response = await ApiClient.get('/user/products', params);
-        if (response.status == 200 || response.status == 201) {
+        const response = await ApiClient.get('/user-products', params);
+        if (response.status === 200 || response.status === 201) {
             return response.data.data;
         }
     } catch (error) {
