@@ -32,9 +32,12 @@ const ProductItem = ({ product }) => {
     var update = time.fromNow();
 
     return (
-        <div className="col-md-12 shadow" style={{ ...baseStyle, borderRadius: "10px" }}>
+        <div className="col-md-12" style={{ ...baseStyle, 
+        borderRadius: "10px", 
+        border : "1px solid #dee2e6", 
+        borderColor : product.is_vip ? <>{"#FF0707"}</> : <>{product.is_urgent ? "#ffc107" : "#dee2e6"}</>}}>
             <div className="row">
-                <div className="col-md-12 px-0" style={{ height: 180 }}>
+                <div className="col-md-12 p-2" style={{ height: 180 }}>
                     {product.media?.length > 0 ?
                         <>
                             {
