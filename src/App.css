@@ -827,3 +827,9 @@ input[type="search"]::-webkit-search-results-decoration { display: block;}
   padding-right: 15px;
   padding-left: 15px;
 }
+.call{
+  position: fixed;
+  left: 20%;
+  top:90%;
+  z-index: 20;
+}

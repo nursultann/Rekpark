@@ -546,6 +546,47 @@ const Ad = ({ match }) => {
                     <button className="btn text-white" style={{ backgroundColor: "#184d9f" }} onClick={PostComplaint}>Пожаловаться</button>
                 </div>
             </Modal>
+            <div className="fixed-bottom d-block d-md-none">
+                <div className="row">
+                    <button className="btn col-6 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fas fa-phone-volume"></i> Позвонить</button>
+                    <button className="btn col-6 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fa-solid fa-envelope"></i> Написать</button>
+                    <div className="col-12">
+                        <div className="collapse multi-collapse" id="multiCollapseExample1">
+                            <div className="card card-body bg-white">
+                                {phones != null && phones.length > 12 ?
+                                    <>
+                                        {phones.split(",").map((item) =>
+                                            <a href={"tel:" + item}>{item}</a>
+                                        )
+                                        }
+                                    </>
+                                    :
+                                    <>
+                                        <a href={"tel:" + phones}>{phones}</a>
+                                    </>
+                                }
+                            </div>
+                        </div>
+                        <div className="collapse multi-collapse" id="multiCollapseExample2">
+                            {token ?
+                                <div className="col-xl-12 bg-white border rounded p-2">
+                                    <div className="col-xl-12 text-center" style={{ backgroundColor: "rgb(9, 72, 130)" }}>
+                                        <label className="p-2 rounded text-white">Написать сообщение к {productDetails.user.name}</label>
+                                    </div>
+                                    <div className="col-xl-12 mt-2 px-0">
+                                        <textarea rows="10" className="form-control" value={messag} onChange={(e) => { setMessage(e.target.value) }}></textarea>
+                                        <Button loading={loadings} className="btn btn-outline-primary rounded col-12 mt-2" onClick={postMessage}>Отправить</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
+                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
+                                    </div>
+                                </div>
+                                : <div className="bg-white">Авторизуйтесь сначала чтобы написать</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
