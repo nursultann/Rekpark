@@ -101,7 +101,7 @@ const Sign = () => {
         <div>
             <Navbar />
             <div className="col-xl-12 d-flex justify-content-center">
-                <div className="col-xl-5 py-4 shadow rounded-lg my-3 bg-white text-center">
+                <div className="col-xl-8 py-4 m-xl-5 shadow rounded-lg my-3 bg-light text-center">
                     <label className="py-2 label" style={{ fontSize: 20 }}>Вход на сайт</label>
                     <br />
                     <Form
@@ -125,6 +125,7 @@ const Sign = () => {
                                         showSearch
                                         optionFilterProp="children"
                                         onChange={onChange}
+                                        className="bg-white rounded border-0"
                                         filterOption={(input, option) =>
                                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                         }
@@ -136,6 +137,7 @@ const Sign = () => {
                                 onChange={(e) => {
                                     setLogin(e.target.value)
                                 }}
+                                className="bg-white rounded border-0"
                                 type="number"
                                 placeholder="Номер телефона"
                             />
@@ -146,20 +148,22 @@ const Sign = () => {
                             rules={[{ required: true, message: 'Пожалуйста введите пароль!' }]}
                             wrapperCol={{ offset: 0 }}
                         >
-                            <Input.Password onChange={(e) => {
+                            <Input.Password 
+                            className="bg-white rounded border-0"
+                            onChange={(e) => {
                                 setPassword(e.target.value)
                             }} placeholder="Пароль" />
                         </Form.Item>
                         <Form.Item wrapperCol={{ offset: 0 }}>
                             <button
-                                className="col-md-10 ml-0 ml-xl-3 btn btn-primary"
-                                style={{ backgroundColor: "#184d9f", color: "#fff" }}
+                                className="col-md-12 ml-0 rounded btn btn-primary"
                                 htmltype="submit"
                                 onClick={signIn}
                             >
                                 Войти
                             </button>
                         </Form.Item>
+                        <Link className="mt-3" to="/forgot_password">Забыли пароль?</Link><br/>
                         <label className="text-muted">Вход с помощью</label>
                         <Form.Item wrapperCol={{ offset: 0 }} className="d-xl-flex justify-content-center">
                             <GoogleLogin
@@ -173,9 +177,8 @@ const Sign = () => {
                             />
                         </Form.Item>
                     </Form>
-                    <label>Вы не зарегистрированы?</label>
-                    <Link style={{ color: "#184d9f" }} className="ml-2" to="/register">Зарегистроваться</Link><br />
-                    <Link style={{ color: "#184d9f" }} className="ml-2" to="/forgot_password">Забыли пароль</Link>
+                    <label>Нету аккаунта?</label>
+                    <Link className="ml-2" to="/register">Зарегиструйтесь</Link><br />
                 </div>
             </div>
         </div>

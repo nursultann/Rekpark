@@ -108,40 +108,30 @@ const Navbar = () => {
   );
   return (
     <div>
-      <div className="container-fluid shadow-sm">
+      <div className="container-fluid bg-dark">
         <div>
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
-              <div className="col-4 col-lg-2 text-center">
-                <a className="navbar-brand" href="/" ><img src={logo} style={{ width: "100%" }} /></a>
+              <div className="col-8 col-lg-6">
+                {/* <a className="navbar-brand" href="/" ><img src={logo} style={{ width: "100%" }} /></a> */}
+                <a className="text-white" href="/">Для бизнеса</a>
+                <a className="text-white ml-2" href="/">О проекте</a>
+                <a className="text-white ml-2" href="/">Помощь</a>
+                <a className="text-white ml-2" href="/">О нас</a>
               </div>
-              
-              <div className='col-2 px-0 d-block d-md-none'>
-                        {token !=null ?
-                        <Button
-                          className="rounded-pill text-white"
-                          onClick={() => navigateTo('/products/create')}
-                          style={{ backgroundColor: 'rgb(9, 72, 130)' }}
-                        >
-                          + Подать объявление
-                        </Button>
-                        :
-                        <Button
-                        className="rounded-pill text-white"
-                        onClick={() => navigateTo('/login')}
-                        style={{ backgroundColor: 'rgb(9, 72, 130)' }}
-                      >
-                        + Подать объявление
-                      </Button>
-                        }
-              </div> 
-             
-              <div className="col-6 d-lg-flex justify-content-end align-items-center">
+              {/* <div className='col-2 px-0 d-block d-md-none'>
+                       
+              </div>  */}
+              <div className="col-4 col-lg-6 d-lg-flex justify-content-end align-items-center">
                 {token == null ?
                   <>
                     <div className="d-none d-lg-block">
-                      <Button onClick={() => navigateTo('/register')} className="mr-2 rounded-pill" style={{ backgroundColor: 'rgb(9, 72, 130)', color: "#fff" }}>Регистрация</Button>
-                      <Button onClick={() => navigateTo('/login')} className="mr-2 rounded-pill" style={{ borderColor: 'rgb(9, 72, 130)', color: 'rgb(9, 72, 130)' }}>Войти</Button>
+                      {/* <Button onClick={() => navigateTo('/register')} className="mr-2 rounded-pill" style={{ backgroundColor: 'rgb(9, 72, 130)', color: "#fff" }}>Регистрация</Button>
+                      <Button onClick={() => navigateTo('/login')} className="mr-2 rounded-pill" style={{ borderColor: 'rgb(9, 72, 130)', color: 'rgb(9, 72, 130)' }}>Войти</Button> */}
+                      <a className="text-white" href="/login">Войти</a>
+                      <span className="text-white mx-1">/</span>
+                      <a className="text-white" href="/register">Регистрация</a>
+                      <button onClick={() => navigateTo('/login')} className="btn btn-primary p-1 ml-3">Разместить объявление</button>
                     </div>
                     <div className="d-xs-block d-lg-none text-right">
                       <Button onClick={show}>
