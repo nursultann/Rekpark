@@ -50,7 +50,7 @@ const Article = ({match})=>{
                 </div>
                 <div className="col-md-12 pt-3 mb-5">
                     <div className="row py-1 px-2">
-                        <div className="col-md-8 shadow-sm">
+                        <div className="col-md-8">
                             {article != null ? 
                             <div className="col-md-12">
                                 <img src={article.image} width="100%" className="rounded" />
@@ -77,12 +77,12 @@ const Article = ({match})=>{
                                     articles.map((article)=>
                                     <>
                             <Link className="nav-link" to={"/article/"+article.id}>
-                                <div className="col-md-12 shadow-sm">
+                                <div className="col-md-12">
                                     <div className="row">
-                                        <div className="col-md-4">
+                                        <div className="col-md-5 px-1">
                                             <img src={article.image} width="100%" className="rounded" />
                                         </div>
-                                        <div className="col-md-8">
+                                        <div className="col-md-7 px-0">
                                             <label>{article.title}</label>
                                             <p 
                                                 className="text-muted"

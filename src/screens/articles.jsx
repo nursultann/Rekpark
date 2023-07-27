@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import { fetchArticleCategories, fetchArticles } from "../api/articles";
 import { Link } from "react-router-dom";
+import moment from "moment";
 const Articles = () => {
     const [articles, setArticles] = useState();
     const [categories, setCategories] = useState();
@@ -25,7 +26,7 @@ const Articles = () => {
 
     }, []);
     return (
-        <div>
+        <div className="col-12">
             <Navbar />
             <div className="col-xl-12 mt-3">
                 <nav aria-label="breadcrumb">
@@ -35,7 +36,7 @@ const Articles = () => {
                     </ol>
                 </nav>
             </div>
-            <div className="row px-2">
+            <div className="row px-1">
                 <div className="col-md-12">
                     <div className="col-md-12">
                         <label style={{ fontSize: 24 }} className="pt-1">Статьи и новости</label>
@@ -62,40 +63,40 @@ const Articles = () => {
                         </div>
                         <hr />
                     </div>
-                    {articles != null || articles != undefined || articles?.length > 0 ?
-                        <>
-                            {articles.map((article) =>
+                </div>
+            </div>
+            <div className="row px-3 pb-4">
+                {articles != null || articles != undefined || articles?.length > 0 ?
+                    <>
+                        {articles.map((article) =>
+
+                            <div className="col-6 col-md-3 px-0 pb-3 border rounded-lg shadow-sm">
+                                <div className="col-md-12 p-2">
+                                    <img src={article.image} width="100%" className="rounded" />
+                                </div>
                                 <Link className="nav-link" to={'/article/' + article.id}>
-                                    <div className="col-md-12 shadow-sm px-3 py-3">
-                                        <div className="row">
-                                            <div className="col-md-3">
-                                                <img src={article.image} width="100%" className="rounded" />
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <label style={{ fontSize: 20 }} className="text-dark">{article.title}</label>
+                                            <div className="text-muted" style={{
+                                                display: "-webkit-box",
+                                                webkitLineClamp: "10",
+                                                webkitBoxOrient: "vertical",
+                                                overflow: "hidden"
+                                            }}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: article.text
+                                                }}>
                                             </div>
-                                            <div className="col-md-9">
-                                                <label style={{ fontSize: 20 }} className="text-dark">{article.title}</label>
-                                                <div style={{
-                                                    display: "-webkit-box",
-                                                    webkitLineClamp: "10",
-                                                    webkitBoxOrient: "vertical",
-                                                    overflow: "hidden"
-                                                }}
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: article.text
-                                                    }}>
-                                                </div>
-                                            </div>
+                                            <label className="text-muted mt-4"><i className="far fa-clock"></i> {moment(article.created_at, 'YYYYMMDD, H:mm:ss').fromNow()}</label>
                                         </div>
-                                        <hr />
                                     </div>
                                 </Link>
-                            )}
-                        </>
-                        : <>Загрузка</>
-                    }
-                </div>
-                <div className="col-md-2">
-
-                </div>
+                            </div>
+                        )}
+                    </>
+                    : <>Загрузка</>
+                }
             </div>
         </div>
     );

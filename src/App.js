@@ -78,13 +78,13 @@ const App = ({ match }) => {
               <Route path="/products" component={Ads} />
               <Route path="/products/create" component={CreateAd} />
               <Route path="/register" component={Register} />
-              <Route path="/profile" component={Profile} />
+              <Route path="/myads" component={Profile} />
               <Route path="/favorites" component={Favorites} />
               <Route path="/category/:id" component={Category} />
               <Route path="/about_us" component={About} />
               <Route path="/contacts" component={Contacts} />
               <Route path="/login" component={Login} />
-              <Route path="/settings" component={Settings} />
+              <Route path="/profile" component={Settings} />
               <Route path="/forgot_password" component={ForgotPassword} />
               <Route path="/wallets" component={Wallets} />
               <Route path="/complete" component={Complete} />

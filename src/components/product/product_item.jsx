@@ -25,19 +25,23 @@ const ProductItem = ({ product }) => {
             baseStyle.background = product.features.color;
         }
     }
-
+    if(product.is_vip){
+        baseStyle.border = "1px solid #fecb00";
+    }else if(product.is_urgent){
+        baseStyle.border = "1px solid #ff3b30";
+    }else{
+        baseStyle.border = "1px solid #dee2e6";
+    }
     var time = moment(product.created_at, 'YYYYMMDD, H:mm:ss', 'Asia/Bishkek');
     moment.locale('ru');
 
     var update = time.fromNow();
-
+    // console.log('product',product);
     return (
         <div className="col-md-12" style={{ ...baseStyle, 
-        borderRadius: "10px", 
-        border : "1px solid #dee2e6", 
-        borderColor : product.is_vip ? <>{"#FF0707"}</> : <>{product.is_urgent ? "#ffc107" : "#dee2e6"}</>}}>
+        borderRadius: "10px"}}>
             <div className="row">
-                <div className="col-md-12 p-2" style={{ height: 180 }}>
+                <div className="col-md-12 p-0" style={{ height: 180 }}>
                     {product.media?.length > 0 ?
                         <>
                             {
@@ -87,50 +91,67 @@ const ProductItem = ({ product }) => {
                     }
                     {product.is_vip && product.is_urgent ?
                         <>
-                            <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
-                            <div style={{ position: "absolute", left: "57px", top: "10px", }}><span className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
+                            <div style={{ position: "absolute", left: "0px", top: "-2px", }}><span style={{fontWeight : 400, backgroundColor : "#fecb00"}} className="badge badge-warning text-white p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
+                            <div style={{ position: "absolute", left: "50px", top: "-2px", }}><span style={{fontWeight : 400, backgroundColor : "#ff3b30"}} className="badge badge-danger p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
                         </>
                         : <></>}
                     {product.is_urgent && product.is_vip == false ?
-                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
+                        <div style={{ position: "absolute", left: "0px", top: "-2px", }}><span style={{fontWeight : 400, backgroundColor : "#ff3b30"}}  className="badge badge-danger p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
                         : <></>}
                     {product.is_vip && product.is_urgent == false ?
-                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
+                        <div style={{ position: "absolute", left: "0px", top: "-2px", }}><span style={{fontWeight : 400, backgroundColor : "#fecb00"}} className="badge badge-warning text-white p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
                         : <></>}
                 </div>
             </div>
             <a onClick={() => navigateToProductDetailsPage(product)}>
-                <div className="card-body px-2 px-md-3">
+                <div className="card-body px-2 px-md-1">
                     <div className="row">
-                        <label style={{ fontSize: 16, fontWeight: "450" }} className="card-title px-0 col-md-12 py-0">{product.price + " " + product.currency_symbol}</label>
                         <label
                             style={{
-                                fontSize: 14,
-                                whiteSpace: "nowrap",
+                                display: "-webkit-box",
+                                WebkitLineClamp: "1",
+                                WebkitBoxOrient: "vertical",
                                 overflow: "hidden",
-                                columnWidth: "10px",
-                                color: "rgb(9, 72, 130)",
-                                fontWeight: '420'
                             }}
-                            className="px-0 py-0 col-md-12"
+                            className="card-title px-0 col-md-12 py-0 mb-1"
                         >
                             {product.title}
                         </label>
                         <p
-                            className="card-text text-secondary"
+                            className="card-text my-1 text-secondary"
                             style={{
                                 display: "-webkit-box",
                                 fontSize: 13,
-                                WebkitLineClamp: "1",
+                                WebkitLineClamp: "2",
                                 WebkitBoxOrient: "vertical",
                                 overflow: "hidden"
                             }}
                         >
                             {product.description}
                         </p>
+                        <label style={{
+                                fontSize: 14,
+                                display: "-webkit-box",
+                                fontSize: 13,
+                                WebkitLineClamp: "1",
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
+                                fontWeight: '420'
+                            }}
+                            className="text-secondary px-0 py-0 col-md-12">{product.price + " " + product.currency_symbol}</label>
+                        <label style={{
+                                fontSize: 14,
+                                display: "-webkit-box",
+                                fontSize: 13,
+                                WebkitLineClamp: "1", 
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
+                                fontWeight: '420'
+                            }}
+                            className="text-secondary px-0 py-0 col-md-12">{product.region.name},{product.city.name}</label>
                     </div>
                     <div className="row">
-                        <div className="col-3 mt-3 px-0">
+                        {/* <div className="col-3 mt-3 px-0">
                             {product.user?.media?.length ?
                                 <>
                                     {product.user.business_account != null ?
@@ -152,9 +173,11 @@ const ProductItem = ({ product }) => {
                                 :
                                 <Avatar size={42} icon={<UserOutlined />} />
                             }
-                        </div>
-                        <div className="col-9 mt-3 px-0 text-right" style={{ fontSize: 11, color: "rgb(9, 72, 130)" }}>
-                            <i className="fa-solid fa-calendar-days text-danger"></i> {update}<br />
+                        </div> */}
+                        <div className="col-9 mt-0 px-0 text-secondary" style={{ fontSize: 11}}>
+                            {/* <i className="fa-solid fa-calendar-days"></i>  */}
+                            {}
+                            {update}<br />
                             {/* <img src={views} width="18" height="18" /> {product.views}<br/> */}
                             <label className="text-dark label" style={{ fontSize: 11 }}>
                                 {/* <i className="far fa-clock text-info"></i> {update}<br /> */}

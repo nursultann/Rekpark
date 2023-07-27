@@ -142,7 +142,7 @@ export const fetchSearchProducts = async (params)=>{
             if (!params.hasOwnProperty('limit')) params['limit'] = 20;
         }
 
-        const response = await ApiClient.get('/products', params);
+        const response = await ApiClient.get('/products-list', params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }

@@ -232,16 +232,16 @@ const Ad = ({ match }) => {
                 <div className="col-xl-12 mt-xl-3 mt-3">
                     <nav aria-label="breadcrumb">
                         <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
+                            <li className="breadcrumb-item text-primary"><a href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
+                            <li className="breadcrumb-item text-primary"><a href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
                             <li className="breadcrumb-item active" aria-current="page">{productDetails.title}</li>
                         </ol>
                     </nav>
                     <div className="row px-xl-3 px-2">
-                        <div className="col-xl-8 border rounded py-3">
+                        <div className="col-xl-8 py-3">
                             <div className="row">
                                 <div className="col-xl-12">
-                                    <label style={{ fontSize: "22px", whiteSpace: "normal", color: "rgb(9, 72, 130)" }}>{productDetails.title}</label><br />
+                                    <label className="text-primary" style={{ fontSize: "22px", whiteSpace: "normal" }}>{productDetails.title}</label><br />
                                     {productDetails.media.length > 0 ?
                                         <Carousel
                                             images={productDetails.media.map((item) => ({
@@ -263,16 +263,19 @@ const Ad = ({ match }) => {
                                 <div className="col-xl-12">
                                     <hr className="d-block d-xl-none" />
                                     <div className="row">
-                                        <div className="col-xl-12 mt-3" style={{ fontSize: "14px", whiteSpace: "normal", color: "rgb(9, 72, 130)" }}>
-                                            <div className="row">
-                                                <label className="col-6">Категория:</label><label className="col-6">{productDetails.category != null ? productDetails.category.name : <></>}</label>
-                                                <label className="col-6">Цена:</label><label className="col-6">{productDetails.price + " " + productDetails.currency_symbol}</label>
+                                        <div className="col-xl-12 mt-3" style={{ fontSize: "14px", whiteSpace: "normal" }}>
+                                            <div className="">
+                                                <label className="border rounded-lg text-muted p-2 font-weight-normal">
+                                                    <span className="text-primary">Категория:</span> {productDetails.category != null ? productDetails.category.name : <></>}
+                                                </label><br />
+                                                <label className="border rounded-lg p-2 text-muted font-weight-normal"><span className="text-primary">Цена: </span> {productDetails.price + " " + productDetails.currency_symbol}</label><br />
                                                 {productDetails.custom_attribute_values != null ?
                                                     productDetails.custom_attribute_values.map((item) => {
                                                         return (
                                                             <>
-                                                                <label className="col-6">{item.custom_attribute.title}:</label>
-                                                                <label className="col-6">{item.value}</label>
+                                                                <label className="border rounded-lg p-2 text-muted font-weight-normal"><span className="text-primary">{item.custom_attribute.title}:</span>
+                                                                    {item.value}
+                                                                </label><br />
                                                             </>
                                                         )
                                                     })
@@ -282,9 +285,8 @@ const Ad = ({ match }) => {
                                     </div>
                                 </div>
                             </div>
-                            <hr />
-                            <div className="col-xl-12">
-                                <label style={{ fontSize: "18px", whiteSpace: "normal" }}>Описание</label>
+                            <div className="col-xl-12 p-2 border rounded-lg">
+                                <label className="text-primary" style={{ fontSize: "18px", whiteSpace: "normal" }}>Описание</label>
                                 <p className="label">{productDetails.description}</p>
                             </div>
                         </div>
@@ -293,7 +295,7 @@ const Ad = ({ match }) => {
                                 <div className="row">
                                     <div className="col-xl-12 mt-xl-4">
                                         <hr className="d-block d-xl-none" />
-                                        <button className="btn col-xl-12 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fas fa-phone-volume"></i> Показать номер</button>
+                                        <button className="btn btn-primary col-xl-12 text-white" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i class="fa-solid fa-phone"></i> Показать номер</button>
                                         <div className="collapse multi-collapse" id="multiCollapseExample1">
                                             <div className="card card-body">
                                                 {phones != null && phones.length > 12 ?
@@ -317,9 +319,9 @@ const Ad = ({ match }) => {
                                                 <hr className="d-block d-xl-none" />
 
                                                 {favorite ?
-                                                    <button className="btn col-xl-12 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={removeFav}><i className="far fa-heart"></i>Удалить из избранного</button>
+                                                    <button className="btn btn-primary col-xl-12 text-white" onClick={removeFav}><i class="fa-solid fa-star text-warning"></i> Удалить из избранного</button>
                                                     :
-                                                    <button className="btn btn-outline-secondary col-xl-12" onClick={addFav}><i className="far fa-heart"></i> Добавить в избранное</button>
+                                                    <button className="btn btn-outline-secondary col-xl-12" onClick={addFav}><i class="fa-regular fa-star"></i> Добавить в избранное</button>
                                                 }
 
                                             </div>
@@ -328,13 +330,13 @@ const Ad = ({ match }) => {
                                     }
                                     <div className="col-xl-12 mt-xl-2">
                                         <hr className="d-block d-xl-none" />
-                                        <button className="btn btn-outline-danger col-xl-12" onClick={showModal}><i className="fas fa-exclamation-triangle"></i> Пожаловаться</button>
+                                        <button className="btn btn-danger col-xl-12" onClick={showModal}><i className="fas fa-exclamation-triangle"></i> Пожаловаться</button>
                                     </div>
                                 </div>
                                 <div className="col-xl-12 mt-xl-2">
                                     <hr />
                                     <div className="row">
-                                        <div className="col-2">
+                                        <div className="col-3">
                                             {productDetails.user != null ?
                                                 <>
                                                     {productDetails.user?.media?.length ?
@@ -348,7 +350,8 @@ const Ad = ({ match }) => {
                                                                             height: "50px",
                                                                             backgroundSize: "cover"
                                                                         }}>
-                                                                        <span className='badge badge-danger mt-4 ml-4'>pro</span>
+                                                                        <span className='badge badge-danger'
+                                                                            style={{ marginLeft: "27px", marginTop: "35px" }}>PRO</span>
                                                                     </div>
                                                                 </>
                                                                 :
@@ -362,10 +365,10 @@ const Ad = ({ match }) => {
                                                 : <></>
                                             }
                                         </div>
-                                        <div className="col-10 px-4">
+                                        <div className="col-9">
                                             {productDetails.user != null ?
                                                 <>
-                                                    <Link to={"/userAds/" + productDetails.user_id}>
+                                                    <Link className="text-dark font-weight-bold" to={"/userAds/" + productDetails.user_id}>
                                                         {productDetails.user.business_account != null ?
                                                             <>
                                                                 {productDetails.user.business_account.name}
@@ -376,7 +379,7 @@ const Ad = ({ match }) => {
                                                             </>
                                                         }
                                                     </Link>
-                                                    <p className="border rounded bg-light px-1 text-secondary">{productDetails.user.active_count} объявлений пользователя</p>
+                                                    <p className="border rounded px-1 text-muted">{productDetails.user.active_count} объявлений </p>
                                                 </>
                                                 : <></>
                                             }
@@ -384,8 +387,8 @@ const Ad = ({ match }) => {
                                     </div>
                                     <hr />
                                 </div>
-                                <div className="col-6 col-xl-12 mt-2">
-                                    <label className="text-muted"><b>Поделиться</b></label><br />
+                                <div className="col-6 col-xl-12 px-0 mt-2">
+                                    <label className="text-muted">Поделиться</label><br />
                                     <FacebookShareButton
                                         url={window.location.href}
                                         quote={"フェイスブックはタイトルが付けれるようです"}
@@ -393,7 +396,7 @@ const Ad = ({ match }) => {
                                         description={"aiueo"}
                                         className="Demo__some-network__share-button mr-1"
                                     >
-                                        <FacebookIcon size={30} round />
+                                        <FacebookIcon size={45} round />
                                     </FacebookShareButton>
                                     <WhatsappShareButton
                                         url={window.location.href}
@@ -402,7 +405,7 @@ const Ad = ({ match }) => {
                                         description={"aiueo"}
                                         className="Demo__some-network__share-button mr-1"
                                     >
-                                        <WhatsappIcon size={30} round />
+                                        <WhatsappIcon size={45} round />
                                     </WhatsappShareButton>
                                     <TelegramShareButton
                                         url={window.location.href}
@@ -411,29 +414,36 @@ const Ad = ({ match }) => {
                                         description={"aiueo"}
                                         className="Demo__some-network__share-button"
                                     >
-                                        <TelegramIcon size={30} round />
+                                        <TelegramIcon size={45} round />
                                     </TelegramShareButton>
                                     <hr className="d-none d-xl-block" />
                                 </div>
-                                <div className="col-xl-12 mt-2 mt-xl-2">
-                                    <label className="ml-0 ml-xl-3 text-muted"><i className="far fa-eye"></i> Просмотры: {productDetails.views}<br />
-                                        <i className="fas fa-map-marker-alt"></i> Местоположение: {productDetails.region != null ? productDetails.region.name + "," + productDetails.city.name : ""}<br />
-                                        <i className="far fa-clock"></i> Обновлено: {update}
+                                <div className="col-xl-12 mt-2 px-0">
+                                    <label className="ml-0 text-muted">
+                                        <i class="fa-solid fa-eye"></i> Просмотры: {productDetails.views}<br />
+                                        <i className="far fa-clock"></i> Обновлено: {update}<br />
+                                        <i className="fas fa-map-marker-alt"></i> Местоположение: {productDetails.region != null ? productDetails.region.name + "," + productDetails.city.name : ""}
                                     </label>
                                 </div>
                             </div>
                             <hr />
                             {token ?
-                                <div className="col-xl-12 border rounded p-2">
-                                    <div className="col-xl-12 text-center" style={{ backgroundColor: "rgb(9, 72, 130)" }}>
-                                        <label className="p-2 rounded text-white">Написать сообщение к {productDetails.user.name}</label>
+                                <div className="col-xl-12 p-2">
+                                    <div className="col-xl-12 text-center rounded"
+                                        style={{ border: '2px dashed #000000' }}>
+                                        <label className="p-2 rounded font-weight-normal">Написать сообщение к {productDetails.user.name}</label>
                                     </div>
                                     <div className="col-xl-12 mt-2 px-0">
-                                        <textarea rows="10" className="form-control" value={messag} onChange={(e) => { setMessage(e.target.value) }}></textarea>
-                                        <Button loading={loadings} className="btn btn-outline-primary rounded col-12 mt-2" onClick={postMessage}>Отправить</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
+                                        <textarea rows="10"
+                                            className="form-control"
+                                            value={messag}
+                                            onChange={(e) => { setMessage(e.target.value) }}
+                                            placeholder="Написать что-нибудь"
+                                        ></textarea>
+                                        <Button loading={loadings} className="btn btn-primary rounded col-12 mt-2" onClick={postMessage}>Отправить</Button>
+                                        <Button className="btn btn-warning text-white rounded mt-2 col-12" onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
+                                        <Button className="btn btn-warning text-white rounded mt-2 col-12" onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
+                                        <Button className="btn btn-warning text-white rounded mt-2 col-12" onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
                                     </div>
                                 </div>
                                 : <></>
@@ -449,7 +459,7 @@ const Ad = ({ match }) => {
                         </div>
                     </div>
                     <div className="col-xl-8 border rounded mt-3 py-3 mb-5">
-                        <label style={{ fontSize: 15 }}><b>Комментарии</b></label>
+                        <label className="font-weight-bold" style={{ fontSize: 15 }}>Комментарии</label>
                         {
                             token != null ?
                                 <>

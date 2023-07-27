@@ -1,25 +1,24 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 import Navbar from "../components/navbar";
-import { userDetails } from "../api/user";
+import { deleteChat, getUserChats, postUserMessage, userDetails, userSettings } from "../api/user";
 import { useEffect, useState } from "react";
 import Skeleton from '@mui/material/Skeleton';
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/actions/user_actions";
-import { Avatar, notification } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Avatar, notification, Input, Upload, message, Button, Image } from 'antd';
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
 import ProductItem from "../components/product/user_product_item";
 import { Tabs } from 'antd';
 import { subscriptions } from "../api/product";
 import { setProductPlans } from "../redux/actions/productPlans_actions";
-import moment from "moment/moment";
 import { cancelBussinessAccount } from "../api/bussiness";
 const { TabPane } = Tabs;
+const key = 'updatable';
 const Profile = () => {
     if (!localStorage.getItem('token')) {
-        window.location.href = '/';
+        window.location.href = '/login';
     }
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
@@ -42,7 +41,7 @@ const Profile = () => {
         }
     }
     const UserProducts = async () => {
-        let _products = await api.fetchUserProducts({ 'sub': true, 'sort' : 'active'});
+        let _products = await api.fetchUserProducts({ 'sub': true, 'sort': 'active' });
         let inactive_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'inactive' });
         let moderation_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'moderation' });
         let disabled_products = await api.fetchUserProducts({ 'sub': true });
@@ -74,7 +73,7 @@ const Profile = () => {
             window.location.href = `/profile`;
         }, 1200);
     }
-    document.title = "Личный кабинет";
+    document.title = "Мои объявления";
     useEffect(() => {
         fetchUserDetails();
         UserProducts();
@@ -127,7 +126,7 @@ const Profile = () => {
                             <li className="breadcrumb-item active" aria-current="page">Мои объявления</li>
                         </ol>
                     </nav>
-                    <div className="row px-3 mb-5">
+                    {/* <div className="row px-3 mb-5">
                         <div className="col-xl-4 bg-light rounded py-3">
                             <div className="col-xl-12 text-white alert" style={{ backgroundColor: "rgb(9, 72, 130)" }}>
                                 <div className="row">
@@ -181,97 +180,115 @@ const Profile = () => {
                             <hr />
                         </div>
                         <div className="col-xl-8 mt-3 mt-md-0">
-                            <Tabs className="border rounded px-2 pb-3 py-1" defaultActiveKey="1">
-                                <TabPane tab="Активные" key="2">
-                                    <div className="row">
-                                        {active?.length > 0 ?
-                                            <>
-                                                {active.map((product) => {
-                                                    if (product.status !== 'active') return;
-                                                    return (
+                            
+                        </div>
+                    </div> */}
+                    <div className="col-12 px-0 px-xl-5">
+                        <div className="col-12 px-0 pb-3 px-xl-5">
+                            <div class="nav d-flex justify-content-around nav-pills border rounded-lg py-2" id="v-pills-tab" role="tablist">
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
+                                <a class="nav-link active px-4 rounded-pill" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
+                            </div>
+                            <div class="tab-content bg-light rounded mt-3" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                    <div className="col-12 px-1 py-2">
+                                        <Tabs className="px-2 pb-3 py-1" centered defaultActiveKey="1">
+                                            <TabPane tab="Активные" key="2">
+                                                <div className="row">
+                                                    {active?.length > 0 ?
                                                         <>
-                                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                                <ProductItem product={product} />
-                                                            </div>
+                                                            {active.map((product) => {
+                                                                if (product.status !== 'active') return;
+                                                                return (
+                                                                    <>
+                                                                        <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
+                                                                            <ProductItem product={product} />
+                                                                        </div>
+                                                                    </>
+                                                                );
+                                                            })}
                                                         </>
-                                                    ); 
-                                                })}
-                                            </>
-                                            :
-                                            <div className="col-xl-12 text-center py-5">
-                                                <label>Нет объявлений</label>
-                                            </div>
-                                        }
-                                    </div>
-                                </TabPane>
-                                <TabPane tab="Неактивные" key="3">
-                                    <div className="row">
-                                        {inactive?.length > 0 ?
-                                            <>
-                                                {inactive.map((product) => {
-                                                    if (product.status !== 'inactive') return;
-                                                    return (
+                                                        :
+                                                        <div className="col-xl-12 text-center py-5">
+                                                            <label>Нет объявлений</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </TabPane>
+                                            <TabPane tab="Неактивные" key="3">
+                                                <div className="row">
+                                                    {inactive?.length > 0 ?
                                                         <>
-                                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                                <ProductItem product={product} />
-                                                            </div>
+                                                            {inactive.map((product) => {
+                                                                if (product.status !== 'inactive') return;
+                                                                return (
+                                                                    <>
+                                                                        <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
+                                                                            <ProductItem product={product} />
+                                                                        </div>
+                                                                    </>
+                                                                );
+                                                            })}
                                                         </>
-                                                    );
-                                                })}
-                                            </>
-                                            :
-                                            <div className="col-xl-12 text-center py-5">
-                                                <label>Нет объявлений</label>
-                                            </div>
-                                        }
-                                    </div>
-                                </TabPane>
-                                <TabPane tab="На модерации" key="4">
-                                    <div className="row">
-                                        {moderation?.length > 0 ?
-                                            <>
-                                                {moderation.map((product) => {
-                                                    if (product.status !== 'moderation') return;
+                                                        :
+                                                        <div className="col-xl-12 text-center py-5">
+                                                            <label>Нет объявлений</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </TabPane>
+                                            <TabPane tab="На модерации" key="4">
+                                                <div className="row">
+                                                    {moderation?.length > 0 ?
+                                                        <>
+                                                            {moderation.map((product) => {
+                                                                if (product.status !== 'moderation') return;
 
-                                                    return (
-                                                        <>
-                                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                                <ProductItem product={product} />
-                                                            </div>
+                                                                return (
+                                                                    <>
+                                                                        <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
+                                                                            <ProductItem product={product} />
+                                                                        </div>
+                                                                    </>
+                                                                );
+                                                            })}
                                                         </>
-                                                    );
-                                                })}
-                                            </>
-                                            :
-                                            <div className="col-xl-12 text-center py-5">
-                                                <label>Нет объявлений</label>
-                                            </div>
-                                        }
-                                    </div>
-                                </TabPane>
-                                <TabPane tab="Отключенные" key="5">
-                                    <div className="row">
-                                        {products?.length > 0 ?
-                                            <>
-                                                {products.map((product) => {
-                                                    if (product.status !== 'disabled') return;
-                                                    return (
+                                                        :
+                                                        <div className="col-xl-12 text-center py-5">
+                                                            <label>Нет объявлений</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </TabPane>
+                                            <TabPane tab="Отключенные" key="5">
+                                                <div className="row">
+                                                    {products?.length > 0 ?
                                                         <>
-                                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                                <ProductItem product={product} />
-                                                            </div>
+                                                            {products.map((product) => {
+                                                                if (product.status !== 'disabled') return;
+                                                                return (
+                                                                    <>
+                                                                        <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
+                                                                            <ProductItem product={product} />
+                                                                        </div>
+                                                                    </>
+                                                                );
+                                                            })}
                                                         </>
-                                                    );
-                                                })}
-                                            </>
-                                            :
-                                            <div className="col-xl-12 text-center py-5">
-                                                <label>Нет объявлений</label>
-                                            </div>
-                                        }
+                                                        :
+                                                        <div className="col-xl-12 text-center py-5">
+                                                            <label>Нет объявлений</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </TabPane>
+                                        </Tabs>
                                     </div>
-                                </TabPane>
-                            </Tabs>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

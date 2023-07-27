@@ -37,16 +37,16 @@ const Register = () => {
         const uid = response.profileObj.googleId;
         console.log(email, name, uid)
         loginGoogle(email, name, uid, (data) => {
-            console.log('Success',data);
+            console.log('Success', data);
         }, (data) => {
             console.log('error', data);
         });
-    
+
         const onLoginError = (data) => {
-            
+
             // message.error({content:'Номер или пароль указан неверно!', duration: 2});
         };
-    
+
     }
     const signIn = async () => {
         const check = await checkPhone(countrycode + phoneNumber);
@@ -86,7 +86,7 @@ const Register = () => {
             return;
         final.confirm(otp).then((result) => {
             console.log("OTP", result);
-            message.success('Код потверждения выслан', 10);
+            message.success('Код потверждения подтвержден', 10);
             setUuid(result.user.uid);
             setCurrent(current + 1);
             // result.user.uuid;
@@ -131,11 +131,13 @@ const Register = () => {
 
     const step1 = (
         <div className="col-xl-12 d-flex justify-content-center">
-            <div className="col-xl-5 py-3 shadow bg-white text-center">
-                <label className="py-3" style={{ fontSize: 20 }}>Регистрация профиля</label><br />
+            <div className="col-xl-8 px-5 pt-4 m-xl-5 shadow rounded-lg bg-light text-center">
+                <label className="" style={{ fontSize: 20 }}>Регистрация профиля</label><br />
 
                 <Form
                     name="basic"
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 19 }}
                     initialValues={{ remember: true }}
                     layout="vertical"
                     autoComplete="off"
@@ -150,17 +152,23 @@ const Register = () => {
                             showSearch
                             optionFilterProp="children"
                             onChange={onChange}
+                            className="bg-white rounded border-0"
                             filterOption={(input, option) =>
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
                         >
                             <Option value="996">+996</Option>
                             <Option value="7">+7</Option>
-                        </Select>} onChange={(e) => { setPhoneNumber(e.target.value) }} type="number" placeholder="(XXX) XXX XXX" />
+                        </Select>}
+                            onChange={(e) => { setPhoneNumber(e.target.value) }}
+                            type="number"
+                            placeholder="(XXX) XXX XXX"
+                            className="bg-white rounded border-0"
+                        />
                     </Form.Item>
                     <div className="my-3 ml-xl-5" id="recaptcha-container"></div>
                     <Form.Item wrapperCol={{ offset: 0 }}>
-                        <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className="col-xl-7" htmlType="submit" onClick={signIn}>
+                        <Button className="btn btn-primary col-12" htmlType="submit" onClick={signIn}>
                             Зарегистрироваться
                         </Button>
                     </Form.Item>
@@ -170,9 +178,9 @@ const Register = () => {
     );
 
     const step2 = (
-        <div className="form-group col-xl-6 py-5 px-5 shadow">
+        <div className="form-group col-xl-8 px-5 pt-4 m-xl-5 shadow rounded-lg">
             <center>
-                <label className="py-3" style={{ fontSize: 20 }}>Потверждение номера</label>
+                <label className="py-3" style={{ fontSize: 20 }}>Подтверждение номера</label>
             </center>
             <Form.Item
                 name="otp"
@@ -191,7 +199,7 @@ const Register = () => {
         </div>
     );
     const step3 = (
-        <div className="form-group col-xl-6 shadow">
+        <div className="form-group col-xl-8 px-5 pt-4 m-xl-5 shadow rounded-lg">
             <Form.Item
                 name="password"
                 rules={[{ required: true, message: 'Пожалуйста введите имя пользователя!' }]}
@@ -239,8 +247,9 @@ const Register = () => {
     return (
         <div>
             <Navbar />
-            <div className="col-xl-12" style={{ height: "auto" }}>
-                <div className="col-xl-12 d-flex justify-content-center mt-2 mt-md-3">
+            <div className="row">
+                <div className="col-xl-12 px-0" style={{ height: "auto" }}>
+                    {/* <div className="col-xl-12 d-flex justify-content-center mt-2 mt-md-3">
                     <div className="col-xl-6 bg-white xl-rounded-pill shadow-sm py-2 py-3">
                         <Steps current={current} size="small">
                             {steps.map(item => (
@@ -248,9 +257,10 @@ const Register = () => {
                             ))}
                         </Steps>
                     </div>
-                </div>
-                <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-xl-3" style={{ height: "400px" }}>
-                    {steps[current].content}
+                </div> */}
+                    <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-xl-3" style={{ height: "400px" }}>
+                        {steps[current].content}
+                    </div>
                 </div>
             </div>
         </div>

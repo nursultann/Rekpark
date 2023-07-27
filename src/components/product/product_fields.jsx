@@ -22,6 +22,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
   const { categories } = useSelector((state) => state.category);
   const { currencies, regions } = useSelector((state) => state.main);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory2, setSelectedCategory2] = useState(null);
   const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -237,6 +238,10 @@ const ProductFields = ({ form, loading = false, onSend }) => {
                   key={item.name}
                   label={item.title}
                   name={item.name}
+                  onChange = {(item) => {
+                    const category = categories.find(o => o.id === item);
+                    setSelectedCategory2(category);
+                  }}
                   rules={[{ required: item.is_required, message: item.placeholder }]}
                 >
                   {CustomAttributeField(item)}
@@ -245,7 +250,24 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             </>
             : 
             <>
-            
+            </>
+        }
+        {
+          selectedCategory2 != null ?
+            <>
+              {selectedCategory2.custom_attribute?.map((item) => (
+                <Form.Item
+                  key={item.name}
+                  label={item.title}
+                  name={item.name}
+                  rules={[{ required: item.is_required, message: item.placeholder }]}
+                >
+                  {CustomAttributeField(item)}
+                </Form.Item>
+              ))}
+            </>
+            : 
+            <>
             </>
         }
         <Form.Item

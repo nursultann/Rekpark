@@ -22,9 +22,9 @@ const News = () => {
         <>
             {articles.map((article) =>
                 items.push(
-                    <div className='col-xl-12'>
-                        <div className='border px-2 py-2 rounded shadow'>
-                            <div className='rounded' style={{ backgroundImage: "url(" + article.image + ")", backgroundSize: "cover", height: "150px" }}
+                    <div className='col-xl-12 py-3'>
+                        <div className='border px-2 py-2 rounded shadow-sm'>
+                            <div className='rounded' style={{ backgroundImage: "url(" + article.image + ")", backgroundSize: "cover", height: "200px" }}
                                 onDragStart={handleDragStart}>  
                             </div>
                             <p className='text-center mt-2' style={{ fontSize: "12pt" }}>
@@ -43,8 +43,8 @@ const News = () => {
     return (
         <>
             <div className="col-xl-12 my-3">
-                <h3 className='px-3 pb-0'><Link to="/articles" style={{ fontSize: "19px", color: "#424242" }}>Новости и статьи</Link></h3>
-                <div className='ml-3 mb-3' style={{ width: "160px", height: 3, backgroundColor: "rgb(9, 72, 130)" }}></div>
+                <h3 className='px-3 pb-0'><Link to="/articles" style={{ fontSize: "16px", color: "#424242" }}>Статьи и новости:</Link></h3>
+                {/* <div className='ml-3 mb-3' style={{ width: "160px", height: 3, backgroundColor: "rgb(9, 72, 130)" }}></div> */}
                 {articles != null || articles != undefined || articles?.length > 0 ?
                     <AliceCarousel
                         mouseTracking

@@ -12,8 +12,6 @@ import { Skeleton, Grid } from "@mui/material";
 import ProductItem from "../components/product/product_item";
 import { Button, BackTop, Tooltip } from "antd";
 import { UpOutlined } from "@ant-design/icons";
-import ProductGridList from "../components/product/product_grid_list";
-import Bussiness_Slider from "../components/bussiness/bussiness_slider";
 import News from "../components/news";
 
 const Main = () => {
@@ -24,7 +22,7 @@ const Main = () => {
   const [offset, setOffset] = useState(0);
 
   const fetchInitProducts = async () => {
-    let _products = await api.fetchProducts({ 'with': 'user' });
+    let _products = await api.fetchProducts({ 'with': 'user;region;city' });
     if (_products != null) {
       dispatch(setProducts(_products));
       // setOffset(offset + limit);
@@ -32,7 +30,7 @@ const Main = () => {
     }
   };
   const fetchProducts = async () => {
-    let prods = products.concat(await api.fetchProducts({ offset: offset }));
+    let prods = products.concat(await api.fetchProducts({ offset: offset,'with': 'user;region;city' }));
     if (prods != null) {
       dispatch(setProducts(prods));
       setOffset(offset + limit);
@@ -62,9 +60,8 @@ const Main = () => {
       <News />
       <main role="main" className="container-fluid mb-5">
         <div className="row">
-          <div className="col-lg-12">
-            <h3 className="px-0 px-xl-2" style={{ fontSize: 19, color: "#424242" }}>Новые объявления в Кыргызстане</h3>
-            <div className='ml-0 ml-xl-2 mb-3' style={{ width: "315px", height: 3, backgroundColor: "rgb(9, 72, 130)" }}></div>
+          <div className="col-lg-9">
+            <h3 className="px-0 px-xl-2" style={{ fontSize: 16, color: "#424242" }}>Новые объявления:</h3>
             <div className="row mt-6 mb-6">
               {products === null || products === undefined || products.length === 0 ?
                 <Grid container spacing={2} className="pl-4 pl-lg-3 pt-4 pb-4">
@@ -90,7 +87,7 @@ const Main = () => {
                 : products.map((product) => {
                   return (
                     <div className="col-6 col-sm-6 col-xl-3 mt-3" key={product.id}>
-                      <div className="row px-2 px-xl-3">
+                      <div className="row px-2 px-xl-1">
                         <ProductItem product={product} />
                       </div>
                     </div>
@@ -99,16 +96,19 @@ const Main = () => {
             </div>
             <center className="mt-5">
               <Button
+                type="primary"
                 variant="outlined"
                 onClick={() => {
                   fetchProducts();
                 }}
-                style={{ backgroundColor: "#184d9f", color: "#fff" }}
-                className="rounded-pill"
+                className="rounded-lg"
               >
-                Показать еще
+                Смотреть все
               </Button>
             </center>
+          </div>
+          <div className="col-lg-3">
+
           </div>
           <BackTop>
             <Tooltip title="Наверх">

@@ -25,6 +25,7 @@ const Wallets = () => {
         const user = await userDetails();
         if (user != null) {
             dispatch(setUser(user));
+            console.log('user',user);
         }
     };
     const closeModal = () => {
@@ -116,7 +117,7 @@ const Wallets = () => {
                             <li className="breadcrumb-item active" aria-current="page">Пополнить баланс</li>
                         </ol>
                     </nav>
-                    <div className='row py-3 px-3'>
+                    {/* <div className='row py-3 px-3'>
                         <div className="col-md-4 alert alert-primary py-3">
                             <h5>Пополнение баланса</h5>
                             <label><i className="fa-solid fa-user text-secondary"></i> Имя пользователя: {user.name}</label><br />
@@ -139,9 +140,62 @@ const Wallets = () => {
                                 </div>
                             </div>
                         </div>
+                    </div> */}
+                    <div className="col-12 px-0 px-xl-5">
+                        <div className="col-12 px-0 pb-3 px-xl-5">
+                            <div class="nav d-flex justify-content-around nav-pills border rounded-lg py-2" id="v-pills-tab" role="tablist">
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
+                                <a class="nav-link active px-4 rounded-pill" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
+                            </div>
+                            <div class="tab-content mt-3" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                                    <div className='row py-3 px-3'>
+                                        <div className='col-md-2 '>
+                                            <img className='rounded-circle' src={user.media[0].original_url} width={120} height={120} alt="" />
+                                        </div>
+                                        <div className="col-md-10 py-3">
+                                            <label>Имя пользователя: {user.name}</label><br />
+                                            <label>Пользователь: +{user.phone}</label><br />
+                                            <label>Баланс: {user.balance} сом</label>
+                                        </div>
+
+                                        <div className='col-md-12 mt-3'>
+                                            <h5>Выберите способ оплаты</h5>
+                                            <div className='row'>
+                                                <div className='col-md-5'>
+                                                    <div style={{
+                                                        backgroundImage : 'url(https://t4.ftcdn.net/jpg/02/64/69/07/360_F_264690777_OanWQuVyQJsG6ntNOwSykFaeMlUM1W3G.jpg)',
+                                                        backgroundSize : 'cover',
+                                                        height: 150,
+                                                        borderRadius : 13
+                                                    }}
+                                                    className='col-12 shadow py-5 px-4 d-flex justify-content-center align-items-center'>
+                                                        <h6 className='text-center text-white'><a onClick={() => { openModal('bankcard') }}><i className="fa-solid fa-money-check-dollar"></i> Банковской картой</a></h6>
+                                                    </div>
+                                                </div>
+                                                <div className='col-md-5'>
+                                                    <div
+                                                    style={{
+                                                        backgroundImage : 'url(https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-2422.jpg)',
+                                                        backgroundSize : 'cover',
+                                                        height: 150,
+                                                        borderRadius : 13
+                                                    }}  
+                                                    className='col-12 shadow py-5 px-4 d-flex justify-content-center align-items-center'>
+                                                        <h6 className='text-center text-white'><a onClick={() => { openModal('wallet') }}><i className="fa-solid fa-money-check"></i> Электронные кошельки</a></h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <Footer />
                 <Modal
                     title="Пополнение счета"
                     visible={isModal}

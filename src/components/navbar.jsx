@@ -12,7 +12,6 @@ import {
   StarOutlined,
   MessageOutlined
 } from '@ant-design/icons';
-import logo from "../../src/img/logo.png";
 import eventBus from "../helpers/event_bus";
 import { unreadMessages } from "../api/user";
 import { subscriptions } from "../api/product";
@@ -113,11 +112,11 @@ const Navbar = () => {
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
               <div className="col-8 col-lg-6">
-                {/* <a className="navbar-brand" href="/" ><img src={logo} style={{ width: "100%" }} /></a> */}
-                <a className="text-white" href="/">Для бизнеса</a>
-                <a className="text-white ml-2" href="/">О проекте</a>
+                <a className="text-white" href="/" >Главная</a>
+                <a className="text-white ml-2" href="/">Для бизнеса</a>
+                <a className="text-white ml-2" href="/">Cтатьи</a>
                 <a className="text-white ml-2" href="/">Помощь</a>
-                <a className="text-white ml-2" href="/">О нас</a>
+                <a className="text-white ml-2" href="/about">О нас</a>
               </div>
               {/* <div className='col-2 px-0 d-block d-md-none'>
                        
@@ -131,7 +130,7 @@ const Navbar = () => {
                       <a className="text-white" href="/login">Войти</a>
                       <span className="text-white mx-1">/</span>
                       <a className="text-white" href="/register">Регистрация</a>
-                      <button onClick={() => navigateTo('/login')} className="btn btn-primary p-1 ml-3">Разместить объявление</button>
+                      <button onClick={() => navigateTo('/login')} className="btn btn-primary p-1 ml-3">+ Разместить объявление</button>
                     </div>
                     <div className="d-xs-block d-lg-none text-right">
                       <Button onClick={show}>
@@ -209,20 +208,29 @@ const Navbar = () => {
                       <Space>
                         <span className="avatar-item mr-2">
                           <Badge count={countMessage}>
-                            <a href="/chats"><i className="fa-solid fa-envelope fa-2x text-muted"></i></a>
+                            <a href="/chats"><i style={{fontSize : 20}} class="fa-solid fa-comments text-white"></i></a>
                           </Badge>
                         </span>
-                        <Dropdown.Button className="" overlay={menu}>
+                        {/* <Dropdown.Button className="" overlay={menu}>
                           <Link to="/profile">Личный кабинет</Link>
-                        </Dropdown.Button>
-                        <Button
+                        </Dropdown.Button> */}
+                        <Badge>
+                          <Link to="/profile">
+                            <i style={{fontSize : 20}} class="fa-regular fa-user text-white mr-2"></i>
+                          </Link>
+                        </Badge>
+                        <Badge>
+                        <i style={{fontSize : 20}} onClick={()=>logOut()} class="fa-solid fa-arrow-right-from-bracket text-white"></i>
+                        </Badge>
+                        {/* <Button
                           className="rounded-pill text-white border-0"
                           type=''
                           onClick={() => navigateTo('/products/create')}
                           style={{ backgroundColor: 'rgb(9, 72, 130)' }}
                         >
                           + Подать объявление
-                        </Button>
+                        </Button> */}
+                        <button onClick={() => navigateTo('/products/create')} className="btn btn-primary p-1 ml-3">Разместить объявление</button>
                       </Space>
                     </div>
                   </>

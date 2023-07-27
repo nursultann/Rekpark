@@ -12,14 +12,14 @@ import { UserOutlined } from '@ant-design/icons';
 import { Button } from "@mui/material";
 import { setProducts } from "../redux/actions/product_actions";
 import * as api from "../api";
-import ProductItem from "../components/product/fav_product_item";
+import ProductItem1 from "../components/product/fav_product_item";
 import { Tabs } from 'antd';
 const key = 'updatable';
 const { TabPane } = Tabs;
 const Favorites = () => {
     console.log(localStorage.getItem('token'));
     if (!localStorage.getItem('token')) {
-        window.location.href = '/';
+        window.location.href = '/login';
     }
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
@@ -92,70 +92,49 @@ const Favorites = () => {
                             <li className="breadcrumb-item active" aria-current="page">Избранные</li>
                         </ol>
                     </nav>
-                    <div className="row px-3 mb-5">
-                        <div className="col-xl-4 bg-light rounded py-3">
-                            <div className="col-xl-12 alert text-white" style={{ backgroundColor: "#184d9f" }}>
-                                <div className="row">
-                                    <div className="col-12">
-                                        {user.media?.length ?
-                                            <Avatar size={64} icon={<img src={user.media[0].original_url} />} />
-                                            :
-                                            <Avatar size={42} icon={<UserOutlined />} />
-                                        }
-                                        <label className="ml-3">{user.name}</label>
-                                    </div>
-                                </div>
+                    <div className="col-12 px-0 px-xl-5">
+                        <div className="col-12 px-0 pb-3 px-xl-5">
+                            <div class="nav d-flex justify-content-around nav-pills border rounded-lg py-2" id="v-pills-tab" role="tablist">
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
+                                <a class="nav-link active px-4 rounded-pill" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
                             </div>
-                            <hr />
-                            <div className="row">
-                                <div className="col-xl-12">
-                                    <ul className="list-group">
-                                        <li className="list-group-item">+{user.phone}</li>
-                                        <li className="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
-                                        <li className="list-group-item"><Link to="/profile">Мои объявления</Link></li>
-                                        <li className="list-group-item text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }}><Link to="/favorites">Избранные</Link></li>
-                                        <li className="list-group-item"><Link to="/chats">Сообщения</Link></li>
-                                        <li className="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-xl-8 pb-4">
-                            <Tabs className="border rounded px-2 pb-3 py-1" defaultActiveKey="1">
-                                <TabPane tab="Избранное" key="1">
-                                    <div className="row px-1">
-                                        {
-                                            <>
-                                                {products?.length > 0 ?
-                                                    <>
-                                                        {products.map((product) => {
-                                                            return (
-                                                                <>
-                                                                    <div className="col-xs-12 col-sm-6 col-xl-6 mt-4 mt-xl-2">
-                                                                        <ProductItem product={product} />
-                                                                    </div>
-                                                                </>
-                                                            );
-                                                        })}
-                                                    </>
-                                                    : <>
-                                                        {products?.length > 0 ?
-                                                            <div className="col-xl-12 text-center py-5">
-                                                                <div className="spinner-border text-success" role="status">
-                                                                    <span className="sr-only">Loading...</span>
+                            <div class="tab-content bg-light rounded mt-3" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                                    {
+                                        <>
+                                            {products?.length > 0 ?
+                                                <div className="row px-3">
+                                                    {products.map((product) => {
+                                                        return (
+                                                            <>
+                                                                <div className="col-xs-12 px-2 col-sm-6 col-xl-3 mt-4 mt-xl-2">
+                                                                    <ProductItem1 product={product} />
                                                                 </div>
+                                                            </>
+                                                        );
+                                                    })}
+                                                </div>
+                                                :
+                                                <>
+                                                    {products?.length > 0 ?
+                                                        <div className="col-xl-12 text-center py-5">
+                                                            <div className="spinner-border text-success" role="status">
+                                                                <span className="sr-only">Loading...</span>
                                                             </div>
-                                                            :
-                                                            <div className="col-xl-12 text-center py-5">
-                                                                <label>Нет объявлений в избранном</label>
-                                                            </div>
-                                                        }
-                                                    </>}
-                                            </>
-                                        }
-                                    </div>
-                                </TabPane>
-                            </Tabs>
+                                                        </div>
+                                                        :
+                                                        <div className="col-xl-12 text-center py-5">
+                                                            <label>Нет объявлений в избранном</label>
+                                                        </div>
+                                                    }
+                                                </>}
+                                        </>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

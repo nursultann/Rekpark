@@ -20,7 +20,9 @@ const CreateAd = () => {
     const [loading, setLoading] = useState(false);
     const [location, setLocation] = useState(null);
     const [form] = Form.useForm();
-
+    if (!localStorage.getItem('token')) {
+        window.location.href = '/login';
+    }
     const fetchUserDetails = async () => {
         const userDetails = await api.userDetails();
         if (userDetails != null) {

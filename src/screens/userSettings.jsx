@@ -53,12 +53,12 @@ const Settings = () => {
     const uploadButton = (
         <div>
             {loading ? <LoadingOutlined /> : <PlusOutlined />}
-            <div style={{ marginTop: 8 }}>Upload</div>
+            <div style={{ marginTop: 8 }}>Загрузить аватар</div>
         </div>
     );
 
     if (!localStorage.getItem('token')) {
-        window.location.href = '/';
+        window.location.href = '/login';
     }
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
@@ -162,7 +162,7 @@ const Settings = () => {
                             <li className="breadcrumb-item active" aria-current="page">Настройки пользователя</li>
                         </ol>
                     </nav>
-                    <div className="row px-3 mb-5">
+                    {/* <div className="row px-3 mb-5">
                         <div className="col-md-4 bg-light rounded py-3">
                             <div className="col-md-12 text-white alert" style={{ backgroundColor: "#184d9f" }}>
                                 <div className="row">
@@ -216,6 +216,36 @@ const Settings = () => {
                                     </div>
                                     <div className="col-md-12 mt-4">
                                         <Button type="primary" onClick={saveSettings} style={{ backgroundColor: '#184d9f', color: "#fff" }}>Сохранить изменения</Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> */}
+                    <div className="col-12 px-0 px-xl-5">
+                        <div className="col-12 px-0 pb-3 px-xl-5">
+                            <div class="nav d-flex justify-content-around nav-pills border rounded-lg py-2" id="v-pills-tab" role="tablist">
+                                <a class="nav-link active px-4 rounded-pill" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
+                            </div>
+                            <div class="tab-content bg-light rounded mt-3" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                    <div className="col-12 p-5">
+                                        <Upload
+                                            name="avatar"
+                                            listType="picture-card"
+                                            className="avatar-uploader"
+                                            showUploadList={false}
+                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                            beforeUpload={beforeUpload}
+                                            onChange={handleChange}
+                                        >
+                                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                                        </Upload>
+                                        <Input className="form-control mt-3 border-0" defaultValue={user != null ? user.name : ""} placeholder="Имя" onChange={(e) => { setName(e.target.value) }} />
+                                        <Button className="col-12 rounded mt-3" type="primary" onClick={saveSettings}>Сохранить изменения</Button>
                                     </div>
                                 </div>
                             </div>

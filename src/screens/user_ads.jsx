@@ -19,7 +19,7 @@ const UserAds = ({ match }) => {
         const _products = await fetchUsersProducts({
             'search': 'user_id:' + match.params.id,
             'searchFields': 'user_id:=',
-            'with': 'user'
+            'with': 'user;region;city'
         });
         if (_products != null) {
             setProducts(_products);
@@ -75,7 +75,7 @@ const UserAds = ({ match }) => {
                                     <>
                                         <div className="col-xl-6">
                                             <div className='row'>
-                                                <div className='col-1'>
+                                                <div className='col-2'>
                                                     {product[0].user.business_account != null ?
                                                         <>
                                                             {product[0].user.image == null ?
@@ -101,8 +101,8 @@ const UserAds = ({ match }) => {
                                                         </>
                                                     }
                                                 </div>
-                                                <div className='col-9 ml-1 px-4'>
-                                                    <label className='ml-2 text-muted'>
+                                                <div className='col-10'>
+                                                    <label className='text-muted'>
                                                         <span className='text-dark'>
                                                             {product[0].user.business_account != null ?
                                                                 <>

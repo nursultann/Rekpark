@@ -9,7 +9,7 @@ import { removeFromFavorites } from "../../api/product";
 import moment from 'moment';
 import { UserOutlined } from '@ant-design/icons';
 const key = "updateable";
-const ProductItem = ({ product }) => {
+const ProductItem1 = ({ product }) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const navigateToProductDetailsPage = (product) => {
@@ -22,6 +22,13 @@ const ProductItem = ({ product }) => {
             baseStyle.background = product.features.color;
         }
     }
+    if(product.is_vip){
+        baseStyle.border = "2px solid #ffc107";
+    }else if(product.is_urgent){
+        baseStyle.border = "2px solid #dc3545";
+    }else{
+        baseStyle.border = "1px solid #dee2e6";
+    }
     const openNotification = (type, message, description) => {
         notification[type]({
             message: message,
@@ -31,40 +38,58 @@ const ProductItem = ({ product }) => {
     const removeFav = async () => {
         const addToFav = await removeFromFavorites(product.id);
         message.error({ content: 'Удалено из избранного!', key, duration: 2 });
-        window.location.href = "/favorites";
+        window.location.href = "/profile";
     }
-    var time = moment(product.created_at, 'YYYYMMDD, h:mm:ss a');
+    var time = moment(product.created_at, 'YYYYMMDD, H:mm:ss', 'Asia/Bishkek');
     moment.locale('ru');
-    var update = time.calendar();
-    const image = product.has_media
+    var update = time.fromNow();
+    const image = product.media.length > 0
         ? product.media[0].original_url
         : '';
     return (
-        <div className="col-md-12 shadow-sm" style={{ ...baseStyle }}>
+        <div className="col-md-12 px-1 bg-white" style={{ ...baseStyle, borderRadius : "10px" }}>
             <div className="row">
-                <div className="col-md-12 px-0" style={{ height: 150 }}>
+                <div className="col-md-12 px-3 pt-1" style={{ height: 150 }}>
                     <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{ objectFit: "cover" }} />
-                    {product.is_vip ?
-                        <div style={{ position: "absolute", left: "30px", top: "10px", }}><span className="badge badge-danger p-2">VIP</span></div>
+                    {product.is_vip && product.is_urgent ?
+                        <>
+                            <div style={{ position: "absolute", left: "10px", top: "-2px", }}><span className="badge badge-warning text-white p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
+                            <div style={{ position: "absolute", left: "55px", top: "-2px", }}><span className="badge badge-danger p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
+                        </>
                         : <></>}
+                    {product.is_urgent && product.is_vip == false ?
+                        <div style={{ position: "absolute", left: "10px", top: "-2px", }}><span className="badge badge-danger p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
+                        : <></>}
+                    {product.is_vip && product.is_urgent == false ?
+                        <div style={{ position: "absolute", left: "10px", top: "-2px", }}><span className="badge badge-warning text-white p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
+                        : <></>}
+                    <i class="fa-solid fa-star text-warning" 
+                    style={{ position: "absolute", left: "160px", top: "130px", }}></i>
                 </div>
             </div>
             <div className="card-body">
                 <div className="row">
-                    <label style={{ fontSize: 17 }} className="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
-                    <p style={{ fontSize: 15, fontFamily: "sans-serif", whiteSpace: "nowrap", color: "rgb(9, 72, 130)" }} className="card-title px-0 py-0 col-md-12">{product.title}</p>
+                    <p style={{ 
+                                fontSize: 14, 
+                                display: "-webkit-box",
+                                fontSize: 13,
+                                WebkitLineClamp: "1",
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden", 
+                                color: "rgb(9, 72, 130)" }} 
+                        className="card-title px-0 py-0 col-md-12">
+                            {product.title}
+                    </p>
+                    <label style={{ fontSize: 15 }} className="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
                 </div>
-                <div className="row px-0 d-flex justify-content-between">
-                    <Avatar size="small" icon={<UserOutlined />} />
+                <div className="row">
                     <label className="text-muted label" style={{ fontSize: 11 }}>
                         <i className="far fa-clock"></i> {update}<br />
                         <i className="far fa-eye"></i>  {product.views}
-                    </label>
+                    </label> 
                 </div>
-                <i className="fa-solid fa-heart text-danger"></i> <a style={{ fontSize: 15, color: "rgb(9, 72, 130)" }} className="mt-2" onClick={removeFav}>Удалить из избранного</a>
             </div>
         </div>
     );
 };
-
-export default ProductItem;
+export default ProductItem1;

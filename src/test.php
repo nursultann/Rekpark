@@ -75,7 +75,6 @@ class FilterByAttributesCriteria implements CriteriaInterface
                        return $item;
                    }
                }
-
                foreach($item->customAttributeValues as $attributeValue) {
                    $attributeName = $attributeValue->customAttribute->name;
                    if (in_array($attributeName, array_keys($filters)) && $filters[$attributeName] === $attributeValue->value) {

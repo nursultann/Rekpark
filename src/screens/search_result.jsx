@@ -8,13 +8,16 @@ import { Button, BackTop, Tooltip } from "antd";
 
 const SearchResult = ({ match }) => {
     const [products, setProducts] = useState();
+    const [search, setSearch] = useState();
     const limit = 20;
     const [offset, setOffset] = useState(0);
-
+    const Search = () => {
+        window.location.href = `/search_result/${search}`;
+      }
     const fetchInitProducts = async () => {
-        let _products = await fetchSearchProducts({ 'searchText': match.params.search });
+        let _products = await fetchSearchProducts({ 'searchText': match.params.search,  'with': 'user;region;city'  });
         if (_products != null) {
-            _products = _products.concat(await fetchSearchProducts({ 'with': 'user' }));
+            _products = _products.concat(await fetchSearchProducts({ 'with': 'user;region;city' }));
             setProducts(_products);
             setOffset(offset + limit);
         }
@@ -42,6 +45,17 @@ const SearchResult = ({ match }) => {
                         <li className="breadcrumb-item active" aria-current="page">Поиск</li>
                     </ol>
                 </nav>
+                <div className="row">
+                    <div className="col-lg-4"></div>
+                    <div className="col-lg-6 px-2 px-lg-2 mt-2 mt-lg-0 py-1 py-lg-2" >
+                        <input type={"search"} className='col-lg-12 form-control border-0 bg-light' placeholder="Я ищу..." onChange={(e) => { setSearch(e.target.value) }} style={{ width: "100%" }} />
+                    </div>
+                    <div className='col-lg-2 px-2 px-lg-1 py-2 py-lg-2'>
+                        <button className='btn btn-primary col-12 rounded-pill' type="primary" onClick={Search}>
+                            Найти
+                        </button>
+                    </div>
+                </div>
                 <label className="pt-3" style={{ fontSize: 20, color: "black" }}>Результаты поиска: {match.params.search}</label>
                 <div style={{ 'width': '185px', 'height': '3px', 'backgroundColor': 'rgb(9, 72, 130)' }}></div>
                 <hr className="pb-2" />

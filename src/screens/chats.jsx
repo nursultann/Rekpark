@@ -29,11 +29,7 @@ const Chats = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
     const [chats, setChats] = useState();
-    const limit = 20;
-    const [offset, setOffset] = useState(0);
     const [chat_id, setChatId] = useState();
-    const [chat_name, setChatName] = useState();
-    const [chat_image, setChatImage] = useState();
     const [message, setMessage] = useState();
     const [loadings, setLoadings] = useState();
     const [user_id, setUserId] = useState();
@@ -52,28 +48,69 @@ const Chats = () => {
             openNotificationWithIcon('success', 'Чат успешно удалён!');
         }
     }
-    const UserProducts = async () => {
-        let _products = await api.fetchUserProducts({ 'sub': true });
-        if (_products != null) {
-            dispatch(setProducts(_products));
-            setOffset(offset + limit);
-        }
-    };
     const fetchChats = async () => {
         const userChats = await getUserChats();
         if (userChats != null) {
             setChats(userChats);
-            console.log(userChats);
+            console.log('chats',userChats);
         }
     }
-    const getUserMessage = async (id, userName, partner_id) => {
-        // console.log('id', id , 'userName', userName);
-        history.push("/chat/" + id + "/" + userName);
+    // const setUserMessage = (id, userName, partner_id) => {
+    //     console.log('id', id , 'userName', userName);
+    //     // history.push("/chat/" + id + "/" + userName);
+    //     // setChatId(id);
+    //     // setAdvertisement_id(userName)
+    //     getUserMessages(id,userName);
+    // }
+    // const postMessage = async () => {
+    //     setLoadings(true);
+    //     if (message != "" && message != null) {
+    //         const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message });
+    //         getUserMessage(chat_id);
+    //         setMessage("");
+    //         openNotificationWithIcon('success', 'Сообщение отправлено!');
+    //         setLoadings(false);
+    //     } else {
+    //         openNotificationWithIcon('error', 'Заполните поле для сообщения!');
+    //     }
+    // }
+    moment.locale('ru');
+    useEffect(() => {
+        document.title = "Сообщения";
+        fetchUserDetails();
+        fetchChats();
+    }, []);
+    //single chat 
+    const [messages, setMessages] = useState(null);
+    const [chat_name, setChatName] = useState();
+    const [chat_image, setChatImage] = useState();
+    const [postId, setPostId] = useState();
+    const [product, setProduct] = useState(null);
+    // const [userID,setUserID] = useState();
+    const [advertisement_id,setAdvertisement_id] = useState();
+    // const fetchUserDetails = async () => {
+    //     const user = await userDetails();
+    //     if (user != null) {
+    //         dispatch(setUser(user));
+    //     }
+    // };
+    const getUserMessage = async (userID,ad_id) => {
+        console.log(ad_id);
+        setChatId(userID);
+        setAdvertisement_id(ad_id);
+        // setChatName(userName);
+        const userMessages = await getUserMessages({ 'chat_user_id': userID, 'advertisement_id': ad_id, 'with': 'sender' });
+        if (userMessages != null) {
+            setMessages(userMessages.reverse());
+            setPostId(messages[0].advertisement_id);
+            console.log('messages', messages);
+            productDetails(postId,userID);
+        }
     }
     const postMessage = async () => {
         setLoadings(true);
         if (message != "" && message != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message });
+            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message, 'advertisement_id': advertisement_id });
             getUserMessage(chat_id);
             setMessage("");
             openNotificationWithIcon('success', 'Сообщение отправлено!');
@@ -82,12 +119,15 @@ const Chats = () => {
             openNotificationWithIcon('error', 'Заполните поле для сообщения!');
         }
     }
+    const productDetails = async (id,userid) => {
+                const _product = await api.fetchProduct(id);
+                const readMessage = await readMessages({ 'partner_id': userid });
+                setProduct(_product);
+                console.log("read", readMessage);
+    }
     moment.locale('ru');
     useEffect(() => {
-        document.title = "Личный кабинет";
-        fetchUserDetails();
-        UserProducts();
-        fetchChats();
+        document.title = "Сообщение пользователя";
     }, []);
     return (
         user === null || user === undefined || user === ""
@@ -136,80 +176,147 @@ const Chats = () => {
                             <li className="breadcrumb-item active" aria-current="page">Сообщения</li>
                         </ol>
                     </nav>
-                    <div className="row px-3 mb-5">
-                        <div className="col-xl-4 bg-light rounded py-3">
-                            <div className="col-xl-12 alert text-white" style={{ backgroundColor: "#184d9f" }}>
-                                <div className="row">
-                                    <div className="col-12">
-                                        {user.media?.length ?
-                                            <Avatar size={64} icon={<img src={user.media[0].original_url} />} />
-                                            :
-                                            <Avatar size={42} icon={<UserOutlined />} />
-                                        }
-                                        <label className="ml-3">{user.name}</label>
-                                    </div>
-                                </div>
+                    <div className="col-12 px-0 px-xl-5">
+                        <div className="col-12 px-0 pb-3 px-xl-5">
+                            <div class="nav d-flex justify-content-around nav-pills border rounded-lg py-2" id="v-pills-tab" role="tablist">
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
+                                <a class="nav-link active px-4 rounded-pill" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
+                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
                             </div>
-                            <hr />
-                            <div className="row">
-                                <div className="col-xl-12">
-                                    <ul className="list-group">
-                                        <li className="list-group-item">+{user.phone}</li>
-                                        <li className="list-group-item"><Link to="/wallets">Пополнить</Link>: {user.balance} сом</li>
-                                        <li className="list-group-item"><Link to="/profile">Мои объявления</Link></li>
-                                        <li className="list-group-item"><Link to="/favorites">Избранные</Link></li>
-                                        <li className="list-group-item text-white" style={{ backgroundColor: "#184d9f" }}><Link to="/chats">Сообщения</Link></li>
-                                        <li className="list-group-item"><Link to="/settings">Настройки пользователя</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <hr />
-                        </div>
-                        <div className="col-xl-8 mt-3 mt-md-0">
-                            <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{ backgroundColor: "#184d9f" }}>
-                                <label className="text-white" style={{ fontSize: 15 }}>Сообщения</label>
-                            </div>
-                            <div className="container">
-                                <div className="content-wrapper">
-                                    <div className="row gutters">
+                            <div class="tab-content bg-light rounded mt-3" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                                    <div className="row">
+                                        <div className="col-xl-5 mt-3 mt-md-0">
+                                            <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{ backgroundColor: "#184d9f" }}>
+                                                <label className="text-white" style={{ fontSize: 15 }}>Сообщения</label>
+                                            </div>
+                                            <div className="container">
+                                                <div className="content-wrapper">
+                                                    <div className="row gutters">
 
-                                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
-                                            <div className="card m-0">
-                                                <div className="row no-gutters">
-                                                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                        <div className="users-container">
-                                                            <ul className="users">
-                                                                {chats?.length > 0 ?
-                                                                    <>
-                                                                        {chats.map((chat) =>
-                                                                            <li className="person" data-chat="person1">
-                                                                                <div className="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
-                                                                                    {chat.advertisement.image != null ?
+                                                            <div className="card m-0">
+                                                                <div className="row no-gutters">
+                                                                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                        <div className="users-container">
+                                                                            <ul className="users">
+                                                                                {chats?.length > 0 ?
                                                                                     <>
-                                                                                    <img src={chat.advertisement.image} />
-                                                                                    <span className="status busy"></span>
-                                                                                    </>
-                                                                                    :
-                                                                                    <>
-                                                                                    <Image />
-                                                                                    </>
-                                                                                    }
-                                                                                </div>
-                                                                                <p className="name-time" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
-                                                                                    <span className="name">{chat.advertisement.title}</span>
-                                                                                </p>
-                                                                                <div className="float-right">
-                                                                                    <span><i className="fa-solid fa-trash-can text-primary" onClick={() => removeChat(chat.id)}></i></span>
-                                                                                </div>
-                                                                            </li>
-                                                                        )}
-                                                                    </> :
-                                                                    <div className="col-12 text-center">
-                                                                        Пока нет сообщений
+                                                                                        {chats.map((chat) =>
+                                                                                            <li className="person" data-chat="person1">
+                                                                                                <div className="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
+                                                                                                    {chat.advertisement.image != null ?
+                                                                                                        <>
+                                                                                                            <img src={chat.advertisement.image} />
+                                                                                                            <span className="status busy"></span>
+                                                                                                        </>
+                                                                                                        :
+                                                                                                        <>
+                                                                                                            <Image />
+                                                                                                        </>
+                                                                                                    }
+                                                                                                </div>
+                                                                                                <p className="name-time" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
+                                                                                                    <span className="name">{chat.advertisement.title}</span>
+                                                                                                </p>
+                                                                                                <div className="float-right">
+                                                                                                    <span><i className="fa-solid fa-trash-can text-primary" onClick={() => removeChat(chat.id)}></i></span>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        )}
+                                                                                    </> :
+                                                                                    <div className="col-12 text-center">
+                                                                                        Пока нет сообщений
+                                                                                    </div>
+                                                                                }
+                                                                            </ul>
+                                                                        </div>
                                                                     </div>
-                                                                }
-                                                            </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className="col-xl-7 mt-3 mt-md-0">
+                                            <div className="content-wrapper">
+                                                <div className="row gutters">
+                                                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 px-0">
+                                                        <div className="card m-0">
+                                                            <div className="row no-gutters">
+                                                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                                                    <div className="selected-user">
+                                                                        <span>Сообщения от <span className="name">{chat_name}</span></span>
+                                                                    </div>
+                                                                    <div className="col-12 alert alert-primary">
+                                                                        {product != null ?
+                                                                            <>
+                                                                                <img src={product.image} width="50px" />
+                                                                                <a href={"/products/" + product.id}><span className="ml-2">{product.title}</span></a>
+                                                                            </>
+                                                                            :
+                                                                            <>
+
+                                                                            </>
+                                                                        }
+                                                                    </div>
+                                                                    <div className="chat-container">
+                                                                        <ul className="chat-box chatContainerScroll">
+                                                                            {
+                                                                                messages?.length > 0 ?
+                                                                                    <>
+                                                                                        {
+                                                                                            messages.map((item) =>
+                                                                                                <>
+                                                                                                    {item.sender_id == chat_id ?
+                                                                                                        <li className="chat-left">
+                                                                                                            <div className="chat-avatar">
+                                                                                                                <img src={item.sender.image} alt="Retail Admin" />
+                                                                                                                <div className="chat-name">{item.sender.name}</div>
+                                                                                                            </div>
+                                                                                                            <div className="chat-text">
+                                                                                                                {item.message}
+                                                                                                            </div>
+                                                                                                            {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div> */}
+                                                                                                        </li>
+                                                                                                        :
+                                                                                                        <li className="chat-right">
+                                                                                                            {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}
+                                                                                                                {item.sender.read_at != null ? <span className="fa fa-check-circle"></span> : <></>}
+                                                                                                            </div> */
+                                                                                                            }
+                                                                                                            <div className="chat-text">
+                                                                                                                {item.message}
+                                                                                                            </div>
+                                                                                                            <div className="chat-avatar">
+                                                                                                                <img src={item.sender.image} alt="Retail Admin" />
+                                                                                                                <div className="chat-name">{item.sender.name}</div>
+                                                                                                            </div>
+                                                                                                        </li>
+                                                                                                    }
+                                                                                                </>
+                                                                                            )}
+                                                                                    </> : <></>
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                    {chat_id ?
+                                                                        <div className="form-group text-right py-2 px-3 mt-3 mb-0">
+                                                                            <textarea className="form-control" rows="3" placeholder="Напишите ваше сообщение..."
+                                                                                onChange={(e) => { setMessage(e.target.value) }} value={message}></textarea>
+                                                                            <button style={{ backgroundColor: "#184d9f" }} className="btn btn-primary mt-3 mb-2" type="primary" loading={loadings} onClick={()=>postMessage()}>
+                                                                                Отправить
+                                                                            </button>
+                                                                        </div>
+                                                                        : <></>
+                                                                    }
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -218,61 +325,6 @@ const Chats = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* <Tabs className="border px-2 py-4 rounded" tabPosition="left">
-                                {chats != null || chats != undefined || chats?.length > 0  ?
-                                <>
-                                {chats.map((chat)=>
-                                <TabPane tab={
-                                    <div className="col-10 col-xl-12">
-                                    <div className="row">
-                                        <div className="col-3 col-xl-2">
-                                        <Avatar size={"100%"} icon={<UserOutlined />} />
-                                        </div>
-                                        <div className="col-9 col-xl-10">
-                                        <div className="about">
-                                        <div className="name"><a href="#" onClick={()=>getUserMessage(chat.id)}>{chat.name}</a></div>                                            
-                                        </div>
-                                        </div>
-                                    </div>
-                                    <hr className="d-none d-md-block"/>
-                                    </div>
-                                } key={chat.id}>
-                                    <div className="col-xl-12">
-                                        <div className="row border rounded py-3" style={{height:"300px",overflowY:"scroll"}}>
-                                            {messages != null ?
-                                            <>
-                                            {
-                                            
-
-                                            }
-                                            <div className="col-12 text-left">
-                                                <label className="bg-light px-4 rounded-pill">
-                                                    Text
-                                                </label>
-                                            </div>
-                                            <div className="col-12 text-right">
-                                                <label className="bg-light px-4 rounded-pill">
-                                                    Text
-                                                </label>
-                                            </div>
-                                           </>
-                                           :<></> 
-                                            }   
-                                        </div>
-                                        <div className="row mt-3">
-                                        <div className="col-xl-12">
-                                        <textarea className="form-control"></textarea>
-                                        </div>
-                                        <div className="col-xl-12 mt-3 text-right">
-                                        <Button type="primary">Отправить</Button>
-                                        </div>
-                                        </div>    
-                                    </div>
-                                </TabPane>
-                                )}
-                                </>:<center>Нет Чатов</center>
-                                }
-                            </Tabs> */}
                         </div>
                     </div>
                 </div>

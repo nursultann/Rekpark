@@ -19,7 +19,7 @@
     "@testing-library/user-event": "^12.8.3",
     "2gis-maps": "^3.7.1",
     "antd": "^4.20.5",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "axios-cache-adapter": "^2.7.3",
     "bootstrap": "^4.6.2",
     "brazzers-carousel": "^1.0.1",

@@ -19,14 +19,14 @@ export const fetchCategoryProducts = async (id, params = { limit: 20, offset: 0 
             if (!params.hasOwnProperty('offset')) params['offset'] = 0;
             if (!params.hasOwnProperty('limit')) params['limit'] = 20;
         }
-        params['with'] = 'user';
+        params['with'] = 'user;region;city';
         // params['search'] = `category_id:${id}`;
         // params['searchFields'] = `category_id:=`;
         params['categories'] = `${id}`;
 
         console.log('fetchCategoryProductsParams', params);
 
-        const response = await ApiClient.get(`/products`, params);
+        const response = await ApiClient.get(`/products-list`, params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
         }

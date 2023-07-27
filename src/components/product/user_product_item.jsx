@@ -209,58 +209,84 @@ const ProductItem = ({ product }) => {
     }, [])
     return (
         <>
-            <div className="col-xl-12 border rounded shadow-sm" style={{ ...baseStyle }}>
+            <div className="col-xl-12 bg-white border rounded-lg shadow-sm" style={{ ...baseStyle }}>
                 <div className="row">
                     <div className="col-xl-6">
                         <div className="row">
                             <div className="col-md-12 px-1 py-1" style={{ height: 150 }}>
-                                <AppImage height={150} width="100%" src={image} classNameName="card-img-top rounded" style={{ objectFit: "cover" }} />
+                                <AppImage height={150} width="100%" src={image} classNameName="card-img-top" style={{ objectFit: "cover" }} />
                                 {product.is_vip && product.is_urgent ?
                                     <>
-                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
-                                        <div style={{ position: "absolute", left: "52px", top: "10px", }}><span className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
+                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{fontWeight : 400, backgroundColor : "#ff3b30"}} className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
+                                        <div style={{ position: "absolute", left: "52px", top: "10px", }}><span style={{fontWeight : 400, backgroundColor : "#fecb00"}} className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
                                     </>
                                     : <></>}
                                 {product.is_urgent && product.is_vip == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
+                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{fontWeight : 400, backgroundColor : "#fecb00"}} className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
                                     : <></>}
                                 {product.is_vip && product.is_urgent == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
+                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{fontWeight : 400, backgroundColor : "#ff3b30"}} className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
                                     : <></>}
                             </div>
                         </div>
-                        <div className="card-body">
-                            <div className="row px-1">
-                                <label style={{ fontSize: 15 }} className="card-title px-0 col-md-12 py-0 label">{product.price + " " + product.currency_symbol}</label>
+                        <div className="card-body p-2">
+                            <div className="row">
+                                <label style={{ fontSize: 13 }} className="card-title mb-0 px-0 col-md-12 py-0 label">{product.title}</label>
                                 <span style={{
-                                    fontSize: 13, fontFamily: "sans-serif", whiteSpace: "nowrap", overflow: "hidden",
+                                    fontSize: 14, fontFamily: "", whiteSpace: "nowrap", overflow: "hidden",
                                     columnWidth: "200px"
-                                }} className="card-title label px-0 text-muted py-0">{product.title}</span>
+                                }} className="card-title mb-0 px-0 py-0">{product.price + " " + product.currency_symbol}</span>
                             </div>
                             <div className="row">
-                                <label className="text-muted label ml-1" style={{ fontSize: 11 }}>
+                                <label className="text-muted label" style={{ fontSize: 11 }}>
                                     <i className="far fa-clock"></i> {update}<br />
                                     <i className="far fa-eye"></i>  {product.views}
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div className="col-xl-6 py-2 bg-light">
-                        <Link style={{ fontSize: 12 }} className="ml-1 mt-4" to={"/products/" + product.id + "/edit"}><i className="far fa-edit text-success"></i> Редактировать</Link><br />
-                        <Link style={{ fontSize: 12 }} className="ml-1 mt-4" onClick={removeAd}><i className="fas fa-trash-alt text-danger"></i> Удалить</Link><br />
+                    <div className="col-xl-6 py-2">
+                        {product.status == "active" ? 
+                        <div className="col-12 p-1 mb-2 bg-success rounded text-center text-white">
+                                Активен
+                        </div>
+                        :<></>
+                        }
+                        {product.status == "inactive" ? 
+                        <div className="col-12 p-1 mb-2 bg-danger rounded text-center text-white">
+                                Неактивен
+                        </div>
+                        :<></>
+                        }
+                        {product.status == "moderation" ? 
+                        <div className="col-12 p-1 mb-2 bg-warning rounded text-center text-white">
+                                На модерации
+                        </div>
+                        :<></>
+                        }
+                        {product.status == "disabled" ? 
+                        <div className="col-12 p-1 mb-2 bg-secondary rounded text-center text-white">
+                                Отключен
+                        </div>
+                        :<></>
+                        }
+                        <Link style={{ fontSize: 13 }} className="ml-1 mt-4" to={"/products/" + product.id + "/edit"}><i className="far fa-edit text-white bg-dark p-1 rounded-circle"></i> Редактировать</Link><br />
+                        <Link style={{ fontSize: 13 }} className="ml-1 mt-4" onClick={removeAd}><i className="fas fa-trash-alt text-white bg-dark p-1 rounded-circle"></i> Удалить</Link><br />
                         {product.status == "active" ?
                             <>
-                                <Link style={{ fontSize: 12 }} className="ml-1 mt-4" onClick={deactivateAd}><i className="fas fa-ban text-warning"></i>Деактивировать</Link><br />
+                                <Link style={{ fontSize: 13 }} className="ml-1 mt-4" onClick={deactivateAd}><i className="fas fa-ban text-white bg-dark p-1 rounded-circle"></i> Деактивировать</Link><br />
                             </>
                             :
                             <></>
                         }
                         {product.status == "inactive" ?
                             <>
-                                <Link style={{ fontSize: 12 }} className="ml-1 mt-4" onClick={activateAd}><i className="fas fa-plus-circle text-muted"></i> Активировать</Link>
+                                <Link style={{ fontSize: 13 }} className="ml-1 mt-4" onClick={activateAd}><i className="fas fa-plus-circle text-white bg-dark p-1 rounded-circle"></i> Активировать</Link>
                             </>
                             :
-                            <></>
+                            <>
+
+                            </>
                         }
                         <div className="row mt-3 mt-xl-5">
                             <div className="col-12 pl-4">
@@ -272,9 +298,9 @@ const ProductItem = ({ product }) => {
                                     <>
                                         {
                                             subPlans.map((item) =>
-                                                <>
-                                                    <a className="text-primary" onClick={() => makeSubscriptionModal(product.id, item.name)}><img src={item.image} width="10" height="10" /> {item.title}</a><br />
-                                                </>
+                                                <div className="">
+                                                    <img src={item.image} width="10" height="10" /><a className="text-dark" onClick={() => makeSubscriptionModal(product.id, item.name)}>{item.title}</a>
+                                                </div>
                                             )
                                         }
                                     </>
