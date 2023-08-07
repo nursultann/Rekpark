@@ -128,7 +128,20 @@ const EditAd = ({ match }) => {
                 formData.append('images[]', file);
               });
               for (const [key, value] of Object.entries(form.getFieldsValue())) {
-                formData.append(`${key}`, value);
+                if (key.startsWith('car_attributes')) {
+                  const s = key.split('.');
+                  if (s[1] === 'characteristics') {
+                    const json = JSON.parse(value);
+                    formData.append(`car_attributes[${s[1]}][${characteristicIndex}][characteristic_id]`, json.characteristic_id);
+                    formData.append(`car_attributes[${s[1]}][${characteristicIndex}][id]`, json.key);
+                    formData.append(`car_attributes[${s[1]}][${characteristicIndex}][value]`, json.value);
+                    characteristicIndex++;
+                  } else {
+                    formData.append(`car_attributes[${s[1]}]`, value);
+                  }
+                } else {
+                  formData.append(`${key}`, value);
+                }
               }
               setLoading(true);
               console.log('formdata', formData);

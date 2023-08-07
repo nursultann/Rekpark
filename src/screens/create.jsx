@@ -54,6 +54,7 @@ const CreateAd = () => {
 
     useEffect(() => {
         fetchUserDetails();
+        // form.getFieldValue
     }, []);
 
     const openNotification = (type, message, description) => {
@@ -88,6 +89,8 @@ const CreateAd = () => {
                     onSend={async (model) => {
                         console.log('phones', form.getFieldValue('phones'));
                         console.log('video', form.getFieldValue('video'));
+                        console.log('fields', form.getFieldsValue());
+
                         const valid = await form.validateFields();
                         if (valid) {
                             const formData = new FormData();
@@ -97,14 +100,32 @@ const CreateAd = () => {
                             model.files.forEach(file => {
                                 formData.append('images[]', file);
                             });
+                            let characteristicIndex = 0;
                             for (const [key, value] of Object.entries(form.getFieldsValue())) {
-                                formData.append(`${key}`, value);
+                                if (value == null || value === '' || value === undefined || value === "undefined") {
+                                    continue;
+                                }
+
+                                if (key.startsWith('car_attributes')) {
+                                    const s = key.split('.');
+                                    if (s[1] === 'characteristics') {
+                                        const json = JSON.parse(value);
+                                        formData.append(`car_attributes[${s[1]}][${characteristicIndex}][characteristic_id]`, json.characteristic_id);
+                                        formData.append(`car_attributes[${s[1]}][${characteristicIndex}][id]`, json.key);
+                                        formData.append(`car_attributes[${s[1]}][${characteristicIndex}][value]`, json.value);
+                                        characteristicIndex++;
+                                    } else {
+                                        formData.append(`car_attributes[${s[1]}]`, value);
+                                    }
+                                } else {
+                                    formData.append(`${key}`, value);
+                                }
                             }
                             setLoading(true);
                             const response = await api.createProduct(formData);
+                            console.log(response);
                             if (response != null && response.success) {
                                 openNotification('success', 'Объявление отправлено на модерацию!', null);
-                                console.log();
                                 history.push(`/`);
                             } else {
                                 openNotification('error', 'Не удалось опубликовать!', null);

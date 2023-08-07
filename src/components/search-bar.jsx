@@ -70,7 +70,7 @@ const SearchBar = () => {
         {cat.children.map((item)=>
         <div className='px-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
           <img src={item.image} width={35} alt="" />
-          <a href={"/category/" + item.id} class="py-2">{item.name}</a>
+          <a href={"/category/" + item.id} className="py-2">{item.name}</a>
         </div>
         )  
       }

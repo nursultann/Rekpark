@@ -295,7 +295,7 @@ const Ad = ({ match }) => {
                                 <div className="row">
                                     <div className="col-xl-12 mt-xl-4">
                                         <hr className="d-block d-xl-none" />
-                                        <button className="btn btn-primary col-xl-12 text-white" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i class="fa-solid fa-phone"></i> Показать номер</button>
+                                        <button className="btn btn-primary col-xl-12 text-white" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fa-solid fa-phone"></i> Показать номер</button>
                                         <div className="collapse multi-collapse" id="multiCollapseExample1">
                                             <div className="card card-body">
                                                 {phones != null && phones.length > 12 ?
@@ -319,9 +319,9 @@ const Ad = ({ match }) => {
                                                 <hr className="d-block d-xl-none" />
 
                                                 {favorite ?
-                                                    <button className="btn btn-primary col-xl-12 text-white" onClick={removeFav}><i class="fa-solid fa-star text-warning"></i> Удалить из избранного</button>
+                                                    <button className="btn btn-primary col-xl-12 text-white" onClick={removeFav}><i className="fa-solid fa-star text-warning"></i> Удалить из избранного</button>
                                                     :
-                                                    <button className="btn btn-outline-secondary col-xl-12" onClick={addFav}><i class="fa-regular fa-star"></i> Добавить в избранное</button>
+                                                    <button className="btn btn-outline-secondary col-xl-12" onClick={addFav}><i className="fa-regular fa-star"></i> Добавить в избранное</button>
                                                 }
 
                                             </div>
@@ -420,7 +420,7 @@ const Ad = ({ match }) => {
                                 </div>
                                 <div className="col-xl-12 mt-2 px-0">
                                     <label className="ml-0 text-muted">
-                                        <i class="fa-solid fa-eye"></i> Просмотры: {productDetails.views}<br />
+                                        <i className="fa-solid fa-eye"></i> Просмотры: {productDetails.views}<br />
                                         <i className="far fa-clock"></i> Обновлено: {update}<br />
                                         <i className="fas fa-map-marker-alt"></i> Местоположение: {productDetails.region != null ? productDetails.region.name + "," + productDetails.city.name : ""}
                                     </label>

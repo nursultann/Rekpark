@@ -13,6 +13,7 @@ import {
   Select,
   TreeSelect
 } from "antd";
+import CarAttributes from "../custom_attribute/car_attributes";
 
 const { TreeNode } = TreeSelect;
 const { Option } = Select;
@@ -22,13 +23,21 @@ const ProductFields = ({ form, loading = false, onSend }) => {
   const { categories } = useSelector((state) => state.category);
   const { currencies, regions } = useSelector((state) => state.main);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedCategory2, setSelectedCategory2] = useState(null);
   const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [files, setFiles] = useState([]);
   const [phoneOptions, setPhoneOptions] = useState([]);
   const [map1, setMap1] = useState(<div id="map" style={{ width: "100%", height: "400px" }}></div>);
+
+  const setCategory = async (category) => {
+    setSelectedCategory(category);
+    const response = await api.fetchCategoryDetails(category.id);
+    if (response != null) {
+      setSelectedCategory(response);
+    }
+  }
+
   const fetchCategoriesTree = async () => {
     const categories = await api.fetchCategoriesTree();
     if (categories != null) {
@@ -88,24 +97,29 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     });
     setDistricts(city.districts);
   };
+
   useEffect(() => {
     if (categories == null || !categories.length) {
       fetchCategoriesTree();
     }
     fetchData();
   }, []);
+
   const currencySelect = (
     <Select value={selectedCurrencyId} onChange={(value) => setSelectedCurrencyId(value)} className="select-after">
       {currencies.map((item) => {
-        return (<Option value={item.id}>{item.symbol}</Option>);
+        return (<Option value={item.id}><div key={item.id}>{item.symbol}</div></Option>);
       })}
     </Select>
   );
+
   const categoryTree = (tree) => {
     if (!tree?.length) return;
     return tree.map((item) => (<TreeNode value={item.id} title={item.name}>{categoryTree(item.children)}</TreeNode>));
   };
-  console.log('custom',selectedCategory);
+
+  console.log('custom', selectedCategory);
+
   return (
     <>
       <Form
@@ -142,7 +156,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             placeholder="Выберите категорию"
             onChange={(item) => {
               const category = categories.find(o => o.id === item);
-              setSelectedCategory(category);
+              setCategory(category);
             }}
             allowClear
             value={selectedCategory?.id}
@@ -197,7 +211,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             }}
           >
             {regions.map((item) =>
-              (<Option value={item.id}>{item.name}</Option>)
+              (<Option key={item.id} value={item.id}>{item.name}</Option>)
             )}
           </Select>
         </Form.Item>
@@ -215,7 +229,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             }}
           >
             {cities.map((item) =>
-              (<Option value={item.id}>{item.name}</Option>)
+              (<Option key={item.id} value={item.id}>{item.name}</Option>)
             )}
           </Select>
         </Form.Item>
@@ -226,7 +240,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         >
           <Select placeholder="Выберите район">
             {districts.map((item) =>
-              (<Option value={item.name}>{item.name}</Option>)
+              (<Option value={item.name}><div key={item.id}>{item.name}</div></Option>)
             )}
           </Select>
         </Form.Item>
@@ -240,30 +254,29 @@ const ProductFields = ({ form, loading = false, onSend }) => {
                   name={item.name}
                   onChange = {(item) => {
                     const category = categories.find(o => o.id === item);
-                    setSelectedCategory2(category);
+
                   }}
                   rules={[{ required: item.is_required, message: item.placeholder }]}
                 >
                   {CustomAttributeField(item)}
                 </Form.Item>
               ))}
-            </>
-            : 
-            <>
-            </>
-        }
-        {
-          selectedCategory2 != null ?
-            <>
-              {selectedCategory2.custom_attribute?.map((item) => (
-                <Form.Item
-                  key={item.name}
-                  label={item.title}
-                  name={item.name}
-                  rules={[{ required: item.is_required, message: item.placeholder }]}
-                >
-                  {CustomAttributeField(item)}
-                </Form.Item>
+              {selectedCategory.ca_groups?.map((group) => (
+                  <>
+                    {group.attributes.map((item) => (
+                        <Form.Item
+                            key={item.name}
+                            label={item.title}
+                            name={item.name}
+                            onChange = {(item) => {
+
+                            }}
+                            rules={[{ required: item.is_required, message: item.placeholder }]}
+                        >
+                            {CustomAttributeField(item)}
+                        </Form.Item>
+                    ))}
+                  </>
               ))}
             </>
             : 
@@ -297,6 +310,15 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         >
           <Input allowClear placeholder="Прямая ссылка на видео" />
         </Form.Item>
+        {selectedCategory != null && selectedCategory.kind === 'cars' ? (
+            <>
+              <hr />
+              <h4>Дополнительные параметры</h4>
+              <CarAttributes form={form} />
+              <hr />
+            </>
+          ) : <></>
+        }
         <Form.Item
           label="Местоположение"
         >
@@ -311,8 +333,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
             loading={loading}
             onClick={async () => {
               if (onSend != null) onSend({ files: files, currency_id: selectedCurrencyId });
-            }
-            }>
+            }}>
             Опубликовать
           </Button>
         </center>

@@ -115,7 +115,7 @@ return (
           {cat.children.map((item) =>
             <div className='px-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
               <img src={item.image} width={35} alt="" />
-              <a href={"/category/" + item.id} class="py-2">{item.name}</a>
+              <a href={"/category/" + item.id} className="py-2">{item.name}</a>
             </div>
           )
           }
@@ -146,19 +146,19 @@ return (
                       >
                         <div className='col-12 d-flex hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
                           <img src={category.image} width={35} alt="" style={{maxWidth : 'none'}} />
-                          <a href={"/category/" + category.id} class="py-2">{category.name}</a>
+                          <a href={"/category/" + category.id} className="py-2">{category.name}</a>
                         </div>
                       </Popover>
                       :
                       <div className='col-12 d-flex hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
                         <img src={category.image} width={35} alt="" style={{maxWidth : 'none'}} />
-                        <a href={"/category/" + category.id} class="py-2">{category.name}</a>
+                        <a href={"/category/" + category.id} className="py-2">{category.name}</a>
                       </div>
                   )
                 })}
               </div>
             </>}>
-              <button className='col-12 btn btn-primary rounded-lg px-3 py-1 text-center' type="primary"><i class="fa-solid fa-table-cells-large"></i> Категории</button>
+              <button className='col-12 btn btn-primary rounded-lg px-3 py-1 text-center' type="primary"><i className="fa-solid fa-table-cells-large"></i> Категории</button>
             </Popover>
           </div>
           : <></>
@@ -315,7 +315,7 @@ export default CategorySlider;
 //           {cat.children.map((item) =>
 //             <div className='px-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
 //               <img src={item.image} width={35} alt="" />
-//               <a href={"/category/" + item.id} class="py-2">{item.name}</a>
+//               <a href={"/category/" + item.id} className="py-2">{item.name}</a>
 //             </div>
 //           )
 //           }
@@ -341,19 +341,19 @@ export default CategorySlider;
 //                       >
 //                         <div className='col-12 d-flex px-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
 //                           <img src={category.image} width={35} alt="" />
-//                           <a href={"/category/" + category.id} class="py-2">{category.name}</a>
+//                           <a href={"/category/" + category.id} className="py-2">{category.name}</a>
 //                         </div>
 //                       </Popover>
 //                       :
 //                       <div className='col-12 d-flex px-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
 //                         <img src={category.image} width={35} alt="" />
-//                         <a href={"/category/" + category.id} class="py-2">{category.name}</a>
+//                         <a href={"/category/" + category.id} className="py-2">{category.name}</a>
 //                       </div>
 //                   )
 //                 })}
 //               </div>
 //             </>}>
-//               <button className='col-12 btn btn-primary rounded-lg px-3 py-1 text-center' type="primary"><i class="fa-solid fa-table-cells-large"></i> Категории</button>
+//               <button className='col-12 btn btn-primary rounded-lg px-3 py-1 text-center' type="primary"><i className="fa-solid fa-table-cells-large"></i> Категории</button>
 //             </Popover>
 //           </div>
 //           : <></>
