@@ -13,10 +13,8 @@ import {
   Select,
   TreeSelect
 } from "antd";
-
 const { TreeNode } = TreeSelect;
 const { Option } = Select;
-
 const ProductFields = ({ form, loading = false, onSend }) => {
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
@@ -320,5 +318,4 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     </>
   );
 };
-
 export default ProductFields;
