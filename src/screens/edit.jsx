@@ -127,6 +127,7 @@ const EditAd = ({ match }) => {
               model.files.forEach(file => {
                 formData.append('images[]', file);
               });
+              let characteristicIndex = 0;
               for (const [key, value] of Object.entries(form.getFieldsValue())) {
                 if (key.startsWith('car_attributes')) {
                   const s = key.split('.');
