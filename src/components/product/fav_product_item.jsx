@@ -63,7 +63,7 @@ const ProductItem1 = ({ product }) => {
                     {product.is_vip && product.is_urgent == false ?
                         <div style={{ position: "absolute", left: "10px", top: "-2px", }}><span className="badge badge-warning text-white p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
                         : <></>}
-                    <i class="fa-solid fa-star text-warning" 
+                    <i className="fa-solid fa-star text-warning"
                     style={{ position: "absolute", left: "160px", top: "130px", }}></i>
                 </div>
             </div>

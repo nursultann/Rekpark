@@ -208,7 +208,7 @@ const Navbar = () => {
                       <Space>
                         <span className="avatar-item mr-2">
                           <Badge count={countMessage}>
-                            <a href="/chats"><i style={{fontSize : 20}} class="fa-solid fa-comments text-white"></i></a>
+                            <a href="/chats"><i style={{fontSize : 20}} className="fa-solid fa-comments text-white"></i></a>
                           </Badge>
                         </span>
                         {/* <Dropdown.Button className="" overlay={menu}>
@@ -216,11 +216,11 @@ const Navbar = () => {
                         </Dropdown.Button> */}
                         <Badge>
                           <Link to="/profile">
-                            <i style={{fontSize : 20}} class="fa-regular fa-user text-white mr-2"></i>
+                            <i style={{fontSize : 20}} className="fa-regular fa-user text-white mr-2"></i>
                           </Link>
                         </Badge>
                         <Badge>
-                        <i style={{fontSize : 20}} onClick={()=>logOut()} class="fa-solid fa-arrow-right-from-bracket text-white"></i>
+                        <i style={{fontSize : 20}} onClick={()=>logOut()} className="fa-solid fa-arrow-right-from-bracket text-white"></i>
                         </Badge>
                         {/* <Button
                           className="rounded-pill text-white border-0"
