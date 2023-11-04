@@ -1,4 +1,4 @@
-import { ActionTypes } from "../../constants/action_types";
+import { ActionTypes } from "../../config/constants/action_types";
 
 export const setProducts = (products) => {
     return {
@@ -19,8 +19,8 @@ export const setArticleDetails = (product) => {
         payload: product,
     }
 }
-export const setFavoriteProducts = (products)=>{
-    return{
+export const setFavoriteProducts = (products) => {
+    return {
         type: ActionTypes.SET_FAVORITES,
         payload: products,
     }

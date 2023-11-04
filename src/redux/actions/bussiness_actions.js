@@ -1,4 +1,4 @@
-import { ActionTypes } from "../../constants/action_types";
+import { ActionTypes } from "../../config/constants/action_types";
 
 export const setBussinessPlanDetails = (product) => {
     return {
