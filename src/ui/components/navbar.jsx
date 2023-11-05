@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Drawer, Button, Menu } from 'antd';
 import {
@@ -12,27 +12,28 @@ import {
   MessageOutlined,
   PlusOutlined,
   CommentOutlined,
-  UserOutlined
+  UserOutlined,
+  MenuOutlined
 } from '@ant-design/icons';
 import { useDispatch } from "react-redux";
 import eventBus from "../../helpers/event_bus";
 import { unreadMessages } from "../../api/user";
 import { subscriptions } from "../../api/product";
 import { setProductPlans } from "../../redux/actions/productPlans_actions";
-
-const { SubMenu } = Menu;
+import logo from "../../dist/img/logo.png";
+import { useUserStore } from "../../store/user_store";
 
 const Navbar = () => {
+  const history = useNavigate();
   const [visible, setVisible] = useState(false);
-  const [collapse, setCollapse] = useState(true);
   const [countMessage, setCountMessage] = useState(0);
   const dispatch = useDispatch();
+  const userState = useUserStore();
 
   const fetchUnreadMessages = async () => {
     const fetchChats = await unreadMessages();
     if (fetchChats != null) {
       setCountMessage(fetchChats.count);
-      // console.log(fetchChats.count);
     }
   }
 
@@ -51,16 +52,14 @@ const Navbar = () => {
     setVisible(false);
   }
 
-  const history = useHistory();
 
   const navigateTo = (page) => {
-    history.push(page);
+    history(page);
   };
 
-  const token = localStorage.getItem('token');
   const logOut = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/';
+    userState.signOut();
+    navigateTo('/');
   }
 
   useEffect(() => {
@@ -114,13 +113,46 @@ const Navbar = () => {
   );
 
   return (
-    <div>
-      <div className="bg-zinc-100 border-b row">
-        <div className="col-1-5"></div>
-        <div className="col-lg-9">
+    <div className="">
+
+      <div className="d-lg-none d-md-block">
+        <div className="flex flex-row mt-4 mx-1 align-items-center justify-content-between md:px-[75px] xs:px-[15px]">
+          <div className='flex-none'>
+            <Link
+              className="navbar-brand d-flex align-items-center justify-content-center"
+              to="/">
+              <img src={logo} className='w-[200px] xs:w-[160px]' />
+            </Link>
+          </div>
+
+          <div className="flex flex-row gap-4 xs:gap-2">
+            <Link
+              to="/login"
+              className="flex flex-row justify-content-center align-items-center gap-2  px-3 xs:px-1 xs:gap-0 py-2 rounded-2xl border border-zinc-100"
+            >
+              <PlusOutlined />
+              <div className="d-none d-md-block">
+                Разместить объявление
+              </div>
+            </Link>
+            <div className="w-10 h-10 p-2.5 rounded-[15px] border border-zinc-100 justify-center items-center  inline-flex">
+              <UserOutlined />
+            </div>
+            <div className="w-10 h-10 p-2.5 rounded-[15px] border border-zinc-100 justify-center items-center inline-flex">
+              <MenuOutlined />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-zinc-100 border-b row  d-lg-flex d-md-none d-sm-none d-xs-none xs:hidden">
+        <div className="col-1-5 "></div>
+
+        <div className="col-lg-9 col-md-12 ">
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
               <div className="col-8 col-lg-6">
+
                 <div
                   className="flex flex-row justify-content-start align-items-center gap-4"
                 >
@@ -133,7 +165,7 @@ const Navbar = () => {
               </div>
 
               <div className="col-4 col-lg-6 d-lg-flex justify-content-end align-items-center">
-                {token == null ?
+                {!userState.isAuthenticated ?
                   <>
                     <div className="flex flex-row gap-2">
                       <div className="flex flex-row gap-2 align-items-center">
@@ -143,7 +175,7 @@ const Navbar = () => {
                       </div>
 
                       <Link
-                        href="/login"
+                        to="/login"
                         className="flex flex-row justify-content-center align-items-center gap-2 rounded-pill border-0 px-3 py-2"
                       >
                         <PlusOutlined /> Разместить объявление
@@ -235,7 +267,7 @@ const Navbar = () => {
 
 
                         <Link
-                          href="/login"
+                          to="/login"
                           className="flex flex-row justify-content-center align-items-center gap-2 rounded-pill border-0 px-3 py-2"
                         >
                           <PlusOutlined /> Разместить объявление
@@ -248,7 +280,8 @@ const Navbar = () => {
             </div>
           </header>
         </div>
-        <div className="col-1-5"></div>
+
+        <div className="col-1-5 "></div>
       </div>
     </div>
   );

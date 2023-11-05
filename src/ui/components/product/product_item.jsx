@@ -1,193 +1,179 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import AliceCarousel from 'react-alice-carousel';
+import { useNavigate } from "react-router-dom";
+import { Skeleton } from '@mui/material';
 import moment from 'moment';
+import { useEffectOnce } from "react-use";
+import { maxSymbolEllipsis } from "../../../helpers/functions";
 import { setProductDetails } from "../../../redux/actions/product_actions";
-import { Image } from 'antd';
+import chat_bubble_outline from '../../../dist/icons/chat_bubble.svg';
+import heart_outline from '../../../dist/icons/heart_outline.svg';
 import '../../../dist/css/custom_card.css';
+import ProductImagesSlider from "./images_slider";
 
-const ProductItem = ({ product }) => {
+
+const ProductItem = ({ product, onClick }) => {
     const dispatch = useDispatch();
-    const history = useHistory();
+    const history = useNavigate();
 
     const navigateToProductDetailsPage = (product) => {
         dispatch(setProductDetails(product));
-        history.push(`/products/${product.id}`);
+        history(`/products/${product.id}`);
     };
 
-    const baseStyle = { height: 'auto' };
+    let baseStyle = {
+        height: 'auto',
+    };
+
+    if (product.is_vip) {
+        baseStyle.border = "1px solid #fecb00";
+    } else if (product.is_urgent) {
+        baseStyle.border = "1px solid #ff3b30";
+    } else {
+        baseStyle.border = "";
+    }
 
     if (typeof product.features === 'object' && !Array.isArray(product.features)) {
         if (product.features.color !== null) {
             baseStyle.background = product.features.color;
         }
     }
-    if (product.is_vip) {
-        baseStyle.border = "1px solid #fecb00";
-    } else if (product.is_urgent) {
-        baseStyle.border = "1px solid #ff3b30";
-    } else {
-        baseStyle.border = "1px solid #dee2e6";
-    }
-    var time = moment(product.created_at, 'YYYYMMDD, H:mm:ss', 'Asia/Bishkek');
-    moment.locale('ru');
 
-    var update = time.fromNow();
-    // console.log('product',product);
+    useEffectOnce(() => {
+        moment.locale('ru');
+    });
+
     return (
-        <div className="col-md-12" style={{
-            ...baseStyle,
-            borderRadius: "10px"
-        }}>
-            <div className="row">
-                <div className="col-md-12 p-0" style={{ height: 180 }}>
-                    {product.media?.length > 0 ?
-                        <>
-                            {
-                                <AliceCarousel
-                                    mouseTracking
-                                    items={product.media.map((item) =>
-                                        <div
-                                            style={{
-                                                backgroundImage: "url(" + item.original_url + ")",
-                                                height: 170,
-                                                width: "100%",
-                                                backgroundSize: "cover",
-                                                borderRadius: "10px"
-                                            }}
-                                        />
-                                    )}
-                                    ArrowLeft={false}
-                                    ArrowRight={false}
-                                    disableButtonsControls
-                                    // disableDotsControls
-                                    responsive={{
-                                        0: {
-                                            items: 1,
-                                        },
-                                        1024: {
-                                            items: 1
-                                        },
-                                        1280: {
-                                            items: 1
-                                        },
-                                        1920: {
-                                            items: 1
-                                        }
-                                    }}
-                                />
-                            }
-                        </>
-                        :
-                        <>
-                            <Image
-                                width={"100%"}
-                                height={170}
-                                src="error"
-                                fallback="data:image/png;base64,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"
-                            />
-                        </>
-                    }
-                    {product.is_vip && product.is_urgent ?
-                        <>
-                            <div style={{ position: "absolute", left: "0px", top: "-2px", }}><span style={{ fontWeight: 400, backgroundColor: "#fecb00" }} className="badge badge-warning text-white p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
-                            <div style={{ position: "absolute", left: "50px", top: "-2px", }}><span style={{ fontWeight: 400, backgroundColor: "#ff3b30" }} className="badge badge-danger p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
-                        </>
-                        : <></>}
-                    {product.is_urgent && product.is_vip == false ?
-                        <div style={{ position: "absolute", left: "0px", top: "-2px", }}><span style={{ fontWeight: 400, backgroundColor: "#ff3b30" }} className="badge badge-danger p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
-                        : <></>}
-                    {product.is_vip && product.is_urgent == false ?
-                        <div style={{ position: "absolute", left: "0px", top: "-2px", }}><span style={{ fontWeight: 400, backgroundColor: "#fecb00" }} className="badge badge-warning text-white p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
-                        : <></>}
-                </div>
+        <div
+            className="max-w-md pb-2.5 rounded-[10px] border-2 border-neutral-200 flex-col justify-start items-center hover:border-primary-500 cursor-pointer hover:bg-gray-50 active:bg-gray-100"
+            style={baseStyle}
+            onClick={() => {
+                console.log('product', 'product');
+                navigateToProductDetailsPage(product)
+            }}
+        >
+            <div
+                className="w-[100%] h-[190px] rounded-tl-[10px] rounded-tr-[10px] border-neutral-200"
+                style={{ objectFit: 'cover' }}
+            >
+                {product.media?.length ?
+                    (<ProductImagesSlider
+                        images={[
+                            ...product.media.map((item) => item.original_url),
+                            product.imageOrDefault
+                        ]}
+                        className="h-[190px] w-full object-cover rounded-tl-[10px] rounded-tr-[10px]"
+                    />) :
+                    <img
+                        className="h-full w-full object-cover rounded-tl-[10px] rounded-tr-[10px]"
+                        src={product.imageOrDefault}
+                    />}
             </div>
-            <a onClick={() => navigateToProductDetailsPage(product)}>
-                <div className="card-body px-2 px-md-1">
-                    <div className="row">
-                        <label
-                            style={{
-                                display: "-webkit-box",
-                                WebkitLineClamp: "1",
-                                WebkitBoxOrient: "vertical",
-                                overflow: "hidden",
-                            }}
-                            className="card-title px-0 col-md-12 py-0 mb-1"
-                        >
-                            {product.title}
-                        </label>
-                        <p
-                            className="card-text my-1 text-secondary"
-                            style={{
-                                display: "-webkit-box",
-                                fontSize: 13,
-                                WebkitLineClamp: "2",
-                                WebkitBoxOrient: "vertical",
-                                overflow: "hidden"
-                            }}
-                        >
-                            {product.description}
-                        </p>
-                        <label style={{
-                            fontSize: 14,
-                            display: "-webkit-box",
-                            fontSize: 13,
-                            WebkitLineClamp: "1",
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                            fontWeight: '420'
-                        }}
-                            className="text-secondary px-0 py-0 col-md-12">{product.price + " " + product.currency_symbol}</label>
-                        <label style={{
-                            fontSize: 14,
-                            display: "-webkit-box",
-                            fontSize: 13,
-                            WebkitLineClamp: "1",
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                            fontWeight: '420'
-                        }}
-                            className="text-secondary px-0 py-0 col-md-12">{product.region.name},{product.city.name}</label>
+
+
+            <div className="self-stretch flex-col justify-start items-start px-3 mt-2">
+
+                <div className="flex-col justify-center items-start gap-[4.85px] flex">
+                    <div className="text-neutral-800 text-sm font-medium">{product.title}</div>
+
+                    <div
+                        className="h-[40px] text-neutral-400 text-xs font-medium font-['SF UI Display']"
+
+                    >
+                        {maxSymbolEllipsis(product.description, 70)}
                     </div>
-                    <div className="row">
-                        {/* <div className="col-3 mt-3 px-0">
-                            {product.user?.media?.length ?
-                                <>
-                                    {product.user.business_account != null ?
-                                        <>
-                                            <div className='rounded-circle p-0'
-                                                style={{
-                                                    backgroundImage: 'url(' + product.user.business_account.logoImage + ')',
-                                                    width: "30px",
-                                                    height: "30px",
-                                                    backgroundSize: "cover"
-                                                }}>
-                                                <span className='badge badge-danger mt-4 ml-3' style={{ fontSize: 10 }}>pro</span>
-                                            </div>
-                                        </>
-                                        :
-                                        <img className="mb-3" src={product.user.media[0].original_url} style={{ borderRadius: "50%", width: "30px", height: "30px" }} />
-                                    }
-                                </>
-                                :
-                                <Avatar size={42} icon={<UserOutlined />} />
-                            }
-                        </div> */}
-                        <div className="col-9 mt-0 px-0 text-secondary" style={{ fontSize: 11 }}>
-                            {/* <i className="fa-solid fa-calendar-days"></i>  */}
-                            { }
-                            {update}<br />
-                            {/* <img src={views} width="18" height="18" /> {product.views}<br/> */}
-                            <label className="text-dark label" style={{ fontSize: 11 }}>
-                                {/* <i className="far fa-clock text-info"></i> {update}<br /> */}
-                                <i className="far fa-eye"></i>  {product.views}
-                            </label>
+                    <div className="text-neutral-800 text-xs font-medium font-['SF UI Display'] mt-1">
+                        {product.priceWithCurrency}
+                    </div>
+                </div>
+
+                <div className="justify-start items-center gap-[5px] inline-flex mt-3">
+                    <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">
+                        Регион: {product.city?.name}
+                    </div>
+                </div>
+
+                <div className="flex flex-row items-center justify-content-between">
+                    <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">
+                        {moment(product.created_at).fromNow()}
+                    </div>
+
+                    <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                        <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                            <img src={chat_bubble_outline} alt="chat_bubble_outline" />
+                            <div className="text-neutral-800 text-[12px] font-normal font-['SF UI Display']">10</div>
+                        </div>
+                        <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                            <img src={heart_outline} alt="heart_outline" />
+                            <div className="text-neutral-800 text-[12px] font-normal font-['SF UI Display']">50</div>
                         </div>
                     </div>
+
                 </div>
-            </a>
+            </div>
         </div>
-    );
+    )
 };
+
+export function ProductItemSkeleton() {
+    return (
+        <div className="max-w-md pb-2.5 rounded-[10px] border-2 border-neutral-200 flex-col justify-start items-center hover:border-primary-500 cursor-pointer hover:bg-gray-50 active:bg-gray-100">
+            <div
+                className="w-[100%] h-[190px] rounded-tl-[10px] rounded-tr-[10px] border-neutral-200"
+                style={{ objectFit: 'cover' }}
+            >
+                <Skeleton variant="rectangular" width="100%" height="100%" />
+            </div>
+
+            <div className="self-stretch flex-col justify-start items-start px-3 mt-2">
+
+                <div className="flex-col justify-center items-start gap-[4.85px] flex">
+                    <div className="text-neutral-800 text-sm font-medium">
+                        <Skeleton variant="text" width="100px" />
+                    </div>
+
+                    <div
+                        className="h-[40px] text-neutral-400 text-xs font-medium font-['SF UI Display']"
+                    >
+                        <Skeleton variant="text" width={'auto'} />
+                    </div>
+                    <div className="text-neutral-800 text-xs font-medium font-['SF UI Display'] mt-1">
+                        <Skeleton variant="text" />
+                    </div>
+                </div>
+
+                <div className="justify-start items-center gap-[5px] inline-flex mt-3">
+                    <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">
+                        <Skeleton variant="text" width="50px" />
+                    </div>
+                </div>
+
+                <div className="flex flex-row items-center justify-content-between">
+                    <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">
+                        <Skeleton variant="text" width="50px" />
+                    </div>
+
+                    <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                        <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                            <img src={chat_bubble_outline} alt="chat_bubble_outline" />
+                            <div className="text-neutral-800 text-[15px] font-normal font-['SF UI Display']">
+                                <Skeleton variant="text" width="10px" />
+                            </div>
+                        </div>
+                        <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                            <img src={heart_outline} alt="heart_outline" />
+                            <div className="text-neutral-800 text-[15px] font-normal font-['SF UI Display']">
+                                <Skeleton variant="text" width={'10px'} />
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    )
+}
+
 export default ProductItem;

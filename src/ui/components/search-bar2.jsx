@@ -7,7 +7,7 @@ import { setCategories } from "../redux/actions/category_actions";
 import { useSelector, useDispatch } from "react-redux";
 import * as api from "../api";
 import { TreeSelect, Select } from 'antd';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BussinessProfiles from './bussiness_profiles';
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
@@ -15,7 +15,7 @@ const { TreeNode } = TreeSelect;
 const SearchBar = () => {
   const [value, setValue] = useState(undefined);
   const [search, setSearch] = useState();
-  const history = useHistory();
+  const history = useNavigate();
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
 
@@ -24,7 +24,7 @@ const SearchBar = () => {
   }
 
   const Search = () => {
-    history.push(`search_result/${search}`);
+    history(`search_result/${search}`);
   }
   const [options, setOptions] = useState([]);
   const fetchCategoriesTree = async () => {
@@ -34,24 +34,24 @@ const SearchBar = () => {
       {
         categories.map((category) => {
           category.children != null && category.children.length > 0 ?
-          <>
-            {setOptions(prevState => [...prevState, {
-              label: category.name,
-              value: category.id
-              // options: [
-              //   category.children.map((item)=>
-              //   {
-              //     label: item.name,
-              //     value: item.id,
-              //   },
-              //   )
-              // ],
-            }])
-            }
-          </>
-          :
-          <>
-          </>
+            <>
+              {setOptions(prevState => [...prevState, {
+                label: category.name,
+                value: category.id
+                // options: [
+                //   category.children.map((item)=>
+                //   {
+                //     label: item.name,
+                //     value: item.id,
+                //   },
+                //   )
+                // ],
+              }])
+              }
+            </>
+            :
+            <>
+            </>
           console.log('options', options);
         }
         )
@@ -60,7 +60,7 @@ const SearchBar = () => {
   };
   const handleChange = (value) => {
     console.log(`selected ${value}`);
-    window.location.href = "/category/"+value;
+    window.location.href = "/category/" + value;
   };
   useEffect(() => {
     fetchCategoriesTree();
@@ -72,7 +72,7 @@ const SearchBar = () => {
           <div class="col-md-12">
             <div className='row pt-2 px-0 px-lg-0 d-md-flex align-items-center'>
               <div className='col-lg-12 mt-3 mt-xl-0 px-3 pt-2'>
-                <div className='col-12 mr-2 alert alert-info' style={{borderRadius : "10px"}}>
+                <div className='col-12 mr-2 alert alert-info' style={{ borderRadius: "10px" }}>
                   <div className='row'>
                     <div className='col-lg-2 px-2 px-lg-1 py-2 py-lg-2'>
                       {options != null ?

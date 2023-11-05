@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, InputNumber, Modal, Select } from 'antd';
 import { setCurrencies, setRegions } from "../../../redux/actions/main_actions";
 import * as api from "../../../api";
@@ -9,7 +9,7 @@ import { CustomAttributeField } from "../custom_components";
 const { Option } = Select;
 
 const SubCategories = ({ category, onSubmit }) => {
-  const history = useHistory();
+  const history = useNavigate();
   const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -92,7 +92,7 @@ const SubCategories = ({ category, onSubmit }) => {
   };
 
   const newCategory = (category) => {
-    history.push(category);
+    history(category);
     fetchRegions();
     document.location.reload();
   }

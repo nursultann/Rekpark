@@ -1,7 +1,7 @@
 import React from "react";
 import moment from 'moment';
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { notification, message } from "antd";
 
 import { removeFromFavorites } from "../../../api/product";
@@ -13,11 +13,11 @@ const key = "updateable";
 
 const ProductItem1 = ({ product }) => {
     const dispatch = useDispatch();
-    const history = useHistory();
+    const history = useNavigate();
 
     const navigateToProductDetailsPage = (product) => {
         dispatch(setProductDetails(product));
-        history.push(`products/${product.id}`);
+        history(`products/${product.id}`);
     };
 
     const baseStyle = { height: 'auto' };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import moment from 'moment';
 import { notification, Modal, message } from "antd";
 import {
@@ -31,10 +31,10 @@ const ProductItem = ({ product }) => {
     const [period, setPeriod] = useState(0);
     const [itemPrice, setItemPrice] = useState(0);
     const [color, setColor] = useState(null);
-    const history = useHistory();
+    const history = useNavigate();
     const navigateToProductDetailsPage = (product) => {
         dispatch(setProductDetails(product));
-        history.push(`products/${product.id}`);
+        history(`products/${product.id}`);
     };
     const subscriptionPlans = async () => {
         const plans = productsPlans;

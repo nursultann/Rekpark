@@ -1,43 +1,43 @@
 import React from 'react';
 import top from './dist/img/topbanner.png';
-import { Route, BrowserRouter, Switch } from 'react-router-dom';
-import Ad from './ui/screens/ad';
-import Main from './ui/screens/main';
-import Login from './ui/screens/login';
-import CreateAd from './ui/screens/create';
-import EditAd from './ui/screens/edit';
-import Profile from './ui/screens/profile';
-import Ads from './ui/screens/ads';
-import Category from './ui/screens/category';
-import About from './ui/screens/about';
-import Articles from './ui/screens/articles';
-import Article from './ui/screens/article';
-import Contacts from './ui/screens/contacts';
-import Register from './ui/screens/register';
-import Settings from './ui/screens/userSettings';
-import Wallets from './ui/screens/wallets';
-import ForgotPassword from './ui/screens/forgot_password';
-import SearchResult from './ui/screens/search_result';
-import Favorites from './ui/screens/favorites';
+import { Route, BrowserRouter, Router, Routes } from 'react-router-dom';
+import ProductDetailPage from './ui/pages/products/detail';
+import HomePage from './ui/pages/home';
+import SignInPage from './ui/pages/auth/sign_in';
+import CreateProductPage from './ui/pages/products/create';
+import EditProductPage from './ui/pages/products/edit';
+import ProfilePage from './ui/pages/profile';
+import ProductListPage from './ui/pages/products';
+import ProductsFilterPage from './ui/pages/products/filter';
+import AboutPage from './ui/pages/about';
+import ArticleListPage from './ui/pages/articles';
+import ArticleDetailPage from './ui/pages/articles/detail';
+import ContactsPage from './ui/pages/profile/contacts';
+import SignUpPage from './ui/pages/auth/sign_up';
+import SettingsPage from './ui/pages/profile/settings';
+import WalletsPage from './ui/pages/profile/wallets';
+import ForgotPasswordPage from './ui/pages/auth/forgot_password';
+import ProductsSearchResultPage from './ui/pages/products/search_result';
+import ProductFavoritesPage from './ui/pages/products/favorites';
 import Footer from './ui/components/footer';
-import UserAds from './ui/screens/user_ads';
-import Chats from './ui/screens/chats';
-import BusinessProfile from './ui/screens/bussiness_profile_page';
-import BusinessSettings from './ui/screens/bussiness_settings';
-import { userDetails } from './api';
-import CategoryArticles from './ui/screens/category_article';
-import SetBusinessProfile from './ui/screens/bussiness';
-import BusinessPlan from './ui/screens/bussiness_plan';
-import ChatUser from './ui/screens/chat';
-import Gallery from './ui/screens/photo_gallery';
-import Agreement from './ui/screens/agreement';
-import Complete from './ui/screens/complete';
+import UserProductListPage from './ui/pages/products/user_products';
+import ChatListPage from './ui/pages/chat';
+import ChatWithUserPage from './ui/pages/chat/detail';
+import BusinessProfile from './ui/pages/business/bussiness_profile_page';
+import BusinessSettings from './ui/pages/business/bussiness_settings';
+import SetBusinessProfile from './ui/pages/business/bussiness';
+import BusinessPlan from './ui/pages/business/bussiness_plan';
+import Gallery from './ui/pages/business/photo_gallery';
+import ArticlesFilterPage from './ui/pages/articles/filter';
+import AgreementPage from './ui/pages/profile/agreement';
+import CompletePage from './ui/pages/profile/complete';
 import { QueryClient, QueryClientProvider } from "react-query";
 import SocketHelper from './helpers/pusher';
 import eventBus from './helpers/event_bus';
 import { message as antMessage } from 'antd';
 import Navbar from './ui/components/navbar';
 import { useEffectOnce } from "react-use";
+import { userDetails } from './api';
 
 import 'moment/locale/ru';
 import 'antd/dist/antd.css';
@@ -45,7 +45,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-gallery-carousel/dist/index.css';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import "./dist/css/app.css";
-import './dist/css/blog.css';
+import Layout from './layouts/layout';
 
 const queryClient = new QueryClient();
 
@@ -79,83 +79,46 @@ const App = ({ match }) => {
     <QueryClientProvider client={queryClient}>
 
       <BrowserRouter>
-        <Switch>
-          <RouteLayout exact path="/" component={Main} />
-          <RouteLayout path="/products/create" component={CreateAd} />
-          <RouteLayout path="/products/:id/edit" component={EditAd} />
-          <RouteLayout path="/products/:id" component={Ad} />
-          <RouteLayout path="/products" component={Ads} />
-          <RouteLayout path="/products/create" component={CreateAd} />
-          <RouteLayout path="/register" component={Register} />
-          <RouteLayout path="/myads" component={Profile} />
-          <RouteLayout path="/favorites" component={Favorites} />
-          <RouteLayout path="/category/:id" component={Category} />
-          <RouteLayout path="/about_us" component={About} />
-          <RouteLayout path="/contacts" component={Contacts} />
-          <RouteLayout path="/login" component={Login} />
-          <RouteLayout path="/profile" component={Settings} />
-          <RouteLayout path="/forgot_password" component={ForgotPassword} />
-          <RouteLayout path="/wallets" component={Wallets} />
-          <RouteLayout path="/complete" component={Complete} />
-          <RouteLayout path="/articles" component={Articles} />
-          <RouteLayout path="/articles_categories/:id" component={CategoryArticles} />
-          <RouteLayout path="/article/:id" component={Article} />
-          <RouteLayout path="/search_result/:search" component={SearchResult} />
-          <RouteLayout path={"/userAds/:id"} component={UserAds} />
-          <RouteLayout path={"/chats"} component={Chats} />
-          <RouteLayout path={"/chat/:id?/:ad_id"} component={ChatUser} />
-          <RouteLayout path="/business-profile" component={BusinessProfile} />
-          <RouteLayout path="/business-settings" component={BusinessSettings} />
-          <RouteLayout path="/business" component={SetBusinessProfile} />
-          <RouteLayout path={"/business-plan/:id/:period"} component={BusinessPlan} />
-          <RouteLayout path={"/about"} component={About} />
-          <RouteLayout path={"/gallery"} component={Gallery} />
-          <RouteLayout path={'/agreement'} component={Agreement} />
-        </Switch>
+        <Routes>
+          <Route element={<Layout requireAuth={false} />}>
+            <Route exact path="/" element={<HomePage />} />
+            <Route path="/login" element={<SignInPage />} />
+            <Route path="/register" element={<SignUpPage />} />
+            <Route path="/forgot_password" element={<ForgotPasswordPage />} />
+            <Route path="/products" element={<ProductListPage />} />
+            <Route path="/products/:id" element={<ProductDetailPage />} />
+            <Route path="/category/:id" element={<ProductsFilterPage />} />
+            <Route path="/search_result/:search" element={<ProductsSearchResultPage />} />
+            <Route path="/about_us" element={<AboutPage />} />
+            <Route path="/contacts" element={<ContactsPage />} />
+            <Route path="/articles" element={<ArticleListPage />} />
+            <Route path="/article/:id" element={<ArticleDetailPage />} />
+            <Route path="/articles_categories/:id" element={<ArticlesFilterPage />} />
+            <Route path={"/userAds/:id"} element={<UserProductListPage />} />
+            <Route path={"/about"} element={<AboutPage />} />
+            <Route path={'/agreement'} element={<AgreementPage />} />
+          </Route>
+
+          <Route element={<Layout requireAuth={true} />}>
+            <Route path="/products/create" element={<CreateProductPage />} />
+            <Route path="/products/:id/edit" element={<EditProductPage />} />
+            <Route path="/myads" element={<ProfilePage />} />
+            <Route path="/favorites" element={<ProductFavoritesPage />} />
+            <Route path="/profile" element={<SettingsPage />} />
+            <Route path="/wallets" element={<WalletsPage />} />
+            <Route path="/complete" element={<CompletePage />} />
+            <Route path={"/chats"} element={<ChatListPage />} />
+            <Route path={"/chat/:id?/:ad_id"} element={<ChatWithUserPage />} />
+            <Route path="/business-profile" element={<BusinessProfile />} />
+            <Route path="/business-settings" element={<BusinessSettings />} />
+            <Route path="/business" element={<SetBusinessProfile />} />
+            <Route path={"/business-plan/:id/:period"} element={<BusinessPlan />} />
+            <Route path={"/gallery"} element={<Gallery />} />
+          </Route>
+        </Routes>
       </BrowserRouter>
 
-    </QueryClientProvider>
-  );
-}
-
-function RouteLayout({ path, component, ...rest }) {
-  return (
-    <Route
-      path={path}
-      {...rest}
-      render={({ location }) => {
-        return (
-          <>
-            <div className="col-lg-12 bg-success px-0 text-white text-center">
-              <img src={top} width="100%" />
-            </div>
-            <Navbar />
-            <div className="container-fluid p-0">
-
-              <div className="row">
-                <div className="col-1-5 px-0 d-none d-lg-block text-white text-center"
-                  style={{
-                    backgroundSize: "auto", backgroundPosition: "right top",
-                    backgroundImage: "",
-                    backgroundRepeat: "no-repeat"
-                  }}>
-                </div>
-                <div className="col-lg-9 px-0" style={{ backgroundColor: '#fff', minHeight: "500px" }}>
-                  {React.createElement(component, { location })}
-                </div>
-                <div className="col-1-5 px-0 d-none d-lg-block text-white text-center"
-                  style={{
-                    backgroundSize: "auto",
-                    backgroundImage: "",
-                    backgroundRepeat: "no-repeat"
-                  }}>
-                </div>
-              </div>
-            </div>
-          </>
-        )
-      }}
-    />
+    </QueryClientProvider >
   );
 }
 
