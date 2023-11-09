@@ -41,7 +41,8 @@ import 'moment/locale/ru';
 import Gallery from './screens/photo_gallery';
 import Agreement from './screens/agreement';
 import Complete from './screens/complete';
-import {QueryClient, QueryClientProvider} from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
+import SearchFilter from './screens/search_filter';
 
 const queryClient = new QueryClient();
 
@@ -57,9 +58,8 @@ const App = ({ match }) => {
   }, []);
 
   return (
-    // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
-    // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
         <div className="container-fluid">
           <div className="row">
             <div className="col-1-5 px-0 d-none d-lg-block text-white text-center"
@@ -73,41 +73,39 @@ const App = ({ match }) => {
               <div className="col-lg-12 bg-success px-0 text-white text-center">
                 <img src={top} width="100%" />
               </div>
-              <BrowserRouter>
-                <Switch>
-                  <Route exact path="/" component={Main} />
-                  <Route path="/products/create" component={CreateAd} />
-                  <Route path="/products/:id/edit" component={EditAd} />
-                  <Route path="/products/:id" component={Ad} />
-                  <Route path="/products" component={Ads} />
-                  <Route path="/products/create" component={CreateAd} />
-                  <Route path="/register" component={Register} />
-                  <Route path="/myads" component={Profile} />
-                  <Route path="/favorites" component={Favorites} />
-                  <Route path="/category/:id" component={Category} />
-                  <Route path="/about_us" component={About} />
-                  <Route path="/contacts" component={Contacts} />
-                  <Route path="/login" component={Login} />
-                  <Route path="/profile" component={Settings} />
-                  <Route path="/forgot_password" component={ForgotPassword} />
-                  <Route path="/wallets" component={Wallets} />
-                  <Route path="/complete" component={Complete} />
-                  <Route path="/articles" component={Articles} />
-                  <Route path="/articles_categories/:id" component={CategoryArticles} />
-                  <Route path="/article/:id" component={Article} />
-                  <Route path="/search_result/:search" component={SearchResult} />
-                  <Route path={"/userAds/:id"} component={UserAds} />
-                  <Route path={"/chats"} component={Chats} />
-                  <Route path={"/chat/:id?/:ad_id"} component={ChatUser} />
-                  <Route path="/business-profile" component={BusinessProfile} />
-                  <Route path="/business-settings" component={BusinessSettings} />
-                  <Route path="/business" component={SetBusinessProfile} />
-                  <Route path={"/business-plan/:id/:period"} component={BusinessPlan} />
-                  <Route path={"/about"} component={About} />
-                  <Route path={"/gallery"} component={Gallery} />
-                  <Route path={'/agreement'} component={Agreement} />
-                </Switch>
-              </BrowserRouter>
+              <Switch>
+                <Route exact path="/" component={Main} />
+                <Route path="/products/create" component={CreateAd} />
+                <Route path="/products/:id/edit" component={EditAd} />
+                <Route path="/products/:id" component={Ad} />
+                <Route path="/search-filter/:form" component={SearchFilter} />
+                <Route path="/products/create" component={CreateAd} />
+                <Route path="/register" component={Register} />
+                <Route path="/myads" component={Profile} />
+                <Route path="/favorites" component={Favorites} />
+                <Route path="/category/:id" component={Category} />
+                <Route path="/about_us" component={About} />
+                <Route path="/contacts" component={Contacts} />
+                <Route path="/login" component={Login} />
+                <Route path="/profile" component={Settings} />
+                <Route path="/forgot_password" component={ForgotPassword} />
+                <Route path="/wallets" component={Wallets} />
+                <Route path="/complete" component={Complete} />
+                <Route path="/articles" component={Articles} />
+                <Route path="/articles_categories/:id" component={CategoryArticles} />
+                <Route path="/article/:id" component={Article} />
+                <Route path="/search_result/:search" component={SearchResult} />
+                <Route path={"/userAds/:id"} component={UserAds} />
+                <Route path={"/chats"} component={Chats} />
+                <Route path={"/chat/:id?/:ad_id"} component={ChatUser} />
+                <Route path="/business-profile" component={BusinessProfile} />
+                <Route path="/business-settings" component={BusinessSettings} />
+                <Route path="/business" component={SetBusinessProfile} />
+                <Route path={"/business-plan/:id/:period"} component={BusinessPlan} />
+                <Route path={"/about"} component={About} />
+                <Route path={"/gallery"} component={Gallery} />
+                <Route path={'/agreement'} component={Agreement} />
+              </Switch>
             </div>
             <div className="col-1-5 px-0 d-none d-lg-block text-white text-center"
               style={{
@@ -116,10 +114,13 @@ const App = ({ match }) => {
                 backgroundRepeat: "no-repeat"
               }}>
             </div>
-            <Footer />
+            <div className='col-12 px-0'>
+              <Footer />
+            </div>
           </div>
         </div>
-      </QueryClientProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 export default App;

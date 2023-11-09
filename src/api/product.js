@@ -13,6 +13,20 @@ export const fetchProducts = async (params = { limit: 20, offset: 0 }) => {
     }
     return null;
 };
+export const fetchPopularProducts = async (params = { limit: 10, offset: 0 }) => {
+    try {
+        if (!params.hasOwnProperty('offset')) params['offset'] = 0;
+        if (!params.hasOwnProperty('limit')) params['limit'] = 10;
+
+        const response = await ApiClient.get('/products-list', params);
+        if (response.status == 200 || response.status == 201) {
+            return response.data.data;
+        }
+    } catch (error) {
+        console.log('fetching products error ', error);
+    }
+    return null;
+};
 export const fetchProduct = async (id, params) => {
     try {
         const response = await ApiClient.get(`/products/${id}`, params);

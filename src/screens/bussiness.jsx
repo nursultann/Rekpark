@@ -38,13 +38,9 @@ const SetBusinessProfile = () => {
         <>
             <Navbar />
             <div className="col-xl-12 py-3">
-                <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                        <li className="breadcrumb-item active" aria-current="page"><a className="text-primary" href="/profile">Профиль</a></li>
-                        <li className="breadcrumb-item active" aria-current="page">Бизнес профиль</li>
-                    </ol>
-                </nav>
+                <div className="col-12 text-center">
+                    <a className="text-primary" href="/">Главная страница</a> | <a className="text-primary" href="/profile">Профиль</a> | <a className="breadcrumb-item active">Бизнес профиль</a>
+                </div>
                 <div className="row pt-2">
                     <div className="col-xl-12">
                         <h5>Выберите бизнес план</h5>
@@ -60,9 +56,9 @@ const SetBusinessProfile = () => {
                                     </div>
                                     <div className="col-12 col-md-8 text-center">
                                         <button className="btn btn-outline-primary" onClick={() => { setTime(1) }}>1 месяц</button>
-                                        <button className="btn btn-outline-primary" onClick={() => { setTime(3) }}>3 месяца</button>
-                                        <button className="btn btn-outline-primary" onClick={() => { setTime(6) }}>6 месяцев</button>
-                                        <button className="btn btn-outline-primary" onClick={() => { setTime(12) }}>1 год</button>
+                                        <button className="btn btn-outline-primary ml-2" onClick={() => { setTime(3) }}>3 месяца</button>
+                                        <button className="btn btn-outline-primary ml-2" onClick={() => { setTime(6) }}>6 месяцев</button>
+                                        <button className="btn btn-outline-primary ml-2" onClick={() => { setTime(12) }}>1 год</button>
                                     </div>
                                     <div className="col-2">
 

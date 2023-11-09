@@ -159,7 +159,7 @@ const ChatUser = () => {
                             <hr />
                         </div>
                         <div className="col-xl-8 mt-3 mt-md-0">
-                            <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{ backgroundColor: "#184d9f" }}>
+                            <div className="col-xl-12 px-2 py-2 bg-info rounded mb-3">
                                 <label className="text-white" style={{ fontSize: 15 }}>Сообщения</label>
                             </div>
                             <div className="container">

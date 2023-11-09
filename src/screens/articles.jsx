@@ -45,13 +45,12 @@ const Articles = () => {
                     <div className="col-xl-12">
                         <label style={{ fontSize: 18 }} className="text-dark bg-light py-2 px-2 rounded-pill" >Категории</label>
                         <div className="container-fluid">
-                            <div className="col-xl-12 py-2 rounded nav-scroller mb-2"
-                                style={{ backgroundColor: "#184d9f" }}>
+                            <div className="col-xl-12 py-2 rounded nav-scroller mb-2">
                                 <nav className="nav d-flex justify-content-between">
                                     {categories != null || categories != undefined || categories?.length > 0 ?
                                         <>
                                             {categories.map((category) =>
-                                                <Link className="text-white p-2" to={"/articles_categories/" + category.id}>{category.name}</Link>
+                                                <Link className="p-2" to={"/articles_categories/" + category.id}>{category.name}</Link>
                                             )
                                             }
                                         </>
@@ -70,28 +69,30 @@ const Articles = () => {
                     <>
                         {articles.map((article) =>
 
-                            <div className="col-6 col-md-3 px-0 pb-3 border rounded-lg shadow-sm">
-                                <div className="col-md-12 p-2">
-                                    <img src={article.image} width="100%" className="rounded" />
-                                </div>
-                                <Link className="nav-link" to={'/article/' + article.id}>
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <label style={{ fontSize: 20 }} className="text-dark">{article.title}</label>
-                                            <div className="text-muted" style={{
-                                                display: "-webkit-box",
-                                                webkitLineClamp: "10",
-                                                webkitBoxOrient: "vertical",
-                                                overflow: "hidden"
-                                            }}
-                                                dangerouslySetInnerHTML={{
-                                                    __html: article.text
-                                                }}>
-                                            </div>
-                                            <label className="text-muted mt-4"><i className="far fa-clock"></i> {moment(article.created_at, 'YYYYMMDD, H:mm:ss').fromNow()}</label>
-                                        </div>
+                            <div className="col-6 col-md-3 px-2 pb-3">
+                                <div className="col-12 border rounded-lg shadow-sm">
+                                    <div className="col-md-12 p-2">
+                                        <img src={article.image} width="100%" className="rounded" />
                                     </div>
-                                </Link>
+                                    <Link className="nav-link" to={'/article/' + article.id}>
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <label style={{ fontSize: 20 }} className="text-dark">{article.title}</label>
+                                                <div className="text-muted" style={{
+                                                    display: "-webkit-box",
+                                                    webkitLineClamp: "10",
+                                                    webkitBoxOrient: "vertical",
+                                                    overflow: "hidden"
+                                                }}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: article.text
+                                                    }}>
+                                                </div>
+                                                <label className="text-muted mt-4"><i className="far fa-clock"></i> {moment(article.created_at, 'YYYYMMDD, H:mm:ss').fromNow()}</label>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
                         )}
                     </>

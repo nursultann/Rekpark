@@ -46,14 +46,14 @@ const CustomAttributeField = (item) => {
             className="w-100 mb-2"
           />
       );
-      case 'RELATION':
-        return (
-          <Select placeholder={item.title} id={item.name} labelId={`${item.name}_label`} className="w-100 mb-2">
-            {Object.keys(values).map((itm) => {
-              return (<Option value={values[itm]}>{values[itm]}</Option>);
-            })}
-          </Select>
-        );
+      // case 'RELATION':
+      //   return (
+      //     <Select placeholder={item.title} id={item.name} labelId={`${item.name}_label`} className="w-100 mb-2">
+      //       {Object.keys(values).map((itm) => {
+      //         return (<Option value={values[itm]}>{values[itm]}</Option>);
+      //       })}
+      //     </Select>
+      //   );
     case 'ARRAY':
       return (<></>);
     default:

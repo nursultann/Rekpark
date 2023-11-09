@@ -33,7 +33,6 @@ export const fetchCategoryProducts = async (id, params = { limit: 20, offset: 0 
     } catch (error) {
         console.log('fetching products error ', error);
     }
-
     return null;
 };
 
@@ -47,6 +46,5 @@ export const fetchCategoryDetails = async (id) => {
     } catch (error) {
         console.log('FetchCategoryErr', error);
     }
-
     return null;
 };

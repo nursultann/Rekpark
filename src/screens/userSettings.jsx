@@ -16,6 +16,7 @@ import { Tabs } from 'antd';
 import { Input } from 'antd';
 import { Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 const { TabPane } = Tabs;
 const key = 'updatable';
@@ -32,7 +33,7 @@ const Settings = () => {
     const [name, setName] = useState();
     const [userid, setUserid] = useState();
     const [file, setFile] = useState();
-
+    const history = useHistory();
     function beforeUpload(file) {
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
@@ -58,7 +59,7 @@ const Settings = () => {
     );
 
     if (!localStorage.getItem('token')) {
-        window.location.href = '/login';
+        history.push('/login');
     }
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
@@ -156,11 +157,8 @@ const Settings = () => {
             <div>
                 <Navbar />
                 <div className="col-md-12 mt-3">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li className="breadcrumb-item active" aria-current="page">Настройки пользователя</li>
-                        </ol>
+                <nav className="col-12 text-center pb-3">
+                    <a href="/"> Главная страница</a> | <a className="text-primary" href="/profile">Профиль</a>
                     </nav>
                     {/* <div className="row px-3 mb-5">
                         <div className="col-md-4 bg-light rounded py-3">
@@ -223,12 +221,12 @@ const Settings = () => {
                     </div> */}
                     <div className="col-12 px-0 px-xl-5">
                         <div className="col-12 px-0 pb-3 px-xl-5">
-                            <div className="nav d-flex justify-content-around nav-pills border rounded-lg py-2" id="v-pills-tab" role="tablist">
-                                <a className="nav-link active px-4 rounded-pill" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
-                                <a className="nav-link px-4 rounded-pill" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
-                                <a className="nav-link px-4 rounded-pill" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
-                                <a className="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
-                                <a className="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
+                        <div className="d-lg-flex justify-content-around text-center nav-pills rounded-lg py-2" id="v-pills-tab" role="tablist">
+                                <a className="nav-link active px-4 border mb-2 rounded-lg" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
+                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
+                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
+                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
+                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
                             </div>
                             <div className="tab-content bg-light rounded mt-3" id="v-pills-tabContent">
                                 <div className="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
@@ -251,6 +249,11 @@ const Settings = () => {
                             </div>
                         </div>
                     </div>
+                    {
+                    <div className="col-12 text-center px-0 px-xl-5 my-4">
+                        <a className="btn btn-primary text-white" href="/business">Перейти на Бизнес PRO аккаунт</a>
+                    </div>
+                    }
                 </div>
             </div>
     );

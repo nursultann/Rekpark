@@ -21,7 +21,7 @@ function SampleArrow(props) {
 const CategorySlider = () => {
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
-  const [options,setOptions] = useState([]);
+  const [options, setOptions] = useState([]);
   const fetchCategoriesTree = async () => {
     const categories = await api.fetchCategoriesTree();
     if (categories != null) {
@@ -33,7 +33,7 @@ const CategorySlider = () => {
     arrows: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 9,
+    slidesToShow: 8,
     slidesToScroll: 1,
     nextArrow: <SampleArrow />,
     prevArrow: <SampleArrow />,
@@ -47,67 +47,94 @@ const CategorySlider = () => {
           infinite: true,
           dots: true
         }
-      },  
+      },
       {
-          breakpoint: 1024,
-          settings: {
-            slidesToShow: 8,
-            slidesToScroll: 3,
-            infinite: true,
-            dots: true
-          }
-        },
-        {
-          breakpoint: 768,
-          settings: {
-            slidesToShow: 6,
-            slidesToScroll: 3,
-            infinite: true,
-            dots: true
-          }
-        },
-        {
-          breakpoint: 600,
-          settings: {
-            slidesToShow: 4,
-            slidesToScroll: 2,
-            initialSlide: 2,
-            arrows: true,
-            speed: 500,
-          }
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            arrows: true,
-            speed: 500,
-          }
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 8,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
         }
-      ]
-};
-const popoverContent = (children) => (
-<div style={{ width: '250px' }}>
-  {children.map((item) => (<><a className="cat-link" style={{color: "rgb(9, 72, 130)"}} href={`/category/${item.id}`}>{item.name}</a><br /></>))}
-</div>
-);
-console.log('categories', categories);
-const content = (category) => {
-const image = category.image != null
-  ? category.image
-  : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
-return (
-  <div id={category.id}>
-    <Link className="cat-link" to={`category/${category.id}`} style={{ color: "black" }}>
-      <div className="col-md-12 px-0 mb-3 d-flex flex-column align-items-center justify-content-center">
-        <img className="mx-3 mb-1 rounded-circle" src={image} width="50px" height="50px" />
-        <p style={{ fontSize: 13, width: 100 }}>{category.name}</p>
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 6,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 2,
+          initialSlide: 2,
+          arrows: true,
+          speed: 500,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          arrows: true,
+          speed: 500,
+        }
+      }
+    ]
+  };
+  const popoverContent = (children) => (
+    <div style={{ width: '250px' }}>
+      {children.map((item) => (<><a className="cat-link" style={{ color: "rgb(9, 72, 130)" }} href={`/category/${item.id}`}>{item.name}</a><br /></>))}
+    </div>
+  );
+  console.log('categories', categories);
+  const content = (category) => {
+    const image = category.image != null
+      ? category.image
+      : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
+    return (
+      <div className="mx-2" id={category.id} style={{maxWidth : 100}}>
+        <Link className="cat-link" to={`category/${category.id}`} style={{ color: "black" }}>
+          <div className="col-md-12 p-0 mb-3">
+            {/* <div className="bg-secondary w-100 p-0">
+            <img className="float-left" src={image} width="15px" height="15px" />
+            <span className="text-left" style={{ fontSize: 11}}>{category.name}</span>
+            </div> */}
+            <div className="bg-light d-flex">
+              <img style={{ maxWidth: 'none' }} src={image} width={'30px'} />
+              <label style={{ fontSize: 11 }}>{category.name}</label>
+            </div>
+          </div>
+        </Link>
       </div>
-    </Link>
-  </div>
-);
-};
+    );
+  };
+  const contentMobile = (category) => {
+    const image = category.image != null
+      ? category.image
+      : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
+    return (
+      <div className="mx-1" id={category.id}>
+        <Link className="cat-link" to={`category/${category.id}`} style={{ color: "black" }}>
+          <div className="col-md-12 bg-light p-0 mb-3 rounded p-0 border">
+            <div className="row">
+              <div className="col-3">
+                <img style={{ maxWidth: 'none' }} src={image} width={'30px'} />
+              </div>
+              <div className="col-9 pl-0">
+              <label style={{ fontSize: 11 }}>{category.name}</label>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+    );
+  };
   const contentMake = (cat) => {
     if (cat.children.length > 0) {
       return (
@@ -129,9 +156,9 @@ return (
   }, []);
   return (
     <div className="row">
-      <div className="col-2">
+      <div className="col-2 pr-0 pr-lg-1 col-lg-3">
         {options != null ?
-          <div className='d-none d-md-block'>
+          <div className='px-0 py-0 px-lg-3 py-lg-3'>
             <Popover content={<>
               <div className='col-12 px-0 rounded-lg'>
                 {categories.map((category) => {
@@ -142,29 +169,30 @@ return (
                         className=""
                         content={() => contentMake(category)}
                         placement="right"
-                        style={{maxWidth : 'none'}}
+                        style={{ maxWidth: 'none' }}
                       >
                         <div className='col-12 d-flex hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
-                          <img src={category.image} width={35} alt="" style={{maxWidth : 'none'}} />
+                          <img src={category.image} width={35} alt="" style={{ maxWidth: 'none' }} />
                           <a href={"/category/" + category.id} className="py-2">{category.name}</a>
                         </div>
                       </Popover>
                       :
                       <div className='col-12 d-flex hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
-                        <img src={category.image} width={35} alt="" style={{maxWidth : 'none'}} />
+                        <img src={category.image} width={35} alt="" style={{ maxWidth: 'none' }} />
                         <a href={"/category/" + category.id} className="py-2">{category.name}</a>
                       </div>
                   )
                 })}
               </div>
             </>}>
-              <button className='col-12 btn btn-primary rounded-lg px-3 py-1 text-center' type="primary"><i className="fa-solid fa-table-cells-large"></i> Категории</button>
+              <button className='col-12 d-none d-lg-block btn btn-primary rounded-lg py-1 text-center' type="primary"><i className="fa-solid fa-table-cells-large"></i> Все категории</button>
+              <button className='d-block d-lg-none btn btn-primary' style={{borderRadius : 12}}><i className="fa-solid fa-table-cells-large"></i></button>
             </Popover>
           </div>
           : <></>
         }
       </div>
-      <div className="col-12 col-lg-10">
+      <div className="col-12 col-lg-9 d-none d-lg-block">
         {/* <a className="btn py-1 btn-warning text-white" href="">Детям</a> */}
         <Slider {...sliderSettings}>
           {categories.map((category) => {
@@ -174,18 +202,38 @@ return (
                   className=""
                   content={() => popoverContent(category.children)}
                   placement="bottom"
-                  style={{maxWidth : 'none'}}
+                  style={{ maxWidth: 'none' }}
                 >
                   {content(category)}
                 </Popover>
-                : <div className="" style={{maxWidth : 'none'}}>
+                : <div className="" style={{ maxWidth: '100px' }}>
                   {content(category)}
                 </div>
             )
           })}
         </Slider>
       </div>
-
+      <div className="col-10 d-block d-lg-none pl-0">
+          <div className='d-flex justify-content-between' style={{ width: '100%', overflowX: 'scroll' }}>
+          {categories.map((category) => {
+            return (
+              category.children != null && category.children.length > 0 ?
+                <div className="col-5 p-0">
+                  <Popover
+                    key={category.id}
+                    content={() => popoverContent(category.children)}
+                    placement="bottom"
+                  >
+                    {contentMobile(category)}
+                  </Popover>
+                </div>
+                : <div className="col-5 p-0" key={category.id}>
+                  {contentMobile(category)}
+                </div>
+            )
+          })}
+        </div>
+      </div>
 
     </div>
   );

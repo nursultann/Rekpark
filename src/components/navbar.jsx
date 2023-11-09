@@ -17,7 +17,7 @@ import { unreadMessages } from "../api/user";
 import { subscriptions } from "../api/product";
 import { useDispatch } from "react-redux";
 import { setProductPlans } from "../redux/actions/productPlans_actions";
-
+import logo from "../../src/img/logo.png";
 const { SubMenu } = Menu;
 
 const Navbar = () => {
@@ -107,33 +107,36 @@ const Navbar = () => {
   );
   return (
     <div>
-      <div className="container-fluid bg-dark">
+      <div className="container-fluid">
         <div>
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
-              <div className="col-8 col-lg-6">
-                <a className="text-white" href="/" >Главная</a>
-                <a className="text-white ml-2" href="/">Для бизнеса</a>
-                <a className="text-white ml-2" href="/">Cтатьи</a>
-                <a className="text-white ml-2" href="/">Помощь</a>
-                <a className="text-white ml-2" href="/about">О нас</a>
+              <div className="col-8 col-lg-6 d-none d-lg-block">
+                <a className="text-dark" href="/" >Главная</a>
+                <a className="text-dark ml-2" href="/">Для бизнеса</a>
+                <a className="text-dark ml-2" href="/articles">Cтатьи</a>
+                <a className="text-dark ml-2" href="/">Помощь</a>
+                <a className="text-dark ml-2" href="/about">О нас</a>
+              </div>
+              <div className="col-6 d-block d-md-none">
+                <a className="navbar-brand" href="/" ><img src={logo} style={{ width: "100%" }} /></a>
               </div>
               {/* <div className='col-2 px-0 d-block d-md-none'>
                        
               </div>  */}
-              <div className="col-4 col-lg-6 d-lg-flex justify-content-end align-items-center">
+              <div className="col-6 col-lg-6 d-lg-flex justify-content-end align-items-center">
                 {token == null ?
                   <>
                     <div className="d-none d-lg-block">
                       {/* <Button onClick={() => navigateTo('/register')} className="mr-2 rounded-pill" style={{ backgroundColor: 'rgb(9, 72, 130)', color: "#fff" }}>Регистрация</Button>
                       <Button onClick={() => navigateTo('/login')} className="mr-2 rounded-pill" style={{ borderColor: 'rgb(9, 72, 130)', color: 'rgb(9, 72, 130)' }}>Войти</Button> */}
-                      <a className="text-white" href="/login">Войти</a>
-                      <span className="text-white mx-1">/</span>
-                      <a className="text-white" href="/register">Регистрация</a>
-                      <button onClick={() => navigateTo('/login')} className="btn btn-primary p-1 ml-3">+ Разместить объявление</button>
+                      <a className="text-dark" href="/login">Войти</a>
+                      <span className="text-dark mx-1">/</span>
+                      <a className="text-dark" href="/register">Регистрация</a>
+                      <button onClick={() => navigateTo('/login')} className="btn btn-light p-1 ml-3"><i class="fa-solid fa-plus"></i> Разместить объявление</button>
                     </div>
                     <div className="d-xs-block d-lg-none text-right">
-                      <Button onClick={show}>
+                      <Button className="rounded-lg" onClick={show}>
                         <i className="fas fa-bars"></i>
                       </Button>
                       <Drawer
@@ -164,7 +167,13 @@ const Navbar = () => {
                   :
                   <>
                     <div className="d-xs-block d-lg-none text-right">
-                      <Button onClick={show}>
+                      <Button className="mr-2" style={{ borderRadius: '12px' }} onClick={() => navigateTo('/products/create')}>
+                        <i class="fa-solid fa-plus"></i>
+                      </Button>
+                      <Button className="mr-2" style={{ borderRadius: '12px' }} onClick={() => navigateTo('/profile')}>
+                        <i class="fa-regular fa-user"></i>
+                      </Button>
+                      <Button style={{ borderRadius: '12px' }} onClick={show}>
                         <i className="fas fa-bars"></i>
                       </Button>
                       <Drawer
@@ -181,7 +190,7 @@ const Navbar = () => {
                             mode="inline"
                             theme="light"
                           >
-                            <Menu.Item onClick={() => navigateTo('/products/create')} key="1" icon={<FileAddOutlined />}>
+                            <Menu.Item onClick={() => navigateTo('/create')} key="1" icon={<FileAddOutlined />}>
                               + Подать объявление
                             </Menu.Item>
                             <Menu.Item onClick={() => navigateTo('/profile')} key="2" icon={<DesktopOutlined />}>
@@ -208,7 +217,7 @@ const Navbar = () => {
                       <Space>
                         <span className="avatar-item mr-2">
                           <Badge count={countMessage}>
-                            <a href="/chats"><i style={{fontSize : 20}} className="fa-solid fa-comments text-white"></i></a>
+                            <a href="/chats"><i style={{ fontSize: 20 }} className="fa-solid fa-comments text-dark"></i></a>
                           </Badge>
                         </span>
                         {/* <Dropdown.Button className="" overlay={menu}>
@@ -216,11 +225,11 @@ const Navbar = () => {
                         </Dropdown.Button> */}
                         <Badge>
                           <Link to="/profile">
-                            <i style={{fontSize : 20}} className="fa-regular fa-user text-white mr-2"></i>
+                            <i style={{ fontSize: 20 }} className="fa-regular fa-user text-dark mr-2"></i>
                           </Link>
                         </Badge>
                         <Badge>
-                        <i style={{fontSize : 20}} onClick={()=>logOut()} className="fa-solid fa-arrow-right-from-bracket text-white"></i>
+                          <i style={{ fontSize: 20 }} onClick={() => logOut()} className="fa-solid fa-arrow-right-from-bracket text-dark"></i>
                         </Badge>
                         {/* <Button
                           className="rounded-pill text-white border-0"
@@ -230,7 +239,8 @@ const Navbar = () => {
                         >
                           + Подать объявление
                         </Button> */}
-                        <button onClick={() => navigateTo('/products/create')} className="btn btn-primary p-1 ml-3">Разместить объявление</button>
+                        <button onClick={() => navigateTo('/products/create')} className="btn p-1 ml-3">
+                          <i class="fa-solid fa-plus"></i> Разместить объявление</button>
                       </Space>
                     </div>
                   </>

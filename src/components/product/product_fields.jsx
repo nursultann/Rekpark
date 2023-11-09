@@ -13,11 +13,11 @@ import {
   Select,
   TreeSelect
 } from "antd";
-
 import CarAttributes from "../custom_attribute/car_attributes";
 
 const { TreeNode } = TreeSelect;
 const { Option } = Select;
+
 const ProductFields = ({ form, loading = false, onSend }) => {
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
@@ -328,8 +328,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         </Form.Item>
         <center>
           <Button
-            className="btn"
-            style={{ backgroundColor: '#184d9f', color: "#fff" }}
+            type="primary"
             loading={loading}
             onClick={async () => {
               if (onSend != null) onSend({ files: files, currency_id: selectedCurrencyId });
@@ -341,4 +340,5 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     </>
   );
 };
+
 export default ProductFields;

@@ -13,8 +13,8 @@ const News = () => {
         const _articles = await fetchArticles({ 'sub': true });
         if (_articles != null) {
             setArticles(_articles);
-            console.log(articles);
         }
+        console.log('articles', articles);
     }
     moment.locale('ru');
     var items = [];
@@ -25,11 +25,14 @@ const News = () => {
                     <div className='col-xl-12 py-3'>
                         <div className='border px-2 py-2 rounded shadow-sm'>
                             <div className='rounded' style={{ backgroundImage: "url(" + article.image + ")", backgroundSize: "cover", height: "200px" }}
-                                onDragStart={handleDragStart}>  
+                                onDragStart={handleDragStart}>
                             </div>
-                            <p className='text-center mt-2' style={{ fontSize: "12pt" }}>
-                                <Link style={{ color: "rgb(9, 72, 130)"}} to={'/article/' + article.id}>{article.title}</Link></p>
-                            <p className='text-muted' style={{ fontSize: "10pt" }}><i className="far fa-clock"></i>&nbsp;
+                            <p className='mt-2 px-2' style={{ fontSize: "14pt" }}>
+                                <Link className="text-dark" to={'/article/' + article.id}>{article.title}</Link></p>
+                            <p className='px-2' dangerouslySetInnerHTML={{
+                                __html: article.text
+                            }}></p>
+                            <p className='text-muted px-2' style={{ fontSize: "10pt" }}><i className="far fa-clock"></i>&nbsp;
                                 {moment(article.created_at, 'YYYYMMDD, h:mm:ss a,').fromNow()}</p>
                         </div>
                     </div>)
@@ -42,7 +45,7 @@ const News = () => {
     }, []);
     return (
         <>
-            <div className="col-xl-12 my-3">
+            <div className="col-xl-12 px-0 px-lg-2 my-3">
                 <h3 className='px-3 pb-0'><Link to="/articles" style={{ fontSize: "16px", color: "#424242" }}>Статьи и новости:</Link></h3>
                 {/* <div className='ml-3 mb-3' style={{ width: "160px", height: 3, backgroundColor: "rgb(9, 72, 130)" }}></div> */}
                 {articles != null || articles != undefined || articles?.length > 0 ?
