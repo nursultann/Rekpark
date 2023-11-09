@@ -138,6 +138,23 @@ export const postUserMessage = async (params) => {
     return null;
 }
 
+export const fetchChatByPartner = async (partnerId) => {
+    try {
+        const response = await ApiClient.get('/chats', { 'partner_id': partnerId });
+        if (response.status == 200 || response.status == 201) {
+            const data = response.data.data;
+            if (data.length > 0) {
+                return data[0];
+            }
+        }
+    } catch (error) {
+        console.log('fetch user details error ', error.response);
+    }
+
+    return null;
+
+}
+
 export const readMessages = async (params) => {
     try {
         const response = await ApiClient.post('/messages/read', params);

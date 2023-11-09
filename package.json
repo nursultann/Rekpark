@@ -37,6 +37,7 @@
     "react-gallery-carousel": "^0.2.6",
     "react-google-login": "^5.2.2",
     "react-material-ui-carousel": "^3.0.4",
+    "react-modal": "^3.16.1",
     "react-query": "^3.39.3",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.8.0",

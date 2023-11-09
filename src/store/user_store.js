@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { userDetails, loginGoogle, login } from "../api";
 
 export const useUserStore = create((set) => ({
-    isAuthenticated: false,
+    isAuthenticated: Boolean(localStorage.getItem('token')),
     user: null,
     async checkAuth() {
         const token = localStorage.getItem('token')

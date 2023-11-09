@@ -46,8 +46,10 @@ import 'react-gallery-carousel/dist/index.css';
 import 'react-alice-carousel/lib/alice-carousel.css';
 import "./dist/css/app.css";
 import Layout from './layouts/layout';
+import ReactModal from 'react-modal';
 
 const queryClient = new QueryClient();
+ReactModal.setAppElement('#root');
 
 const App = ({ match }) => {
   const subscribe = async () => {

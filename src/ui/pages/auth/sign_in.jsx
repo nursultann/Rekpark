@@ -98,7 +98,6 @@ const SignInPage = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="col-xl-12 d-flex justify-content-center">
                 <div className="col-xl-8 py-4 m-xl-5 shadow rounded-lg my-3 bg-light text-center">
                     <label className="py-2 label" style={{ fontSize: 20 }}>Вход на сайт</label>

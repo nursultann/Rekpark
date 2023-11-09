@@ -1,6 +1,6 @@
 import { UserOutlined } from "@ant-design/icons"
 import { Avatar } from "antd"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 function UserAvatar({ user }) {
     if (user.business_account?.logoImage) {
@@ -30,8 +30,15 @@ function UserAvatar({ user }) {
 }
 
 function UserTile({ user }) {
+    const navigate = useNavigate()
+
     return (
-        <div className="flex flex-row gap-[28px] items-center">
+        <div
+            className="flex flex-row gap-[28px] items-center hover:bg-gray-100 cursor-pointer rounded-xl active:bg-gray-200 transition-all duration-300"
+            onClick={() => {
+                navigate("/userAds/" + user.id)
+            }}
+        >
             <UserAvatar user={user} />
             <div className="flex flex-col gap-1">
 

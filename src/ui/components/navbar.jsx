@@ -30,6 +30,8 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const userState = useUserStore();
 
+  const isAuth = userState.isAuthenticated;
+
   const fetchUnreadMessages = async () => {
     const fetchChats = await unreadMessages();
     if (fetchChats != null) {
@@ -165,7 +167,7 @@ const Navbar = () => {
               </div>
 
               <div className="col-4 col-lg-6 d-lg-flex justify-content-end align-items-center">
-                {!userState.isAuthenticated ?
+                {!isAuth ?
                   <>
                     <div className="flex flex-row gap-2">
                       <div className="flex flex-row gap-2 align-items-center">
@@ -267,7 +269,7 @@ const Navbar = () => {
 
 
                         <Link
-                          to="/login"
+                          to="/products/create"
                           className="flex flex-row justify-content-center align-items-center gap-2 rounded-pill border-0 px-3 py-2"
                         >
                           <PlusOutlined /> Разместить объявление

@@ -1,7 +1,8 @@
 import { Upload, Modal } from "antd";
-import { InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined, CloudUploadOutlined } from '@ant-design/icons';
 import { React, useState } from "react";
 import { AppImage } from "./custom_components";
+import { CloudUploadRounded } from "@mui/icons-material";
 
 const { Dragger } = Upload;
 
@@ -61,9 +62,13 @@ const DragAndDropUploader = ({ style, className, onChange, onRemove, multiple = 
         <>
             <Dragger {...props} style={style} className={className}>
                 <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
+                    <CloudUploadOutlined />
                 </p>
-                <p className="ant-upload-text">Нажмите или перетащите файлы, чтобы загрузить</p>
+                <p style={{
+                    fontSize: 16,
+                    fontWeight: 400,
+                    fontFamily: "SF UI Display",
+                }}>Нажмите или перетащите файлы,<br /> чтобы загрузить</p>
             </Dragger>
             <Modal
                 visible={previewVisible}

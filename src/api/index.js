@@ -16,7 +16,8 @@ export {
     register,
     userDetails,
     loginGoogle,
-    postUserMessage
+    postUserMessage,
+    fetchChatByPartner
 } from './user';
 export { fetchRegions, fetchSettings, fetchCurrencies } from './app';
 export { fetchCar } from './car';

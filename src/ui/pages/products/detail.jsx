@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import Carousel from 'react-gallery-carousel';
-import { FacebookShareButton, WhatsappShareButton, TelegramShareButton } from "react-share";
-import { FacebookIcon, WhatsappIcon, TelegramIcon } from "react-share";
-import { Modal, Comment, Avatar, Form, Button, List, Input, message, Select, notification, Image } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Modal, Button, Input, message, Select, notification, Image } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { useEffectOnce } from "react-use";
 import {
     addToFavorites,
-    answerComment,
-    deleteComments,
+    fetchChatByPartner,
     getComplaints,
     postComplaints,
+    postUserMessage,
     removeFromFavorites,
-    createComment,
-    userDetails,
-    postUserMessage
 } from "../../../api";
 import { setProductDetails } from "../../../redux/actions/product_actions";
 import { useProductDetailsQuery } from "../../../hooks/product";
@@ -27,10 +20,14 @@ import CommentsBlock from "./contents/comments_bloc";
 import { useUserStore } from "../../../store/user_store";
 import Conditional from "../../components/conditional";
 import UserTile from "./contents/user_tile";
+import QuickMessages from "./contents/quick_message";
+import ShareButtons from "./contents/share_buttons";
 
 const key = "updateable";
 const { TextArea } = Input;
 const { Option } = Select;
+
+var DG = require('2gis-maps');
 
 const openNotificationWithIcon = (type, info) => {
     notification[type]({
@@ -53,8 +50,7 @@ const ProductDetailPage = ({ match }) => {
     const [childrens, setChildrens] = useState();
     const [loadings, setLoadings] = useState();
     const [messag, setMessage] = useState();
-    const [chat_id, setChatId] = useState();
-    const [phones, setPhones] = useState();
+    const [chatId, setChatId] = useState();
     const [location, setLocation] = useState(undefined);
     const [map1, setMap1] = useState(<div id="map" style={{ width: "100%", height: "400px" }}></div>);
 
@@ -64,33 +60,28 @@ const ProductDetailPage = ({ match }) => {
             setFavorite(productDetails.is_favorite);
             // dispatch(setProductUserDetails(productDetails.user));
 
-            setChatId(productDetails.user_id);
-            setPhones(productDetails.phones);
             var position = productDetails.location;
             if (position != undefined) {
-                setLocation(JSON.parse(position));
+                const location = JSON.parse(position);
+                setLocation(location);
+
+                var map;
+                var marker;
+                DG.then(function () {
+                    map = DG.map('map', {
+                        'center': [location.latitude, location.longitude],
+                        'zoom': 13
+                    });
+                    DG.marker([location.latitude, location.longitude]).addTo(map);
+                });
             }
-            // console.log('product',productDetails);
+
             document.title = productDetails.title;
         }
     }, [productDetails]);
 
 
     useEffectOnce(() => {
-        //map
-        if (location) {
-            var DG = require('2gis-maps');
-            var map;
-            var marker;
-            DG.then(function () {
-                map = DG.map('map', {
-                    'center': [location.latitude, location.longitude],
-                    'zoom': 13
-                });
-                DG.marker([location.latitude, location.longitude]).addTo(map);
-            });
-        }
-
         moment.locale('ru');
     });
 
@@ -164,34 +155,6 @@ const ProductDetailPage = ({ match }) => {
         setVisible(false);
     };
 
-    if (productDetails != null) {
-
-    }
-
-    const postMessage = async () => {
-        setLoadings(true);
-        if (messag != "" && messag != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag, 'advertisement_id': match.params.id });
-            setMessage("");
-            openNotificationWithIcon('success', 'Сообщение отправлено!');
-            setLoadings(false);
-        } else {
-            openNotificationWithIcon('error', 'Заполните поле для сообщения!');
-        }
-    }
-
-    const postQuickMessage = async (messag) => {
-        setLoadings(true);
-        if (messag != "" && messag != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': messag, 'advertisement_id': match.params.id });
-            setMessage("");
-            openNotificationWithIcon('success', 'Сообщение отправлено!');
-            setLoadings(false);
-        } else {
-            openNotificationWithIcon('error', 'Заполните поле для сообщения!');
-        }
-    }
-
     if (query.isLoading) {
         return (
             <div className="flex flex-col w-full h-full items-center justify-center">
@@ -208,8 +171,28 @@ const ProductDetailPage = ({ match }) => {
         )
     }
 
+    const postQuickMessage = async (message) => {
+        if (message) {
+            if (!chatId) {
+                const chat = await fetchChatByPartner(productDetails.user_id);
+                if (chat) {
+                    setChatId(chat.id);
+                }
+            }
+
+            const sendMessage = await postUserMessage({ 'user_id': productDetails.user_id, 'message': message, 'advertisement_id': productDetails.id });
+
+            setMessage("");
+            openNotificationWithIcon('success', 'Сообщение отправлено!');
+        } else {
+            openNotificationWithIcon('error', 'Заполните поле для сообщения!');
+        }
+    }
+
     var time = moment(productDetails.created_at, 'YYYYMMDD, H:mm:ss');
     var update = time.fromNow();
+
+    const phones = productDetails.phones;
 
     return (
         <div>
@@ -243,8 +226,8 @@ const ProductDetailPage = ({ match }) => {
 
                             <div className="flex flex-col gap-[10px] mt-[35px]">
                                 <BorderedTile title='Категория:' >
-                                    {productDetails.category_tree?.map((item) => (
-                                        <span>
+                                    {productDetails.category_tree?.map((item, index) => (
+                                        <span key={index}>
                                             <Link to={"/category/" + item.id} className="">
                                                 {item.name}
                                             </Link>
@@ -274,10 +257,12 @@ const ProductDetailPage = ({ match }) => {
                                 )}
 
                                 <div className="grid grid-cols-2 gap-2">
-                                    {productDetails.custom_attributes?.map((item) => (
-                                        <BorderedTile title={item.attribute.name}>
-                                            {item.value}
-                                        </BorderedTile>
+                                    {productDetails.custom_attributes?.map((item, index) => (
+                                        <div key={index}>
+                                            <BorderedTile title={item.attribute.name}>
+                                                {item.value}
+                                            </BorderedTile>
+                                        </div>
                                     ))}
                                 </div>
 
@@ -290,8 +275,8 @@ const ProductDetailPage = ({ match }) => {
                     <div className="col-xl-4">
                         <div className="col-xl-12 border rounded-2xl mt-3">
                             <div className="row">
-                                <div className="col-xl-12 mt-xl-4">
-                                    <hr className="d-block d-xl-none" />
+                                <div className="col-xl-12 mt-4">
+
                                     <button
                                         className="w-full  rounded-2xl py-[12px]  flex flex-row gap-2 justify-center items-center bg-blue-600 text-white"
                                         data-toggle="collapse"
@@ -304,10 +289,10 @@ const ProductDetailPage = ({ match }) => {
 
                                     <div className="collapse multi-collapse" id="multiCollapseExample1">
                                         <div className="card card-body">
-                                            {phones != null && phones.length > 12 ?
+                                            {phones && phones.length > 12 ?
                                                 <>
-                                                    {phones.split(",").map((item) =>
-                                                        <a href={"tel:" + item}>{item}</a>
+                                                    {phones.split(",").map((item, index) =>
+                                                        <a href={"tel:" + item} key={index}>{item}</a>
                                                     )}
                                                 </>
                                                 :
@@ -318,7 +303,7 @@ const ProductDetailPage = ({ match }) => {
                                 </div>
 
                                 <Conditional condition={isAuth}>
-                                    <div className="col-xl-12 mt-xl-2">
+                                    <div className="col-xl-12 mt-2">
                                         {favorite ?
                                             <button
                                                 className="w-full rounded-2xl py-[12px] flex flex-row gap-2 justify-center items-center text-white bg-yellow-500"
@@ -337,7 +322,7 @@ const ProductDetailPage = ({ match }) => {
                                     </div>
                                 </Conditional>
 
-                                <div className="col-xl-12 mt-xl-2">
+                                <div className="col-xl-12 mt-2">
                                     <button
                                         className="w-full rounded-2xl py-[12px] flex flex-row gap-2 justify-center items-center text-white bg-red-500"
                                         onClick={showModal}
@@ -355,39 +340,7 @@ const ProductDetailPage = ({ match }) => {
                                 <hr />
                             </div>
 
-                            <div className="col-6 col-xl-12 my-[25px]">
-                                <label className="text-muted">Поделиться</label>
-                                <br />
-                                <div className="flex flex-row gap-2">
-                                    <FacebookShareButton
-                                        url={window.location.href}
-                                        quote={"フェイスブックはタイトルが付けれるようです"}
-                                        hashtag={"#hashtag"}
-                                        description={"aiueo"}
-                                        className="Demo__some-network__share-button mr-1"
-                                    >
-                                        <FacebookIcon size={45} round />
-                                    </FacebookShareButton>
-                                    <WhatsappShareButton
-                                        url={window.location.href}
-                                        quote={"フェイスブックはタイトルが付けれるようです"}
-                                        hashtag={"#hashtag"}
-                                        description={"aiueo"}
-                                        className="Demo__some-network__share-button mr-1"
-                                    >
-                                        <WhatsappIcon size={45} round />
-                                    </WhatsappShareButton>
-                                    <TelegramShareButton
-                                        url={window.location.href}
-                                        quote={"フェイスブックはタイトルが付けれるようです"}
-                                        hashtag={"#hashtag"}
-                                        description={"aiueo"}
-                                        className="Demo__some-network__share-button"
-                                    >
-                                        <TelegramIcon size={45} round />
-                                    </TelegramShareButton>
-                                </div>
-                            </div>
+                            <ShareButtons />
 
                             <hr className="d-none d-xl-block" />
 
@@ -425,31 +378,9 @@ const ProductDetailPage = ({ match }) => {
                                     </span>
                                 </div>
 
-                                <div className="col-xl-12 mt-2 px-0">
-                                    <textarea rows="10"
-                                        className="form-control"
-                                        value={messag}
-                                        onChange={(e) => { setMessage(e.target.value) }}
-                                        placeholder="Написать что-нибудь"
-                                    ></textarea>
-                                    <div className="flex flex-col gap-2 justify-center items-center mt-2 text-white">
-                                        <button
-                                            className="rounded-xl w-full btn btn-primary text-white"
-                                            onClick={postMessage}
-                                        >
-                                            Отправить
-                                        </button>
-                                        <button className="btn btn-warning rounded-xl w-full" onClick={() => postQuickMessage("Еще актуально?")}>
-                                            Еще актуально?
-                                        </button>
-                                        <button className="btn btn-warning rounded-xl w-full" onClick={() => postQuickMessage("Обмен интересует?")}>
-                                            Обмен интересует?
-                                        </button>
-                                        <button className="btn btn-warning rounded-xl w-full" onClick={() => postQuickMessage("Торг возможен?")}>
-                                            Торг возможен?
-                                        </button>
-                                    </div>
-                                </div>
+                                <QuickMessages
+                                    messageSendHandler={(message) => postQuickMessage(message)}
+                                />
                             </div>
                         }
                         <hr />
@@ -462,10 +393,9 @@ const ProductDetailPage = ({ match }) => {
                     </div>
                 </div>
 
-                <div className="row xl:mt-[30px]">
+                <div className="row xl:mt-[30px] lg:mt-[30px] md:mt-[20px] sm:mt-[10px]">
                     <div className="col-xl-8 m-0 p-0">
                         <div className="text-neutral-800 text-xl">Комментарии</div>
-
                         <CommentsBlock product={productDetails} />
                     </div>
                 </div>
@@ -488,10 +418,8 @@ const ProductDetailPage = ({ match }) => {
                 <Select size={"large"} onChange={handleChange} style={{ width: "100%" }}>
                     {childrens?.length ?
                         <>
-                            {childrens.map((item) =>
-                                <>
-                                    <option value={item.id}>{item.name}</option>
-                                </>
+                            {childrens.map((item, index) =>
+                                <option key={index} value={item.id}>{item.name}</option>
                             )}
                         </>
                         : <></>
@@ -513,10 +441,9 @@ const ProductDetailPage = ({ match }) => {
                             <div className="card card-body bg-white">
                                 {phones != null && phones.length > 12 ?
                                     <>
-                                        {phones.split(",").map((item) =>
-                                            <a href={"tel:" + item}>{item}</a>
-                                        )
-                                        }
+                                        {phones.split(",").map((item, index) =>
+                                            <a key={index} href={"tel:" + item}>{item}</a>
+                                        )}
                                     </>
                                     :
                                     <>
@@ -533,10 +460,38 @@ const ProductDetailPage = ({ match }) => {
                                     </div>
                                     <div className="col-xl-12 mt-2 px-0">
                                         <textarea rows="10" className="form-control" value={messag} onChange={(e) => { setMessage(e.target.value) }}></textarea>
-                                        <Button loading={loadings} className="btn btn-outline-primary rounded col-12 mt-2" onClick={postMessage}>Отправить</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Еще актуально?")}>Еще актуально?</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Обмен интересует?")}>Обмен интересует?</Button>
-                                        <Button className="btn text-white rounded mt-2 col-12" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => postQuickMessage("Торг возможен?")}>Торг возможен?</Button>
+                                        <Button
+                                            loading={loadings}
+                                            className="btn btn-outline-primary rounded col-12 mt-2"
+                                            onClick={async () => {
+                                                setLoadings(true);
+                                                await postQuickMessage(messag);
+                                                setLoadings(false);
+                                            }}
+                                        >
+                                            Отправить
+                                        </Button>
+                                        <Button
+                                            className="btn text-white rounded mt-2 col-12"
+                                            style={{ backgroundColor: "rgb(9, 72, 130)" }}
+                                            onClick={() => postQuickMessage("Еще актуально?")}
+                                        >
+                                            Еще актуально?
+                                        </Button>
+                                        <Button
+                                            className="btn text-white rounded mt-2 col-12"
+                                            style={{ backgroundColor: "rgb(9, 72, 130)" }}
+                                            onClick={() => postQuickMessage("Обмен интересует?")}
+                                        >
+                                            Обмен интересует?
+                                        </Button>
+                                        <Button
+                                            className="btn text-white rounded mt-2 col-12"
+                                            style={{ backgroundColor: "rgb(9, 72, 130)" }}
+                                            onClick={() => postQuickMessage("Торг возможен?")}
+                                        >
+                                            Торг возможен?
+                                        </Button>
                                     </div>
                                 </div>
                                 : <div className="bg-white">Авторизуйтесь сначала чтобы написать</div>

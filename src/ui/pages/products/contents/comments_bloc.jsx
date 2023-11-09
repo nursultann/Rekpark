@@ -57,16 +57,21 @@ function CommentsBlock({ product }) {
 
     const [text, setText] = React.useState('')
 
+    let position = 'items-start justify-center'
+    if (!comments?.length) {
+        position = 'items-center justify-center'
+    }
+
     return (
         <div className="mt-[20px] bg-zinc-100 rounded-[10px] border border-neutral-200 flex flex-col items-start justify-center px-[30px]">
             <Conditional
                 condition={isAuth}
                 orElse={<div className='text-lg font-medium text-center'>Чтобы оставить комментарий, войдите в аккаунт</div>}
             >
-                <div className='flex flex-col items-start justify-center h-[500px] w-full'>
+                <div className={`flex flex-col ${position} h-[500px] w-full`}>
                     {isLoading ? <div className='text-lg text-center'>Загрузка...</div> : (
                         comments.length === 0
-                            ? <div className='text-lg text-center'>Комментариев пока нет {comments.length}</div>
+                            ? <div className='text-lg text-center'>Комментариев пока нет</div>
                             : (
                                 <CommentList
                                     comments={comments}
