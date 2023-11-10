@@ -41,18 +41,19 @@ const Chats = () => {
         }
     };
     const removeChat = async (id) => {
-        console.log('id chat', id);
         const remove = await deleteChat(id);
         console.log(remove);
         if (remove != null) {
             openNotificationWithIcon('success', 'Чат успешно удалён!');
+        }else{
+            openNotificationWithIcon('error', 'Что-то пошло не так!');
         }
     }
     const fetchChats = async () => {
         const userChats = await getUserChats();
         if (userChats != null) {
             setChats(userChats);
-            console.log('chats',userChats);
+            console.log('chats', userChats);
         }
     }
     // const setUserMessage = (id, userName, partner_id) => {
@@ -87,14 +88,14 @@ const Chats = () => {
     const [postId, setPostId] = useState();
     const [product, setProduct] = useState(null);
     // const [userID,setUserID] = useState();
-    const [advertisement_id,setAdvertisement_id] = useState();
+    const [advertisement_id, setAdvertisement_id] = useState();
     // const fetchUserDetails = async () => {
     //     const user = await userDetails();
     //     if (user != null) {
     //         dispatch(setUser(user));
     //     }
     // };
-    const getUserMessage = async (userID,ad_id) => {
+    const getUserMessage = async (userID, ad_id) => {
         console.log(ad_id);
         setChatId(userID);
         setAdvertisement_id(ad_id);
@@ -104,7 +105,7 @@ const Chats = () => {
             setMessages(userMessages.reverse());
             setPostId(messages[0].advertisement_id);
             console.log('messages', messages);
-            productDetails(postId,userID);
+            productDetails(postId, userID);
         }
     }
     const postMessage = async () => {
@@ -119,11 +120,11 @@ const Chats = () => {
             openNotificationWithIcon('error', 'Заполните поле для сообщения!');
         }
     }
-    const productDetails = async (id,userid) => {
-                const _product = await api.fetchProduct(id);
-                const readMessage = await readMessages({ 'partner_id': userid });
-                setProduct(_product);
-                console.log("read", readMessage);
+    const productDetails = async (id, userid) => {
+        const _product = await api.fetchProduct(id);
+        const readMessage = await readMessages({ 'partner_id': userid });
+        setProduct(_product);
+        console.log("read", readMessage);
     }
     moment.locale('ru');
     useEffect(() => {
@@ -170,34 +171,29 @@ const Chats = () => {
             <div>
                 <Navbar />
                 <div className="col-xl-12 mt-3">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li className="breadcrumb-item active" aria-current="page">Сообщения</li>
-                        </ol>
+                    <nav className="col-12 text-center pb-3">
+                        <a href="/"> Главная страница</a> | <a className="text-primary" href="/chats">Сообщения</a>
                     </nav>
                     <div className="col-12 px-0 px-xl-5">
                         <div className="col-12 px-0 pb-3 px-xl-5">
-                            <div class="nav d-flex justify-content-around nav-pills border rounded-lg py-2" id="v-pills-tab" role="tablist">
-                                <a class="nav-link px-4 rounded-pill" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
-                                <a class="nav-link px-4 rounded-pill" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
-                                <a class="nav-link px-4 rounded-pill" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
-                                <a class="nav-link active px-4 rounded-pill" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
-                                <a class="nav-link px-4 rounded-pill" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
+                            <div className="d-lg-flex justify-content-around text-center nav-pills rounded-lg py-2" id="v-pills-tab" role="tablist">
+                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
+                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
+                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
+                                <a className="nav-link active px-4 border mb-2 rounded-lg" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
+                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
                             </div>
-                            <div class="tab-content bg-light rounded mt-3" id="v-pills-tabContent">
-                                <div class="tab-pane fade show active" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                                    <div className="row">
-                                        <div className="col-xl-5 mt-3 mt-md-0">
-                                            <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{ backgroundColor: "#184d9f" }}>
-                                                <label className="text-white" style={{ fontSize: 15 }}>Сообщения</label>
-                                            </div>
-                                            <div className="container">
+                            <div className="tab-content bg-light rounded mt-3" id="v-pills-tabContent">
+                                <div className="tab-pane fade show active" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                                    <div className="row" style={{ backgroundColor: '#007bff' }}>
+                                        <div className="col-xl-5 mt-3 mt-md-0 px-0">
+                                            {/* <div className="col-xl-12 px-2 py-2 rounded mb-3">
+                                                <label className="" style={{ fontSize: 15 }}>Сообщения</label>
+                                            </div> */}
+                                            <div className="container-fluid">
                                                 <div className="content-wrapper">
-                                                    <div className="row gutters">
-
+                                                    <div className="row gutters mt-3 px-0">
                                                         <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
                                                             <div className="card m-0">
                                                                 <div className="row no-gutters">
                                                                     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -206,7 +202,7 @@ const Chats = () => {
                                                                                 {chats?.length > 0 ?
                                                                                     <>
                                                                                         {chats.map((chat) =>
-                                                                                            <li className="person" data-chat="person1">
+                                                                                            <li className="person mt-1" data-chat="person1">
                                                                                                 <div className="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
                                                                                                     {chat.advertisement.image != null ?
                                                                                                         <>
@@ -215,7 +211,11 @@ const Chats = () => {
                                                                                                         </>
                                                                                                         :
                                                                                                         <>
-                                                                                                            <Image />
+                                                                                                            <Image
+                                                                                                                width={"100%"}
+                                                                                                                src="error"
+                                                                                                                fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3PTWBSGcbGzM6GCKqlIBRV0dHRJFarQ0eUT8LH4BnRU0NHR0UEFVdIlFRV7TzRksomPY8uykTk/zewQfKw/9znv4yvJynLv4uLiV2dBoDiBf4qP3/ARuCRABEFAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghgg0Aj8i0JO4OzsrPv69Wv+hi2qPHr0qNvf39+iI97soRIh4f3z58/u7du3SXX7Xt7Z2enevHmzfQe+oSN2apSAPj09TSrb+XKI/f379+08+A0cNRE2ANkupk+ACNPvkSPcAAEibACyXUyfABGm3yNHuAECRNgAZLuYPgEirKlHu7u7XdyytGwHAd8jjNyng4OD7vnz51dbPT8/7z58+NB9+/bt6jU/TI+AGWHEnrx48eJ/EsSmHzx40L18+fLyzxF3ZVMjEyDCiEDjMYZZS5wiPXnyZFbJaxMhQIQRGzHvWR7XCyOCXsOmiDAi1HmPMMQjDpbpEiDCiL358eNHurW/5SnWdIBbXiDCiA38/Pnzrce2YyZ4//59F3ePLNMl4PbpiL2J0L979+7yDtHDhw8vtzzvdGnEXdvUigSIsCLAWavHp/+qM0BcXMd/q25n1vF57TYBp0a3mUzilePj4+7k5KSLb6gt6ydAhPUzXnoPR0dHl79WGTNCfBnn1uvSCJdegQhLI1vvCk+fPu2ePXt2tZOYEV6/fn31dz+shwAR1sP1cqvLntbEN9MxA9xcYjsxS1jWR4AIa2Ibzx0tc44fYX/16lV6NDFLXH+YL32jwiACRBiEbf5KcXoTIsQSpzXx4N28Ja4BQoK7rgXiydbHjx/P25TaQAJEGAguWy0+2Q8PD6/Ki4R8EVl+bzBOnZY95fq9rj9zAkTI2SxdidBHqG9+skdw43borCXO/ZcJdraPWdv22uIEiLA4q7nvvCug8WTqzQveOH26fodo7g6uFe/a17W3+nFBAkRYENRdb1vkkz1CH9cPsVy/jrhr27PqMYvENYNlHAIesRiBYwRy0V+8iXP8+/fvX11Mr7L7ECueb/r48eMqm7FuI2BGWDEG8cm+7G3NEOfmdcTQw4h9/55lhm7DekRYKQPZF2ArbXTAyu4kDYB2YxUzwg0gi/41ztHnfQG26HbGel/crVrm7tNY+/1btkOEAZ2M05r4FB7r9GbAIdxaZYrHdOsgJ/wCEQY0J74TmOKnbxxT9n3FgGGWWsVdowHtjt9Nnvf7yQM2aZU/TIAIAxrw6dOnAWtZZcoEnBpNuTuObWMEiLAx1HY0ZQJEmHJ3HNvGCBBhY6jtaMoEiJB0Z29vL6ls58vxPcO8/zfrdo5qvKO+d3Fx8Wu8zf1dW4p/cPzLly/dtv9Ts/EbcvGAHhHyfBIhZ6NSiIBTo0LNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiEC/wGgKKC4YMA4TAAAAABJRU5ErkJggg=="
+                                                                                                            />
                                                                                                         </>
                                                                                                     }
                                                                                                 </div>
@@ -243,25 +243,32 @@ const Chats = () => {
                                             </div>
 
                                         </div>
-                                        <div className="col-xl-7 mt-3 mt-md-0">
+                                        <div className="col-xl-7 mt-3 mb-5 mt-md-0">
                                             <div className="content-wrapper">
                                                 <div className="row gutters">
                                                     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 px-0">
                                                         <div className="card m-0">
                                                             <div className="row no-gutters">
                                                                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                                    <div className="selected-user">
+                                                                    <div className="selected-user text-white">
                                                                         <span>Сообщения от <span className="name">{chat_name}</span></span>
                                                                     </div>
                                                                     <div className="col-12 alert alert-primary">
                                                                         {product != null ?
                                                                             <>
-                                                                                <img src={product.image} width="50px" />
+                                                                                {product.image != null ?
+                                                                                    <img src={product.image} width="50px" />
+                                                                                    :
+                                                                                    <Image
+                                                                                        width={"50px"}
+                                                                                        src="error"
+                                                                                        fallback="data:image/png;base64,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"
+                                                                                    />
+                                                                                }
                                                                                 <a href={"/products/" + product.id}><span className="ml-2">{product.title}</span></a>
                                                                             </>
                                                                             :
                                                                             <>
-
                                                                             </>
                                                                         }
                                                                     </div>
@@ -280,7 +287,7 @@ const Chats = () => {
                                                                                                                 <div className="chat-name">{item.sender.name}</div>
                                                                                                             </div>
                                                                                                             <div className="chat-text">
-                                                                                                                {item.message}
+                                                                                                                <span className="bg-primary text-white p-1 rounded">{item.message}</span>
                                                                                                             </div>
                                                                                                             {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div> */}
                                                                                                         </li>
@@ -291,7 +298,7 @@ const Chats = () => {
                                                                                                             </div> */
                                                                                                             }
                                                                                                             <div className="chat-text">
-                                                                                                                {item.message}
+                                                                                                                <span className="bg-primary text-white p-1 rounded">{item.message}</span>
                                                                                                             </div>
                                                                                                             <div className="chat-avatar">
                                                                                                                 <img src={item.sender.image} alt="Retail Admin" />
@@ -306,12 +313,20 @@ const Chats = () => {
                                                                         </ul>
                                                                     </div>
                                                                     {chat_id ?
-                                                                        <div className="form-group text-right py-2 px-3 mt-3 mb-0">
-                                                                            <textarea className="form-control" rows="3" placeholder="Напишите ваше сообщение..."
-                                                                                onChange={(e) => { setMessage(e.target.value) }} value={message}></textarea>
-                                                                            <button style={{ backgroundColor: "#184d9f" }} className="btn btn-primary mt-3 mb-2" type="primary" loading={loadings} onClick={()=>postMessage()}>
-                                                                                Отправить
-                                                                            </button>
+                                                                        <div className="col-12 form-group text-right py-2 px-3 mt-3 mb-0">
+                                                                            <div className="row">
+                                                                                <div className="col-10 col-lg-11 pl-1 pr-1 pb-0">
+                                                                                    <textarea className="form-control bg-light mb-0" rows="1" placeholder="Напишите ваше сообщение..."
+                                                                                        onChange={(e) => { setMessage(e.target.value) }} value={message}></textarea>
+                                                                                </div>
+                                                                                <div className="col-2 col-lg-1 pl-0">
+                                                                                    <button className="btn btn-primary" type="primary" loading={loadings} onClick={() => postMessage()}>
+                                                                                    <i class="fa-brands fa-telegram"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+
+
                                                                         </div>
                                                                         : <></>
                                                                     }

@@ -40,13 +40,16 @@ const Ad = ({ match }) => {
     const [phones, setPhones] = useState();
     const [location, setLocation] = useState(undefined);
     const [map1, setMap1] = useState(<div id="map" style={{ width: "100%", height: "400px" }}></div>);
+    const [productState, setProductState] = useState(false);
     const fetchProductDetails = async () => {
         const productDetails = await fetchProduct(match.params.id, {
             'with': 'category;customAttributeValues.customAttribute;region;city;user;comments.user'
         });
+        console.log('product details', productDetails);
         if (productDetails != null) {
             dispatch(setProductDetails(productDetails));
             setFavorite(productDetails.is_favorite);
+            setProductState(true);
             // dispatch(setProductUserDetails(productDetails.user));
             setProductUserDetail(productDetails.user);
             setChatId(productDetails.user_id);
@@ -228,14 +231,10 @@ const Ad = ({ match }) => {
     return (
         <div>
             <Navbar />
-            {productDetails != null ? <>
+            {productDetails != null && productState != false ? <>
                 <div className="col-xl-12 mt-xl-3 mt-3">
-                    <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item text-primary"><a href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                            <li className="breadcrumb-item text-primary"><a href={"/category/" + productDetails.category_id}>Объявления из категории</a></li>
-                            <li className="breadcrumb-item active" aria-current="page">{productDetails.title}</li>
-                        </ol>
+                    <nav className="col-12 text-center pb-3">
+                        <a href="/"> Главная страница</a> | <a className="text-dark" href={"/category/" + productDetails.category_id}>Объявления из категории</a> | <a className="text-primary" href="#">Объявление</a>
                     </nav>
                     <div className="row px-xl-3 px-2">
                         <div className="col-xl-8 py-3">
@@ -289,13 +288,69 @@ const Ad = ({ match }) => {
                                 <label className="text-primary" style={{ fontSize: "18px", whiteSpace: "normal" }}>Описание</label>
                                 <p className="label">{productDetails.description}</p>
                             </div>
+                            <div className="col-xl-12 border rounded mt-5 py-3 mb-5">
+                                <label className="font-weight-bold" style={{ fontSize: 15 }}>Комментарии</label>
+                                {
+                                    token != null ?
+                                        <>
+                                            {
+                                                productDetails.can_comment == "all" ?
+                                                    <div className="col-xl-12">
+                                                        {
+                                                            productDetails.comments?.length
+                                                                ? <CommentList comments={productDetails.comments} />
+                                                                : <>Нет комментариев</>
+                                                        }
+                                                        <Comment
+                                                            avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+                                                            content={
+                                                                <>
+                                                                    <Form.Item>
+                                                                        <TextArea rows={4}
+                                                                            onChange={(e) => { setValue(e.target.value) }} value={value} />
+                                                                    </Form.Item>
+                                                                    <Form.Item>
+                                                                        {!comment ?
+                                                                            <Button type="primary" htmlType="submit" loading={submitting} onClick={onSubmit}>
+                                                                                Добавить комментарий
+                                                                            </Button>
+                                                                            :
+                                                                            <Button type="primary" htmlType="submit" loading={submitting} onClick={Answer}>
+                                                                                Ответить на комментарий
+                                                                            </Button>
+                                                                        }
+                                                                    </Form.Item>
+                                                                </>
+                                                            }
+                                                        />
+                                                    </div>
+                                                    :
+                                                    <></>
+                                            }
+                                        </>
+                                        :
+                                        <>
+                                            <div className="col-xl-12 py-2">
+                                                {
+                                                    productDetails.comments?.length
+                                                        ? <CommentList comments={productDetails.comments} />
+                                                        : <>Нет комментариев</>
+                                                }
+                                                <hr />
+                                                <label style={{ fontSize: 14 }}>Чтобы оставить комментарий нужно авторизоваться</label>
+                                                <br />
+                                                <Button><a href="/login">Войти</a></Button>
+                                            </div>
+                                        </>
+                                }
+                            </div>
                         </div>
-                        <div className="col-xl-4">
+                        <div className="col-xl-4 mb-3">
                             <div className="col-xl-12 border rounded mt-3 mt-xl-0">
                                 <div className="row">
                                     <div className="col-xl-12 mt-xl-4">
                                         <hr className="d-block d-xl-none" />
-                                        <button className="btn btn-primary col-xl-12 text-white" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i class="fa-solid fa-phone"></i> Показать номер</button>
+                                        <button className="btn btn-primary col-xl-12 text-white" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fa-solid fa-phone"></i> Показать номер</button>
                                         <div className="collapse multi-collapse" id="multiCollapseExample1">
                                             <div className="card card-body">
                                                 {phones != null && phones.length > 12 ?
@@ -319,9 +374,9 @@ const Ad = ({ match }) => {
                                                 <hr className="d-block d-xl-none" />
 
                                                 {favorite ?
-                                                    <button className="btn btn-primary col-xl-12 text-white" onClick={removeFav}><i class="fa-solid fa-star text-warning"></i> Удалить из избранного</button>
+                                                    <button className="btn btn-primary col-xl-12 text-white" onClick={removeFav}><i className="fa-solid fa-star text-warning"></i> Удалить из избранного</button>
                                                     :
-                                                    <button className="btn btn-outline-secondary col-xl-12" onClick={addFav}><i class="fa-regular fa-star"></i> Добавить в избранное</button>
+                                                    <button className="btn btn-outline-secondary col-xl-12" onClick={addFav}><i className="fa-regular fa-star"></i> Добавить в избранное</button>
                                                 }
 
                                             </div>
@@ -420,14 +475,14 @@ const Ad = ({ match }) => {
                                 </div>
                                 <div className="col-xl-12 mt-2 px-0">
                                     <label className="ml-0 text-muted">
-                                        <i class="fa-solid fa-eye"></i> Просмотры: {productDetails.views}<br />
+                                        <i className="fa-solid fa-eye"></i> Просмотры: {productDetails.views}<br />
                                         <i className="far fa-clock"></i> Обновлено: {update}<br />
                                         <i className="fas fa-map-marker-alt"></i> Местоположение: {productDetails.region != null ? productDetails.region.name + "," + productDetails.city.name : ""}
                                     </label>
                                 </div>
                             </div>
                             <hr />
-                            {token ?
+                            {token && productDetails.user.id != userId  ?
                                 <div className="col-xl-12 p-2">
                                     <div className="col-xl-12 text-center rounded"
                                         style={{ border: '2px dashed #000000' }}>
@@ -457,62 +512,6 @@ const Ad = ({ match }) => {
                                 : <></>
                             }
                         </div>
-                    </div>
-                    <div className="col-xl-8 border rounded mt-3 py-3 mb-5">
-                        <label className="font-weight-bold" style={{ fontSize: 15 }}>Комментарии</label>
-                        {
-                            token != null ?
-                                <>
-                                    {
-                                        productDetails.can_comment == "all" ?
-                                            <div className="col-xl-12">
-                                                {
-                                                    productDetails.comments?.length
-                                                        ? <CommentList comments={productDetails.comments} />
-                                                        : <>Нет комментариев</>
-                                                }
-                                                <Comment
-                                                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
-                                                    content={
-                                                        <>
-                                                            <Form.Item>
-                                                                <TextArea rows={4}
-                                                                    onChange={(e) => { setValue(e.target.value) }} value={value} />
-                                                            </Form.Item>
-                                                            <Form.Item>
-                                                                {!comment ?
-                                                                    <Button className="rounded-pill" htmlType="submit" loading={submitting} onClick={onSubmit} style={{ backgroundColor: "#184d9f", color: "#fff" }}>
-                                                                        Добавить комментарий
-                                                                    </Button>
-                                                                    :
-                                                                    <Button className="rounded-pill" htmlType="submit" loading={submitting} onClick={Answer} style={{ backgroundColor: "#184d9f", color: "#fff" }}>
-                                                                        Ответить на комментарий
-                                                                    </Button>
-                                                                }
-                                                            </Form.Item>
-                                                        </>
-                                                    }
-                                                />
-                                            </div>
-                                            :
-                                            <></>
-                                    }
-                                </>
-                                :
-                                <>
-                                    <div className="col-xl-12 py-2">
-                                        {
-                                            productDetails.comments?.length
-                                                ? <CommentList comments={productDetails.comments} />
-                                                : <>Нет комментариев</>
-                                        }
-                                        <hr />
-                                        <label style={{ fontSize: 14 }}>Чтобы оставить комментарий нужно авторизоваться</label>
-                                        <br />
-                                        <Button style={{ borderColor: "#184d9f", color: "#184d9f" }}><a href="/login">Войти</a></Button>
-                                    </div>
-                                </>
-                        }
                     </div>
                 </div>
             </>
@@ -553,10 +552,10 @@ const Ad = ({ match }) => {
                 <hr />
                 <div className="text-right">
                     <button className="btn btn-outline-light border text-dark mr-2" onClick={handleCancel}>Закрыть</button>
-                    <button className="btn text-white" style={{ backgroundColor: "#184d9f" }} onClick={PostComplaint}>Пожаловаться</button>
+                    <button className="btn btn-outline-primary" onClick={PostComplaint}>Пожаловаться</button>
                 </div>
             </Modal>
-            <div className="fixed-bottom d-block d-md-none">
+            {/* <div className="fix col-12 d-block d-md-none">
                 <div className="row">
                     <button className="btn col-6 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fas fa-phone-volume"></i> Позвонить</button>
                     <button className="btn col-6 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fa-solid fa-envelope"></i> Написать</button>
@@ -581,7 +580,7 @@ const Ad = ({ match }) => {
                             {token ?
                                 <div className="col-xl-12 bg-white border rounded p-2">
                                     <div className="col-xl-12 text-center" style={{ backgroundColor: "rgb(9, 72, 130)" }}>
-                                        <label className="p-2 rounded text-white">Написать сообщение к {productDetails.user.name}</label>
+                                        <label className="p-2 rounded text-white">Написать сообщение к {productDetails.user.name != null ? productDetails.user.name : <></>}</label>
                                     </div>
                                     <div className="col-xl-12 mt-2 px-0">
                                         <textarea rows="10" className="form-control" value={messag} onChange={(e) => { setMessage(e.target.value) }}></textarea>
@@ -596,7 +595,7 @@ const Ad = ({ match }) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

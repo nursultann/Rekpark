@@ -225,7 +225,7 @@ const SubCategories = ({ category, onSubmit }) => {
                 </div>
               </div>
               <div className="col-xl-12 d-xl-flex justify-content-end">
-                <Button className="col-12 col-xl-2" onClick={onChange} style={{ backgroundColor: "#184d9f", color: "#fff" }}>Поиск</Button>
+                <Button type="primary" className="col-12 col-xl-2" onClick={onChange}>Поиск</Button>
               </div>
             </Form>
           </div>
@@ -345,7 +345,7 @@ const SubCategories = ({ category, onSubmit }) => {
                   </Form.Item>
                 </div>
                 <div className="col-xl-12 d-xl-flex justify-content-end">
-                  <Button className="col-12 col-xl-2" onClick={onChange} style={{ backgroundColor: "#184d9f", color: "#fff" }}>Поиск</Button>
+                  <Button type="primary" className="col-12 col-xl-2" onClick={onChange}>Поиск</Button>
                 </div>
               </Form>
             </Modal>

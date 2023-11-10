@@ -7,6 +7,7 @@ import { checkPhone, loginGoogle, register } from "../api/user";
 import Footer from "../components/footer";
 import { Steps, Button, message, Form, Input, Select, InputNumber } from 'antd';
 import { Alert } from 'antd';
+
 const clientId = "363682799555-97hlkli04bo0eevlu0br81jtl3vg677a.apps.googleusercontent.com";
 // const countryCodes = [
 //     {"value": "+996", "label": "+996"},

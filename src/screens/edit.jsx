@@ -103,11 +103,8 @@ const EditAd = ({ match }) => {
     <div>
       <Navbar />
       <div className="col-12 mt-3">
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-            <li className="breadcrumb-item active" aria-current="page">Редактирование объявления</li>
-          </ol>
+        <nav className="col-12 text-center pb-3">
+          <a href="/"> Главная страница</a> | <a className="text-primary" href="#">Редактировать объявление</a>
         </nav>
       </div>
       <div className="col-md-8 py-5">
@@ -127,8 +124,22 @@ const EditAd = ({ match }) => {
               model.files.forEach(file => {
                 formData.append('images[]', file);
               });
+              let characteristicIndex = 0;
               for (const [key, value] of Object.entries(form.getFieldsValue())) {
-                formData.append(`${key}`, value);
+                if (key.startsWith('car_attributes')) {
+                  const s = key.split('.');
+                  if (s[1] === 'characteristics') {
+                    const json = JSON.parse(value);
+                    formData.append(`car_attributes[${s[1]}][${characteristicIndex}][characteristic_id]`, json.characteristic_id);
+                    formData.append(`car_attributes[${s[1]}][${characteristicIndex}][id]`, json.key);
+                    formData.append(`car_attributes[${s[1]}][${characteristicIndex}][value]`, json.value);
+                    characteristicIndex++;
+                  } else {
+                    formData.append(`car_attributes[${s[1]}]`, value);
+                  }
+                } else {
+                  formData.append(`${key}`, value);
+                }
               }
               setLoading(true);
               console.log('formdata', formData);
@@ -147,5 +158,4 @@ const EditAd = ({ match }) => {
     </div>
   );
 }
-
 export default EditAd;

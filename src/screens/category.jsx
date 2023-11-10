@@ -41,7 +41,6 @@ const Category = ({ match }) => {
         }
         setIsLoading(false);
     };
-
     useEffect(() => {
         fetchCategory();
     }, []);
@@ -94,11 +93,10 @@ const Category = ({ match }) => {
                     <div className="col-md-12 py-5">
                         <center className="">
                             <Button
-                                variant="outlined"
+                                type="primary"
                                 onClick={() => {
                                     fetchProducts();
                                 }}
-                                style={{ backgroundColor: "#184d9f", color: "#fff" }}
                             >
                                 Показать еще
                             </Button>
