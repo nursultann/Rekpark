@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Form, Select } from "antd";
 import { useQuery } from "react-query";
 import * as api from "../../../api";
+import { SearchableSelect } from "../default_input_fields";
+import { useEffectOnce } from "react-use";
 
 const filterObject = (obj) => {
     let newObj = {};
@@ -14,16 +15,16 @@ const filterObject = (obj) => {
     return newObj;
 }
 
-export default function CarAttributes({ form }) {
-    const [type, setType] = useState(form.getFieldValue('car_attributes.type_id') ?? 1);
-    const [mark, setMark] = useState(form.getFieldValue('car_attributes.mark_id'));
-    const [model, setModel] = useState(form.getFieldValue('car_attributes.model_id'));
-    const [generation, setGeneration] = useState(form.getFieldValue('car_attributes.generation_id'));
-    const [serie, setSerie] = useState(form.getFieldValue('car_attributes.series_id'));
-    const [modification, setModification] = useState(form.getFieldValue('car_attributes.modification_id'));
-    const [characteristics, setCharacteristics] = useState(form.getFieldValue('car_attributes.characteristics') ?? {});
-
-
+export default function CarAttributes({
+    type,
+    mark,
+    model,
+    generation,
+    series,
+    modification,
+    characteristics,
+    onChange,
+}) {
 
     const types = useQuery(['types'], () => api.fetchCar('types'));
     const marks = useQuery(['marks', type], () => api.fetchCar('marks', {
@@ -46,7 +47,7 @@ export default function CarAttributes({ form }) {
         }),
         limit: 1000
     }));
-    const series = useQuery(['series', type, mark, model, generation], () => api.fetchCar('series', {
+    const seriesQuery = useQuery(['series', type, mark, model, generation], () => api.fetchCar('series', {
         where: filterObject({
             car_type_id: type,
             car_model_id: model,
@@ -54,15 +55,15 @@ export default function CarAttributes({ form }) {
         }),
         limit: 1000
     }));
-    const modifications = useQuery(['modifications', type, mark, model, generation, serie], () => api.fetchCar('modifications', {
+    const modifications = useQuery(['modifications', type, mark, model, generation, series], () => api.fetchCar('modifications', {
         where: filterObject({
             car_type_id: type,
             car_model_id: model,
-            car_series_id: serie
+            car_series_id: series
         }),
         limit: 1000
     }));
-    const characteristicsQuery = useQuery(['characteristics', type, mark, model,], () => api.fetchCar('characteristics', {
+    const characteristicsQuery = useQuery(['characteristics', type, mark, model], () => api.fetchCar('characteristics', {
         where: filterObject({
             car_type_id: type,
             car_model_id: model,
@@ -73,130 +74,120 @@ export default function CarAttributes({ form }) {
         with_values: true
     }));
 
+    console.log('marks', marks)
+
     return (
         <div>
-            <Form.Item
-                label="Тип"
-                name="car_attributes.type_id"
-                rules={[{ required: true, message: 'Выберите тип' }]}
-            >
-                <Select
-                    value={type}
-                    placeholder="Выберите тип"
-                    onChange={(value) => {
-                        setType(value);
-                        setMark(null);
-                        setModel(null);
-                        setGeneration(null);
-                        setSerie(null);
-                        setModification(null);
-                    }}
-                >
-                    {types.data?.map((type) => (
-                        <Select.Option value={type.id}>{type.name}</Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
+            <SearchableSelect
+                value={type}
+                placeholder="Выберите тип"
+                onChange={(value) => {
+                    onChange({
+                        type: value,
+                        mark: null,
+                        model: null,
+                        generation: null,
+                        series: null,
+                        modification: null,
+                    });
+                }}
+                options={types.data?.map((type) => ({ value: type.id, label: type.name }))}
+            />
+
             {type != null ?
-                <Form.Item
-                    label="Марка"
-                    name="car_attributes.mark_id"
-                    rules={[{ required: true, message: 'Выберите марку' }]}
-                >
-                    <Select
-                        placeholder="Выберите марку"
-                        value={mark}
-                        onChange={(value) => {
-                            setMark(value);
-                            setModel(null);
-                            setGeneration(null);
-                            setSerie(null);
-                            setModification(null);
-                        }}
-                    >
-                        {marks.data?.map((type) => (
-                            <Select.Option value={type.id}>{type.name}</Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item> : null}
-            {mark != null ? <Form.Item
-                label="Модель"
-                name="car_attributes.model_id"
-                rules={[{ required: true, message: 'Выберите модель' }]}
-            >
-                <Select
+                <SearchableSelect
+                    placeholder="Выберите марку"
+                    value={mark}
+                    onChange={(value) => {
+                        onChange({
+                            type: type,
+                            mark: value,
+                            model: null,
+                            generation: null,
+                            series: null,
+                            modification: null,
+                        });
+                    }}
+                    className="mt-[15px]"
+                    options={marks.data?.map((type) => ({ value: type.id, label: type.name }))}
+                />
+                : null}
+            {mark != null ?
+                <SearchableSelect
                     placeholder="Выберите модель"
                     value={model}
                     onChange={(value) => {
-                        setModel(value);
-                        setGeneration(null);
-                        setSerie(null);
-                        setModification(null);
+                        onChange({
+                            type: type,
+                            mark: mark,
+                            model: value,
+                            generation: null,
+                            series: null,
+                            modification: null,
+                        });
                     }}
-                >
-                    {models.data?.map((type) => (
-                        <Select.Option value={type.id}>{type.name}</Select.Option>
-                    ))}
-                </Select>
-            </Form.Item> : null}
+                    className="mt-[15px]"
+                    options={models.data?.map((type) => ({ value: type.id, label: type.name }))}
+                />
+                : null}
             {model != null ?
-                <Form.Item
-                    label="Поколение"
-                    name="car_attributes.generation_id"
-                    rules={[{ required: true, message: 'Выберите поколение' }]}
-                >
-                    <Select
-                        placeholder="Выберите поколение"
-                        value={generation}
-                        onChange={(value) => {
-                            setGeneration(value);
-                            setSerie(null);
-                            setModification(null);
-                        }}
-                    >
-                        {generations.data?.map((type) => (
-                            <Select.Option value={type.id}>{type.name}</Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item> : null}
+                <SearchableSelect
+                    placeholder="Выберите поколение"
+                    value={generation}
+                    onChange={(value) => {
+                        onChange({
+                            type: type,
+                            mark: mark,
+                            model: model,
+                            generation: value,
+                            series: null,
+                            modification: null,
+                        });
+                    }}
+                    className="mt-[15px]"
+                    options={generations.data?.map((type) => ({ value: type.id, label: type.name }))}
+                />
+                : null}
             {generation != null ?
-                <Form.Item
-                    label="Серия"
-                    name="car_attributes.series_id"
-                    rules={[{ required: true, message: 'Выберите серию' }]}
-                >
-                    <Select
-                        placeholder="Выберите серию"
-                        value={serie}
-                        onChange={(value) => {
-                            setSerie(value);
-                            setModification(null);
-                        }}
-                    >
-                        {series.data?.map((type) => (
-                            <Select.Option value={type.id}>{type.name}</Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item> : null}
-            {serie != null ?
-                <Form.Item
-                    label="Модификация"
-                    name="car_attributes.modification_id"
-                >
-                    <Select
-                        placeholder="Выберите модификацию"
-                        value={modification}
-                        onChange={(value) => {
-                            setModification(value);
-                        }}
-                    >
-                        {modifications.data?.map((type) => (
-                            <Select.Option value={type.id}>{type.name}</Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item> : null}
+                <SearchableSelect
+                    placeholder="Выберите серию"
+                    value={series}
+                    onChange={(value) => {
+                        onChange({
+                            type: type,
+                            mark: mark,
+                            model: model,
+                            generation: generation,
+                            series: value,
+                            modification: null,
+                        });
+                    }}
+                    className="mt-[15px]"
+                    options={seriesQuery.data?.map((type) => ({ value: type.id, label: type.name }))}
+                />
+                : null}
+            {series != null ?
+                <SearchableSelect
+                    placeholder="Выберите модификацию"
+                    value={modification}
+                    onChange={(value) => {
+                        onChange({
+                            type: type,
+                            mark: mark,
+                            model: model,
+                            generation: generation,
+                            series: series,
+                            modification: value,
+                        });
+                    }}
+                    className="mt-[15px]"
+                    options={modifications.data?.map((type) => ({ value: type.id, label: type.name }))}
+                />
+                : null}
             {type != null && model != null && mark != null ? <>
-                <h5>Характеристики</h5>
+                <h5
+                    className="text-[15px] font-bold mt-[25px] mb-[14px] cursor-pointer"
+                >Характеристики</h5>
                 {characteristicsQuery.data?.map((characteristic) => (
                     <CharacteristicSelect
                         characteristic={characteristic}
@@ -223,36 +214,17 @@ const CharacteristicSelect = ({ characteristic, modificationId }) => {
         setValues(response);
     }
 
+    useEffectOnce(() => {
+        fetchValues();
+    });
+
     return (
         <>
             <div>
-                <Form.Item
-                    label={characteristic.name}
-                    name={`car_attributes.characteristics.${characteristic.id}`}
-                >
-                    <Select
-                        onClick={() => {
-                            if (values == null) {
-                                fetchValues();
-                            }
-                        }}
-                    >
-                        {values != null
-                            ? values.map((value) => (
-                                <Select.Option value={JSON.stringify({
-                                    key: value.id,
-                                    characteristic_id: characteristic.id,
-                                    value: value.value
-                                })}>
-                                    {value.value}
-                                </Select.Option>
-                            ))
-                            : <Select.Option value={null} disabled>
-                                <div style={{ textAlign: "center" }}>Загрузка...</div>
-                            </Select.Option>
-                        }
-                    </Select>
-                </Form.Item>
+                <SearchableSelect
+                    placeholder={characteristic.name}
+                    options={values?.map((value) => ({ value: value.id, label: value.value }))}
+                />
             </div>
         </>
     );

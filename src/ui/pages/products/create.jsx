@@ -17,7 +17,6 @@ const CreateProductPage = () => {
     const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
     const [loading, setLoading] = useState(false);
     const [location, setLocation] = useState(null);
-    const [form] = Form.useForm();
 
     const fetchUserDetails = async () => {
         const userDetails = await api.userDetails();
@@ -66,14 +65,13 @@ const CreateProductPage = () => {
                 </div>
                 <div className="col-xl-9 col-md-12 col-sm-12 col-xs-12 mx-auto">
                     <ProductFields
-                        form={form}
                         loading={loading}
                         onSend={async (model) => {
-                            console.log('phones', form.getFieldValue('phones'));
-                            console.log('video', form.getFieldValue('video'));
-                            console.log('fields', form.getFieldsValue());
+                            // console.log('phones', form.getFieldValue('phones'));
+                            // console.log('video', form.getFieldValue('video'));
+                            // console.log('fields', form.getFieldsValue());
 
-                            const valid = await form.validateFields();
+                            const valid = false; // await form.validateFields();
                             if (valid) {
                                 const formData = new FormData();
                                 formData.append('user_id', user.id);
@@ -83,7 +81,7 @@ const CreateProductPage = () => {
                                     formData.append('images[]', file);
                                 });
                                 let characteristicIndex = 0;
-                                for (const [key, value] of Object.entries(form.getFieldsValue())) {
+                                for (const [key, value] of Object.entries({})) {
                                     if (value == null || value === '' || value === undefined || value === "undefined") {
                                         continue;
                                     }

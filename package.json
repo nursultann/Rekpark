@@ -23,6 +23,7 @@
     "axios-cache-adapter": "^2.7.3",
     "bootstrap": "^4.6.2",
     "brazzers-carousel": "^1.0.1",
+    "classnames": "^2.3.2",
     "firebase": "^8.3.1",
     "firebaseui": "^5.0.0",
     "gapi-script": "^1.2.0",

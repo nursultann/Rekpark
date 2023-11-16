@@ -5,91 +5,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+        #local-video {
+            width: 300px;
+            height: 300px;
+            background-color: #000;
+            float: left;
+            margin: 10px;
+        }
+
+        #remote-video {
+            width: 300px;
+            height: 300px;
+            background-color: #000;
+            float: left;
+            margin: 10px;
+        }
+
+        #start-button {
+            float: left;
+            margin: 10px;
+        }
+
+        #end-button {
+            float: left;
+            margin: 10px;
+        }
+    </style>
 </head>
 
 <body>
 
+    <div id="local-video">
+
+    </div>
+    <div id="remote-video">
+
+    </div>
+    <button id="start-button">Start Video Call</button>
+    <button id="end-button">End Video Call</button>
 
 
-    <script src="https://sdk.twilio.com/js/video/releases/2.22.1/twilio-video.min.js"></script>
+    <script src="https://sdk.twilio.com/js/video/releases/2.0.0-beta1/twilio-video.min.js"></script>
     <script>
-        const token = '';
+        let token = '';
         const roomName = 'VideoRoom';
 
-        Twilio.Video.createLocalTracks({
-            audio: true,
-            video: {
-                width: 300
-            }
-        }).then(function (localTracks) {
-            const response = fetch('http://185.251.88.75/api/general/get_video_token/');
+        const localVideo = document.getElementById('local-video');
+        const remoteVideo = document.getElementById('remote-video');
+        const startButton = document.getElementById('start-button');
+        const endButton = document.getElementById('end-button');
+        let room;
 
-            return Twilio.Video.connect(`${token}`, {
-                name: `${roomName}`,
-                tracks: localTracks,
-                video: {
-                    width: 300
+        (async function () {
+            const bToken = // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA0NzExMTc1LCJpYXQiOjE2OTk1MjcxNzUsImp0aSI6Ijk0NDViZWVhYzI1YzQyZTU5YTZlNWM1NGY0MWM3ZmE4IiwidXNlcl9pZCI6MTh9.UvLHMtuLESLlrBVzAZvX4NZYDXVDh-7-GDM7UGCq_wM'
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA0NzA2ODIwLCJpYXQiOjE2OTk1MjI4MjAsImp0aSI6ImZjMmQ4ZmM0ZTJhNTRjNWRiMjVjYmJhNjM0Mjk3ODg4IiwidXNlcl9pZCI6MX0.ZMzA1k-kDpNVzettgd2uiR-1QIbiKEY4QHIAiQ-202c'
+            const response = await fetch(
+                'http://185.251.88.75/api/general/get_video_token/',
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${bToken}`
+                    },
                 }
-            });
-        }).then(function (room) {
-            console.log('Successfully joined a Room: ', room.name);
-
-            room.participants.forEach(participantConnected);
-
-            var previewContainer = document.getElementById(room.localParticipant.sid);
-            if (!previewContainer || !previewContainer.querySelector('video')) {
-                participantConnected(room.localParticipant);
-            }
-
-            room.on('participantConnected', function (participant) {
-                console.log("Joining: '" + participant.identity + "'");
-                participantConnected(participant);
+            ).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                return data.token;
             });
 
-            room.on('participantDisconnected', function (participant) {
-                console.log("Disconnected: '" + participant.identity + "'");
-                participantDisconnected(participant);
+            console.log(response);
+            token = response;
+
+            Twilio.Video.createLocalVideoTrack().then(track => {
+                console.log('local video track created ' + track.id);
+                localVideo.appendChild(track.attach());
             });
-        });
+
+            startButton.addEventListener('click', () => {
+                joinRoom();
+            });
+
+        })();
+
+        function joinRoom() {
+            Twilio.Video.connect(token, {
+                name: roomName
+            }).then(room => {
+                console.log(`Successfully joined a Room: ${room}`);
+                window.room = room;
+                room.participants.forEach(participantConnected);
+                const previewContainer = document.getElementById(room.localParticipant.sid);
+                if (!previewContainer || !previewContainer.querySelector('video')) {
+                    participantConnected(room.localParticipant);
+                }
+                room.on('participantConnected', participantConnected);
+                room.on('participantDisconnected', participantDisconnected);
+            }, error => {
+                console.error(`Unable to connect to Room: ${error}`);
+            });
+        }
 
         function participantConnected(participant) {
-            console.log('Participant "%s" connected', participant.identity);
+            console.log(`Participant "${participant.identity}" connected`);
 
             const div = document.createElement('div');
             div.id = participant.sid;
             div.setAttribute("style", "float: left; margin: 10px;");
 
-            participant.tracks.forEach(function (track) {
-                trackAdded(div, track)
+            participant.tracks.forEach(publication => {
+                if (publication.isSubscribed) {
+                    trackSubscribed(div, publication.track);
+                }
             });
-
-            participant.on('trackAdded', function (track) {
-                trackAdded(div, track)
-            });
-            participant.on('trackRemoved', trackRemoved);
+            participant.on('trackSubscribed', track => trackSubscribed(div, track));
+            participant.on('trackUnsubscribed', trackUnsubscribed);
 
             document.body.appendChild(div);
         }
 
         function participantDisconnected(participant) {
-            console.log('Participant "%s" disconnected', participant.identity);
+            console.log(`Participant "${participant.identity}" disconnected`);
 
-            participant.tracks.forEach(trackRemoved);
+            participant.tracks.forEach(publication => {
+                if (publication.track) {
+                    publication.track.detach().forEach(element => element.remove());
+                }
+            });
             document.getElementById(participant.sid).remove();
         }
 
-        function trackAdded(div, track) {
+        function trackSubscribed(div, track) {
             div.appendChild(track.attach());
-            var video = div.getElementsByTagName("video")[0];
-            if (video) {
-                video.setAttribute("style", "max-width: 300px;");
-            }
         }
 
-        function trackRemoved(track) {
-            track.detach().forEach(function (element) {
-                element.remove()
-            });
+        function trackUnsubscribed(track) {
+            track.detach().forEach(element => element.remove());
         }
 
     </script>

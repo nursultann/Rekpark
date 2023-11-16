@@ -12,7 +12,7 @@ import { setCurrencies, setRegions } from "../../../redux/actions/main_actions";
 import DragAndDropUploader from "../drag_and_drop_uploader";
 import CarAttributes from "../custom_attribute/car_attributes";
 import { CustomAttributeField, NewCustomAttributeField } from "../custom_components";
-import { DefaultInput, DefaultSelect } from "../default_input_fields";
+import { DefaultInput, DefaultSelect, SearchableSelect } from "../default_input_fields";
 import { useCategoriesTree } from "../../../hooks/category";
 import { useEffectOnce } from "react-use";
 import ReactModal from "react-modal";
@@ -20,6 +20,7 @@ import { ArrowDropDown, KeyboardArrowDown } from "@mui/icons-material";
 import TreeView from "../tree_view";
 import TagsInput from "../tags_input";
 import { useUserStore } from "../../../store/user_store";
+import JsonField from "../json_field";
 
 var DG = require('2gis-maps');
 
@@ -34,12 +35,14 @@ const Title = ({ title, isRequired, children }) => (
 
 const HelpBlock = ({ children }) => (
   <span className="text-gray-500 text-[12px] mt-1 mb-3 gap-2 flex items-center">
-    <i class="fas fa-info-circle"></i>
+    <i className="fas fa-info-circle"></i>
     <span>{children}</span>
   </span>
 );
 
-const ProductFields = ({ form, loading = false, onSend }) => {
+
+
+const ProductFields = ({ loading = false, onSend }) => {
   const dispatch = useDispatch();
   const userState = useUserStore();
   const categories = useCategoriesTree();
@@ -48,15 +51,23 @@ const ProductFields = ({ form, loading = false, onSend }) => {
 
   const { currencies, regions } = useSelector((state) => state.main);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
   const [cities, setCities] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [phones, setPhones] = useState([]);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(undefined);
 
   const [files, setFiles] = useState([]);
-  const [map, setMap] = useState(<div id="map" style={{ width: "100%", height: "400px" }}></div>);
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [selectedCurrencyId, setSelectedCurrencyId] = useState(undefined);
+  const [selectedCategory, setSelectedCategory] = useState(undefined);
+  const [description, setDescription] = useState("");
+  const [regionId, setRegionId] = useState(undefined);
+  const [cityId, setCityId] = useState(undefined);
+  const [districtId, setDistrictId] = useState(undefined);
+  const [canComment, setCanComment] = useState("all");
+  const [customAttributes, setCustomAttributes] = useState([]);
+  const [carAttributes, setCarAttributes] = useState({});
 
   const setCategory = async (category) => {
     setSelectedCategory(category);
@@ -71,8 +82,8 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     if (currencies != null) {
       dispatch(setCurrencies(currencies));
       if (currencies.length) {
-        if (form.getFieldValue("currency_id")) {
-          const currency = currencies.find(o => o.id === form.getFieldValue("currency_id"));
+        if (selectedCurrencyId) {
+          const currency = currencies.find(o => o.id === selectedCurrencyId);
           setSelectedCurrencyId(currency.id);
         } else {
           setSelectedCurrencyId(currencies[0].id);
@@ -83,8 +94,8 @@ const ProductFields = ({ form, loading = false, onSend }) => {
     if (regions != null) {
       dispatch(setRegions(regions));
       if (regions.length) {
-        if (form.getFieldValue("region_id")) {
-          const region = regions.find(o => o.id === form.getFieldValue("region_id"));
+        if (regionId) {
+          const region = regions.find(o => o.id === regionId);
           selectRegion(region);
         } else {
           selectRegion(regions[0]);
@@ -94,14 +105,13 @@ const ProductFields = ({ form, loading = false, onSend }) => {
   };
 
   const selectRegion = (region) => {
-    form.setFieldsValue({
-      region_id: region.id
-    });
+    setRegionId(region.id);
 
     setCities(region.cities);
     if (region.cities != null && region.cities.length) {
-      if (form.getFieldValue("city_id")) {
-        const city = region.cities.find(o => o.id === form.getFieldValue("city_id"));
+      if (cityId) {
+        const city = region.cities.find(o => o.id === cityId);
+        selectCity(city);
       } else {
         selectCity(region.cities[0]);
       }
@@ -109,9 +119,7 @@ const ProductFields = ({ form, loading = false, onSend }) => {
   };
 
   const selectCity = (city) => {
-    form.setFieldsValue({
-      city_id: city.id
-    });
+    setCityId(city.id);
     setDistricts(city.districts);
   };
 
@@ -132,12 +140,35 @@ const ProductFields = ({ form, loading = false, onSend }) => {
 
   const user = userState.user;
 
+  function checkAttributes(categories) {
+    let attributes = [];
+    categories.forEach((category) => {
+      if (category.custom_attribute && category.custom_attribute.length > 0) {
+        attributes.push({
+          name: category.name,
+          attributes: category.custom_attribute,
+        });
+      }
+      if (category.ca_groups && category.ca_groups.length > 0) {
+        attributes.push({
+          name: category.name,
+          attributes: category.ca_groups,
+        });
+      }
+      if (category.children && category.children.length > 0) {
+        attributes = attributes.concat(checkAttributes(category.children));
+      }
+    });
+
+    return attributes;
+  }
+
+  const attributes = checkAttributes(categories);
+  console.log('attributes', attributes);
+
   return (
     <>
-      <form
-        ref={formRef}
-
-      >
+      <form >
         <center>
           <Title title="Изображения" isRequired={true} />
           <HelpBlock>
@@ -195,17 +226,24 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         <DefaultInput
           placeholder="Введите загаловок"
           className={"mt-1"}
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
         />
 
         <Title title="Цена" isRequired={true} />
         <div className="flex flex-row items-center  justify-between gap-2 mt-1 border rounded-[10px] p-0 m-0">
-          <input type="text" placeholder="Цена" className="w-full border-none rounded-[10px] px-[20px] py-[10px] hover:border-[#184d9f] focus:border-[#184d9f] focus:ring-0" />
+          <input type="number" placeholder="Цена" className="w-full border-none rounded-[10px] px-[20px] py-[10px] hover:border-[#184d9f] focus:border-[#184d9f] focus:ring-0" />
           <select
             className="px-[20px] py-[10px] border-none focus:ring-0 rounded-tr-[10px] rounded-br-[10px] bg-zinc-200 text-primary m-0"
             onChange={(e) => { setSelectedCurrencyId(e.target.value); }}
+            value={selectedCurrencyId}
           >
-            {currencies.map((item) => (
-              <option value={item.id} selected={item.id === selectedCurrencyId}>{item.symbol}</option>
+            {currencies.map((item, index) => (
+              <option
+                key={index}
+                value={item.id}>{item.symbol}</option>
             ))}
           </select>
         </div>
@@ -214,29 +252,37 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         <textarea
           placeholder="Введите описание"
           className="mt-1 border rounded-[10px] px-[20px] py-[10px] w-full h-[200px] resize-none"
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value);
+          }}
         ></textarea>
 
         <Title title="Регион" isRequired={true} />
-        <DefaultSelect
+        <SearchableSelect
           placeholder="Выберите регион"
-          value={null}
+          value={regionId}
+          onChange={(e) => {
+            const region = regions.find(o => o.id === e);
+
+            selectRegion(region);
+          }}
           className="mt-1"
-        >
-          {regions.map((item) => (
-            <option value={item.id}>{item.name}</option>
-          ))}
-        </DefaultSelect>
+          options={regions.map((item) => ({ value: item.id, label: item.name }))}
+        />
 
         <Title title="Город" isRequired={true} />
-        <DefaultSelect
+        <SearchableSelect
           placeholder="Выберите город"
-          value={null}
+          value={cityId}
+          onChange={(e) => {
+            const city = cities.find(o => o.id === e);
+
+            selectCity(city);
+          }}
           className="mt-1"
-        >
-          {cities.map((item) => (
-            <option value={item.id}>{item.name}</option>
-          ))}
-        </DefaultSelect>
+          options={cities.map((item) => ({ value: item.id, label: item.name }))}
+        />
 
         <Title title="Район" isRequired={false} />
         <TagsInput
@@ -253,21 +299,27 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         {
           selectedCategory != null ?
             <>
-              {selectedCategory.custom_attribute?.map((item) => (<>
+              {selectedCategory.custom_attribute?.map((item, index) => (<div key={index}>
                 <Title title={item.title} isRequired={item.required} />
                 <div className="mt-1">
-                  <NewCustomAttributeField item={item} />
+                  <NewCustomAttributeField
+                    item={item}
+                    value={customAttributes[item.name]}
+                    onChange={(value) => {
+                      setCustomAttributes({ ...customAttributes, [item.name]: value });
+                    }}
+                  />
                 </div>
-              </>))}
-              {selectedCategory.ca_groups?.map((group) => (
-                <>
-                  {group.attributes?.map((item) => (<>
+              </div>))}
+              {selectedCategory.ca_groups?.map((group, index) => (
+                <div key={index}>
+                  {group.attributes?.map((item, index) => (<div key={index}>
                     <Title title={item.title} isRequired={item.required} />
                     <div className="mt-1">
                       <NewCustomAttributeField item={item} />
                     </div>
-                  </>))}
-                </>
+                  </div>))}
+                </div>
               ))}
             </>
             :
@@ -276,18 +328,28 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         }
 
         <Title title="Кто может комментировать" isRequired={false} />
-        <DefaultSelect placeholder="Кто может комментировать" value="all" className="mt-1">
+        <DefaultSelect
+          placeholder="Кто может комментировать"
+          value={canComment}
+          onChange={(e) => {
+            setCanComment(e.target.value);
+          }}
+          className="mt-1"
+        >
           <option value="all">Все</option>
           <option value="none">Никто</option>
         </DefaultSelect>
 
         <Title title="Тел. номера" isRequired={true} />
-        <TagsInput
-          placeholder="Введите тел. номера"
-          className="mt-1" options={user?.phone && !phones.includes(user.phone) ? [user.phone] : null}
+        <JsonField
+          fields={[
+            { title: "Номер телефона", key: "phone" },
+          ]}
+          className="mt-1"
           values={phones}
-          onChange={(phones) => {
-            setPhones(phones);
+          onChange={(values) => {
+            console.log('values', values);
+            setPhones(values);
           }}
         />
 
@@ -304,17 +366,30 @@ const ProductFields = ({ form, loading = false, onSend }) => {
         {selectedCategory != null && selectedCategory.kind === 'cars' ? (
           <>
             <hr />
-            <h4>Дополнительные параметры</h4>
-            <CarAttributes form={form} />
-            <hr />
+            <h4
+              className="text-[15px] font-bold mt-[25px] mb-[14px] cursor-pointer"
+            >Дополнительные параметры</h4>
+            <CarAttributes
+              type={carAttributes.type}
+              mark={carAttributes.mark}
+              model={carAttributes.model}
+              generation={carAttributes.generation}
+              series={carAttributes.series}
+              modification={carAttributes.modification}
+              characteristics={carAttributes.characteristics}
+              onChange={(value) => {
+                setCarAttributes(value);
+              }}
+            />
+            <hr
+              className="mt-[25px]"
+            />
           </>
         ) : <></>
         }
 
         <div className="mt-[25px] mb-[14px] text-primary">Поставьте курсор на карте о местоположении товара или услуги</div>
-        {map}
-        {/* <Input type="text" value={JSON.stringify(location)} /> */}
-
+        <div id="map" style={{ width: "100%", height: "400px" }}></div>
 
         <center>
           <div

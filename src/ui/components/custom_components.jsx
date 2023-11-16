@@ -11,7 +11,7 @@ import { DefaultInput, DefaultSelect } from "./default_input_fields";
 
 const { Option } = Select;
 
-const NewCustomAttributeField = ({ item }) => {
+const NewCustomAttributeField = ({ item, value, onChange }) => {
   let values = item.values;
   if (typeof item.values === 'string') {
     values = JSON.parse(item.values);
@@ -27,20 +27,27 @@ const NewCustomAttributeField = ({ item }) => {
       <DefaultInput
         placeholder={item.placeholder}
         type={type}
+        value={value || ''}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
       />
     );
   }
 
   if (['SELECT', 'MULTISELECT', 'ARRAY'].includes(item.type)) {
-    console.log(values);
+
     return (
       <DefaultSelect
         placeholder={item.placeholder}
         multiple={item.type === 'MULTISELECT' || item.type === 'ARRAY'}
-        onChange={(value) => { }}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+        value={value}
       >
-        {Object.keys(values['options']).map((itm) => {
-          return (<option value={itm}>{itm}</option>);
+        {Object.keys(values['options']).map((itm, index) => {
+          return (<option key={index} value={itm}>{itm}</option>);
         })}
       </DefaultSelect>
     );
@@ -52,8 +59,8 @@ const NewCustomAttributeField = ({ item }) => {
         placeholder={item.placeholder}
         onChange={(value) => { }}
       >
-        {Object.keys(values).map((itm) => {
-          return (<option value={values[itm]}>{values[itm]}</option>);
+        {Object.keys(values).map((itm, ind) => {
+          return (<option key={ind} value={values[itm]}>{values[itm]}</option>);
         })}
       </DefaultSelect>
     );
