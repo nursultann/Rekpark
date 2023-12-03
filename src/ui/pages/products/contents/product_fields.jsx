@@ -1,36 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Form,
-  Button,
-  Select,
-} from "antd";
 
-import * as api from "../../../api";
-import { setCategories } from "../../../redux/actions/category_actions";
-import { setCurrencies, setRegions } from "../../../redux/actions/main_actions";
-import DragAndDropUploader from "../drag_and_drop_uploader";
-import CarAttributes from "../custom_attribute/car_attributes";
-import { CustomAttributeField, NewCustomAttributeField } from "../custom_components";
-import { DefaultInput, DefaultSelect, SearchableSelect } from "../default_input_fields";
-import { useCategoriesTree } from "../../../hooks/category";
+import * as api from "../../../../api";
+import { setCurrencies, setRegions } from "../../../../redux/actions/main_actions";
+import DragAndDropUploader from "../../../components/drag_and_drop_uploader";
+import CarAttributes from "../../../components/custom_attribute/car_attributes";
+import { CustomAttributeField, NewCustomAttributeField } from "../../../components/custom_components";
+import { DefaultInput, DefaultSelect, SearchableSelect } from "../../../components/default_input_fields";
+import { useCategoriesTree } from "../../../../hooks/category";
 import { useEffectOnce } from "react-use";
 import ReactModal from "react-modal";
 import { ArrowDropDown, KeyboardArrowDown } from "@mui/icons-material";
-import TreeView from "../tree_view";
-import TagsInput from "../tags_input";
-import { useUserStore } from "../../../store/user_store";
-import JsonField from "../json_field";
+import TreeView from "../../../components/tree_view";
+import TagsInput from "../../../components/tags_input";
+import { useUserStore } from "../../../../store/user_store";
+import JsonField from "../../../components/json_field";
 
 var DG = require('2gis-maps');
 
 const Title = ({ title, isRequired, children }) => (
-  <>
-    <div className="flex flex-row items-center gap-2 mt-3">
-      {isRequired ? <span className="text-red-500">*</span> : <></>}
-      <span className="text-black text-[15px] font-normal">{title}</span>
-    </div>
-  </>
+  <div className="flex flex-row items-center gap-2 mt-3">
+    {isRequired ? <span className="text-red-500">*</span> : <></>}
+    <span className="text-black text-[15px] font-normal">{title}</span>
+  </div>
 );
 
 const HelpBlock = ({ children }) => (
@@ -68,6 +60,9 @@ const ProductFields = ({ loading = false, onSend }) => {
   const [canComment, setCanComment] = useState("all");
   const [customAttributes, setCustomAttributes] = useState([]);
   const [carAttributes, setCarAttributes] = useState({});
+  const [location, setLocation] = useState(null);
+
+  const [errors, setErrors] = useState({});
 
   const setCategory = async (category) => {
     setSelectedCategory(category);
@@ -133,7 +128,14 @@ const ProductFields = ({ loading = false, onSend }) => {
         'center': [42.876, 74.607],
         'zoom': 13
       });
-      DG.marker([42.876, 74.607]).addTo(map);
+      marker = DG.marker([42.876, 74.607], {
+        draggable: true
+      }).addTo(map);
+      marker.on('drag', function (e) {
+        let lat = e.target._latlng.lat.toFixed(3);
+        let lng = e.target._latlng.lng.toFixed(3);
+        setLocation({ latitude: lat, longitude: lng });
+      });
     });
 
   });
@@ -163,12 +165,61 @@ const ProductFields = ({ loading = false, onSend }) => {
     return attributes;
   }
 
+  function validate() {
+    let errors = {};
+    if (title.length === 0) {
+      errors.title = "Заголовок не может быть пустым";
+    }
+    if (price.length === 0) {
+      errors.price = "Цена не может быть пустой";
+    }
+    if (description.length === 0) {
+      errors.description = "Описание не может быть пустым";
+    }
+    if (!regionId) {
+      errors.regionId = "Регион не может быть пустым";
+    }
+    if (cityId == null) {
+      errors.cityId = "Город не может быть пустым";
+    }
+    if (selectedCategory == null) {
+      errors.selectedCategory = "Категория не может быть пустой";
+    }
+    if (phones.length === 0) {
+      errors.phones = "Телефон не может быть пустым";
+    }
+    if (location == null) {
+      errors.location = "Местоположение не может быть пустым";
+    }
+    if (selectedCategory != null && selectedCategory.custom_attribute?.length > 0) {
+      selectedCategory.custom_attribute.forEach((item) => {
+        if (item.required && customAttributes[item.name] === undefined) {
+          errors[item.name] = "Поле не может быть пустым";
+        }
+      });
+    }
+    if (selectedCategory != null && selectedCategory.ca_groups?.length > 0) {
+      selectedCategory.ca_groups?.forEach((group) => {
+        group.attributes?.forEach((item) => {
+          if (item.required && customAttributes[item.name] === undefined) {
+            errors[item.name] = "Поле не может быть пустым";
+          }
+        });
+      });
+    }
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  }
+
   const attributes = checkAttributes(categories);
-  console.log('attributes', attributes);
+
+  console.log('ca_groups.attributes', selectedCategory?.ca_groups?.map((group) => group));
 
   return (
     <>
-      <form >
+      <form
+        ref={formRef}
+      >
         <center>
           <Title title="Изображения" isRequired={true} />
           <HelpBlock>
@@ -224,21 +275,35 @@ const ProductFields = ({ loading = false, onSend }) => {
 
         <Title title="Заголовок" isRequired={true} />
         <DefaultInput
+          name="title"
           placeholder="Введите загаловок"
           className={"mt-1"}
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
           }}
+          required={true}
+          error={errors.title}
         />
 
         <Title title="Цена" isRequired={true} />
         <div className="flex flex-row items-center  justify-between gap-2 mt-1 border rounded-[10px] p-0 m-0">
-          <input type="number" placeholder="Цена" className="w-full border-none rounded-[10px] px-[20px] py-[10px] hover:border-[#184d9f] focus:border-[#184d9f] focus:ring-0" />
+          <input
+            type="number"
+            placeholder="Цена"
+            className="w-full border-none rounded-[10px] px-[20px] py-[10px] hover:border-[#184d9f] focus:border-[#184d9f] focus:ring-0"
+            value={price}
+            onChange={(e) => {
+              setPrice(e.target.value);
+            }}
+            required={true}
+            error={errors.price}
+          />
           <select
             className="px-[20px] py-[10px] border-none focus:ring-0 rounded-tr-[10px] rounded-br-[10px] bg-zinc-200 text-primary m-0"
             onChange={(e) => { setSelectedCurrencyId(e.target.value); }}
             value={selectedCurrencyId}
+
           >
             {currencies.map((item, index) => (
               <option
@@ -256,10 +321,13 @@ const ProductFields = ({ loading = false, onSend }) => {
           onChange={(e) => {
             setDescription(e.target.value);
           }}
+          required={true}
+          error={errors.description}
         ></textarea>
 
         <Title title="Регион" isRequired={true} />
         <SearchableSelect
+          name={"regionId"}
           placeholder="Выберите регион"
           value={regionId}
           onChange={(e) => {
@@ -269,10 +337,12 @@ const ProductFields = ({ loading = false, onSend }) => {
           }}
           className="mt-1"
           options={regions.map((item) => ({ value: item.id, label: item.name }))}
+
         />
 
         <Title title="Город" isRequired={true} />
         <SearchableSelect
+          name={"cityId"}
           placeholder="Выберите город"
           value={cityId}
           onChange={(e) => {
@@ -311,12 +381,19 @@ const ProductFields = ({ loading = false, onSend }) => {
                   />
                 </div>
               </div>))}
+
               {selectedCategory.ca_groups?.map((group, index) => (
                 <div key={index}>
                   {group.attributes?.map((item, index) => (<div key={index}>
                     <Title title={item.title} isRequired={item.required} />
                     <div className="mt-1">
-                      <NewCustomAttributeField item={item} />
+                      <NewCustomAttributeField
+                        item={item}
+                        value={customAttributes[item.name]}
+                        onChange={(value) => {
+                          setCustomAttributes({ ...customAttributes, [item.name]: value });
+                        }}
+                      />
                     </div>
                   </div>))}
                 </div>
@@ -394,10 +471,78 @@ const ProductFields = ({ loading = false, onSend }) => {
         <center>
           <div
             className=" bg-blue-600 rounded-[5px] mt-[40px] mb-3 px-16 py-[10px] text-white hover:bg-blue-700 transition-colors duration-200 active:bg-blue-800"
-
-
             onClick={async () => {
-              console.log('values', formRef.current);
+              if (!validate()) {
+                console.log('validate', errors);
+                for (let key in errors) {
+                  const element = formRef.current.querySelector(`#${key}`);
+                  if (element != null) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    break;
+                  }
+                }
+                return;
+              }
+
+              const data = new FormData();
+
+              if (files.length) {
+                files.forEach((file) => {
+                  data.append("images[]", file);
+                });
+              }
+
+              data.append("title", title);
+              data.append("price", price);
+              data.append("currency_id", selectedCurrencyId);
+              data.append("description", description);
+              data.append("category_id", selectedCategory.id);
+              data.append("region_id", regionId);
+              data.append("city_id", cityId);
+              data.append("district", districtId);
+              data.append("can_comment", canComment);
+              data.append("location", JSON.stringify(location));
+              data.append("phones", JSON.stringify(
+                phones.map((item) => item.value)
+              ));
+
+              let attributes = [];
+              for (let key in customAttributes) {
+                let allAttributes = [
+                  ...selectedCategory.custom_attribute,
+                  ...selectedCategory.ca_groups?.map((group) => group.attributes).flat(),
+                ];
+
+                const attribute = allAttributes.find(o => o.name === key);
+                if (attribute != null) {
+                  let extra = null;
+                  if (attribute.type === 'RELATION') {
+                    const values = JSON.parse(attribute.values);
+                    if (values instanceof Object) {
+                      extra = values['table'];
+                    }
+                  }
+
+                  attributes.push({
+                    attribute_id: attribute.id,
+                    value: customAttributes[key],
+                    type: attribute.type.toLowerCase(),
+                    label: attribute.title ?? attribute.placeholder,
+                    extra: extra,
+                  });
+                }
+              }
+              if (attributes.length) {
+                data.append("custom_attribute_values", JSON.stringify(attributes));
+              }
+
+              console.log('attributes', attributes)
+
+              if (selectedCategory.kind === 'cars') {
+                data.append("car_attributes", JSON.stringify(carAttributes));
+              }
+
+              onSend(data);
             }}>
             Опубликовать
           </div>

@@ -10,7 +10,7 @@ export {
     addToFavorites,
     getComplaints
 } from './product';
-export { fetchCategoriesTree, fetchCategoryProducts, fetchCategoryDetails } from './category';
+export { fetchCategoriesTree, fetchCategoryProducts, fetchCategoryDetails, fetchCustomAttributeRelations } from './category';
 export {
     login,
     register,

@@ -24,7 +24,20 @@ function maxSymbolEllipsis(str, maxLength) {
     return str;
 }
 
+function filterCategoriesByParentId(categories, parentId = null) {
+    return categories.filter(category => category.parent_id == parentId);
+}
+
+function filterCategoriesByParentIdRecursive(categories, parentId = null) {
+    const filteredCategories = filterCategoriesByParentId(categories, parentId);
+    return filteredCategories.map(category => {
+        category.children = filterCategoriesByParentIdRecursive(categories, category.id);
+        return category;
+    });
+}
+
 export {
     maxSymbolEllipsis,
-    getTextContentOnly
+    getTextContentOnly,
+    filterCategoriesByParentIdRecursive
 }

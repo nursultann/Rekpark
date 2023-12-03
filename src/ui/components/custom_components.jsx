@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
   Input,
@@ -7,7 +7,10 @@ import {
   Switch
 } from "antd";
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import { DefaultInput, DefaultSelect } from "./default_input_fields";
+import { DefaultInput, DefaultSelect, SearchableSelect } from "./default_input_fields";
+import { useEffectOnce } from "react-use";
+import { load } from "@2gis/mapgl";
+import { fetchCustomAttributeRelations } from "../../api";
 
 const { Option } = Select;
 
@@ -55,18 +58,53 @@ const NewCustomAttributeField = ({ item, value, onChange }) => {
 
   if (item.type === 'RELATION') {
     return (
-      <DefaultSelect
-        placeholder={item.placeholder}
-        onChange={(value) => { }}
-      >
-        {Object.keys(values).map((itm, ind) => {
-          return (<option key={ind} value={values[itm]}>{values[itm]}</option>);
-        })}
-      </DefaultSelect>
+      <RelationField
+        item={item}
+        value={value}
+        onChange={(value) => {
+          console.log(value);
+          onChange(value);
+        }}
+      />
     );
   }
 
   return (<input placeholder="Unknown type" />)
+}
+
+const RelationField = ({ item, value, onChange }) => {
+  const [values, setValues] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffectOnce(() => {
+    if (typeof item.values === 'string') {
+      const values = JSON.parse(item.values);
+      setValues(values);
+    }
+    loadOptions();
+  });
+
+  const loadOptions = async () => {
+    setLoading(true);
+    const options = await fetchCustomAttributeRelations(item.id);
+    setOptions(options);
+    setLoading(false);
+  }
+
+  const key = values['label'];
+
+  return (
+    <SearchableSelect
+      name={item.name}
+      placeholder={item.placeholder}
+      onChange={onChange}
+      value={value}
+      options={options.map((itm, ind) => {
+        return ({ value: itm['id'], label: itm[key] });
+      })}
+    />
+  );
 }
 
 const CustomAttributeField = (item) => {
@@ -106,6 +144,7 @@ const CustomAttributeField = (item) => {
         />
       );
     case 'RELATION':
+
       return (
         <Select placeholder={item.title} id={item.name} labelId={`${item.name}_label`} className="w-100 mb-2">
           {Object.keys(values).map((itm) => {
