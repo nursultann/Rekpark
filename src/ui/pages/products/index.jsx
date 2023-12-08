@@ -39,7 +39,7 @@ const ProductListPage = () => {
   return (
     <div>
       <Navbar />
-      <SearchBar />
+      {/* <SearchBar /> */}
       <div className="col-md-12">
         <div className="row mt-6 mb-6">
           {products === null || products === undefined || products.length === 0 ?

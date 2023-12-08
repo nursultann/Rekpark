@@ -1,6 +1,6 @@
 import React from "react";
 import MobileBar from "./mobile_bar";
-import logo from '../img/logo.png';
+// import logo from '../../';
 const Footer = () => {
   return (
     <footer>
@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="container">
           <div className="row mb-5">
             <div className="col-md-4">
-              <a href="/" className="footer-site-logo"><img src={logo} alt="" width={'200px'} /></a>
+              <a href="/" className="footer-site-logo"><img src={''} alt="" width={'200px'} /></a>
               <p>Сайт объявлений Кыргызстана</p>
             </div>
             <div className="col-5 text-white">

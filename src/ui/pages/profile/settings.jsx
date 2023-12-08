@@ -12,7 +12,8 @@ import { Tabs } from 'antd';
 import { Input } from 'antd';
 import { Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { unstable_HistoryRouter } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 const { TabPane } = Tabs;
 const key = 'updatable';
@@ -29,7 +30,7 @@ const SettingsPage = () => {
     const [name, setName] = useState();
     const [userid, setUserid] = useState();
     const [file, setFile] = useState();
-    const history = useHistory();
+    const history = unstable_HistoryRouter();
     function beforeUpload(file) {
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {

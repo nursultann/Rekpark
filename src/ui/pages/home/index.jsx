@@ -27,11 +27,9 @@ const HomePage = () => {
   return (
     <div>
       <SearchBar />
-
       <main role="main" className="container-fluid mb-5">
         <div className="row">
           <div className="col-lg-9 col-md-12">
-
             <div className="flex flex-grow gap-4 h-[400px] overflow-x-scroll d-none d-md-none w-full">
               {Array.from(new Array(10)).map((item, index) => {
                 return (

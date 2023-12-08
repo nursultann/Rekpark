@@ -432,7 +432,7 @@ const ProductDetailPage = ({ match }) => {
                     <button className="btn text-white" style={{ backgroundColor: "#184d9f" }} onClick={PostComplaint}>Пожаловаться</button>
                 </div>
             </Modal>
-            <div className="fixed-bottom d-block d-md-none">
+            {/* <div className="fixed-bottom d-block d-md-none">
                 <div className="row">
                     <button className="btn col-6 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fas fa-phone-volume"></i> Позвонить</button>
                     <button className="btn col-6 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fa-solid fa-envelope"></i> Написать</button>
@@ -499,7 +499,7 @@ const ProductDetailPage = ({ match }) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
