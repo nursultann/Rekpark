@@ -1,14 +1,14 @@
-import { ActionTypes } from "../../constants/action_types"
+import { ActionTypes } from "../../config/constants/action_types"
 
 const initialState = {
     categories: []
 }
 
-export const categoryReducer = (state = initialState, {type, payload}) => {
-    switch(type) {
+export const categoryReducer = (state = initialState, { type, payload }) => {
+    switch (type) {
         case ActionTypes.SET_CATEGORIES:
             return { ...state, categories: payload };
-        default: 
+        default:
             return state;
     }
 }

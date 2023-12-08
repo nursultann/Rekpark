@@ -1,36 +1,77 @@
-import Pusher from 'pusher-js'
-import eventBus from './event_bus';
-import { message } from 'antd';
+import { io } from 'socket.io-client';
 
-const pusher = new Pusher('a93eea2d3346ba7f82c9', {
-    cluster: 'ap2',
+const socket = io('http://localhost:8001', {
+    transports: ['websocket'],
+    autoConnect: false,
 });
 
-export const subscribeToPusher = (userId) => {
-    var channel = pusher.subscribe(`chat.${userId}`);
-    channel.bind('message-event', function(data) {
-        console.log('message', data);
-        /*
-        {
-            user: {},
-            // receiver: {},
-            message: {
-                id: int,
-                text: string,
-                created_at: datetime,
-            },
+class SocketHelper {
+    static instance = null;
+
+    static getInstance = () => {
+        if (SocketHelper.instance === null) {
+            SocketHelper.instance = new SocketHelper();
         }
-        */
-        const messag = JSON.stringify(data);
-        eventBus.dispatch('chat-message', messag);
-        if(messag!=null){
-        message.info("Вам пришло сообщение!");
-        // alert(messag);
+
+        return SocketHelper.instance;
+    }
+
+    static I = SocketHelper.getInstance();
+
+    constructor() {
+        this.connected = false;
+
+        this.socket = socket;
+
+        this.socket.on('disconnect', () => {
+            console.log('disconnected');
+            this.connected = false;
+        });
+    }
+
+    connect = async () => {
+        return new Promise((resolve) => {
+            this.socket.connect();
+
+            this.socket.on('connect', () => {
+                console.log('connected');
+                this.connected = true;
+
+                socket.emit('join', {
+                    token: localStorage.getItem('token')
+                });
+
+                resolve();
+            });
+
+        });
+    }
+
+    disconnect = () => {
+        this.socket.disconnect();
+    }
+
+    sendMessage = (message) => {
+        this.socket.emit('message', message);
+    }
+
+    async* subscribeTo(channel) {
+        if (!this.connected) {
+            await this.connect();
         }
-    });
+
+        yield new Promise((resolve) => {
+            this.socket.on(channel, (data) => {
+                console.log(channel, data);
+
+                resolve(data);
+            });
+        });
+    }
+
+    unsubscribeFrom = (channel) => {
+        this.socket.off(channel);
+    }
 }
 
-export const unsubscribeFromPusher = (userId) => {
-    pusher.unsubscribe(`user.${userId}`);
-}
-
+export default SocketHelper;
