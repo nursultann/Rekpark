@@ -47,6 +47,7 @@ import 'react-alice-carousel/lib/alice-carousel.css';
 import "./dist/css/app.css";
 import Layout from './layouts/layout';
 import ReactModal from 'react-modal';
+import Profilelayout from './ui/pages/profile/layout';
 
 const queryClient = new QueryClient();
 ReactModal.setAppElement('#root');
@@ -104,12 +105,14 @@ const App = ({ match }) => {
           <Route element={<Layout requireAuth={true} />}>
             <Route path="/products/create" element={<CreateProductPage />} />
             <Route path="/products/:id/edit" element={<EditProductPage />} />
-            <Route path="/myads" element={<ProfilePage />} />
-            <Route path="/favorites" element={<ProductFavoritesPage />} />
-            <Route path="/profile" element={<SettingsPage />} />
-            <Route path="/wallets" element={<WalletsPage />} />
-            <Route path="/complete" element={<CompletePage />} />
-            <Route path={"/chats"} element={<ChatListPage />} />
+            <Route element={<Profilelayout />}>
+              <Route path="/profile" element={<SettingsPage />} />
+              <Route path="/profile/list" element={<ProfilePage />} />
+              <Route path="/profile/favorites" element={<ProductFavoritesPage />} />
+              <Route path="/profile/wallets" element={<WalletsPage />} />
+              <Route path="/profile/complete" element={<CompletePage />} />
+              <Route path={"/profile/chats"} element={<ChatListPage />} />
+            </Route>
             <Route path={"/chat/:id?/:ad_id"} element={<ChatWithUserPage />} />
             <Route path="/business-profile" element={<BusinessProfile />} />
             <Route path="/business-settings" element={<BusinessSettings />} />

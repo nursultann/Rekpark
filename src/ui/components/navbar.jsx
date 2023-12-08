@@ -262,9 +262,21 @@ const Navbar = () => {
                         <div className="flex flex-row gap-3 align-items-center" style={{
                           fontSize: 22,
                         }}>
-                          <CommentOutlined size={50} />
-                          <UserOutlined size={50} />
-                          <LogoutOutlined onClick={logOut} size={50} />
+                          <Link
+                            to="/profile/chats"
+                          >
+                            <CommentOutlined size={50} />
+                          </Link>
+                          <Link
+                            to="/profile"
+                          >
+                            <UserOutlined size={50} />
+                          </Link>
+                          <Link
+                            to="/settings"
+                          >
+                            <LogoutOutlined onClick={logOut} size={50} />
+                          </Link>
                         </div>
 
 
