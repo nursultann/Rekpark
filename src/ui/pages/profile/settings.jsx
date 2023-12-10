@@ -1,17 +1,20 @@
 import React from "react";
-import Navbar from "../../components/navbar";
 import { userDetails, userSettings } from "../../../api/user";
-import { useEffect, useState } from "react";
-import Skeleton from '@mui/material/Skeleton';
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { setUser } from "../../../redux/actions/user_actions";
 import { Button } from "@mui/material";
 import { setProducts } from "../../../redux/actions/product_actions";
 import * as api from "../../../api";
 import { Tabs } from 'antd';
-import { Input } from 'antd';
-import { Upload, message } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { message } from 'antd';
+import { EditFilled, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { useEffectOnce } from "react-use";
+import ProfileImage from "./components/profile_image";
+import { useUserStore } from "../../../store/user_store";
+
+import editRect from "../../../dist/icons/edit-rect.svg";
+import { Phone } from "@mui/icons-material";
 
 const { TabPane } = Tabs;
 const key = 'updatable';
@@ -22,12 +25,29 @@ function getBase64(img, callback) {
     reader.readAsDataURL(img);
 }
 
+function formatPhoneNumber(phoneNumberString) {
+    var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+    var match = cleaned.match(/^(\d{3})(\d{3})(\d{6})$/);
+
+    if (match) {
+        return '+' + match[1] + ' ' + match[2] + ' ' + match[3]
+    };
+
+    return ""
+}
+
 const SettingsPage = () => {
+    const userState = useUserStore();
+
+    const user = userState.user;
+
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageurl] = useState();
-    const [name, setName] = useState();
+    const [name, setName] = useState(user != null ? user.name : "");
+    const [phone, setPhone] = useState(user != null ? user.phone : "");
     const [userid, setUserid] = useState();
     const [file, setFile] = useState();
+
 
     function beforeUpload(file) {
         const isLt2M = file.size / 1024 / 1024 < 2;
@@ -37,39 +57,15 @@ const SettingsPage = () => {
         }
 
         setFile(file);
-        getBase64(file, function (result) {
-            setImageurl(result);
-        });
 
         return false;
     }
 
-    const handleChange = (info) => { }
-
-    const uploadButton = (
-        <div>
-            {loading ? <LoadingOutlined /> : <PlusOutlined />}
-            <div style={{ marginTop: 8 }}>Загрузить аватар</div>
-        </div>
-    );
-
-    if (!localStorage.getItem('token')) {
-        window.location.href = '/login';
-    }
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
     const limit = 20;
     const [offset, setOffset] = useState(0);
 
-    const fetchUserDetails = async () => {
-        const user = await userDetails();
-        if (user != null) {
-            dispatch(setUser(user));
-            setUserid(user.id);
-        }
-    };
-
-    const UserProducts = async () => {
+    const fetchUserProducts = async () => {
         let _products = await api.fetchUserProducts({ 'sub': true });
         if (_products != null) {
             dispatch(setProducts(_products));
@@ -86,52 +82,111 @@ const SettingsPage = () => {
                 message.error('Имя не может быть короче 4 символов', 10);
                 return;
             }
-
         }
         if (file != null) {
             formData.append('avatar', file);
         }
         if (name != null || file != null) {
             formData.append('_method', 'PATCH');
-            message.loading({ content: 'Загрузка...', key });
+            setLoading(true);
             const result = await userSettings(formData, userid, function (data) {
-                fetchUserDetails();
                 setTimeout(() => {
                     message.success({ content: 'Успешно!', key, duration: 2 });
                 }, 1000);
-                // window.location.href = '/profile';
+                setLoading(false);
             }, function (data) {
                 console.log("Error");
+                setLoading(false);
             });
         }
     }
-    document.title = "Настройки пользователя";
-    useEffect(() => {
-        fetchUserDetails();
-        UserProducts();
-    }, []);
+
+    useEffectOnce(() => {
+        document.title = "Настройки пользователя";
+        fetchUserProducts();
+    })
+
 
     return (
         <div className="col-12 bg-[#F4F4F4] py-[60px] flex flex-col items-center justify-center justify-items-center rounded-2xl">
-            <Upload
-                name="avatar"
-                listType="picture-card"
-                className="avatar-uploader"
-                showUploadList={false}
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-            >
-                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-            </Upload>
 
-            <Input
-                className="form-control mt-3 border-0"
-                defaultValue={user != null ? user.name : ""}
-                placeholder="Имя"
-                onChange={(e) => { setName(e.target.value) }}
+
+            <center>
+                <ProfileImage
+                    image={user != null ? user.image : ""}
+                    onChange={(file) => {
+                        setFile(file);
+
+                    }}
+                />
+            </center>
+
+            <div
+                className="mt-[40px] col-12"
+                style={{
+                    maxWidth: "540px",
+                }}
+            >
+                <Input
+                    label="Имя:"
+                    placeholder="Введите имя"
+                    value={name}
+                    onChange={setName}
+                />
+                <div className="h-[20px]" />
+                <Input
+                    label={(
+                        <div className="flex flex-row items-center">
+                            <Phone />
+                        </div>
+                    )}
+                    placeholder="Номер телефона"
+                    value={formatPhoneNumber(phone)}
+                    enabled={false}
+                />
+
+                <div className="h-[30px]" />
+
+                <button
+                    className="col-12 h-[60px] bg-blue-500 rounded-[15px] text-white font-bold text-[18px]"
+                    type="primary"
+                    onClick={saveSettings}
+                >
+                    {loading && <LoadingOutlined className="mr-4" />}
+                    Сохранить изменения
+                </button>
+
+            </div>
+
+
+        </div>
+    );
+}
+
+function Input({ label, placeholder, value = "", onChange, enabled = true, className }) {
+    return (
+        <div className="flex flex-row justify-center items-center h-[60px] bg-white rounded-[15px] border border-neutral-200">
+            <div
+                className="col-3 flex items-center justify-center"
+            >
+                {label}
+            </div>
+            <input
+                className=" border-0 h-full rounded-[15px] w-full focus:outline-none"
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => { onChange(e.target.value) }}
+                disabled={!enabled}
             />
-            <Button className="col-12 rounded mt-3" type="primary" onClick={saveSettings}>Сохранить изменения</Button>
+            <img
+                src={editRect}
+                alt="edit"
+                className="col-1 mr-2 p-0 "
+                style={{
+                    height: "20px",
+                }}
+            />
+
         </div>
     );
 }
