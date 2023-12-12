@@ -13,12 +13,9 @@ import {
 } from "../../../api/product";
 import { deleteAd } from "../../../api/user";
 import { setProductDetails } from "../../../redux/actions/product_actions";
-import { AppImage } from "../custom_components";
 import '../../../dist/css/custom_card.css';
-import ProductImagesSlider from "./images_slider";
-import chat_bubble_outline from '../../../dist/icons/chat_bubble.svg';
-import heart_outline from '../../../dist/icons/heart_outline.svg';
 import editCircle from '../../../dist/icons/edit-circle.svg';
+import deleteCircle from '../../../dist/icons/delete-circle.svg';
 import { maxSymbolEllipsis } from "../../../helpers/functions";
 import ProductItem from "./product_item";
 import classNames from "classnames";
@@ -335,7 +332,7 @@ const UserProductItem = ({ product }) => {
                         })}
 
                         <div className='flex gap-[11.009px] items-center shrink-0 flex-nowrap relative z-[8]'>
-                            <img src={editCircle} className='w-[30px] h-[30px] shrink-0 basis-auto' />
+                            <img src={deleteCircle} className='w-[30px] h-[30px] shrink-0 basis-auto' />
 
                             <span
                                 className="h-[17px] shrink-0 basis-auto font-['SF_UI_Display'] text-[14.01187801361084px] font-medium leading-[16.721px] text-[#222222] relative text-left whitespace-nowrap z-10"
