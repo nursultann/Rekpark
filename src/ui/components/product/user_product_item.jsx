@@ -15,11 +15,19 @@ import { deleteAd } from "../../../api/user";
 import { setProductDetails } from "../../../redux/actions/product_actions";
 import { AppImage } from "../custom_components";
 import '../../../dist/css/custom_card.css';
+import ProductImagesSlider from "./images_slider";
+import chat_bubble_outline from '../../../dist/icons/chat_bubble.svg';
+import heart_outline from '../../../dist/icons/heart_outline.svg';
+import editCircle from '../../../dist/icons/edit-circle.svg';
+import { maxSymbolEllipsis } from "../../../helpers/functions";
+import ProductItem from "./product_item";
+import classNames from "classnames";
 
-const ProductItem = ({ product }) => {
+const UserProductItem = ({ product }) => {
     const dispatch = useDispatch();
     const { productsPlans } = useSelector((state) => state.plans);
     const { user } = useSelector((state) => state.user);
+
     //modal
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [subPlans, setSubPlans] = useState();
@@ -32,10 +40,12 @@ const ProductItem = ({ product }) => {
     const [itemPrice, setItemPrice] = useState(0);
     const [color, setColor] = useState(null);
     const history = useNavigate();
+
     const navigateToProductDetailsPage = (product) => {
         dispatch(setProductDetails(product));
         history(`products/${product.id}`);
     };
+
     const subscriptionPlans = async () => {
         const plans = productsPlans;
         if (plans != null) {
@@ -211,204 +221,138 @@ const ProductItem = ({ product }) => {
     const image = product.media?.length > 0
         ? product.media[0].original_url
         : '';
+
     useEffect(() => {
         subscriptionPlans();
     }, [])
+
+    const byStatus = ({
+        active = () => { },
+        inactive = () => { },
+        moderation = () => { },
+        disabled = () => { },
+        orElse = () => { }
+    }) => {
+        switch (product.status) {
+            case 'active':
+                return active();
+            case 'inactive':
+                return inactive();
+            case 'moderation':
+                return moderation();
+            case 'disabled':
+                return disabled();
+            default:
+                return orElse();
+        }
+    }
+
     return (
         <>
-            <div className="col-xl-12 bg-white border rounded-lg shadow-sm" style={{ ...baseStyle }}>
-                <div className="row">
-                    <div className="col-xl-6">
-                        <div className="row">
-                            <div className="col-md-12 px-1 py-1" style={{ height: 150 }}>
-                                <AppImage height={150} width="100%" src={image} classNameName="card-img-top" style={{ objectFit: "cover" }} />
-                                {product.is_vip && product.is_urgent ?
-                                    <>
-                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{ fontWeight: 400, backgroundColor: "#ff3b30" }} className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
-                                        <div style={{ position: "absolute", left: "52px", top: "10px", }}><span style={{ fontWeight: 400, backgroundColor: "#fecb00" }} className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
-                                    </>
-                                    : <></>}
-                                {product.is_urgent && product.is_vip == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{ fontWeight: 400, backgroundColor: "#fecb00" }} className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
-                                    : <></>}
-                                {product.is_vip && product.is_urgent == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{ fontWeight: 400, backgroundColor: "#ff3b30" }} className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
-                                    : <></>}
-                            </div>
-                        </div>
-                        <div className="card-body p-2">
-                            <div className="row">
-                                <label style={{ fontSize: 13 }} className="card-title mb-0 px-0 col-md-12 py-0 label">{product.title}</label>
-                                <span style={{
-                                    fontSize: 14, fontFamily: "", whiteSpace: "nowrap", overflow: "hidden",
-                                    columnWidth: "200px"
-                                }} className="card-title mb-0 px-0 py-0">{product.price + " " + product.currency_symbol}</span>
-                            </div>
-                            <div className="row">
-                                <label className="text-muted label" style={{ fontSize: 11 }}>
-                                    <i className="far fa-clock"></i> {update}<br />
-                                    <i className="far fa-eye"></i>  {product.views}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-6 py-2">
-                        {product.status == "active" ?
-                            <div className="col-12 p-1 mb-2 bg-success rounded text-center text-white">
-                                Активен
-                            </div>
-                            : <></>
-                        }
-                        {product.status == "inactive" ?
-                            <div className="col-12 p-1 mb-2 bg-danger rounded text-center text-white">
-                                Неактивен
-                            </div>
-                            : <></>
-                        }
-                        {product.status == "moderation" ?
-                            <div className="col-12 p-1 mb-2 bg-warning rounded text-center text-white">
-                                На модерации
-                            </div>
-                            : <></>
-                        }
-                        {product.status == "disabled" ?
-                            <div className="col-12 p-1 mb-2 bg-secondary rounded text-center text-white">
-                                Отключен
-                            </div>
-                            : <></>
-                        }
-                        <Link style={{ fontSize: 13 }} className="ml-1 mt-4" to={"/products/" + product.id + "/edit"}><i className="far fa-edit text-white bg-dark p-1 rounded-circle"></i> Редактировать</Link><br />
-                        <Link style={{ fontSize: 13 }} className="ml-1 mt-4" onClick={removeAd}><i className="fas fa-trash-alt text-white bg-dark p-1 rounded-circle"></i> Удалить</Link><br />
-                        {product.status == "active" ?
-                            <>
-                                <Link style={{ fontSize: 13 }} className="ml-1 mt-4" onClick={deactivateAd}><i className="fas fa-ban text-white bg-dark p-1 rounded-circle"></i> Деактивировать</Link><br />
-                            </>
-                            :
-                            <></>
-                        }
-                        {product.status == "inactive" ?
-                            <>
-                                <Link style={{ fontSize: 13 }} className="ml-1 mt-4" onClick={activateAd}><i className="fas fa-plus-circle text-white bg-dark p-1 rounded-circle"></i> Активировать</Link>
-                            </>
-                            :
-                            <>
-
-                            </>
-                        }
-                        <div className="row mt-3 mt-xl-5">
-                            <div className="col-12 pl-4">
-                                {product.status != 'disabled' && product.status != 'inactive'
-                                    && product.status != 'moderation' ?
-                                    <>
-                                        <span className="text-muted" style={{ fontSize: 13 }}>Платные услуги</span><br />
-                                        {subPlans != null ?
-                                            <>
-                                                {
-                                                    subPlans.map((item) =>
-                                                        <div className="">
-                                                            <img src={item.image} width="10" height="10" /><a className="text-dark" onClick={() => makeSubscriptionModal(product.id, item.name)}>{item.title}</a>
-                                                        </div>
-                                                    )
-                                                }
-                                            </>
-                                            : <></>
-                                        }
-                                    </> : <></>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {plan != null ?
-                <Modal title={
-                    <>
-                        <img src={plan.image} width="20" height="20" /> {plan.title}
-                    </>
-                }
-                    visible={isModalVisible}
-                    onCancel={handleCancel}
-                    // onOk = {false}
-                    cancelText="Отмена"
-                    footer={
-                        plan.periods?.length > 0 ?
-                            <>
-                                <button className="my-2 btn text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => buyServiceBySelectedPeriod(user.balance, plan.name)}>Подключить услугу</button>
-                            </>
-                            :
-                            <>
-                                <button className="my-2 btn text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} onClick={() => buyService(user.balance, plan.name)}>Подключить услугу</button>
-                            </>
-                    }
+            <div className='max-w-[540px] relative mx-auto my-0 bg-[#fff] rounded-[20px] border-solid border-2 border-[#e2e2e2] flex flex-row'>
+                <div
+                    className='w-[50%] overflow-hidden'
                 >
-                    {plan != null ?
-                        <>
-                            <p>
-                                {plan.description}
-                            </p>
-                            <p>
-                                Промежуток: {interval != null ? interval : <></>}
-                            </p>
-                            <p>
-                                Ваш баланс: {user.balance} сом
-                            </p>
-                            <hr />
-                            {plan.periods?.length > 0 ?
-                                <>
-                                    <h6>Выберите период действия услуги:</h6>
-                                    <div className="border rounded p-2">
-                                        {
-                                            plan.periods.map((item) =>
-                                                <div className="border rounded alert alert-light p-2 my-2">
-                                                    <input type="radio" value={item.id} onChange={(e) => {
-                                                        if (e.target.checked)
-                                                            setPeriodId(item.id)
-                                                        setItemPrice(item.price)
-                                                    }} name="period" />
-                                                    <span className="ml-2 text-primary label">{item.price} {plan.currency}</span> ({item.period + " " + interval})
-                                                </div>
-                                            )
-                                        }
+                    <ProductItem
+                        product={product}
+                        border={false}
+                    />
+                </div>
+
+
+                <div className="w-[50%] pt-2 pb-2 pr-2 pl-4 flex flex-col mb-2">
+                    <div className={classNames(
+                        "w-100 mb-3 text-center text-white py-2 rounded-xl",
+                        byStatus({
+                            active: () => 'bg-green-500',
+                            inactive: () => 'bg-yellow-500',
+                            moderation: () => 'bg-blue-500',
+                            disabled: () => 'bg-red-500',
+                            orElse: () => 'bg-gray-500'
+                        })
+                    )}>
+                        {byStatus({
+                            active: () => 'Активно',
+                            inactive: () => 'Неактивно',
+                            moderation: () => 'На модерации',
+                            disabled: () => 'Отключено',
+                            orElse: () => 'Неизвестно'
+                        })}
+                    </div>
+
+                    <div
+                        className="flex flex-col justify-between gap-2"
+                    >
+                        <div className='flex gap-[11.009px] items-center shrink-0 flex-nowrap relative z-[8]'>
+                            <img src={editCircle} className='w-[30px] h-[30px] shrink-0 basis-auto' />
+
+                            <span className="h-[17px] shrink-0 basis-auto font-['SF_UI_Display'] text-[14.01187801361084px] font-medium leading-[16.721px] text-[#222222] relative text-left whitespace-nowrap z-10">
+                                Редактировать
+                            </span>
+                        </div>
+
+                        {byStatus({
+                            active: () => (
+                                subPlans?.map((item) =>
+                                    <div className="flex gap-[11.009px] items-center shrink-0 flex-nowrap relative z-[8]">
+                                        <img src={item.image} className='w-[30px] h-[30px] shrink-0 basis-auto' />
+                                        <span
+                                            className="h-[17px] shrink-0 basis-auto font-['SF_UI_Display'] text-[14.01187801361084px] font-medium leading-[16.721px] text-[#222222] relative text-left whitespace-nowrap z-10 cursor-pointer"
+                                            onClick={() => makeSubscriptionModal(product.id, item.name)}
+                                        >
+                                            {item.title}
+                                        </span>
                                     </div>
-                                </>
-                                :
-                                <>
-                                    {plan.name == "colored" ?
-                                        <>
-                                            <div className="">Выберите цвет для закраски
-                                            </div>
-                                            {/* <input type="color" onChange={(e) => { setColor(e.target.value) }} /> */}
-                                            <button className="btn" style={{ backgroundColor: "#fcc7c7" }} onClick={(e) => { setColor("#fcc7c7") }}>Выбрать цвет</button>
-                                            <button className="btn ml-2" style={{ backgroundColor: "#d8c7fc" }} onClick={() => { setColor("#d8c7fc") }}>Выбрать цвет</button>
-                                            <button className="btn ml-2" style={{ backgroundColor: "#c7fcd6" }} onClick={() => { setColor("#c7fcd6") }}>Выбрать цвет</button>
-                                            <button className="btn mt-2" style={{ backgroundColor: "#b8dcff" }} onClick={() => { setColor("#b8dcff") }}>Выбрать цвет</button>
-                                            <button className="btn mt-2 ml-2" style={{ backgroundColor: "#f7ffbf" }} onClick={() => { setColor("#f7ffbf") }}>Выбрать цвет</button>
-                                            <button className="btn mt-2 ml-2" style={{ backgroundColor: "#e8e8e8" }} onClick={() => { setColor("#e8e8e8") }}>Выбрать цвет</button>
-                                            {color != null ?
-                                                <div className="d-flex mt-2">
-                                                    выбранный цвет: <div className="rounded-circle" style={{ width: 20, height: 20, backgroundColor: color }} ></div>
-                                                </div>
-                                                : <></>}
-                                        </>
-                                        : <></>
-                                    }
-                                    <h6 className="mt-3">Выберите период действия услуги:</h6>
-                                    {plan.price * period} {plan.currency}
-                                    <input defaultValue={1} type="range" className="range col-12" onChange={(e) => {
-                                        setPeriod(e.target.value)
-                                        setItemPrice(plan.price * period)
-                                    }} /> {period} {interval != null ? interval : <></>}
-                                </>
-                            }
-                        </>
-                        :
-                        <></>
-                    }
-                </Modal>
-                : <></>
-            }
+                                )
+                            )
+                        })}
+
+                        {byStatus({
+                            active: () => (
+                                <div className='flex gap-[11.009px] items-center shrink-0 flex-nowrap relative z-[8]'>
+                                    <img src={editCircle} className='w-[30px] h-[30px] shrink-0 basis-auto' />
+
+                                    <span
+                                        className="h-[17px] shrink-0 basis-auto font-['SF_UI_Display'] text-[14.01187801361084px] font-medium leading-[16.721px] text-[#222222] relative text-left whitespace-nowrap z-10"
+                                        onClick={deactivateAd}
+                                    >
+                                        Деактивировать
+                                    </span>
+                                </div>
+                            ),
+                            inactive: () => (
+                                <div className='flex gap-[11.009px] items-center shrink-0 flex-nowrap relative z-[8]'>
+                                    <img src={editCircle} className='w-[30px] h-[30px] shrink-0 basis-auto' />
+
+                                    <span
+                                        className="h-[17px] shrink-0 basis-auto font-['SF_UI_Display'] text-[14.01187801361084px] font-medium leading-[16.721px] text-[#222222] relative text-left whitespace-nowrap z-10"
+                                        onClick={activateAd}
+                                    >
+                                        Активировать
+                                    </span>
+                                </div>
+                            )
+                        })}
+
+                        <div className='flex gap-[11.009px] items-center shrink-0 flex-nowrap relative z-[8]'>
+                            <img src={editCircle} className='w-[30px] h-[30px] shrink-0 basis-auto' />
+
+                            <span
+                                className="h-[17px] shrink-0 basis-auto font-['SF_UI_Display'] text-[14.01187801361084px] font-medium leading-[16.721px] text-[#222222] relative text-left whitespace-nowrap z-10"
+                                onClick={removeAd}
+                            >
+                                Удалить
+                            </span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
         </>
     );
 };
 
-export default ProductItem;
+export default UserProductItem;

@@ -89,15 +89,19 @@ const SettingsPage = () => {
         if (name != null || file != null) {
             formData.append('_method', 'PATCH');
             setLoading(true);
-            const result = await userSettings(formData, userid, function (data) {
-                setTimeout(() => {
-                    message.success({ content: 'Успешно!', key, duration: 2 });
-                }, 1000);
-                setLoading(false);
-            }, function (data) {
-                console.log("Error");
-                setLoading(false);
-            });
+            const result = await userSettings(formData, userid,
+                function (data) {
+                    setTimeout(() => {
+                        message.success({ content: 'Успешно!', key, duration: 2 });
+                    }, 1000);
+                    setLoading(false);
+                    userState.fetchUser()
+                },
+                function (data) {
+                    console.log("Error");
+                    setLoading(false);
+                },
+            );
         }
     }
 

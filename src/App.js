@@ -48,6 +48,7 @@ import "./dist/css/app.css";
 import Layout from './layouts/layout';
 import ReactModal from 'react-modal';
 import Profilelayout from './ui/pages/profile/layout';
+import NewHabbit from './ui/components/new_habbit';
 
 const queryClient = new QueryClient();
 ReactModal.setAppElement('#root');
@@ -97,9 +98,9 @@ const App = ({ match }) => {
             <Route path="/articles" element={<ArticleListPage />} />
             <Route path="/article/:id" element={<ArticleDetailPage />} />
             <Route path="/articles_categories/:id" element={<ArticlesFilterPage />} />
-            <Route path={"/userAds/:id"} element={<UserProductListPage />} />
-            <Route path={"/about"} element={<AboutPage />} />
-            <Route path={'/agreement'} element={<AgreementPage />} />
+            <Route path="/userAds/:id" element={<UserProductListPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path='/agreement' element={<AgreementPage />} />
           </Route>
 
           <Route element={<Layout requireAuth={true} />}>
@@ -111,14 +112,14 @@ const App = ({ match }) => {
               <Route path="/profile/favorites" element={<ProductFavoritesPage />} />
               <Route path="/profile/wallets" element={<WalletsPage />} />
               <Route path="/profile/complete" element={<CompletePage />} />
-              <Route path={"/profile/chats"} element={<ChatListPage />} />
+              <Route path="/profile/chats" element={<ChatListPage />} />
             </Route>
-            <Route path={"/chat/:id?/:ad_id"} element={<ChatWithUserPage />} />
+            <Route path="/chat/:id?/:ad_id" element={<ChatWithUserPage />} />
             <Route path="/business-profile" element={<BusinessProfile />} />
             <Route path="/business-settings" element={<BusinessSettings />} />
             <Route path="/business" element={<SetBusinessProfile />} />
-            <Route path={"/business-plan/:id/:period"} element={<BusinessPlan />} />
-            <Route path={"/gallery"} element={<Gallery />} />
+            <Route path="/business-plan/:id/:period" element={<BusinessPlan />} />
+            <Route path="/gallery" element={<Gallery />} />
           </Route>
         </Routes>
       </BrowserRouter>

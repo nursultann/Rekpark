@@ -74,7 +74,7 @@ function ProfileImage({ image, onChange }) {
                             <img
                                 src={imageUrl}
                                 alt="avatar"
-                                className="rounded-full w-full h-full"
+                                className="rounded-full w-full h-full bg-white"
                                 style={{ width: "130px", height: "130px" }}
                             />
                             <div

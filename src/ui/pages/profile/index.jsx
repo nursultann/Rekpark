@@ -1,38 +1,34 @@
-import React from "react";
-import Navbar from "../../components/navbar";
-import { userDetails } from "../../../api";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../../redux/actions/user_actions";
-import { notification } from 'antd';
-import { setProducts } from "../../../redux/actions/product_actions";
+import React, { useMemo } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import * as api from "../../../api";
 import ProductItem from "../../components/product/user_product_item";
-import { Tabs } from 'antd';
 import { subscriptions } from "../../../api/product";
 import { setProductPlans } from "../../../redux/actions/productPlans_actions";
 import { cancelBussinessAccount } from "../../../api/bussiness";
 import { useUserStore } from "../../../store/user_store";
-import { useEffectOnce } from "react-use";
-
-const { TabPane } = Tabs;
-const key = 'updatable';
+import { useEffectOnce, useLocation } from "react-use";
+import classNames from "classnames";
+import { Link } from "react-router-dom";
+import { useCallback } from "react";
 
 const ProfilePage = () => {
-    if (!localStorage.getItem('token')) {
-        window.location.href = '/login';
-    }
-
     const dispatch = useDispatch();
     const auth = useUserStore()
 
+    const location = useLocation()
+
     const user = auth.user;
-    const { products } = useSelector((state) => state.product);
-    const [active, setActive] = useState([]);
-    const [inactive, setInactive] = useState([]);
-    const [moderation, setModeration] = useState([]);
+    const [products, setProducts] = useState([]);
     const limit = 20;
     const [offset, setOffset] = useState(0);
+
+    const tab = useMemo(() => {
+        if (location.hash) {
+            return location.hash.replace('#', '')
+        }
+        return 'active'
+    }, [location])
 
     const fetchPlans = async () => {
         const plans = await subscriptions();
@@ -41,143 +37,98 @@ const ProfilePage = () => {
         }
     }
 
-    const UserProducts = async () => {
-        let _products = await api.fetchUserProducts({ 'sub': true, 'sort': 'active' });
-        let inactive_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'inactive' });
-        let moderation_products = await api.fetchUserProducts({ 'sub': true, 'sort': 'moderation' });
-        let disabled_products = await api.fetchUserProducts({ 'sub': true });
-        if (_products != null) {
-            setActive(_products);
-            console.log('active', _products)
+    const fetchProducts = async () => {
+        let data = await api.fetchUserProducts({ 'sort': tab });
+        if (data != null) {
+            setProducts(data);
             setOffset(offset + limit);
-        }
-        if (inactive_products != null) {
-            console.log('inactive', inactive_products);
-            setInactive(inactive_products);
-        }
-        if (moderation_products != null) {
-            console.log('moderation', moderation_products);
-            setModeration(moderation_products);
-        }
-        if (disabled_products != null) {
-            console.log('disabled', disabled_products);
-            dispatch(setProducts(disabled_products));
         }
     };
 
     const cancelBussiness = async () => {
         const cancel = await cancelBussinessAccount();
-        console.log(cancel);
-        notification['success']({
-            message: 'Вы вышли из бизнес профиля!',
-        });
+
+
         setTimeout(() => {
             window.location.href = `/profile`;
         }, 1200);
+
     }
 
     useEffectOnce(() => {
         document.title = "Мои объявления";
 
-        UserProducts();
+        fetchProducts();
         fetchPlans();
         auth.fetchUser();
     });
 
-    return (
-        <div className="col-12 px-1 py-2">
-            <Tabs className="px-2 pb-3 py-1" centered defaultActiveKey="1">
-                <TabPane tab="Активные" key="2">
-                    <div className="row">
-                        {active?.length > 0 ?
-                            <>
-                                {active.map((product) => {
-                                    if (product.status !== 'active') return;
-                                    return (
-                                        <>
-                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                <ProductItem product={product} />
-                                            </div>
-                                        </>
-                                    );
-                                })}
-                            </>
-                            :
-                            <div className="col-xl-12 text-center py-5">
-                                <label>Нет объявлений</label>
-                            </div>
-                        }
-                    </div>
-                </TabPane>
-                <TabPane tab="Неактивные" key="3">
-                    <div className="row">
-                        {inactive?.length > 0 ?
-                            <>
-                                {inactive.map((product) => {
-                                    if (product.status !== 'inactive') return;
-                                    return (
-                                        <>
-                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                <ProductItem product={product} />
-                                            </div>
-                                        </>
-                                    );
-                                })}
-                            </>
-                            :
-                            <div className="col-xl-12 text-center py-5">
-                                <label>Нет объявлений</label>
-                            </div>
-                        }
-                    </div>
-                </TabPane>
-                <TabPane tab="На модерации" key="4">
-                    <div className="row">
-                        {moderation?.length > 0 ?
-                            <>
-                                {moderation.map((product) => {
-                                    if (product.status !== 'moderation') return;
 
-                                    return (
-                                        <>
-                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                <ProductItem product={product} />
-                                            </div>
-                                        </>
-                                    );
-                                })}
-                            </>
-                            :
-                            <div className="col-xl-12 text-center py-5">
-                                <label>Нет объявлений</label>
-                            </div>
-                        }
-                    </div>
-                </TabPane>
-                <TabPane tab="Отключенные" key="5">
-                    <div className="row">
-                        {products?.length > 0 ?
-                            <>
-                                {products.map((product) => {
-                                    if (product.status !== 'disabled') return;
-                                    return (
-                                        <>
-                                            <div className="col-xs-12 col-sm-6 col-xl-6 mt-3">
-                                                <ProductItem product={product} />
-                                            </div>
-                                        </>
-                                    );
-                                })}
-                            </>
-                            :
-                            <div className="col-xl-12 text-center py-5">
-                                <label>Нет объявлений</label>
-                            </div>
-                        }
-                    </div>
-                </TabPane>
-            </Tabs>
-        </div>
+    const activeLink = useCallback((path, borderColor, bgColor, textColor) => {
+        return classNames(
+            'h-[45px] px-5 w-full py-2.5 rounded-[10px] justify-center items-center gap-2.5 inline-flex',
+            {
+                [`${bgColor} text-white `]: tab === path,
+                [`border ${borderColor} ${textColor} `]: tab !== path
+            }
+        )
+    }, [location])
+
+    return (
+        <>
+            <div className="flex flex-row justify-content-around items-center mt-[50px] gap-4">
+                <Link
+                    className={activeLink("active", 'border-green-500', 'bg-green-500', 'text-green-500')}
+                    to="/profile/list#active"
+                    type="button"
+                >
+                    <div className="text-center text-sm font-medium font-['SF UI Display'] leading-snug">Активные</div>
+                </Link>
+
+                <Link
+                    className={activeLink("inactive", 'border-red-500', 'bg-red-500')}
+                    to="/profile/list#inactive"
+                    type="button"
+                >
+                    Неактивные
+                </Link>
+
+                <Link
+                    className={activeLink("moderation", 'border-yellow-500', 'bg-yellow-500')}
+                    to="/profile/list#moderation"
+                    type="button"
+                >
+                    Модерация
+                </Link>
+
+                <Link
+                    className={activeLink("disabled", 'border-gray-500', 'bg-gray-500')}
+                    to="/profile/list#disabled"
+                    type="button"
+                >
+                    Отключенные
+                </Link>
+            </div>
+
+            <div className="mt-[40px] grid grid-cols-2 md:grid-cols-2 xs:grid-cols-1 gap-4">
+                {products.map((product, index) => {
+                    return (
+                        <div key={index}>
+                            <ProductItem
+                                product={product}
+                                index={index}
+                                onEdit={() => {
+                                    window.location.href = `/edit/${product.id}`;
+                                }}
+                                onDelete={() => {
+                                    window.location.href = `/delete/${product.id}`;
+                                }}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
+        </>
     );
 }
 
