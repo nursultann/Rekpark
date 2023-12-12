@@ -19,13 +19,15 @@ import deleteCircle from '../../../dist/icons/delete-circle.svg';
 import { maxSymbolEllipsis } from "../../../helpers/functions";
 import ProductItem from "./product_item";
 import classNames from "classnames";
+import { useEffectOnce } from "react-use";
+import { useUserStore } from "../../../store/user_store";
 
 const UserProductItem = ({ product }) => {
     const dispatch = useDispatch();
     const { productsPlans } = useSelector((state) => state.plans);
-    const { user } = useSelector((state) => state.user);
+    const user = useUserStore().user;
 
-    //modal
+    // modal
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [subPlans, setSubPlans] = useState();
     const [plan, setPlan] = useState(null);
@@ -38,11 +40,6 @@ const UserProductItem = ({ product }) => {
     const [color, setColor] = useState(null);
     const history = useNavigate();
 
-    const navigateToProductDetailsPage = (product) => {
-        dispatch(setProductDetails(product));
-        history(`products/${product.id}`);
-    };
-
     const subscriptionPlans = async () => {
         const plans = productsPlans;
         if (plans != null) {
@@ -50,18 +47,21 @@ const UserProductItem = ({ product }) => {
         }
         // console.log('plans',subPlans);
     }
+
     const baseStyle = { height: 'auto' };
     if (typeof product.features === 'object' && !Array.isArray(product.features)) {
         if (product.features.color !== null) {
             baseStyle.backgroundColor = product.features.color;
         }
     }
+
     const openNotification = (type, message, description) => {
         notification[type]({
             message: message,
             description: description,
         });
     };
+
     const removeAd = async () => {
         deleteAd(product.id);
         openNotification('success', 'Успешно удалено!', null);
@@ -70,6 +70,7 @@ const UserProductItem = ({ product }) => {
         }
         setTimeout(reload, 1000);
     }
+
     const deactivateAd = async () => {
         deactivate(product.id);
         openNotification('success', 'Успешно деактивировано!', null);
@@ -78,6 +79,7 @@ const UserProductItem = ({ product }) => {
         }
         setTimeout(reload, 1000);
     }
+
     const activateAd = async () => {
         activate(product.id);
         openNotification('success', 'Успешно активировано!', null);
@@ -86,6 +88,7 @@ const UserProductItem = ({ product }) => {
         }
         setTimeout(reload, 1000);
     }
+
     //subscriptions
     const makeSubscriptionModal = async (id, name) => {
         var index = subPlans.findIndex(obj => obj.name == name);
@@ -103,6 +106,7 @@ const UserProductItem = ({ product }) => {
             setIsModalVisible(true);
         }
     }
+
     const buyServiceBySelectedPeriod = async (balance) => {
         if (balance > itemPrice) {
             const params = {
@@ -121,6 +125,7 @@ const UserProductItem = ({ product }) => {
             message.error("Недостаточно средств чтобы подключить услугу!")
         }
     };
+
     const buyService = async (balance, plan) => {
         if (plan == "vip") {
             if (balance > itemPrice) {
@@ -211,6 +216,7 @@ const UserProductItem = ({ product }) => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+
     var time = moment(product.created_at, 'YYYYMMDD, h:mm:ss a');
     moment.locale('ru');
     console.log('product', product);
@@ -219,9 +225,9 @@ const UserProductItem = ({ product }) => {
         ? product.media[0].original_url
         : '';
 
-    useEffect(() => {
+    useEffectOnce(() => {
         subscriptionPlans();
-    }, [])
+    })
 
     const byStatus = ({
         active = () => { },
@@ -283,7 +289,10 @@ const UserProductItem = ({ product }) => {
                         <div className='flex gap-[11.009px] items-center shrink-0 flex-nowrap relative z-[8]'>
                             <img src={editCircle} className='w-[30px] h-[30px] shrink-0 basis-auto' />
 
-                            <span className="h-[17px] shrink-0 basis-auto font-['SF_UI_Display'] text-[14.01187801361084px] font-medium leading-[16.721px] text-[#222222] relative text-left whitespace-nowrap z-10">
+                            <span
+                                className="h-[17px] shrink-0 basis-auto font-['SF_UI_Display'] text-[14.01187801361084px] font-medium leading-[16.721px] text-[#222222] relative text-left whitespace-nowrap z-10 cursor-pointer"
+                                onClick={() => history(`/products/${product.id}/edit`)}
+                            >
                                 Редактировать
                             </span>
                         </div>
@@ -348,6 +357,106 @@ const UserProductItem = ({ product }) => {
                 </div>
 
             </div>
+
+
+            <Modal
+                title={
+                    <>
+                        <img src={plan?.image} width="20" height="20" /> {plan?.title}
+                    </>
+                }
+                visible={isModalVisible}
+                onCancel={handleCancel}
+                // onOk = {false}
+                cancelText="Отмена"
+                footer={
+                    plan?.periods?.length > 0 ?
+                        <>
+                            <button
+                                className="my-2 btn text-white"
+                                style={{ backgroundColor: "rgb(9, 72, 130)" }}
+                                onClick={() => buyServiceBySelectedPeriod(user.balance, plan.name)}
+                            >
+                                Подключить услугу
+                            </button>
+                        </>
+                        :
+                        <>
+                            <button
+                                className="my-2 btn text-white"
+                                style={{ backgroundColor: "rgb(9, 72, 130)" }}
+                                onClick={() => buyService(user.balance, plan.name)}
+                            >
+                                Подключить услугу
+                            </button>
+                        </>
+                }
+            >
+                {plan != null ?
+                    <>
+                        <p>
+                            {plan.description}
+                        </p>
+                        <p>
+                            Промежуток: {interval != null ? interval : <></>}
+                        </p>
+                        <p>
+                            Ваш баланс: {user.balance} сом
+                        </p>
+                        <hr />
+                        {plan.periods?.length > 0 ?
+                            <>
+                                <h6>Выберите период действия услуги:</h6>
+                                <div className="border rounded p-2">
+                                    {
+                                        plan.periods.map((item) =>
+                                            <div className="border rounded alert alert-light p-2 my-2">
+                                                <input type="radio" value={item.id} onChange={(e) => {
+                                                    if (e.target.checked)
+                                                        setPeriodId(item.id)
+                                                    setItemPrice(item.price)
+                                                }} name="period" />
+                                                <span className="ml-2 text-primary label">{item.price} {plan.currency}</span> ({item.period + " " + interval})
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            </>
+                            :
+                            <>
+                                {plan.name == "colored" ?
+                                    <>
+                                        <div className="">Выберите цвет для закраски
+                                        </div>
+                                        {/* <input type="color" onChange={(e) => { setColor(e.target.value) }} /> */}
+                                        <button className="btn" style={{ backgroundColor: "#fcc7c7" }} onClick={(e) => { setColor("#fcc7c7") }}>Выбрать цвет</button>
+                                        <button className="btn ml-2" style={{ backgroundColor: "#d8c7fc" }} onClick={() => { setColor("#d8c7fc") }}>Выбрать цвет</button>
+                                        <button className="btn ml-2" style={{ backgroundColor: "#c7fcd6" }} onClick={() => { setColor("#c7fcd6") }}>Выбрать цвет</button>
+                                        <button className="btn mt-2" style={{ backgroundColor: "#b8dcff" }} onClick={() => { setColor("#b8dcff") }}>Выбрать цвет</button>
+                                        <button className="btn mt-2 ml-2" style={{ backgroundColor: "#f7ffbf" }} onClick={() => { setColor("#f7ffbf") }}>Выбрать цвет</button>
+                                        <button className="btn mt-2 ml-2" style={{ backgroundColor: "#e8e8e8" }} onClick={() => { setColor("#e8e8e8") }}>Выбрать цвет</button>
+                                        {color != null ?
+                                            <div className="d-flex mt-2">
+                                                выбранный цвет: <div className="rounded-circle" style={{ width: 20, height: 20, backgroundColor: color }} ></div>
+                                            </div>
+                                            : <></>}
+                                    </>
+                                    : <></>
+                                }
+                                <h6 className="mt-3">Выберите период действия услуги:</h6>
+                                {plan.price * period} {plan.currency}
+                                <input defaultValue={1} type="range" className="range col-12" onChange={(e) => {
+                                    setPeriod(e.target.value)
+                                    setItemPrice(plan.price * period)
+                                }} /> {period} {interval != null ? interval : <></>}
+                            </>
+                        }
+                    </>
+                    :
+                    <></>
+                }
+            </Modal>
+
         </>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as api from "../../../api";
@@ -38,7 +38,7 @@ const ProfilePage = () => {
     }
 
     const fetchProducts = async () => {
-        let data = await api.fetchUserProducts({ 'sort': tab });
+        let data = await api.fetchUserProducts({ 'status': tab });
         if (data != null) {
             setProducts(data);
             setOffset(offset + limit);
@@ -58,10 +58,13 @@ const ProfilePage = () => {
     useEffectOnce(() => {
         document.title = "Мои объявления";
 
-        fetchProducts();
         fetchPlans();
         auth.fetchUser();
     });
+
+    useEffect(() => {
+        fetchProducts();
+    }, [tab])
 
 
     const activeLink = useCallback((path, borderColor, bgColor, textColor) => {

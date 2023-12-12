@@ -49,6 +49,7 @@ import Layout from './layouts/layout';
 import ReactModal from 'react-modal';
 import Profilelayout from './ui/pages/profile/layout';
 import NewHabbit from './ui/components/new_habbit';
+import NotFound from './ui/pages/not_found';
 
 const queryClient = new QueryClient();
 ReactModal.setAppElement('#root');
@@ -121,6 +122,8 @@ const App = ({ match }) => {
             <Route path="/business-plan/:id/:period" element={<BusinessPlan />} />
             <Route path="/gallery" element={<Gallery />} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
 
