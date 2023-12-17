@@ -6,7 +6,6 @@ class About extends React.Component {
     render() {
         return (
             <div>
-                <Navbar />
                 <div className="col-md-12 p-4">
                     <div className="row">
                         <div className="col-md-12 bg-light text-center border rounded p-3">

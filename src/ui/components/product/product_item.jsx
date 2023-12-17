@@ -84,7 +84,6 @@ const ProductItem = ({ product, onClick, border = true }) => {
 
                     <div
                         className="h-[40px] text-neutral-400 text-xs font-medium font-['SF UI Display']"
-
                     >
                         {maxSymbolEllipsis(product.description, 70)}
                     </div>

@@ -1,108 +1,69 @@
 import React from "react";
-import Navbar from "../../components/navbar";
 import { userDetails } from "../../../api";
 import * as api from "../../../api";
-import { useEffect, useState } from "react";
-import Skeleton from '@mui/material/Skeleton';
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../../redux/actions/user_actions";
-import { setProducts } from "../../../redux/actions/product_actions";
-import ProductItem1 from "../../components/product/fav_product_item";
-import { Tabs } from 'antd';
-
-const key = 'updatable';
-const { TabPane } = Tabs;
+import { useState } from "react";
+import ProductItem from "../../components/product/product_item";
+import { useUserStore } from "../../../store/user_store";
+import { useEffectOnce } from "react-use";
+import { Helmet } from 'react-helmet';
 
 const ProductFavoritesPage = () => {
-    console.log(localStorage.getItem('token'));
-    if (!localStorage.getItem('token')) {
-        window.location.href = '/login';
-    }
+    const user = useUserStore().user;
 
-    const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
-    const [products, setProduct] = useState();
+    const [products, setProducts] = useState();
     const limit = 20;
     const [offset, setOffset] = useState(0);
+    const [loading, setLoading] = useState(false);
 
-    const fetchUserDetails = async () => {
-        const user = await userDetails();
-        if (user != null) {
-            dispatch(setUser(user));
-        }
-    };
-    const UserProducts = async () => {
+    const fetchUserProducts = async () => {
+        if (loading) return;
+
+        setLoading(true);
         let _products = await api.fetchUserFavorites({ 'sub': true });
         if (_products != null) {
-            dispatch(setProducts(_products));
-            setProduct(_products);
+            setProducts(_products);
             setOffset(offset + limit);
         }
+
+        setLoading(false);
     };
 
-    document.title = "Избранные";
-
-    useEffect(() => {
-        fetchUserDetails();
-        UserProducts();
-    }, []);
+    useEffectOnce(() => {
+        fetchUserProducts();
+    });
 
     return (
         <>
+            <Helmet>
+                <title>Избранные</title>
+            </Helmet>
+
             {products?.length > 0 ?
                 <div className="row px-3">
                     {products.map((product) => {
                         return (
-                            <>
-                                <div className="col-xs-12 px-2 col-sm-6 col-xl-3 mt-4 mt-xl-2">
-                                    <ProductItem1 product={product} />
-                                </div>
-                            </>
+                            <div className="col-xs-12 px-2 col-sm-6 col-xl-3 mt-4 mt-xl-2">
+                                <ProductItem product={product} />
+                            </div>
                         );
                     })}
                 </div>
                 :
                 <>
-                    {products?.length > 0 ?
-                        <div className="col-xl-12 text-center py-5">
-                            <div className="spinner-border text-success" role="status">
-                                <span className="sr-only">Loading...</span>
-                            </div>
-                        </div>
-                        :
-                        <div className="col-xl-12 text-center py-5">
+                    {products?.length == 0 &&
+                        <div className="col-xl-12 text-center py-5 h-[300px] flex flex-col justify-center items-center">
                             <label>Нет объявлений в избранном</label>
                         </div>
                     }
                 </>
             }
-            {products?.length > 0 ?
-                <div className="row px-3">
-                    {products.map((product) => {
-                        return (
-                            <>
-                                <div className="col-xs-12 px-2 col-sm-6 col-xl-3 mt-4 mt-xl-2">
-                                    <ProductItem1 product={product} />
-                                </div>
-                            </>
-                        );
-                    })}
+
+            {loading && <div className="col-xl-12 text-center py-5">
+                <div className="spinner-border text-success" role="status">
+                    <span className="sr-only">Loading...</span>
                 </div>
-                :
-                <>
-                    {products?.length > 0 ?
-                        <div className="col-xl-12 text-center py-5">
-                            <div className="spinner-border text-success" role="status">
-                                <span className="sr-only">Loading...</span>
-                            </div>
-                        </div>
-                        :
-                        <div className="col-xl-12 text-center py-5">
-                            <label>Нет объявлений в избранном</label>
-                        </div>
-                    }
-                </>
-            }
+            </div>}
+
         </>
     );
 }

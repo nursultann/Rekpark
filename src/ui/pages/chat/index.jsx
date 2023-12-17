@@ -1,15 +1,17 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
-import Navbar from "../../components/navbar";
-import { deleteChat, getUserChats, getUserMessages, postUserMessage, readMessages, userDetails } from "../../../api/user";
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import Skeleton from '@mui/material/Skeleton';
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../../redux/actions/user_actions";
-import { Image } from 'antd';
-import * as api from "../../../api";
 import { Tabs, notification } from 'antd';
 import moment from "moment-timezone";
+import { Helmet } from "react-helmet";
+import { useEffectOnce } from "react-use";
+import classNames from "classnames";
+import { deleteChat, getUserChats, getUserMessages, postUserMessage, readMessages, userDetails } from "../../../api/user";
+import * as api from "../../../api";
+import { ChatBubble, ChatBubbleOutlined, ChatOutlined, MessageOutlined, PersonOutline } from "@mui/icons-material";
+import personOutline from '../../../dist/icons/person-outline.svg';
+import { useUserStore } from "../../../store/user_store";
+import { useChatStore } from "../../../store/chat_store";
 
 const openNotificationWithIcon = (type, info) => {
     notification[type]({
@@ -17,30 +19,16 @@ const openNotificationWithIcon = (type, info) => {
     });
 };
 
-const { TabPane } = Tabs;
-
 const ChatListPage = () => {
-    // console.log(localStorage.getItem('token'));
-    if (!localStorage.getItem('token')) {
-        window.location.href = '/';
-    }
+    const user = useUserStore().user;
+    const { chats, selectedChat, fetchChats, setSelectedChat, fetchMessages } = useChatStore();
 
-    const history = useNavigate();
-    const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
-    const [chats, setChats] = useState();
-    const [chat_id, setChatId] = useState();
-    const [message, setMessage] = useState();
-    const [loadings, setLoadings] = useState();
-    const [user_id, setUserId] = useState();
+    //const [chats, setChats] = useState();
+    const [messages, setMessages] = useState(null);
 
-    const fetchUserDetails = async () => {
-        const user = await userDetails();
-        if (user != null) {
-            dispatch(setUser(user));
-            setUserId(user.id);
-        }
-    };
+    //const [selectedChat, setSelectedChat] = useState();
+
+    const [innerWidth, setInnerWidth] = useState(window.innerWidth);
 
     const removeChat = async (id) => {
         console.log('id chat', id);
@@ -51,231 +39,257 @@ const ChatListPage = () => {
         }
     }
 
-    const fetchChats = async () => {
-        const userChats = await getUserChats();
-        if (userChats != null) {
-            setChats(userChats);
-            console.log('chats', userChats);
-        }
-    }
-    // const setUserMessage = (id, userName, partner_id) => {
-    //     console.log('id', id , 'userName', userName);
-    //     // history("/chat/" + id + "/" + userName);
-    //     // setChatId(id);
-    //     // setAdvertisement_id(userName)
-    //     getUserMessages(id,userName);
-    // }
-    // const postMessage = async () => {
-    //     setLoadings(true);
-    //     if (message != "" && message != null) {
-    //         const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message });
-    //         getUserMessage(chat_id);
-    //         setMessage("");
-    //         openNotificationWithIcon('success', 'Сообщение отправлено!');
-    //         setLoadings(false);
-    //     } else {
-    //         openNotificationWithIcon('error', 'Заполните поле для сообщения!');
-    //     }
-    // }
-
-    moment.locale('ru');
     useEffect(() => {
-        document.title = "Сообщения";
-        fetchUserDetails();
-        fetchChats();
+        const resizeListener = async () => {
+            setInnerWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', resizeListener);
+
+        return () => {
+            window.removeEventListener('resize', resizeListener);
+        }
     }, []);
 
-    //single chat 
-    const [messages, setMessages] = useState(null);
-    const [chat_name, setChatName] = useState();
-    const [chat_image, setChatImage] = useState();
-    const [postId, setPostId] = useState();
-    const [product, setProduct] = useState(null);
-    // const [userID,setUserID] = useState();
-    const [advertisement_id, setAdvertisement_id] = useState();
-    // const fetchUserDetails = async () => {
-    //     const user = await userDetails();
-    //     if (user != null) {
-    //         dispatch(setUser(user));
+    // const fetchMessages = async (userID) => {
+    //     const userMessages = await getUserMessages({
+    //         'chat_user_id': userID,
+    //         'with': 'sender'
+    //     });
+
+    //     if (userMessages != null) {
+    //         setMessages(userMessages.reverse());
     //     }
-    // };
+    // }
 
-    const getUserMessage = async (userID, ad_id) => {
-        console.log(ad_id);
-        setChatId(userID);
-        setAdvertisement_id(ad_id);
-        // setChatName(userName);
-        const userMessages = await getUserMessages({ 'chat_user_id': userID, 'advertisement_id': ad_id, 'with': 'sender' });
-        if (userMessages != null) {
-            setMessages(userMessages.reverse());
-            setPostId(messages[0].advertisement_id);
-            console.log('messages', messages);
-            productDetails(postId, userID);
-        }
-    }
-
-    const postMessage = async () => {
-        setLoadings(true);
+    const postMessage = async (message) => {
         if (message != "" && message != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message, 'advertisement_id': advertisement_id });
-            getUserMessage(chat_id);
-            setMessage("");
+            const sendMessage = await postUserMessage({ 'user_id': selectedChat?.partner?.id, 'message': message });
+            console.log('send message', sendMessage);
+            if (sendMessage != null) {
+                fetchMessages(selectedChat.partner.id);
+            }
             openNotificationWithIcon('success', 'Сообщение отправлено!');
-            setLoadings(false);
         } else {
             openNotificationWithIcon('error', 'Заполните поле для сообщения!');
         }
     }
 
-    const productDetails = async (id, userid) => {
-        const _product = await api.fetchProduct(id);
-        const readMessage = await readMessages({ 'partner_id': userid });
-        setProduct(_product);
-        console.log("read", readMessage);
-    }
-
-    moment.locale('ru');
     useEffect(() => {
-        document.title = "Сообщение пользователя";
-    }, []);
+        if (selectedChat) {
+            fetchMessages(selectedChat.partner.id);
+        }
+    }, [selectedChat]);
+
+
+    useEffectOnce(() => {
+        moment.locale('ru')
+        fetchChats()
+
+        return () => {
+            setSelectedChat(null);
+        }
+    });
 
     return (
-        <div className="row">
-            <div className="col-xl-5 mt-3 mt-md-0">
-                <div className="col-xl-12 px-2 py-2 rounded mb-3" style={{ backgroundColor: "#184d9f" }}>
-                    <label className="text-white" style={{ fontSize: 15 }}>Сообщения</label>
-                </div>
-                <div className="container">
-                    <div className="content-wrapper">
-                        <div className="row gutters">
+        <>
+            <Helmet>
+                <title>Сообщение пользователя</title>
+            </Helmet>
 
-                            <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <Contents
+                chats={chats}
+                user={user}
+                messages={selectedChat?.messages}
+                selectedChat={selectedChat}
+                onSelectedChatChange={setSelectedChat}
+                onSendMessage={postMessage}
+            />
 
-                                <div className="card m-0">
-                                    <div className="row no-gutters">
-                                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                            <div className="users-container">
-                                                <ul className="users">
-                                                    {chats?.length > 0 ?
-                                                        <>
-                                                            {chats.map((chat) =>
-                                                                <li className="person" data-chat="person1">
-                                                                    <div className="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
-                                                                        {chat.advertisement.image != null ?
-                                                                            <>
-                                                                                <img src={chat.advertisement.image} />
-                                                                                <span className="status busy"></span>
-                                                                            </>
-                                                                            :
-                                                                            <>
-                                                                                <Image />
-                                                                            </>
-                                                                        }
-                                                                    </div>
-                                                                    <p className="name-time" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
-                                                                        <span className="name">{chat.advertisement.title}</span>
-                                                                    </p>
-                                                                    <div className="float-right">
-                                                                        <span><i className="fa-solid fa-trash-can text-primary" onClick={() => removeChat(chat.id)}></i></span>
-                                                                    </div>
-                                                                </li>
-                                                            )}
-                                                        </> :
-                                                        <div className="col-12 text-center">
-                                                            Пока нет сообщений
-                                                        </div>
-                                                    }
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            <div className="h-[50px]" />
+        </>
+    );
+}
+
+function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, onSendMessage, onRemoveChat }) {
+    const [message, setMessage] = useState();
+    const scrollRef = React.useRef();
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
+
+    return (
+        <div className="h-[750px] w-full bg-[#587fb3] rounded-2xl flex flex-row gap-3 p-3">
+            <div className="w-[40%] flex flex-col gap-2">
+                {chats?.length == 0 && (
+                    <>  </>
+                )}
+
+                {chats?.map((item, i) => {
+                    return (
+                        <div key={i}>
+                            <ChatListItem
+                                item={item}
+                                isSelected={selectedChat?.id == item.id}
+                                onClick={() => {
+                                    onSelectedChatChange(item);
+                                }}
+                            />
                         </div>
-                    </div>
-                </div>
+                    )
+                })}
 
             </div>
-            <div className="col-xl-7 mt-3 mt-md-0">
-                <div className="content-wrapper">
-                    <div className="row gutters">
-                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 px-0">
-                            <div className="card m-0">
-                                <div className="row no-gutters">
-                                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                        <div className="selected-user">
-                                            <span>Сообщения от <span className="name">{chat_name}</span></span>
-                                        </div>
-                                        <div className="col-12 alert alert-primary">
-                                            {product != null ?
-                                                <>
-                                                    <img src={product.image} width="50px" />
-                                                    <a href={"/products/" + product.id}><span className="ml-2">{product.title}</span></a>
-                                                </>
-                                                :
-                                                <>
 
-                                                </>
-                                            }
-                                        </div>
-                                        <div className="chat-container">
-                                            <ul className="chat-box chatContainerScroll">
-                                                {
-                                                    messages?.length > 0 ?
-                                                        <>
-                                                            {
-                                                                messages.map((item) =>
-                                                                    <>
-                                                                        {item.sender_id == chat_id ?
-                                                                            <li className="chat-left">
-                                                                                <div className="chat-avatar">
-                                                                                    <img src={item.sender.image} alt="Retail Admin" />
-                                                                                    <div className="chat-name">{item.sender.name}</div>
-                                                                                </div>
-                                                                                <div className="chat-text">
-                                                                                    {item.message}
-                                                                                </div>
-                                                                                {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div> */}
-                                                                            </li>
-                                                                            :
-                                                                            <li className="chat-right">
-                                                                                {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}
-                                                                                                                {item.sender.read_at != null ? <span className="fa fa-check-circle"></span> : <></>}
-                                                                                                            </div> */
-                                                                                }
-                                                                                <div className="chat-text">
-                                                                                    {item.message}
-                                                                                </div>
-                                                                                <div className="chat-avatar">
-                                                                                    <img src={item.sender.image} alt="Retail Admin" />
-                                                                                    <div className="chat-name">{item.sender.name}</div>
-                                                                                </div>
-                                                                            </li>
-                                                                        }
-                                                                    </>
-                                                                )}
-                                                        </> : <></>
-                                                }
-                                            </ul>
-                                        </div>
-                                        {chat_id ?
-                                            <div className="form-group text-right py-2 px-3 mt-3 mb-0">
-                                                <textarea className="form-control" rows="3" placeholder="Напишите ваше сообщение..."
-                                                    onChange={(e) => { setMessage(e.target.value) }} value={message}></textarea>
-                                                <button style={{ backgroundColor: "#184d9f" }} className="btn btn-primary mt-3 mb-2" type="primary" loading={loadings} onClick={() => postMessage()}>
-                                                    Отправить
-                                                </button>
+            <div className="w-[60%] flex flex-col gap-2 bg-zinc-100 rounded-2xl">
+                {selectedChat && (
+                    <div className="flex flex-col gap-2 h-full w-full">
+                        <div ref={scrollRef} className="flex-1 overflow-y-scroll">
+                            <div
+                                className="flex flex-col gap-2 expand  px-3 pt-1 "
+                            >
+                                <div className="pt-1" />
+
+                                {messages?.map((item) => {
+                                    const isMe = item.sender?.id == user?.id;
+
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className={classNames(
+                                                "flex flex-row gap-2 items-center w-full",
+                                                { 'justify-end': isMe, 'justify-start': !isMe },
+                                            )}
+                                        >
+                                            <div
+                                                className={classNames(
+                                                    "flex flex-row gap-2 items-center p-[13px] bg-slate-500 rounded-[10px] max-w-[50%]",
+                                                    { 'justify-end': isMe, 'justify-start': !isMe },
+                                                )}
+                                            >
+                                                <div
+                                                    className="text-white text-xs font-normal w-full break-words"
+                                                >
+                                                    {item.message}
+                                                </div>
                                             </div>
-                                            : <></>
-                                        }
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="flex-none w-full mb-3 px-3">
+                            <div className="flex flex-row gap-2 items-center justify-center w-full">
+                                <div className="flex flex-row gap-2 items-center justify-center w-full">
+                                    <input
+                                        className="w-full h-[40px] rounded-[10px] border-2 border-neutral-200 focus:outline-none focus:border-primary-500 px-3"
+                                        placeholder="Сообщение"
+                                        value={message}
+                                        onChange={(e) => {
+                                            setMessage(e.target.value);
+                                        }}
+                                    />
+                                    <button
+                                        className="w-[40px] h-[40px] rounded-[10px] bg-primary text-white flex items-center justify-center"
+                                        onClick={async () => {
+                                            await onSendMessage(message);
+                                            setMessage('');
+                                        }}
+                                    >
+                                        <ChatBubbleOutlined />
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                ) || (
+                        <div className="flex flex-col gap-2 items-center justify-center h-100">
+                            <div className="flex flex-row gap-2 items-center justify-center ">
+                                <div className="bg-zinc-400 rounded-[25px] justify-center items-center p-[10px]">
+                                    <ChatBubbleOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <div className="text-sm font-medium font-['SF UI Display']">
+                                        Выберите чат
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    )}
             </div>
         </div>
+    );
+}
+
+function ChatListItem({ item, isSelected = false, onClick }) {
+    const image = item.partner?.image;
+    const textColor = isSelected ? 'text-white' : 'text-neutral-800';
+
+    return (
+        <div
+            className={classNames(
+                "h-[66px] flex flex-row gap-2  rounded-[25px] p-[8px] cursor-pointer animate__animated animate__fadeIn",
+                { 'bg-neutral-800': isSelected, 'bg-zinc-100': !isSelected },
+            )}
+            onClick={onClick}
+        >
+            <span
+                className={classNames(
+                    "bg-zinc-400 rounded-[25px] justify-center items-center",
+                    { 'bg-zinc-400': image },
+                    { 'bg-neutral-800 p-[15px]': !image }
+                )}
+                style={{
+                    width: '56px',
+                    height: '50px',
+                }}
+            >
+                {image && (
+                    <img
+                        src={image}
+                        alt="person"
+                        style={{
+                            width: '56px',
+                            height: '50px',
+                            objectFit: 'cover',
+                            borderRadius: '50%',
+                        }}
+                    />
+                )}
+            </span>
+
+            <div className="flex-col justify-start items-start gap-[5px] inline-flex">
+                <Link
+                    className={classNames(
+                        "text-sm font-medium font-['SF UI Display']",
+                        textColor,
+                    )}
+                    to={`/chat/${item.id}/${item.partner?.id}`}
+                >
+                    {item.partner?.name}
+                </Link>
+                <div
+                    className={classNames(
+                        "h-[17px] text-[15px] font-normal font-['SF UI Display']",
+                        textColor,
+                    )}
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                    }}
+                >
+                    {item.lastMessageText || 'Здравствуйте! Сколько просите и есть торг'}
+                </div>
+            </div>
+        </div >
     );
 }
 
