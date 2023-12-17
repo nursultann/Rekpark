@@ -4,20 +4,25 @@ import { deleteChat, getUserChats, getUserMessages, postUserMessage, readMessage
 export const useChatStore = create((set) => ({
     chats: [],
     selectedChat: null,
-    setSelectedChat: (chat) => set(() => ({ selectedChat: chat })),
+    messages: [],
+    setSelectedChat: (chat) => set(() => ({ selectedChat: chat, messages: [] })),
     async fetchChats() {
         const response = await getUserChats()
         if (response) set(() => ({ chats: response }))
     },
-    async fetchMessages(chatId) {
-        const response = await getUserMessages(chatId)
-        if (response) set((state) => ({ selectedChat: { ...state.selectedChat, messages: response } }))
+    async fetchMessages(chatId, productId) {
+        const response = await getUserMessages({
+            'chat_user_id': chatId,
+            'with': 'sender',
+            ...(productId && { 'advertisement_id': productId })
+        })
+        if (response) set((state) => ({ messages: response }))
     },
     async sendMessage(userID, message) {
         const sendMessage = await postUserMessage({ 'user_id': userID, 'message': message });
         if (sendMessage) {
             const response = await getUserMessages(userID)
-            if (response) set((state) => ({ selectedChat: { ...state.selectedChat, messages: response } }))
+            if (response) set((state) => ({ messages: response }))
         }
         return sendMessage
     },

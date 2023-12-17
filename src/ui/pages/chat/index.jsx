@@ -21,10 +21,7 @@ const openNotificationWithIcon = (type, info) => {
 
 const ChatListPage = () => {
     const user = useUserStore().user;
-    const { chats, selectedChat, fetchChats, setSelectedChat, fetchMessages } = useChatStore();
-
-    //const [chats, setChats] = useState();
-    const [messages, setMessages] = useState(null);
+    const { chats, selectedChat, fetchChats, setSelectedChat, messages, fetchMessages } = useChatStore();
 
     //const [selectedChat, setSelectedChat] = useState();
 
@@ -77,7 +74,8 @@ const ChatListPage = () => {
 
     useEffect(() => {
         if (selectedChat) {
-            fetchMessages(selectedChat.partner.id);
+            console.log('selected chat', selectedChat?.partner?.id);
+            fetchMessages(selectedChat?.partner?.id);
         }
     }, [selectedChat]);
 
@@ -100,9 +98,14 @@ const ChatListPage = () => {
             <Contents
                 chats={chats}
                 user={user}
-                messages={selectedChat?.messages}
+                messages={messages}
                 selectedChat={selectedChat}
-                onSelectedChatChange={setSelectedChat}
+                onSelectedChatChange={(chat) => {
+                    setSelectedChat(null);
+                    setTimeout(() => {
+                        setSelectedChat(chat);
+                    }, 100);
+                }}
                 onSendMessage={postMessage}
             />
 
