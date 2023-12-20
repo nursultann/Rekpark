@@ -259,21 +259,27 @@ const Navbar = () => {
 
                     <div className="d-none d-lg-block">
                       <div className="flex flex-row gap-2 align-items-center">
-                        <div className="flex flex-row gap-3 align-items-center" style={{
-                          fontSize: 22,
-                        }}>
+                        <div
+                          className="flex flex-row gap-3 align-items-center  justify-center"
+                          style={{
+                            fontSize: 22,
+                          }}
+                        >
                           <Link
                             to="/profile/chats"
+                            className="m-0 p-0 flex justify-center items-center"
                           >
                             <CommentOutlined size={50} />
                           </Link>
                           <Link
                             to="/profile"
+                            className="m-0 p-0 flex justify-center items-center"
                           >
                             <UserOutlined size={50} />
                           </Link>
                           <Link
                             to="/settings"
+                            className="m-0 p-0 flex justify-center items-center"
                           >
                             <LogoutOutlined onClick={logOut} size={50} />
                           </Link>

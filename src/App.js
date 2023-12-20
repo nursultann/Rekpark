@@ -32,7 +32,7 @@ import ArticlesFilterPage from './ui/pages/articles/filter';
 import AgreementPage from './ui/pages/profile/agreement';
 import CompletePage from './ui/pages/profile/complete';
 import { QueryClient, QueryClientProvider } from "react-query";
-import SocketHelper from './helpers/pusher';
+import SocketHelper from './helpers/socket';
 import eventBus from './helpers/event_bus';
 import { message as antMessage } from 'antd';
 import Navbar from './ui/components/navbar';
@@ -50,32 +50,20 @@ import ReactModal from 'react-modal';
 import Profilelayout from './ui/pages/profile/layout';
 import NewHabbit from './ui/components/new_habbit';
 import NotFound from './ui/pages/not_found';
+import { useChatStore } from './store/chat_store';
+import { useUserStore } from './store/user_store';
 
 const queryClient = new QueryClient();
 ReactModal.setAppElement('#root');
 
 const App = ({ match }) => {
-  const subscribe = async () => {
-    const user = await userDetails();
-    if (localStorage.getItem('token')) {
-      const messages = SocketHelper.getInstance().subscribeTo(`chat.${user.id}`)
-      for await (let message of messages) {
-        message = JSON.parse(message);
-        if (message['event'] == 'message-event') {
-
-          const msg = JSON.stringify(message['data']);
-          eventBus.dispatch('chat-message', msg);
-          if (msg != null) {
-            antMessage.info("Вам пришло сообщение!");
-            // alert(messag);
-          }
-        }
-      }
-    }
-  }
+  const chatStore = useChatStore();
+  const { isAuthenticated } = useUserStore();
 
   useEffectOnce(() => {
-    subscribe();
+    if (isAuthenticated) {
+      chatStore.listenMessages();
+    }
   });
 
   return (

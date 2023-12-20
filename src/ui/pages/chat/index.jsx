@@ -21,11 +21,13 @@ const openNotificationWithIcon = (type, info) => {
 
 const ChatListPage = () => {
     const user = useUserStore().user;
-    const { chats, selectedChat, fetchChats, setSelectedChat, messages, fetchMessages } = useChatStore();
+    const { chats, selectedChat, fetchChats, setSelectedChat, messages, fetchMessages, lastMessage } = useChatStore();
 
     //const [selectedChat, setSelectedChat] = useState();
 
     const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+
+    const partner = selectedChat?.partner?.id == user.id ? selectedChat?.user : selectedChat?.partner;
 
     const removeChat = async (id) => {
         console.log('id chat', id);
@@ -48,23 +50,12 @@ const ChatListPage = () => {
         }
     }, []);
 
-    // const fetchMessages = async (userID) => {
-    //     const userMessages = await getUserMessages({
-    //         'chat_user_id': userID,
-    //         'with': 'sender'
-    //     });
-
-    //     if (userMessages != null) {
-    //         setMessages(userMessages.reverse());
-    //     }
-    // }
-
     const postMessage = async (message) => {
         if (message != "" && message != null) {
-            const sendMessage = await postUserMessage({ 'user_id': selectedChat?.partner?.id, 'message': message });
+            const sendMessage = await postUserMessage({ 'user_id': partner?.id, 'message': message });
             console.log('send message', sendMessage);
             if (sendMessage != null) {
-                fetchMessages(selectedChat.partner.id);
+                fetchMessages(partner.id);
             }
             openNotificationWithIcon('success', 'Сообщение отправлено!');
         } else {
@@ -74,10 +65,18 @@ const ChatListPage = () => {
 
     useEffect(() => {
         if (selectedChat) {
-            console.log('selected chat', selectedChat?.partner?.id);
-            fetchMessages(selectedChat?.partner?.id);
+            console.log('selected chat', partner?.id);
+
+            fetchMessages(partner?.id);
         }
     }, [selectedChat]);
+
+    useEffect(() => {
+        if (lastMessage) {
+            console.log('last message', lastMessage);
+            fetchChats();
+        }
+    }, [lastMessage]);
 
 
     useEffectOnce(() => {
@@ -115,7 +114,7 @@ const ChatListPage = () => {
 }
 
 function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, onSendMessage, onRemoveChat }) {
-    const [message, setMessage] = useState();
+    const [message, setMessage] = useState('');
     const scrollRef = React.useRef();
 
     useEffect(() => {
@@ -128,7 +127,7 @@ function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, o
         <div className="h-[750px] w-full bg-[#587fb3] rounded-2xl flex flex-row gap-3 p-3">
             <div className="w-[40%] flex flex-col gap-2">
                 {chats?.length == 0 && (
-                    <>  </>
+                    <></>
                 )}
 
                 {chats?.map((item, i) => {
@@ -140,6 +139,7 @@ function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, o
                                 onClick={() => {
                                     onSelectedChatChange(item);
                                 }}
+                                userId={user?.id}
                             />
                         </div>
                     )
@@ -150,18 +150,19 @@ function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, o
             <div className="w-[60%] flex flex-col gap-2 bg-zinc-100 rounded-2xl">
                 {selectedChat && (
                     <div className="flex flex-col gap-2 h-full w-full">
-                        <div ref={scrollRef} className="flex-1 overflow-y-scroll">
+                        <div className="flex-1 overflow-y-scroll">
                             <div
+                                ref={scrollRef}
                                 className="flex flex-col gap-2 expand  px-3 pt-1 "
                             >
                                 <div className="pt-1" />
 
-                                {messages?.map((item) => {
+                                {messages?.map((item, index) => {
                                     const isMe = item.sender?.id == user?.id;
 
                                     return (
                                         <div
-                                            key={item.id}
+                                            key={index}
                                             className={classNames(
                                                 "flex flex-row gap-2 items-center w-full",
                                                 { 'justify-end': isMe, 'justify-start': !isMe },
@@ -232,9 +233,11 @@ function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, o
     );
 }
 
-function ChatListItem({ item, isSelected = false, onClick }) {
-    const image = item.partner?.image;
+function ChatListItem({ item, isSelected = false, userId, onClick }) {
     const textColor = isSelected ? 'text-white' : 'text-neutral-800';
+
+    const partner = item.partner?.id == userId ? item.user : item.partner;
+    const image = partner?.image;
 
     return (
         <div
@@ -246,12 +249,12 @@ function ChatListItem({ item, isSelected = false, onClick }) {
         >
             <span
                 className={classNames(
-                    "bg-zinc-400 rounded-[25px] justify-center items-center",
+                    "bg-zinc-400 rounded-[25px] justify-center items-center flex-shrink-0",
                     { 'bg-zinc-400': image },
                     { 'bg-neutral-800 p-[15px]': !image }
                 )}
                 style={{
-                    width: '56px',
+                    width: '50px',
                     height: '50px',
                 }}
             >
@@ -260,7 +263,7 @@ function ChatListItem({ item, isSelected = false, onClick }) {
                         src={image}
                         alt="person"
                         style={{
-                            width: '56px',
+                            width: '50px',
                             height: '50px',
                             objectFit: 'cover',
                             borderRadius: '50%',
@@ -269,19 +272,19 @@ function ChatListItem({ item, isSelected = false, onClick }) {
                 )}
             </span>
 
-            <div className="flex-col justify-start items-start gap-[5px] inline-flex">
+            <div className="flex-col justify-start items-start gap-[5px] inline-flex w-full overflow-hidden">
                 <Link
                     className={classNames(
                         "text-sm font-medium font-['SF UI Display']",
                         textColor,
                     )}
-                    to={`/chat/${item.id}/${item.partner?.id}`}
+                    to={`/chat/${item.id}/${partner?.id}`}
                 >
-                    {item.partner?.name}
+                    {partner?.name}
                 </Link>
                 <div
                     className={classNames(
-                        "h-[17px] text-[15px] font-normal font-['SF UI Display']",
+                        "h-[17px] text-[15px] font-normal w-full",
                         textColor,
                     )}
                     style={{
@@ -289,7 +292,7 @@ function ChatListItem({ item, isSelected = false, onClick }) {
                         textOverflow: 'ellipsis',
                     }}
                 >
-                    {item.lastMessageText || 'Здравствуйте! Сколько просите и есть торг'}
+                    {item.lastMessage?.message || 'Здравствуйте! Сколько просите и есть торг'}
                 </div>
             </div>
         </div >

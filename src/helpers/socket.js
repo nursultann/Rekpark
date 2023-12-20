@@ -60,13 +60,29 @@ class SocketHelper {
             await this.connect();
         }
 
-        yield new Promise((resolve) => {
-            this.socket.on(channel, (data) => {
-                console.log(channel, data);
+        let queue = [];
+        let resolver;
 
-                resolve(data);
-            });
+        this.socket.on(channel, (data) => {
+            console.log(channel, data);
+
+            if (resolver) {
+                resolver(data);
+                resolver = null;
+            } else {
+                queue.push(data);
+            }
         });
+
+        while (true) {
+            if (queue.length > 0) {
+                yield queue.shift();
+            } else {
+                yield new Promise(resolve => {
+                    resolver = resolve;
+                });
+            }
+        }
     }
 
     unsubscribeFrom = (channel) => {

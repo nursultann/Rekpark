@@ -1,3 +1,4 @@
+import SocketHelper from "../helpers/socket";
 import ApiClient from "./ApiClient";
 
 export const login = async (phone, password, onSuccess, onError) => {
@@ -127,6 +128,7 @@ export const getUserMessages = async (params) => {
 
 export const postUserMessage = async (params) => {
     try {
+        SocketHelper.getInstance().sendMessage(params['message']);
         const response = await ApiClient.post('/messages', params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
