@@ -85,7 +85,6 @@ const SearchBar = () => {
                         onClick={Search}>
                         Найти
                     </button>
-
                     <RoundedButton
                         className='d-md-block d-lg-none'
                         onClick={() => {
