@@ -18,7 +18,7 @@ export const useChatStore = create((set) => ({
             'with': 'sender',
             ...(productId && { 'advertisement_id': productId })
         })
-        if (response) set((state) => ({ messages: response }))
+        if (response) set((state) => ({ messages: response?.reverse() }))
     },
     async sendMessage(userID, message) {
         const sendMessage = await postUserMessage({ 'user_id': userID, 'message': message });
@@ -41,22 +41,50 @@ export const useChatStore = create((set) => ({
             if (event['event'] === 'message-event') {
                 const data = event['data'];
                 let message = data['message'];
-                console.log('data', data);
+
 
                 const chat = message['room_id'];
-                const sender = data['senderId']
+                const sender = data['senderId'];
 
                 set((state) => {
                     const chat = state.chats.find((chat) => chat.id == message['room_id']);
-                    const chats = state.chats.filter((chat) => chat.id != data['room_id']);
+                    const chats = state.chats.filter((chat) => chat.id != message['room_id']);
+
+                    console.log('chat', message['room_id'], chat.id);
 
                     if (chat) {
-                        chat['last_message'] = message;
-                        chat['last_message']['sender'] = sender;
-                        chat['last_message']['read_at'] = null;
-                        return { chats: [chat, ...chats], lastMessage: message }
+                        chat['lastMessage'] = {
+                            ...message,
+                            senderName: data['senderName'],
+                            senderImage: data['senderImage']
+                        }
+
+                        const messages = state.messages;
+                        if (state.selectedChat && state.selectedChat.id == message['room_id']) {
+                            messages.push({
+                                ...message,
+                                senderName: data['senderName'],
+                                senderImage: data['senderImage']
+                            })
+                        }
+
+                        return {
+                            chats: [chat, ...chats],
+                            lastMessage: {
+                                ...message,
+                                senderName: data['senderName'],
+                                senderImage: data['senderImage']
+                            },
+                            messages: messages
+                        }
                     } else {
-                        return { chats: [{ ...data['chat'], last_message: message }, ...chats], lastMessage: message }
+                        return {
+                            lastMessage: {
+                                ...message,
+                                senderName: data['senderName'],
+                                senderImage: data['senderImage']
+                            }
+                        }
                     }
                 })
             }

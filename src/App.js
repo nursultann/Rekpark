@@ -1,6 +1,5 @@
-import React from 'react';
-import top from './dist/img/topbanner.png';
-import { Route, BrowserRouter, Router, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import ProductDetailPage from './ui/pages/products/detail';
 import HomePage from './ui/pages/home';
 import SignInPage from './ui/pages/auth/sign_in';
@@ -19,7 +18,6 @@ import WalletsPage from './ui/pages/profile/wallets';
 import ForgotPasswordPage from './ui/pages/auth/forgot_password';
 import ProductsSearchResultPage from './ui/pages/products/search_result';
 import ProductFavoritesPage from './ui/pages/products/favorites';
-import Footer from './ui/components/footer';
 import UserProductListPage from './ui/pages/products/user_products';
 import ChatListPage from './ui/pages/chat';
 import ChatWithUserPage from './ui/pages/chat/detail';
@@ -32,12 +30,8 @@ import ArticlesFilterPage from './ui/pages/articles/filter';
 import AgreementPage from './ui/pages/profile/agreement';
 import CompletePage from './ui/pages/profile/complete';
 import { QueryClient, QueryClientProvider } from "react-query";
-import SocketHelper from './helpers/socket';
-import eventBus from './helpers/event_bus';
-import { message as antMessage } from 'antd';
-import Navbar from './ui/components/navbar';
 import { useEffectOnce } from "react-use";
-import { userDetails } from './api';
+import { message, notification } from 'antd';
 
 import 'moment/locale/ru';
 import 'antd/dist/antd.css';
@@ -48,23 +42,47 @@ import "./dist/css/app.css";
 import Layout from './layouts/layout';
 import ReactModal from 'react-modal';
 import Profilelayout from './ui/pages/profile/layout';
-import NewHabbit from './ui/components/new_habbit';
 import NotFound from './ui/pages/not_found';
 import { useChatStore } from './store/chat_store';
 import { useUserStore } from './store/user_store';
+import { Slide, Snackbar } from '@mui/material';
+
+import notificationSound from './dist/audio/notification.ogg';
 
 const queryClient = new QueryClient();
 ReactModal.setAppElement('#root');
 
+function TransitionLeft(props) {
+  return <Slide {...props} direction="left" />;
+}
+
 const App = ({ match }) => {
   const chatStore = useChatStore();
   const { isAuthenticated } = useUserStore();
+
+  const soundRef = React.useRef(null);
+  const [open, setOpen] = React.useState(false);
 
   useEffectOnce(() => {
     if (isAuthenticated) {
       chatStore.listenMessages();
     }
   });
+
+  useEffect(() => {
+    if (chatStore.lastMessage) {
+      const { lastMessage } = chatStore;
+      const { selectedChat } = chatStore;
+
+      if (selectedChat && selectedChat.id == lastMessage.room_id) {
+        // chatStore.fetchMessages(lastMessage.sender_id);
+      } else {
+        setOpen(true);
+        // chatStore.fetchChats();
+      }
+      soundRef.current.play();
+    }
+  }, [chatStore.lastMessage]);
 
   return (
     // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
@@ -114,6 +132,37 @@ const App = ({ match }) => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={open}
+        onClose={() => setOpen(false)}
+        autoHideDuration={6000}
+        key={'bottom' + 'right'}
+        TransitionComponent={TransitionLeft}
+      >
+        <div className="alert alert-info flex flex-row gap-2 " role="alert">
+          {chatStore.lastMessage?.senderImage
+            ? <img src={chatStore.lastMessage?.senderImage} className="rounded-full w-10 h-10" />
+            : <div className="rounded-full w-10 h-10 bg-gray-200"></div>}
+          <div className="flex flex-col gap-1">
+            <div
+              className="text-base"
+              style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+            >
+              Новое сообщение от <strong>{chatStore.lastMessage?.senderName}</strong>
+            </div>
+            <p
+              className="text-sm text-gray-500"
+              style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+            >
+              {chatStore.lastMessage?.message}
+            </p>
+          </div>
+        </div>
+      </Snackbar>
+
+      <audio ref={soundRef} id="audio" src={notificationSound} preload="auto"></audio>
 
     </QueryClientProvider >
   );

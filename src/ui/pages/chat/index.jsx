@@ -71,13 +71,6 @@ const ChatListPage = () => {
         }
     }, [selectedChat]);
 
-    useEffect(() => {
-        if (lastMessage) {
-            console.log('last message', lastMessage);
-            fetchChats();
-        }
-    }, [lastMessage]);
-
 
     useEffectOnce(() => {
         moment.locale('ru')
@@ -164,7 +157,7 @@ function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, o
                                         <div
                                             key={index}
                                             className={classNames(
-                                                "flex flex-row gap-2 items-center w-full",
+                                                "flex flex-row gap-2 items-center w-full animate__animated animate__fadeIn",
                                                 { 'justify-end': isMe, 'justify-start': !isMe },
                                             )}
                                         >
@@ -188,17 +181,23 @@ function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, o
 
                         <div className="flex-none w-full mb-3 px-3">
                             <div className="flex flex-row gap-2 items-center justify-center w-full">
-                                <div className="flex flex-row gap-2 items-center justify-center w-full">
+                                <div className="flex flex-row gap-2 items-center justify-center w-full bg-neutral-200 p-1 rounded-[20px]">
                                     <input
-                                        className="w-full h-[40px] rounded-[10px] border-2 border-neutral-200 focus:outline-none focus:border-primary-500 px-3"
+                                        className="w-full h-[40px] border-2 border-none focus:outline-none focus:border-primary-500 px-3 bg-transparent"
                                         placeholder="Сообщение"
                                         value={message}
                                         onChange={(e) => {
                                             setMessage(e.target.value);
                                         }}
+                                        onKeyPress={async (e) => {
+                                            if (e.key == 'Enter') {
+                                                await onSendMessage(message);
+                                                setMessage('');
+                                            }
+                                        }}
                                     />
                                     <button
-                                        className="w-[40px] h-[40px] rounded-[10px] bg-primary text-white flex items-center justify-center"
+                                        className="w-[40px] h-[40px] rounded-[15px] p-3 bg-primary text-white flex items-center justify-center"
                                         onClick={async () => {
                                             await onSendMessage(message);
                                             setMessage('');
@@ -243,6 +242,7 @@ function ChatListItem({ item, isSelected = false, userId, onClick }) {
         <div
             className={classNames(
                 "h-[66px] flex flex-row gap-2  rounded-[25px] p-[8px] cursor-pointer animate__animated animate__fadeIn",
+                'chat-' + item.id,
                 { 'bg-neutral-800': isSelected, 'bg-zinc-100': !isSelected },
             )}
             onClick={onClick}
