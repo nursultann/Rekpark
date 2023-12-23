@@ -99,7 +99,7 @@ const App = ({ match }) => {
             <Route path="/products" element={<ProductListPage />} />
             <Route path="/products/:id" element={<ProductDetailPage />} />
             <Route path="/category/:id" element={<ProductsFilterPage />} />
-            <Route path="/search_result/:search" element={<ProductsSearchResultPage />} />
+            <Route path="/search-result" element={<ProductsSearchResultPage />} />
             <Route path="/about_us" element={<AboutPage />} />
             <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/articles" element={<ArticleListPage />} />

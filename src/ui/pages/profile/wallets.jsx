@@ -6,8 +6,6 @@ import { useUserStore } from '../../../store/user_store';
 import bankCard from '../../../dist/icons/bank-card.svg';
 import wallet from '../../../dist/icons/electronic-card.svg';
 
-const { Meta } = Card;
-
 const WalletsPage = () => {
     const user = useUserStore(state => state.user);
 
