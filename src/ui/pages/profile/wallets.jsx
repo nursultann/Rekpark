@@ -1,33 +1,19 @@
 import React, { useState } from 'react';
-import Footer from '../../components/footer';
-import Navbar from '../../components/navbar';
 import { Card, Modal } from 'antd';
-import { depositAmount, userDetails } from "../../../api/user";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../../redux/actions/user_actions";
-import Skeleton from '@mui/material/Skeleton';
+import { depositAmount } from "../../../api/user";
+import { useUserStore } from '../../../store/user_store';
+
+import bankCard from '../../../dist/icons/bank-card.svg';
+import wallet from '../../../dist/icons/electronic-card.svg';
 
 const { Meta } = Card;
 
 const WalletsPage = () => {
-    if (!localStorage.getItem('token')) {
-        window.location.href = '/';
-    }
+    const user = useUserStore(state => state.user);
 
     const [amount, setAmount] = useState(0);
     const [isModal, setModal] = useState(false);
     const [depositType, setDepositType] = useState(null);
-    const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
-
-    const fetchUserDetails = async () => {
-        const user = await userDetails();
-        if (user != null) {
-            dispatch(setUser(user));
-            console.log('user', user);
-        }
-    };
 
     const closeModal = () => {
         setModal(false);
@@ -72,51 +58,64 @@ const WalletsPage = () => {
         }
     }
 
-    useEffect(() => {
-        fetchUserDetails();
-    }, []);
 
     return (
         <>
-            <div className='row py-3 px-3'>
-                <div className='col-md-2 '>
-                    <img className='rounded-circle' src={user.media[0].original_url} width={120} height={120} alt="" />
-                </div>
-                <div className="col-md-10 py-3">
-                    <label>Имя пользователя: {user.name}</label><br />
-                    <label>Пользователь: +{user.phone}</label><br />
-                    <label>Баланс: {user.balance} сом</label>
+            <div className='flex flex-col gap-[40px] mt-[60px]'>
+                <div className='flex flex-row gap-[30px] items-center'>
+                    <div className=' '>
+                        <img className='rounded-full object-cover w-[120px] h-[120px]' src={user.image} alt="" />
+                    </div>
+
+                    <div className="">
+                        <label>Имя пользователя: {user.name}</label><br />
+                        <label>Пользователь: +{user.phone}</label><br />
+                        <label>Баланс: {user.balance} сом</label>
+                    </div>
                 </div>
 
-                <div className='col-md-12 mt-3'>
-                    <h5>Выберите способ оплаты</h5>
-                    <div className='row'>
-                        <div className='col-md-5'>
-                            <div style={{
-                                backgroundImage: 'url(https://t4.ftcdn.net/jpg/02/64/69/07/360_F_264690777_OanWQuVyQJsG6ntNOwSykFaeMlUM1W3G.jpg)',
-                                backgroundSize: 'cover',
-                                height: 150,
-                                borderRadius: 13
-                            }}
-                                className='col-12 shadow py-5 px-4 d-flex justify-content-center align-items-center'>
-                                <h6 className='text-center text-white'><a onClick={() => { openModal('bankcard') }}><i className="fa-solid fa-money-check-dollar"></i> Банковской картой</a></h6>
-                            </div>
-                        </div>
-                        <div className='col-md-5'>
+
+                <div className='flex flex-col gap-8'>
+                    <p className='text-xl font-semibold'>Выберите способ оплаты</p>
+
+                    <div className='flex flex-row md:flex-row sm:flex-col gap-5'>
+                        <div className='max-w-[450px] w-full'>
                             <div
                                 style={{
-                                    backgroundImage: 'url(https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-2422.jpg)',
-                                    backgroundSize: 'cover',
                                     height: 150,
                                     borderRadius: 13
                                 }}
-                                className='col-12 shadow py-5 px-4 d-flex justify-content-center align-items-center'>
-                                <h6 className='text-center text-white'><a onClick={() => { openModal('wallet') }}><i className="fa-solid fa-money-check"></i> Электронные кошельки</a></h6>
+                                className='shadow py-5 px-4 d-flex justify-content-center align-items-center bg-gradient-to-t from-cyan-400 to-blue-400 rounded-[20px] backdrop-blur-[10px] cursor-pointer'
+                                onClick={() => { openModal('bankcard') }}
+                            >
+                                <h6 className='text-center text-white flex flex-row gap-4 text-2xl font-semibold items-center'>
+                                    <img src={bankCard} alt="" className='w-[50px] h-[50px]' />
+                                    Банковской картой
+                                </h6>
+                            </div>
+                        </div>
+                        <div className='max-w-[450px] w-full'>
+                            <div
+                                style={{
+                                    height: 150,
+                                    borderRadius: 13
+                                }}
+                                className='col-12 shadow py-5 px-4 d-flex justify-content-center align-items-center bg-gradient-to-tr from-blue-500 to-fuchsia-400 rounded-[20px] backdrop-blur-[10px] cursor-pointer'
+                                onClick={() => { openModal('wallet') }}
+                            >
+                                <h6 className='text-center text-white flex flex-row gap-4 text-2xl font-semibold items-center'>
+                                    <img src={wallet} alt="" className='w-[50px] h-[50px]' />
+                                    Электронные кошельки
+                                </h6>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div></div>
             </div>
+
+
             <Modal
                 title="Пополнение счета"
                 visible={isModal}
