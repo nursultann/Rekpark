@@ -38,14 +38,7 @@ const ProductsSearchResultPage = ({ match }) => {
 
     return (
         <div>
-            <Navbar />
             <div className="col-md-12 py-3">
-                <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                        <li className="breadcrumb-item active" aria-current="page">Поиск</li>
-                    </ol>
-                </nav>
                 <div className="row">
                     <div className="col-lg-4"></div>
                     <div className="col-lg-6 px-2 px-lg-2 mt-2 mt-lg-0 py-1 py-lg-2" >
@@ -58,7 +51,6 @@ const ProductsSearchResultPage = ({ match }) => {
                     </div>
                 </div>
                 <label className="pt-3" style={{ fontSize: 20, color: "black" }}>Результаты поиска: {match.params.search}</label>
-                <div style={{ 'width': '185px', 'height': '3px', 'backgroundColor': 'rgb(9, 72, 130)' }}></div>
                 <hr className="pb-2" />
                 <div className="row mt-6 mb-6">
                     {products === null || products === undefined || products.length === 0 ?

@@ -4,6 +4,7 @@ import { useUserStore } from "../store/user_store";
 import { useEffectOnce } from "react-use";
 import Navbar from "../ui/components/navbar";
 import top from '../dist/img/topbanner.png';
+import Footer from "../ui/components/footer";
 
 export default function Layout({ requireAuth = false }) {
     const auth = useUserStore();
@@ -22,15 +23,12 @@ export default function Layout({ requireAuth = false }) {
         // than dropping them off on the home page.
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
-
     return (
         <div className='bg-white p-0 m-0'>
             <div className="col-lg-12 bg-success px-0 text-white text-center">
                 <img src={top} width="100%" />
             </div>
-
             <Navbar />
-
             <div className="container-fluid p-0">
 
                 <div className="row">
@@ -56,7 +54,8 @@ export default function Layout({ requireAuth = false }) {
                         }}>
                     </div>
                 </div>
-            </div >
+            </div>
+            <Footer/>
         </div>
     );
 }

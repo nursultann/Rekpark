@@ -106,7 +106,6 @@ const EditProductPage = ({ match }) => {
   document.title = "Редактирование";
   return (
     <div>
-      <Navbar />
       <div className="col-12 mt-3">
         <nav className="col-12 text-center pb-3">
           <a href="/"> Главная страница</a> | <a className="text-primary" href="#">Редактировать объявление</a>

@@ -197,7 +197,6 @@ const ProductDetailPage = ({ match }) => {
     return (
         <div>
             <div className="col-xl-12 mt-xl-3 mt-[50px]">
-
                 <div className="row ">
                     <div className="col-xl-8 py-3">
                         <div className="row">
@@ -205,7 +204,6 @@ const ProductDetailPage = ({ match }) => {
                                 <label className="text-blue-600 text-xl font-semibold mb-[25px]">
                                     {productDetails.title}
                                 </label>
-
                                 {productDetails.media.length > 0 ?
                                     <DetailsImageCarousel
                                         images={productDetails.media.map((item) => item.original_url)}

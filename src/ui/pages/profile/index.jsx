@@ -87,7 +87,6 @@ const ProfilePage = () => {
             </div>
             :
             <div>
-                <Navbar />
                 <div className="col-xl-12 mt-3">
                     <nav className="col-12 text-center pb-3">
                     <a href="/"> Главная страница</a> | <a className="text-primary" href="/myads">Мои объявления</a>

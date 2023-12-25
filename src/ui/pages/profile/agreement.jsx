@@ -3,7 +3,6 @@ import Navbar from "../../components/navbar";
 const AgreementPage = () => {
     return (
         <>
-            <Navbar />
             <div className="col-12 p-3 pt-4 p-md-5">
                 <p style={{ marginTop: '0cm', marginRight: '0cm', marginBottom: '.0001pt', marginLeft: '0cm', lineHeight: 'normal', fontSize: '15px', fontFamily: '"Calibri",sans-serif', background: 'white' }}><strong><span style={{ fontSize: '20px', fontFamily: '"Helvetica",sans-serif', color: '#424242' }}>Пользовательское соглашение</span></strong></p>
                 <p style={{ marginTop: '0cm', marginRight: '0cm', marginBottom: '12.0pt', marginLeft: '0cm', lineHeight: 'normal', fontSize: '15px', fontFamily: '"Calibri",sans-serif', background: 'white' }}><span style={{ fontSize: '14px', fontFamily: '"Helvetica",sans-serif', color: '#424242' }}>Настоящее Пользовательское соглашение регулирует отношения между ЧП «Даниярова Г.С.» (далее - ) и пользователем сети Интернет (далее - «Пользователь»), возникающие при использовании Интернет-ресурса www.</span><span style={{ fontSize: '14px', fontFamily: '"Helvetica",sans-serif', color: '#424242' }}>rekpark</span><span style={{ fontSize: '14px', fontFamily: '"Helvetica",sans-serif', color: '#424242' }}>.kg (далее-&nbsp;</span><span style={{ fontSize: '14px', fontFamily: '"Helvetica",sans-serif', color: '#424242' }}>Rekpark</span><span style={{ fontSize: '14px', fontFamily: '"Helvetica",sans-serif', color: '#424242' }}>.kg), на указанных в Пользовательском соглашении условиях.</span></p>

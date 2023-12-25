@@ -65,16 +65,9 @@ const UserProductListPage = ({ match }) => {
 
     return (
         <div>
-            <Navbar />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-xl-12 mt-3">
-                        <nav aria-label="breadcrumb">
-                            <ol className="breadcrumb">
-                                <li className="breadcrumb-item" ><a style={{ color: "rgb(9, 72, 130)" }} href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                                <li className="breadcrumb-item active" aria-current="page">Объявления пользователя</li>
-                            </ol>
-                        </nav>
                         <div className="row mt-4 px-2">
                             <div className='col-xl-12 border rounded py-3'>
                                 {product != null || product != undefined ?
@@ -371,12 +364,8 @@ const UserProductListPage = ({ match }) => {
                                     }
                                 </> : <></>
                             }
-
-
-
                             <div className='col-xl-12 border rounded py-3 mt-4'>
                                 <h4 className='' style={{ fontSize: 20 }}>Объявления</h4>
-                                <div style={{ 'width': '120px', 'height': '3px', 'backgroundColor': 'rgb(9, 72, 130)' }}></div>
                                 <div className='row'>
                                     {product != null && product != undefined ?
                                         product.map((item) => (

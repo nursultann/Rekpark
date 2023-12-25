@@ -5,7 +5,6 @@ import Navbar from '../../components/navbar';
 const CompletePage = () => {
     return (
         <div>
-            <Navbar />
             <div className='col-md-12'>
                 <div className="row">
                     <div className='col-md-12 d-flex justify-content-center'>
