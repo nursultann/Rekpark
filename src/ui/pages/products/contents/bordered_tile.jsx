@@ -8,5 +8,4 @@ const BorderedTile = ({ title, children }) => {
         </div>
     );
 };
-
 export default BorderedTile;

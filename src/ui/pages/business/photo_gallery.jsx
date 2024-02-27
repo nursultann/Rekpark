@@ -70,7 +70,6 @@ const Gallery = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="col-12 d-flex justify-content-center py-3">
                 <div className="col-7 text-center py-3">
                     <h4>Добавление фото для галереи бизнес профиля</h4>

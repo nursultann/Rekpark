@@ -167,7 +167,7 @@ const Navbar = () => {
               </div>
 
               <div className="col-4 col-lg-6 d-lg-flex justify-content-end align-items-center">
-                {true ?
+                {!isAuth ?
                   <>
                     <div className="flex flex-row gap-2">
                       <div className="flex flex-row gap-2 align-items-center">

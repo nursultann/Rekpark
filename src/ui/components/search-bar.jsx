@@ -21,7 +21,9 @@ const SearchBar = ({ query }) => {
     const onChange = () => {
         setValue(value);
     }
-
+    const SearchFilter = ()=>{
+        
+    }
     const handleSearch = () => {
         history(`/search-result?q=${search}`);
     }

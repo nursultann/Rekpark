@@ -130,8 +130,6 @@ const App = ({ match }) => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-<<<<<<< HEAD
-=======
 
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -164,7 +162,6 @@ const App = ({ match }) => {
 
       <audio ref={soundRef} id="audio" src={notificationSound} preload="auto"></audio>
 
->>>>>>> origin/dev
     </QueryClientProvider >
   );
 }

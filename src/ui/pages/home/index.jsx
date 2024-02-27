@@ -115,7 +115,7 @@ function ProductsGrid({
   return (
     <div className={className}>
       <h3 className="px-0 " style={{ fontSize: 16, color: "#424242" }}>{title}</h3>
-      <div className="grid grid-cols-3 gap-4 mt-[25px] xxl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 xs:grid-cols-1">
+      <div className="grid grid-cols-3 gap-4 mt-[25px] xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 xs:grid-cols-1">
         {
           isLoading ? (Array.from(new Array(4))).map((item, index) => {
             return (
@@ -144,7 +144,7 @@ function ProductsGrid({
             Смотреть все
           </Link>
         </div>
-
+        
       )}
     </div>
   )

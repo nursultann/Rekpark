@@ -252,129 +252,6 @@ const UserProductItem = ({ product }) => {
 
     return (
         <>
-<<<<<<< HEAD
-            <div className="col-xl-12 bg-white border rounded-lg shadow-sm" style={{ ...baseStyle }}>
-                <div className="row">
-                    <div className="col-6">
-                        <div className="row">
-                            <div className="col-md-12 px-1 py-1" style={{ height: 150 }}>
-                                <a onClick={() => navigateToProductDetailsPage(product)}>
-                                <AppImage height={150} width="100%" src={image} className="card-img-top" style={{ objectFit: "cover" }} />
-                                {product.is_vip && product.is_urgent ?
-                                    <>
-                                        <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{ fontWeight: 400, backgroundColor: "#ff3b30" }} className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
-                                        <div style={{ position: "absolute", left: "52px", top: "10px", }}><span style={{ fontWeight: 400, backgroundColor: "#fecb00" }} className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
-                                    </>
-                                    : <></>}
-                                {product.is_urgent && product.is_vip == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{ fontWeight: 400, backgroundColor: "#fecb00" }} className="badge badge-warning p-1"><i className="fa-solid fa-bolt"></i> Срочно</span></div>
-                                    : <></>}
-                                {product.is_vip && product.is_urgent == false ?
-                                    <div style={{ position: "absolute", left: "10px", top: "10px", }}><span style={{ fontWeight: 400, backgroundColor: "#ff3b30" }} className="badge badge-danger p-1"><i className="fa-solid fa-crown"></i> VIP</span></div>
-                                    : <></>}
-                                </a>
-                            </div>
-                        </div>
-                        <div className="card-body p-2">
-                            <div className="row">
-                                <label style={{ fontSize: 14, fontWeight: 600 }} className="mb-0 px-0 col-md-12 py-1 label">{product.title}</label>
-                                <p
-                                    style={{
-                                        display: "-webkit-box",
-                                        fontSize: 13,
-                                        WebkitLineClamp: "2",
-                                        WebkitBoxOrient: "vertical",
-                                        overflow: "hidden"
-                                    }}
-                                    className="mb-1 text-muted">{product.description}</p>
-                                <span style={{
-                                    fontSize: 14, fontFamily: "", whiteSpace: "nowrap", overflow: "hidden",
-                                    columnWidth: "200px", fontWeight: 600
-                                }} className="mb-0 px-0 py-0">{product.price + " " + product.currency_symbol}</span>
-                            </div>
-                            <div className="row">
-                                <label style={{
-                                    fontSize: 12,
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: "2",
-                                    WebkitBoxOrient: "vertical",
-                                    overflow: "hidden",
-                                    fontWeight: '420'
-                                }}
-                                    className="text-secondary mt-1 px-0 py-0 col-md-12">{product.region.name},{product.city.name}</label>
-                                <label className="text-muted label" style={{ fontSize: 11 }}>
-                                    {update}<br />
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-xl-6 py-2">
-                        {product.status == "active" ?
-                            <div className="col-12 p-1 mb-2 bg-success rounded text-center text-white">
-                                Активен
-                            </div>
-                            : <></>
-                        }
-                        {product.status == "inactive" ?
-                            <div className="col-12 p-1 mb-2 bg-danger rounded text-center text-white">
-                                Неактивен
-                            </div>
-                            : <></>
-                        }
-                        {product.status == "moderation" ?
-                            <div className="col-12 p-1 mb-2 bg-warning rounded text-center text-white">
-                                На модерации
-                            </div>
-                            : <></>
-                        }
-                        {product.status == "disabled" ?
-                            <div className="col-12 p-1 mb-2 bg-secondary rounded text-center text-white">
-                                Отключен
-                            </div>
-                            : <></>
-                        }
-                        <Link style={{ fontSize: 13 }} className="mt-4" to={"/products/" + product.id + "/edit"}><i className="far fa-edit text-white bg-dark p-1 rounded-circle"></i> Редактировать</Link><br />
-                        <Link style={{ fontSize: 13 }} className="mt-4" onClick={removeAd}><i className="fas fa-trash-alt text-white bg-dark p-1 rounded-circle"></i> Удалить</Link><br />
-                        {product.status == "active" ?
-                            <>
-                                <Link style={{ fontSize: 13 }} className="mt-4" onClick={deactivateAd}><i className="fas fa-ban text-white bg-dark p-1 rounded-circle"></i> Деактивировать</Link><br />
-                            </>
-                            :
-                            <></>
-                        }
-                        {product.status == "inactive" ?
-                            <>
-                                <Link style={{ fontSize: 13 }} className="mt-4" onClick={activateAd}><i className="fas fa-plus-circle text-white bg-dark p-1 rounded-circle"></i> Активировать</Link>
-                            </>
-                            :
-                            <>
-
-                            </>
-                        }
-                        <div className="row mt-3 mt-xl-5">
-                            <div className="col-12 pl-4">
-                                {product.status != 'disabled' && product.status != 'inactive'
-                                    && product.status != 'moderation' ?
-                                    <>
-                                        <span className="text-muted" style={{ fontSize: 13 }}>Платные услуги</span><br />
-                                        {subPlans != null ?
-                                            <>
-                                                {
-                                                    subPlans.map((item) =>
-                                                        <div className="">
-                                                            <img src={item.image} width="10" height="10" /><a className="text-dark" onClick={() => makeSubscriptionModal(product.id, item.name)}>{item.title}</a>
-                                                        </div>
-                                                    )
-                                                }
-                                            </>
-                                            : <></>
-                                        }
-                                    </> : <></>
-                                }
-                            </div>
-                        </div>
-                    </div>
-=======
             <div className='max-w-[540px] relative mx-auto my-0 bg-[#fff] rounded-[20px] border-solid border-2 border-[#e2e2e2] flex flex-row'>
                 <div
                     className='w-[50%] overflow-hidden'
@@ -383,7 +260,6 @@ const UserProductItem = ({ product }) => {
                         product={product}
                         border={false}
                     />
->>>>>>> origin/dev
                 </div>
 
 
