@@ -5,7 +5,11 @@ module.exports = {
   ],
   theme: {
     extend: {
-
+      colors: {
+        'primary': '#587fb3',
+        'secondary': '#00ff00',
+        'danger': '#0000ff',
+      },
     },
     screens: {
       'xs': '0px',

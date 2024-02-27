@@ -37,10 +37,11 @@ export default function Layout({ requireAuth = false }) {
                             backgroundSize: "auto", backgroundPosition: "right top",
                             backgroundImage: "",
                             backgroundRepeat: "no-repeat"
-                        }}>
+                        }}
+                    >
                     </div>
 
-                    <div className="col-lg-9  col-md-12 col-sm-12 col-xs-12 md:px-[75px] lg:px-0 sm:px-[75px]"
+                    <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 col-xs-12 lg:px-0 sm:px-[75px]"
                         style={{ backgroundColor: '#fff', minHeight: "500px" }}>
                         <AuthStatus />
                         <Outlet />

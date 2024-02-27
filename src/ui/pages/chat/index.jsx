@@ -1,15 +1,17 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
-import Navbar from "../../components/navbar";
-import { deleteChat, getUserChats, getUserMessages, postUserMessage, readMessages, userDetails } from "../../../api/user";
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import Skeleton from '@mui/material/Skeleton';
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../../redux/actions/user_actions";
-import { Image } from 'antd';
-import * as api from "../../../api";
 import { Tabs, notification } from 'antd';
 import moment from "moment-timezone";
+import { Helmet } from "react-helmet";
+import { useEffectOnce } from "react-use";
+import classNames from "classnames";
+import { deleteChat, getUserChats, getUserMessages, postUserMessage, readMessages, userDetails } from "../../../api/user";
+import * as api from "../../../api";
+import { ChatBubble, ChatBubbleOutlined, ChatOutlined, MessageOutlined, PersonOutline } from "@mui/icons-material";
+import personOutline from '../../../dist/icons/person-outline.svg';
+import { useUserStore } from "../../../store/user_store";
+import { useChatStore } from "../../../store/chat_store";
 
 const openNotificationWithIcon = (type, info) => {
     notification[type]({
@@ -17,28 +19,16 @@ const openNotificationWithIcon = (type, info) => {
     });
 };
 
-const { TabPane } = Tabs;
-
 const ChatListPage = () => {
-    // console.log(localStorage.getItem('token'));
-    if (!localStorage.getItem('token')) {
-        window.location.href = '/';
-    }
-    const history = useNavigate();
-    const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.user);
-    const [chats, setChats] = useState();
-    const [chat_id, setChatId] = useState();
-    const [message, setMessage] = useState();
-    const [loadings, setLoadings] = useState();
-    const [user_id, setUserId] = useState();
-    const fetchUserDetails = async () => {
-        const user = await userDetails();
-        if (user != null) {
-            dispatch(setUser(user));
-            setUserId(user.id);
-        }
-    };
+    const user = useUserStore().user;
+    const { chats, selectedChat, fetchChats, setSelectedChat, messages, fetchMessages, lastMessage } = useChatStore();
+
+    //const [selectedChat, setSelectedChat] = useState();
+
+    const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+
+    const partner = selectedChat?.partner?.id == user.id ? selectedChat?.user : selectedChat?.partner;
+
     const removeChat = async (id) => {
         const remove = await deleteChat(id);
         console.log(remove);
@@ -48,293 +38,265 @@ const ChatListPage = () => {
             openNotificationWithIcon('error', 'Что-то пошло не так!');
         }
     }
-    const fetchChats = async () => {
-        const userChats = await getUserChats();
-        if (userChats != null) {
-            setChats(userChats);
-            console.log('chats', userChats);
-        }
-    }
-    // const setUserMessage = (id, userName, partner_id) => {
-    //     console.log('id', id , 'userName', userName);
-    //     // history("/chat/" + id + "/" + userName);
-    //     // setChatId(id);
-    //     // setAdvertisement_id(userName)
-    //     getUserMessages(id,userName);
-    // }
-    // const postMessage = async () => {
-    //     setLoadings(true);
-    //     if (message != "" && message != null) {
-    //         const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message });
-    //         getUserMessage(chat_id);
-    //         setMessage("");
-    //         openNotificationWithIcon('success', 'Сообщение отправлено!');
-    //         setLoadings(false);
-    //     } else {
-    //         openNotificationWithIcon('error', 'Заполните поле для сообщения!');
-    //     }
-    // }
-    moment.locale('ru');
+
     useEffect(() => {
-        document.title = "Сообщения";
-        fetchUserDetails();
-        fetchChats();
-    }, []);
-    //single chat 
-    const [messages, setMessages] = useState(null);
-    const [chat_name, setChatName] = useState();
-    const [chat_image, setChatImage] = useState();
-    const [postId, setPostId] = useState();
-    const [product, setProduct] = useState(null);
-    // const [userID,setUserID] = useState();
-    const [advertisement_id, setAdvertisement_id] = useState();
-    // const fetchUserDetails = async () => {
-    //     const user = await userDetails();
-    //     if (user != null) {
-    //         dispatch(setUser(user));
-    //     }
-    // };
-    const getUserMessage = async (userID, ad_id) => {
-        console.log(ad_id);
-        setChatId(userID);
-        setAdvertisement_id(ad_id);
-        // setChatName(userName);
-        const userMessages = await getUserMessages({ 'chat_user_id': userID, 'advertisement_id': ad_id, 'with': 'sender' });
-        if (userMessages != null) {
-            setMessages(userMessages.reverse());
-            setPostId(messages[0].advertisement_id);
-            console.log('messages', messages);
-            productDetails(postId, userID);
+        const resizeListener = async () => {
+            setInnerWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', resizeListener);
+
+        return () => {
+            window.removeEventListener('resize', resizeListener);
         }
-    }
-    const postMessage = async () => {
-        setLoadings(true);
+    }, []);
+
+    const postMessage = async (message) => {
         if (message != "" && message != null) {
-            const sendMessage = await postUserMessage({ 'user_id': chat_id, 'message': message, 'advertisement_id': advertisement_id });
-            getUserMessage(chat_id);
-            setMessage("");
+            const sendMessage = await postUserMessage({ 'user_id': partner?.id, 'message': message });
+            console.log('send message', sendMessage);
+            if (sendMessage != null) {
+                fetchMessages(partner.id);
+            }
             openNotificationWithIcon('success', 'Сообщение отправлено!');
-            setLoadings(false);
         } else {
             openNotificationWithIcon('error', 'Заполните поле для сообщения!');
         }
     }
-    const productDetails = async (id, userid) => {
-        const _product = await api.fetchProduct(id);
-        const readMessage = await readMessages({ 'partner_id': userid });
-        setProduct(_product);
-        console.log("read", readMessage);
-    }
-    moment.locale('ru');
+
     useEffect(() => {
-        document.title = "Сообщение пользователя";
-    }, []);
+        if (selectedChat) {
+            console.log('selected chat', partner?.id);
+
+            fetchMessages(partner?.id);
+        }
+    }, [selectedChat]);
+
+
+    useEffectOnce(() => {
+        moment.locale('ru')
+        fetchChats()
+
+        return () => {
+            setSelectedChat(null);
+        }
+    });
+
     return (
-        user === null || user === undefined || user === ""
-            ? <div className="col-md-12 mt-3">
-                <Skeleton variant="rectangular" width={'100%'} height={200} />
-                <div className="row mt-3">
-                    <div className="col-md-4">
-                        <Skeleton variant="text" />
-                        <Skeleton variant="circular" width={40} height={40} />
-                        <Skeleton variant="rectangular" width={210} height={118} />
-                    </div>
-                    <div className="col-md-8">
-                        <div className="row">
-                            <div className="col-md-12 mb-2">
-                                <Skeleton variant="rectangular" width={'100%'} height={50} />
-                            </div>
-                            <div className="col-md-4">
-                                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                                <Skeleton variant="text" />
-                                <Skeleton variant="text" />
-                                <Skeleton variant="text" />
-                            </div>
-                            <div className="col-md-4">
-                                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                                <Skeleton variant="text" />
-                                <Skeleton variant="text" />
-                                <Skeleton variant="text" />
-                            </div>
-                            <div className="col-md-4">
-                                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                                <Skeleton variant="text" />
-                                <Skeleton variant="text" />
-                                <Skeleton variant="text" />
+        <>
+            <Helmet>
+                <title>Сообщение пользователя</title>
+            </Helmet>
+
+            <Contents
+                chats={chats}
+                user={user}
+                messages={messages}
+                selectedChat={selectedChat}
+                onSelectedChatChange={(chat) => {
+                    setSelectedChat(null);
+                    setTimeout(() => {
+                        setSelectedChat(chat);
+                    }, 100);
+                }}
+                onSendMessage={postMessage}
+            />
+
+            <div className="h-[50px]" />
+        </>
+    );
+}
+
+function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, onSendMessage, onRemoveChat }) {
+    const [message, setMessage] = useState('');
+    const scrollRef = React.useRef();
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
+
+    return (
+        <div className="h-[750px] w-full bg-[#587fb3] rounded-2xl flex flex-row gap-3 p-3">
+            <div className="w-[40%] flex flex-col gap-2">
+                {chats?.length == 0 && (
+                    <></>
+                )}
+
+                {chats?.map((item, i) => {
+                    return (
+                        <div key={i}>
+                            <ChatListItem
+                                item={item}
+                                isSelected={selectedChat?.id == item.id}
+                                onClick={() => {
+                                    onSelectedChatChange(item);
+                                }}
+                                userId={user?.id}
+                            />
+                        </div>
+                    )
+                })}
+
+            </div>
+
+            <div className="w-[60%] flex flex-col gap-2 bg-zinc-100 rounded-2xl">
+                {selectedChat && (
+                    <div className="flex flex-col gap-2 h-full w-full">
+                        <div className="flex-1 overflow-y-scroll">
+                            <div
+                                ref={scrollRef}
+                                className="flex flex-col gap-2 expand  px-3 pt-1 "
+                            >
+                                <div className="pt-1" />
+
+                                {messages?.map((item, index) => {
+                                    const isMe = item.sender?.id == user?.id;
+
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={classNames(
+                                                "flex flex-row gap-2 items-center w-full animate__animated animate__fadeIn",
+                                                { 'justify-end': isMe, 'justify-start': !isMe },
+                                            )}
+                                        >
+                                            <div
+                                                className={classNames(
+                                                    "flex flex-row gap-2 items-center p-[13px] bg-slate-500 rounded-[10px] max-w-[50%]",
+                                                    { 'justify-end': isMe, 'justify-start': !isMe },
+                                                )}
+                                            >
+                                                <div
+                                                    className="text-white text-xs font-normal w-full break-words"
+                                                >
+                                                    {item.message}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            :
-            <div>
-                <Navbar />
-                <div className="col-xl-12 mt-3">
-                    <nav className="col-12 text-center pb-3">
-                        <a href="/"> Главная страница</a> | <a className="text-primary" href="/chats">Сообщения</a>
-                    </nav>
-                    <div className="col-12 px-0 px-xl-5">
-                        <div className="col-12 px-0 pb-3 px-xl-5">
-                            <div className="d-lg-flex justify-content-around text-center nav-pills rounded-lg py-2" id="v-pills-tab" role="tablist">
-                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-home-tab" href="/profile" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Профиль</a>
-                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-profile-tab" href="/myads" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Мои объявления</a>
-                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-messages-tab" href="/favorites" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Избранные</a>
-                                <a className="nav-link active px-4 border mb-2 rounded-lg" id="v-pills-settings-tab" href="/chats" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Сообщения</a>
-                                <a className="nav-link text-primary px-4 border mb-2 rounded-lg" id="v-pills-settings-tab" href="/wallets" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Пополнить баланс</a>
-                            </div>
-                            <div className="tab-content bg-light rounded mt-3" id="v-pills-tabContent">
-                                <div className="tab-pane fade show active" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                                    <div className="row" style={{ backgroundColor: '#007bff' }}>
-                                        <div className="col-xl-5 mt-3 mt-md-0 px-0">
-                                            {/* <div className="col-xl-12 px-2 py-2 rounded mb-3">
-                                                <label className="" style={{ fontSize: 15 }}>Сообщения</label>
-                                            </div> */}
-                                            <div className="container-fluid">
-                                                <div className="content-wrapper">
-                                                    <div className="row gutters mt-3 px-0">
-                                                        <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                            <div className="card m-0">
-                                                                <div className="row no-gutters">
-                                                                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                                        <div className="users-container">
-                                                                            <ul className="users">
-                                                                                {chats?.length > 0 ?
-                                                                                    <>
-                                                                                        {chats.map((chat) =>
-                                                                                            <li className="person mt-1" data-chat="person1">
-                                                                                                <div className="user" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
-                                                                                                    {chat.advertisement.image != null ?
-                                                                                                        <>
-                                                                                                            <img src={chat.advertisement.image} />
-                                                                                                            <span className="status busy"></span>
-                                                                                                        </>
-                                                                                                        :
-                                                                                                        <>
-                                                                                                            <Image
-                                                                                                                width={"100%"}
-                                                                                                                src="error"
-                                                                                                                fallback="data:image/png;base64,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"
-                                                                                                            />
-                                                                                                        </>
-                                                                                                    }
-                                                                                                </div>
-                                                                                                <p className="name-time" onClick={() => getUserMessage(chat.user_1_id != user_id ? chat.user_1_id : chat.user_2_id, chat.advertisement_id)}>
-                                                                                                    <span className="name">{chat.advertisement.title}</span>
-                                                                                                </p>
-                                                                                                <div className="float-right">
-                                                                                                    <span><i className="fa-solid fa-trash-can text-primary" onClick={() => removeChat(chat.id)}></i></span>
-                                                                                                </div>
-                                                                                            </li>
-                                                                                        )}
-                                                                                    </> :
-                                                                                    <div className="col-12 text-center">
-                                                                                        Пока нет сообщений
-                                                                                    </div>
-                                                                                }
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                        </div>
-                                        <div className="col-xl-7 mt-3 mb-5 mt-md-0">
-                                            <div className="content-wrapper">
-                                                <div className="row gutters">
-                                                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 px-0">
-                                                        <div className="card m-0">
-                                                            <div className="row no-gutters">
-                                                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                                                    <div className="selected-user text-white">
-                                                                        <span>Сообщения от <span className="name">{chat_name}</span></span>
-                                                                    </div>
-                                                                    <div className="col-12 alert alert-primary">
-                                                                        {product != null ?
-                                                                            <>
-                                                                                {product.image != null ?
-                                                                                    <img src={product.image} width="50px" />
-                                                                                    :
-                                                                                    <Image
-                                                                                        width={"50px"}
-                                                                                        src="error"
-                                                                                        fallback="data:image/png;base64,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"
-                                                                                    />
-                                                                                }
-                                                                                <a href={"/products/" + product.id}><span className="ml-2">{product.title}</span></a>
-                                                                            </>
-                                                                            :
-                                                                            <>
-                                                                            </>
-                                                                        }
-                                                                    </div>
-                                                                    <div className="chat-container">
-                                                                        <ul className="chat-box chatContainerScroll">
-                                                                            {
-                                                                                messages?.length > 0 ?
-                                                                                    <>
-                                                                                        {
-                                                                                            messages.map((item) =>
-                                                                                                <>
-                                                                                                    {item.sender_id == chat_id ?
-                                                                                                        <li className="chat-left">
-                                                                                                            <div className="chat-avatar">
-                                                                                                                <img src={item.sender.image} alt="Retail Admin" />
-                                                                                                                <div className="chat-name">{item.sender.name}</div>
-                                                                                                            </div>
-                                                                                                            <div className="chat-text">
-                                                                                                                <span className="bg-primary text-white p-1 rounded">{item.message}</span>
-                                                                                                            </div>
-                                                                                                            {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}</div> */}
-                                                                                                        </li>
-                                                                                                        :
-                                                                                                        <li className="chat-right">
-                                                                                                            {/* <div className="chat-hour">{moment(item.created_at, 'YYYYMMDD, h:mm:ss a').tz('Asia/Almaty').format('LLLL')}
-                                                                                                                {item.sender.read_at != null ? <span className="fa fa-check-circle"></span> : <></>}
-                                                                                                            </div> */
-                                                                                                            }
-                                                                                                            <div className="chat-text">
-                                                                                                                <span className="bg-primary text-white p-1 rounded">{item.message}</span>
-                                                                                                            </div>
-                                                                                                            <div className="chat-avatar">
-                                                                                                                <img src={item.sender.image} alt="Retail Admin" />
-                                                                                                                <div className="chat-name">{item.sender.name}</div>
-                                                                                                            </div>
-                                                                                                        </li>
-                                                                                                    }
-                                                                                                </>
-                                                                                            )}
-                                                                                    </> : <></>
-                                                                            }
-                                                                        </ul>
-                                                                    </div>
-                                                                    {chat_id ?
-                                                                        <div className="form-group text-right py-2 px-3 mt-3 mb-0">
-                                                                            <textarea className="form-control" rows="3" placeholder="Напишите ваше сообщение..."
-                                                                                onChange={(e) => { setMessage(e.target.value) }} value={message}></textarea>
-                                                                            <button style={{ backgroundColor: "#184d9f" }} className="btn btn-primary mt-3 mb-2" type="primary" loading={loadings} onClick={() => postMessage()}>
-                                                                                Отправить
-                                                                            </button>
-                                                                        </div>
-                                                                        : <></>
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                        <div className="flex-none w-full mb-3 px-3">
+                            <div className="flex flex-row gap-2 items-center justify-center w-full">
+                                <div className="flex flex-row gap-2 items-center justify-center w-full bg-neutral-200 p-1 rounded-[20px]">
+                                    <input
+                                        className="w-full h-[40px] border-2 border-none focus:outline-none focus:border-primary-500 px-3 bg-transparent"
+                                        placeholder="Сообщение"
+                                        value={message}
+                                        onChange={(e) => {
+                                            setMessage(e.target.value);
+                                        }}
+                                        onKeyPress={async (e) => {
+                                            if (e.key == 'Enter') {
+                                                await onSendMessage(message);
+                                                setMessage('');
+                                            }
+                                        }}
+                                    />
+                                    <button
+                                        className="w-[40px] h-[40px] rounded-[15px] p-3 bg-primary text-white flex items-center justify-center"
+                                        onClick={async () => {
+                                            await onSendMessage(message);
+                                            setMessage('');
+                                        }}
+                                    >
+                                        <ChatBubbleOutlined />
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                ) || (
+                        <div className="flex flex-col gap-2 items-center justify-center h-100">
+                            <div className="flex flex-row gap-2 items-center justify-center ">
+                                <div className="bg-zinc-400 rounded-[25px] justify-center items-center p-[10px]">
+                                    <ChatBubbleOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <div className="text-sm font-medium font-['SF UI Display']">
+                                        Выберите чат
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    )}
+            </div>
+        </div>
+    );
+}
+
+function ChatListItem({ item, isSelected = false, userId, onClick }) {
+    const textColor = isSelected ? 'text-white' : 'text-neutral-800';
+
+    const partner = item.partner?.id == userId ? item.user : item.partner;
+    const image = partner?.image;
+
+    return (
+        <div
+            className={classNames(
+                "h-[66px] flex flex-row gap-2  rounded-[25px] p-[8px] cursor-pointer animate__animated animate__fadeIn",
+                'chat-' + item.id,
+                { 'bg-neutral-800': isSelected, 'bg-zinc-100': !isSelected },
+            )}
+            onClick={onClick}
+        >
+            <span
+                className={classNames(
+                    "bg-zinc-400 rounded-[25px] justify-center items-center flex-shrink-0",
+                    { 'bg-zinc-400': image },
+                    { 'bg-neutral-800 p-[15px]': !image }
+                )}
+                style={{
+                    width: '50px',
+                    height: '50px',
+                }}
+            >
+                {image && (
+                    <img
+                        src={image}
+                        alt="person"
+                        style={{
+                            width: '50px',
+                            height: '50px',
+                            objectFit: 'cover',
+                            borderRadius: '50%',
+                        }}
+                    />
+                )}
+            </span>
+
+            <div className="flex-col justify-start items-start gap-[5px] inline-flex w-full overflow-hidden">
+                <Link
+                    className={classNames(
+                        "text-sm font-medium font-['SF UI Display']",
+                        textColor,
+                    )}
+                    to={`/chat/${item.id}/${partner?.id}`}
+                >
+                    {partner?.name}
+                </Link>
+                <div
+                    className={classNames(
+                        "h-[17px] text-[15px] font-normal w-full",
+                        textColor,
+                    )}
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                    }}
+                >
+                    {item.lastMessage?.message || 'Здравствуйте! Сколько просите и есть торг'}
                 </div>
             </div>
+        </div >
     );
 }
 

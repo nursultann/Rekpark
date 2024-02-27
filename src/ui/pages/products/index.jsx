@@ -1,85 +1,59 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Skeleton, Grid } from "@mui/material";
-import { Button } from "@mui/material";
-import * as api from "../../../api";
-import { setProducts } from "../../../redux/actions/product_actions";
-import ProductItem from "../../components/product/product_item";
+import React, { } from "react";
+import { useDispatch } from "react-redux";
+import ProductItem, { ProductItemSkeleton } from "../../components/product/product_item";
 import SearchBar from "../../components/search-bar";
-import Navbar from "../../components/navbar";
+import { useProductsPaginatedQuery } from "../../../hooks/product";
 
 const ProductListPage = () => {
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.product);
 
-  const limit = 20;
-  const [offset, setOffset] = useState(0);
+  const { products, reachEnd, isLoading, fetchProducts } = useProductsPaginatedQuery();
 
-
-  const fetchInitProducts = async () => {
-    let _products = await api.fetchProducts({ 'with': 'user' });
-    if (_products != null) {
-      dispatch(setProducts(_products));
-      setOffset(offset + limit);
-    }
-  };
-
-  const fetchProducts = async () => {
-    let prods = products.concat(await api.fetchProducts({ offset: offset, 'with': 'user' }));
-    if (prods != null) {
-      dispatch(setProducts(prods));
-      setOffset(offset + limit);
-    }
-  };
-
-  useEffect(() => {
-    fetchInitProducts();
-  }, []);
+  const isRefreshing = isLoading && (products === null || products === undefined || products.length === 0);
 
   return (
     <div>
-      {/* <SearchBar /> */}
-      <div className="col-md-12">
-        <div className="row mt-6 mb-6">
-          {products === null || products === undefined || products.length === 0 ?
-            <Grid container spacing={2} className="pl-3 pt-4 pb-4">
-              <Grid item xs={4}>
-                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                <Skeleton variant="text" />
-                <Skeleton variant="text" />
-                <Skeleton variant="text" />
-              </Grid>
-              <Grid item xs={4}>
-                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                <Skeleton variant="text" />
-                <Skeleton variant="text" />
-                <Skeleton variant="text" />
-              </Grid>
-              <Grid item xs={4}>
-                <Skeleton variant="rectangular" width={'100%'} height={100} />
-                <Skeleton variant="text" />
-                <Skeleton variant="text" />
-                <Skeleton variant="text" />
-              </Grid>
-            </Grid>
-            : products.map((product) => {
+      <SearchBar />
+
+      <div className="flex flex-col">
+        <div className="grid grid-cols-3 gap-4 mt-[25px] xxl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 xs:grid-cols-1">
+          {
+            isRefreshing ? (Array.from(new Array(4))).map((item, index) => {
               return (
-                <div className="col-md-4 mt-3">
-                  <ProductItem product={product} />
-                </div>
+                <ProductItemSkeleton
+                  key={index}
+                />
               )
-            })}
+            }) :
+              products?.map((item, index) => {
+                return (
+                  <ProductItem
+                    key={index}
+                    product={item}
+                    onClick={() => { }}
+                  />
+                )
+              })
+          }
         </div>
-        <center className="mt-5">
-          <Button
-            variant="outlined"
-            onClick={() => {
-              fetchProducts();
-            }}>
-            Показать еще
-          </Button>
-        </center>
-        <hr />
+
+        <div className="flex flex-row justify-center mt-4">
+          {!reachEnd &&
+            <button
+              onClick={() => {
+                fetchProducts();
+              }}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              disabled={isLoading}
+            >
+              {isLoading ? "Загрузка..." : "Загрузить еще"}
+              {isLoading && <span className="ml-2"><i className="fa-solid fa-spinner-third animate-spin"></i></span>}
+            </button>
+          }
+        </div>
+
+        <div className="mt-8"></div>
+
       </div>
     </div>
   );

@@ -10,9 +10,10 @@ import chat_bubble_outline from '../../../dist/icons/chat_bubble.svg';
 import heart_outline from '../../../dist/icons/heart_outline.svg';
 import '../../../dist/css/custom_card.css';
 import ProductImagesSlider from "./images_slider";
+import classNames from "classnames";
 
 
-const ProductItem = ({ product, onClick }) => {
+const ProductItem = ({ product, onClick, border = true }) => {
     const dispatch = useDispatch();
     const history = useNavigate();
 
@@ -45,7 +46,12 @@ const ProductItem = ({ product, onClick }) => {
 
     return (
         <div
-            className="max-w-md pb-2.5 rounded-[10px] border-2 border-neutral-200 flex-col justify-start items-center hover:border-primary-500 cursor-pointer hover:bg-gray-50 active:bg-gray-100"
+            className={classNames(
+                "max-w-md pb-2.5 rounded-[10px] flex-col justify-start items-center  cursor-pointer ",
+                {
+                    "border-2 border-neutral-200 hover:border-primary-500 hover:bg-gray-50 active:bg-gray-100": border,
+                }
+            )}
             style={baseStyle}
             onClick={() => {
                 console.log('product', 'product');
@@ -78,7 +84,6 @@ const ProductItem = ({ product, onClick }) => {
 
                     <div
                         className="h-[40px] text-neutral-400 text-xs font-medium font-['SF UI Display']"
-
                     >
                         {maxSymbolEllipsis(product.description, 70)}
                     </div>
@@ -111,6 +116,7 @@ const ProductItem = ({ product, onClick }) => {
 
                 </div>
             </div>
+
         </div>
     )
 };

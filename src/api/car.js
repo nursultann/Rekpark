@@ -9,7 +9,6 @@ export const fetchCar = async (s, params = {}) => {
             params.where = null;
         }
 
-        console.log('fetchCarUrl', url)
         const response = await ApiClient.get(url, params);
         if (response.status === 200 || response.status === 201) {
             return response.data.data;

@@ -13,26 +13,23 @@ import RoundedButton from './rounded_button';
 const { Search } = Input;
 const { TreeNode } = TreeSelect;
 
-const SearchBar = () => {
+const SearchBar = ({ query }) => {
     const [value, setValue] = useState(undefined);
-    const [search, setSearch] = useState();
+    const [search, setSearch] = useState(query ?? '');
     const history = useNavigate();
 
     const onChange = () => {
         setValue(value);
     }
 
-    const Search = () => {
-        history(`search_result/${search}`);
+    const handleSearch = () => {
+        history(`/search-result?q=${search}`);
     }
-
 
     const handleChange = (value) => {
         console.log(`selected ${value}`);
         window.location.href = "/category/" + value;
     };
-
-
 
     return (
         <div>
@@ -72,8 +69,14 @@ const SearchBar = () => {
                             type={"search"}
                             className='rounded-xl px-4 py-2 w-full border border-neutral-200 bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent'
                             placeholder="Я ищу..."
+                            value={search}
                             onChange={(e) => {
                                 setSearch(e.target.value)
+                            }}
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch();
+                                }
                             }}
                         />
                         <SearchOutlined className='relative right-8  text-gray-400 ' />
@@ -82,7 +85,7 @@ const SearchBar = () => {
                     <button
                         className='btn btn-primary rounded-xl px-[60px] py-[7px] ml-2 d-md-none d-lg-block d-sm-none d-xs-none'
                         type="primary"
-                        onClick={Search}>
+                        onClick={handleSearch}>
                         Найти
                     </button>
                     <RoundedButton

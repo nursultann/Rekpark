@@ -7,9 +7,9 @@ import {
   Form,
   notification
 } from "antd";
-import ProductFields from "../../components/product/product_fields";
 import { setUser } from "../../../redux/actions/user_actions";
 import { setProductDetails } from "../../../redux/actions/product_actions";
+import ProductFields from "./contents/product_fields";
 
 const EditProductPage = ({ match }) => {
 
