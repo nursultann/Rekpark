@@ -14,7 +14,9 @@ const ArticleDetailPage = ({ match }) => {
     const [update, setUpdate] = useState();
 
     const getArticle = async () => {
+        console.log('article');
         const articleDetails = await fetchArticle(match.params.id);
+        console.log('article', articleDetails);
         if (articleDetails != null) {
             dispatch(setArticleDetails(articleDetails));
             setArticle(articleDetails);
