@@ -63,50 +63,52 @@ function NewsItem({
         <div
             className="max-w-md pb-2.5 rounded-[10px] border border-neutral-200 flex-col justify-start items-center"
         >
-            <div
-                className="w-[100%] h-[190px] rounded-tl-[10px] rounded-tr-[10px]"
-                style={{ objectFit: 'cover' }}
-            >
-                <img
-                    className="rounded-tl-[10px] rounded-tr-[10px] h-full w-full object-cover"
-                    src={item?.image}
-                />
-            </div>
-
-
-            <div className="self-stretch flex-col justify-start items-start px-3 mt-2">
-
-                <div className="flex-col justify-center items-start gap-[4.85px] flex">
-                    <div className="text-neutral-800 text-sm font-medium font-['SF UI Display']">{item.title}</div>
-                    <div
-                        className="h-[40px] text-neutral-400 text-xs font-medium font-['SF UI Display']"
-
-                    >
-                        {maxSymbolEllipsis(item.text, 70)}
-                    </div>
+            <Link to={'/article/' + item.id}>
+                <div
+                    className="w-[100%] h-[190px] rounded-tl-[10px] rounded-tr-[10px]"
+                    style={{ objectFit: 'cover' }}
+                >
+                    <img
+                        className="rounded-tl-[10px] rounded-tr-[10px] h-full w-full object-cover"
+                        src={item?.image}
+                    />
                 </div>
 
-                <div className="justify-start items-center gap-[5px] inline-flex mt-3">
-                    <div className="text-zinc-500 text-xs font-medium font-['SF UI Display']">Регион:</div>
-                    <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">г.Бишкек</div>
-                </div>
 
-                <div className="flex flex-row items-center justify-content-between">
-                    <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">Сегодня 13:01</div>
+                <div className="self-stretch flex-col justify-start items-start px-3 mt-2">
 
-                    <div className="flex flex-row items-center justify-content-between gap-[5px]">
-                        <div className="flex flex-row items-center justify-content-between gap-[5px]">
-                            <img src={chat_bubble_outline} alt="chat_bubble_outline" />
-                            <div className="text-neutral-800 text-[15px] font-normal font-['SF UI Display']">10</div>
-                        </div>
-                        <div className="flex flex-row items-center justify-content-between gap-[5px]">
-                            <img src={heart_outline} alt="heart_outline" />
-                            <div className="text-neutral-800 text-[15px] font-normal font-['SF UI Display']">50</div>
+                    <div className="flex-col justify-center items-start gap-[4.85px] flex">
+                        <div className="text-neutral-800 text-sm font-medium font-['SF UI Display']">{item.title}</div>
+                        <div
+                            className="h-[40px] text-neutral-400 text-xs font-medium font-['SF UI Display']"
+
+                        >
+                            {maxSymbolEllipsis(item.text, 70)}
                         </div>
                     </div>
 
+                    <div className="justify-start items-center gap-[5px] inline-flex mt-3">
+                        <div className="text-zinc-500 text-xs font-medium font-['SF UI Display']">Регион:</div>
+                        <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">г.Бишкек</div>
+                    </div>
+
+                    <div className="flex flex-row items-center justify-content-between">
+                        <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">Сегодня 13:01</div>
+
+                        <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                            <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                                <img src={chat_bubble_outline} alt="chat_bubble_outline" />
+                                <div className="text-neutral-800 text-[15px] font-normal font-['SF UI Display']">10</div>
+                            </div>
+                            <div className="flex flex-row items-center justify-content-between gap-[5px]">
+                                <img src={heart_outline} alt="heart_outline" />
+                                <div className="text-neutral-800 text-[15px] font-normal font-['SF UI Display']">50</div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
+            </Link>
         </div>
     )
 }

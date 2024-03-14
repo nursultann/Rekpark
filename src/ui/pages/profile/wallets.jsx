@@ -61,21 +61,17 @@ const WalletsPage = () => {
         <>
             <div className='flex flex-col gap-[40px] mt-[60px]'>
                 <div className='flex flex-row gap-[30px] items-center'>
-                    <div className=' '>
+                    <div className=''>
                         <img className='rounded-full object-cover w-[120px] h-[120px]' src={user.image} alt="" />
                     </div>
-
                     <div className="">
                         <label>Имя пользователя: {user.name}</label><br />
                         <label>Пользователь: +{user.phone}</label><br />
                         <label>Баланс: {user.balance} сом</label>
                     </div>
                 </div>
-
-
                 <div className='flex flex-col gap-8'>
                     <p className='text-xl font-semibold'>Выберите способ оплаты</p>
-
                     <div className='flex flex-row md:flex-row sm:flex-col gap-5'>
                         <div className='max-w-[450px] w-full'>
                             <div
@@ -109,10 +105,8 @@ const WalletsPage = () => {
                         </div>
                     </div>
                 </div>
-
                 <div></div>
             </div>
-
             <Modal
                 title="Пополнение счета"
                 visible={isModal}
@@ -136,5 +130,4 @@ const WalletsPage = () => {
         </>
     );
 }
-
 export default WalletsPage; 

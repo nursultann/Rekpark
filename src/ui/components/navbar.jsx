@@ -153,7 +153,7 @@ const Navbar = () => {
                 >
                   <a className="" href="/" >Главная</a>
                   <a className="" href="/">Для бизнеса</a>
-                  <a className="" href="/">Cтатьи</a>
+                  <a className="" href="/articles">Cтатьи</a>
                   <a className="" href="/">Помощь</a>
                   <a className="" href="/about">О нас</a>
                 </div>

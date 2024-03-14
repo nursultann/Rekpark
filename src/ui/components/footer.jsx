@@ -3,7 +3,7 @@ import MobileBar from "./mobile_bar";
 // import logo from '../../';
 const Footer = () => {
   return (
-    <div className="container-fluid text-white p-4 footer d-none d-lg-block">
+    <div className="container-fluid text-white p-4 bg-primary">
       <div className="container">
         <div className="row mb-5">
           <div className="col-md-4">
@@ -48,4 +48,3 @@ const Footer = () => {
   );
 }
 export default Footer;
-{/*  */ }
