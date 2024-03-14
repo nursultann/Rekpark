@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import { setArticleDetails } from "../../../redux/actions/product_actions";
 import { fetchArticle, fetchArticles } from "../../../api/articles";
 import Navbar from "../../components/navbar";
 
-const ArticleDetailPage = ({ match }) => {
+const ArticleDetailPage = (props) => {
     const dispatch = useDispatch();
     // const { articleDetails } = useSelector((state) => state.product);
     const [article, setArticle] = useState();
     const [articles, setArticles] = useState();
     const [update, setUpdate] = useState();
+    const params = useParams();
 
     const getArticle = async () => {
-        const articleDetails = await fetchArticle(match.params.id);
+        const articleDetails = await fetchArticle(params.id);
         if (articleDetails != null) {
             dispatch(setArticleDetails(articleDetails));
             setArticle(articleDetails);
-            var time = moment(articleDetails.created_at, 'YYYYMMDD, h:mm:ss a');
+            const time = moment(articleDetails.created_at, 'YYYYMMDD, h:mm:ss a');
             moment.locale('ru');
             setUpdate(time.calendar());
-
         }
     }
+
     const getArticles = async () => {
         const Articles = await fetchArticles({ 'limit': 10, 'offset': 0 });
         if (Articles != null) {
@@ -31,11 +32,12 @@ const ArticleDetailPage = ({ match }) => {
             console.log(articles);
         }
     }
+
     useEffect(() => {
         getArticle();
         getArticles();
-        console.log(article);
     }, []);
+
     return (
         <div>
             <div className="col-md-12 pt-3 mb-5">

@@ -127,7 +127,7 @@ const App = ({ match }) => {
             <Route path="/gallery" element={<Gallery />} />
           </Route>
 
-          <Route path="*" element={<NotFound />} />
+
         </Routes>
       </BrowserRouter>
 

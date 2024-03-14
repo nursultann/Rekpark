@@ -35,7 +35,7 @@ export const useChatStore = create((set) => ({
     },
     async listenMessages() {
         const user = await userDetails();
-        const messages = SocketHelper.getInstance().subscribeTo(`chat.${user.id}`)
+        const messages = SocketHelper.getInstance().subscribeTo(`chat.${user?.id}`)
         for await (let msg of messages) {
             let event = JSON.parse(msg);
             if (event['event'] === 'message-event') {
