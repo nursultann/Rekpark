@@ -17,15 +17,12 @@ export const useUserStore = create((set) => ({
             const result = response.result
             localStorage.setItem('token', result.token)
             await this.fetchPermissions()
-
             set((state) => ({
                 isAuthenticated: true,
                 user: result.user,
             }))
-
             return true
         }
-
         return false
     },
     async firebaseSignIn(phone, idToken) {
@@ -33,16 +30,14 @@ export const useUserStore = create((set) => ({
         if (response) {
             const result = response.result
             localStorage.setItem('token', result.token)
-            await this.fetchPermissions()
+            await this.fetchPermissions();
 
             set((state) => ({
                 isAuthenticated: true,
                 user: result.user,
             }))
-
             return true
         }
-
         return false
     },
     signOut(callback) {

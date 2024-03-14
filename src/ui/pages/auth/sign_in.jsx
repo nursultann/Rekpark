@@ -100,7 +100,7 @@ const SignInPage = () => {
         <div>
             <div className="col-xl-12 d-flex justify-content-center">
                 <div className="col-xl-8 py-4 m-xl-5 shadow rounded-lg my-3 bg-light text-center">
-                    <label className="py-2 label" style={{ fontSize: 20 }}>Вход на сайт</label>
+                    <label className="py-2" style={{ fontSize: 20 }}>Вход на сайт</label>
                     <br />
                     <Form
                         name="basic"
@@ -123,7 +123,6 @@ const SignInPage = () => {
                                         showSearch
                                         optionFilterProp="children"
                                         onChange={onChange}
-                                        className="bg-white rounded border-0"
                                         filterOption={(input, option) =>
                                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                         }
@@ -135,7 +134,7 @@ const SignInPage = () => {
                                 onChange={(e) => {
                                     setLogin(e.target.value)
                                 }}
-                                className="bg-white rounded border-0"
+                                className="w-full border border-neutral-200 bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                                 type="number"
                                 placeholder="Номер телефона"
                             />

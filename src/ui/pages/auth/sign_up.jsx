@@ -133,8 +133,8 @@ const SignUpPage = () => {
 
                 <Form
                     name="basic"
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 19 }}
+                    // labelCol={{ span: 5 }}
+                    // wrapperCol={{ span: 19 }}
                     initialValues={{ remember: true }}
                     layout="vertical"
                     autoComplete="off"
@@ -160,20 +160,19 @@ const SignUpPage = () => {
                             onChange={(e) => { setPhoneNumber(e.target.value) }}
                             type="number"
                             placeholder="(XXX) XXX XXX"
-                            className="bg-white rounded border-0"
+                            className="w-full border border-neutral-200 bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                         />
                     </Form.Item>
                     <div className="my-3 ml-xl-5" id="recaptcha-container"></div>
                     <Form.Item wrapperCol={{ offset: 0 }}>
-                        <Button className="btn btn-primary col-12" htmlType="submit" onClick={signIn}>
+                        <button className="flex w-full justify-center rounded-md btn btn-primary px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" htmlType="submit" onClick={signIn}>
                             Зарегистрироваться
-                        </Button>
+                        </button>
                     </Form.Item>
                 </Form>
             </div>
         </div>
     );
-
     const step2 = (
         <div className="form-group col-xl-8 px-5 pt-4 m-xl-5 shadow rounded-lg">
             <center>
@@ -190,7 +189,7 @@ const SignUpPage = () => {
                 <div className="text-secondary">{":" + timer}</div>
                 <a href="/register" style={{ display: link ? "block" : "none" }}>Вернуться назад</a>
                 <Form.Item wrapperCol={{ offset: 0 }}>
-                    <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
+                    <Button className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
                 </Form.Item>
             </center>
         </div>
@@ -220,7 +219,7 @@ const SignUpPage = () => {
             </Form.Item>
             <center>
                 <Form.Item wrapperCol={{ offset: 0 }}>
-                    <Button style={{ backgroundColor: "#184d9f", color: "#fff" }} className='col-md-7' onClick={addUser}>Завершить регистрацию</Button>
+                    <Button className='col-md-7' onClick={addUser}>Завершить регистрацию</Button>
                 </Form.Item>
             </center>
         </div>
@@ -243,7 +242,6 @@ const SignUpPage = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="row">
                 <div className="col-xl-12 px-0" style={{ height: "auto" }}>
                     {/* <div className="col-xl-12 d-flex justify-content-center mt-2 mt-md-3">

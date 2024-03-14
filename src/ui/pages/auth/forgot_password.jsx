@@ -113,7 +113,7 @@ const ForgotPasswordPage = () => {
 
     const step1 = (
         <div className="col-xl-12 d-flex justify-content-center px-0">
-            <div className="col-xl-5 py-3 shadow bg-white text-center">
+            <div className="col-xl-9 py-3 shadow bg-white text-center">
                 <label className="py-3" style={{ fontSize: 20 }}>Восстановление пароля</label><br />
                 <Form
                     name="basic"
@@ -127,7 +127,8 @@ const ForgotPasswordPage = () => {
                         name="phone"
                         rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
                     >
-                        <Input addonBefore={<Select
+                        <Input 
+                            addonBefore={<Select
                             placeholder="код страны"
                             showSearch
                             optionFilterProp="children"
@@ -138,11 +139,15 @@ const ForgotPasswordPage = () => {
                         >
                             <Option value="996">+996</Option>
                             <Option value="7">+7</Option>
-                        </Select>} onChange={(e) => { setPhoneNumber(e.target.value) }} type="number" placeholder="(XXX) XXX XXX" />
+                        </Select>} onChange={(e) => { setPhoneNumber(e.target.value) }} 
+                        type="number" 
+                        className="bg-white rounded border-0"
+                        placeholder="(XXX) XXX XXX" 
+                        />
                     </Form.Item>
                     <div className="my-3" id="recaptcha-container"></div>
                     <Form.Item wrapperCol={{ offset: 0 }}>
-                        <button className="col-md-7 btn btn-primary" style={{ backgroundColor: "#184d9f", color: "#fff" }} htmlType="submit" onClick={getAccessCode}>
+                        <button className="col-md-7 btn btn-primary" htmlType="submit" onClick={getAccessCode}>
                             Получить код потверждения
                         </button>
                     </Form.Item>
@@ -152,7 +157,7 @@ const ForgotPasswordPage = () => {
     );
 
     const step2 = (
-        <div className="form-group col-xl-6 px-0">
+        <div className="form-group col-xl-9 px-0">
             <Form.Item
                 name="otp"
                 rules={[{ required: true, message: 'Пожалуйста введите код потверждения!' }]}
@@ -171,7 +176,7 @@ const ForgotPasswordPage = () => {
     );
 
     const step3 = (
-        <div className="form-group col-xl-6 px-0">
+        <div className="form-group col-xl-9 px-0">
             <Form.Item
                 name="password"
                 rules={[{ required: true, message: 'Пожалуйста введите новый пароль!' }]}
@@ -211,16 +216,9 @@ const ForgotPasswordPage = () => {
 
     return (
         <div>
-            <Navbar />
             <div className="col-xl-12 py-3" style={{ height: "auto" }}>
-                <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                        <li className="breadcrumb-item active" aria-current="page">Забыли пароль</li>
-                    </ol>
-                </nav>
                 <div className="col-xl-12 d-flex justify-content-center mt-0 mt-xl-3 px-0">
-                    <div className="col-xl-6 bg-white md-rounded-pill py-2 py-3">
+                    <div className="col-xl-9 bg-white md-rounded-pill py-2 py-3">
                         <Steps current={current} size="small">
                             {steps.map(item => (
                                 <Step key={item.title} title={item.title} />

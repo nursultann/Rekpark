@@ -41,10 +41,7 @@ const HomePage = () => {
                 )
               })}
             </div>
-
-
             <NewsGrid />
-
             <ProductsGrid
               title="Новые объявления:"
             />

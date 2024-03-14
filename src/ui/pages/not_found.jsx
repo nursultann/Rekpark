@@ -10,9 +10,9 @@ const NotFound = () => {
             <h1
                 className="text-5xl font-bold"
             >
-                404 Not Found
+                404 ничего не найдено
             </h1>
-            <p>The page you are looking for does not exist.</p>
+            <p>Эта страница возможно недоступна или удалена</p>
         </div>
     );
 };

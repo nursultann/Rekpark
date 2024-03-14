@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { fetchArticleCategories, fetchArticles } from "../../../api/articles";
 import Navbar from "../../components/navbar";
+import { maxSymbolEllipsis } from "../../../helpers/functions";
 
 const ArticleListPage = () => {
     const [articles, setArticles] = useState();
@@ -31,19 +32,10 @@ const ArticleListPage = () => {
 
     return (
         <div className="col-12">
-            <Navbar />
-            <div className="col-xl-12 mt-3">
-                <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                        <li className="breadcrumb-item active" aria-current="page">Статьи и новости</li>
-                    </ol>
-                </nav>
-            </div>
             <div className="row px-1">
                 <div className="col-md-12">
                     <div className="col-md-12">
-                        <label style={{ fontSize: 24 }} className="pt-1">Статьи и новости</label>
+                        <label style={{ fontSize: 24 }} className="pt-3">Статьи и новости</label>
                         <hr />
                     </div>
                     <div className="col-xl-12">
@@ -68,13 +60,13 @@ const ArticleListPage = () => {
                     </div>
                 </div>
             </div>
-            <div className="row px-3 pb-4">
+            <div className="row px-3 pb-4 mt-3">
                 {articles != null || articles != undefined || articles?.length > 0 ?
                     <>
                         {articles.map((article) =>
 
                             <div className="col-6 col-md-3 px-2 pb-3">
-                                <div className="col-12 border rounded-lg shadow-sm">
+                                <div className="col-12 border rounded-lg shadow-sm" style={{height:380}}>
                                     <div className="col-md-12 p-2">
                                         <img src={article.image} width="100%" className="rounded" />
                                     </div>
@@ -82,17 +74,19 @@ const ArticleListPage = () => {
                                         <div className="row">
                                             <div className="col-md-12">
                                                 <label style={{ fontSize: 20 }} className="text-dark">{article.title}</label>
-                                                <div className="text-muted" style={{
-                                                    display: "-webkit-box",
-                                                    webkitLineClamp: "10",
-                                                    webkitBoxOrient: "vertical",
-                                                    overflow: "hidden"
+                                                <div className="text-muted pb-2" style={{
+                                                    // display: "-webkit-box",
+                                                    // webkitLineClamp: "2",
+                                                    // webkitBoxOrient: "vertical",
+                                                    // overflow: "hidden",
+                                                    // textOverflow: 'ellipsis',
+                                                    // whiteSpace:'nowrap'
                                                 }}
                                                     dangerouslySetInnerHTML={{
-                                                        __html: article.text
+                                                        __html: maxSymbolEllipsis(article.text, 50)
                                                     }}>
                                                 </div>
-                                                <label className="text-muted mt-4"><i className="far fa-clock"></i> {moment(article.created_at, 'YYYYMMDD, H:mm:ss').fromNow()}</label>
+                                                <label className="text-muted pt-2"><i className="far fa-clock"></i> {moment(article.created_at, 'YYYYMMDD, H:mm:ss').fromNow()}</label>
                                             </div>
                                         </div>
                                     </Link>

@@ -29,16 +29,13 @@ const Navbar = () => {
   const [countMessage, setCountMessage] = useState(0);
   const dispatch = useDispatch();
   const userState = useUserStore();
-
   const isAuth = userState.isAuthenticated;
-
   const fetchUnreadMessages = async () => {
     const fetchChats = await unreadMessages();
     if (fetchChats != null) {
       setCountMessage(fetchChats.count);
     }
   }
-
   const fetchPlans = async () => {
     const plans = await subscriptions();
     if (plans != null) {
@@ -53,13 +50,12 @@ const Navbar = () => {
   const hide = () => {
     setVisible(false);
   }
-
-
   const navigateTo = (page) => {
     history(page);
   };
 
   const logOut = () => {
+    localStorage.removeItem('token');
     userState.signOut();
     navigateTo('/');
   }
@@ -126,7 +122,6 @@ const Navbar = () => {
               <img src={logo} className='w-[200px] xs:w-[160px]' />
             </Link>
           </div>
-
           <div className="flex flex-row gap-4 xs:gap-2">
             <Link
               to="/login"
@@ -146,10 +141,8 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
       <div className="bg-zinc-100 border-b row  d-lg-flex d-md-none d-sm-none d-xs-none xs:hidden">
         <div className="col-1-5 "></div>
-
         <div className="col-lg-9 col-md-12 ">
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
@@ -280,7 +273,6 @@ const Navbar = () => {
                             <UserOutlined size={50} />
                           </Link>
                           <Link
-                            to="/settings"
                             className="m-0 p-0 flex justify-center items-center"
                           >
                             <LogoutOutlined onClick={logOut} size={50} />

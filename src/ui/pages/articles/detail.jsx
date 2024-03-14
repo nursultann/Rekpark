@@ -38,16 +38,6 @@ const ArticleDetailPage = ({ match }) => {
     }, []);
     return (
         <div>
-            <Navbar />
-            <div className="col-xl-12 mt-3">
-                <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a className="text-primary" href="/"><i className="fa-solid fa-house"></i> Главная страница</a></li>
-                        <li className="breadcrumb-item"><a className="text-primary" href="/articles">Статьи и новости</a></li>
-                        <li className="breadcrumb-item">Статья</li>
-                    </ol>
-                </nav>
-            </div>
             <div className="col-md-12 pt-3 mb-5">
                 <div className="row py-1 px-2">
                     <div className="col-md-8">
