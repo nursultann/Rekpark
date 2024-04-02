@@ -7,9 +7,12 @@ class ApiClient {
         console.log(url, 'cached', req.headers)
         return req
     };
-    post = (url, body, contentType = 'application/json') => {
+    post = async (url, body, contentType = 'application/json') => {
         setContentType(contentType);
-        return client.post(url, body);
+        console.log(url, body)
+        const req = await client.post(url, body);
+        console.log(url, req.headers)
+        return req
     };
     put = (url, body, contentType = 'application/json') => {
         setContentType(contentType);
@@ -27,6 +30,7 @@ class ApiClient {
 
 const setContentType = (contentType) => {
     client.defaults.headers['Content-Type'] = contentType;
+    // client.defaults.headers['Accept-Encoding'] = 'gzip';
 };
 
 export default new ApiClient();

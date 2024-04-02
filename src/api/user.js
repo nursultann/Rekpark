@@ -1,15 +1,17 @@
 import SocketHelper from "../helpers/socket";
 import ApiClient from "./ApiClient";
 
-export const login = async (phone, password, onSuccess, onError) => {
+export const login = async (phone, password) => {
     try {
         const params = { 'login': phone, 'password': password };
         const response = await ApiClient.post('/login', params);
-        if (response.status == 200 || response.status == 201) {
-            if (onSuccess != null) onSuccess(response.data.data);
-        }
+        return {
+            success: response.status == 200 || response.status == 201,
+            result: response?.data?.data
+        };
     } catch (error) {
-        if (onError != null) onError(error);
+        console.log('login error', error.response);
+        return { success: false, result: null };
     }
 };
 

@@ -53,7 +53,6 @@ export default function Layout({ requireAuth = false }) {
                     </div>
                 </div>
             </div>
-            <Footer/>
         </div>
     );
 }

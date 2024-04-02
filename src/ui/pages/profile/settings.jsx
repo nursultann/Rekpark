@@ -167,7 +167,7 @@ const SettingsPage = () => {
     );
 }
 
-function Input({ label, placeholder, value = "", onChange, enabled = true, className }) {
+export function Input({ label, placeholder, value = "", onChange, enabled = true, className }) {
     return (
         <div className="flex flex-row justify-center items-center h-[60px] bg-white rounded-[15px] border border-neutral-200">
             <div

@@ -21,6 +21,7 @@ client.interceptors.request.use(config => {
   if (token !== null) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  client.defaults.headers['Content-Type'] = 'application/json';
 
   return config;
 }, error => {

@@ -1,45 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { message } from 'antd';
-import { Form, Input, Select } from 'antd';
 import { Link, useNavigate } from "react-router-dom";
-import GoogleLogin from "react-google-login";
+import GoogleLogin, { useGoogleLogin } from "react-google-login";
 
-import { login, loginGoogle } from "../../../api/user";
-import Navbar from "../../components/navbar";
+import { DefaultPhoneInput, DefaultPasswordInput } from "../../components/default_input_fields";
+import { loginGoogle } from "../../../api/user";
 import { auth, clientId, googleAuthProvider } from '../../../config/firebase_config';
+import classNames from "classnames";
 
-const { Option } = Select;
+import { GoogleIcon } from "../../components/icons";
+import { useUserStore } from "../../../store/user_store";
+
 const key = 'updatable';
+
+const Title = ({ title, isRequired, children }) => (
+    <div className="flex flex-row items-center gap-2 mt-3">
+        {isRequired ? <span className="text-red-500">*</span> : <></>}
+        <span className="text-black text-[15px] font-normal">{title}</span>
+    </div>
+);
 
 const SignInPage = () => {
     const history = useNavigate();
-    const [phoneNumber, setLogin] = useState(0);
-    const [password, setPassword] = useState();
-    const [countryCode, setCountryCode] = useState();
+    const userStore = useUserStore();
+    const [phoneNumber, setLogin] = useState("");
+    const [password, setPassword] = useState("");
+    const [countryCode, setCountryCode] = useState('996');
 
     const responseGoogle = async (response) => {
-        console.log("google response", response);
         const email = response.profileObj.email;
         const name = response.profileObj.name;
         const uid = response.profileObj.googleId;
-
-        // const credential = await auth.signInWithEmailAndPassword(email, uid);
-
-        console.log(clientId, email, name)
 
         const credential = await auth.signInWithCredential(googleAuthProvider.credential(
             response.tokenId,
             response.accessToken,
         ))
 
-        console.log('credential', credential)
-
         const idToken = await credential.user.getIdToken(true);
-        // credential.user.displayName;
-        // credential.user.email;
 
-
-        console.log('datas', email, name, idToken)
         await loginGoogle(
             email, name, idToken,
             (data) => {
@@ -56,126 +55,130 @@ const SignInPage = () => {
 
     }
 
+
     const onFailure = (response) => {
         console.log("Failure!", response);
     }
 
+    const googleLogin = useGoogleLogin({
+        clientId,
+        onSuccess: responseGoogle,
+        onFailure: onFailure,
+        accessType: 'offline',
+        responseType: 'code',
+        prompt: 'consent',
+        scope: 'https://www.googleapis.com/auth/userinfo.profile',
+    });
+
     const signIn = async () => {
         if (password === "" || phoneNumber.length < 9) return;
-        // console.log('phone', countryCode + phoneNumber);
-        await login(countryCode + phoneNumber, password, onLoginSuccess, onLoginError);
+        const phone = countryCode + phoneNumber.replaceAll(' ', '');
+        const result = userStore.signIn(phone, password);
+        if (result) {
+            onLoginSuccess();
+        } else {
+            onLoginError();
+        }
     }
 
-    const onLoginSuccess = (data) => {
-        localStorage.setItem('token', data.api_token);
-        message.loading({ content: 'Загрузка...', key });
+    const onLoginSuccess = () => {
         setTimeout(() => {
             message.success({ content: 'Успешно!', key, duration: 2 });
         }, 1000);
         history("/profile");
     };
 
-    const onLoginError = (data) => {
-        console.log('error', data);
+    const onLoginError = () => {
+        console.log('error');
         message.error({ content: 'Номер или пароль указан неверно!', duration: 2 });
     };
 
-    function onChange(value) {
-        // console.log(`selected ${value}`);
-        setCountryCode(value);
-    }
-
-    useEffect(() => {
-        document.title = "Вход";
-        // function start() {
-        //     gapi.client.init({
-        //         clientId: clientId,
-        //         scope: ""
-        //     })
-        // }
-        // gapi.load('client:auth2', start);
-    });
-
     return (
         <div>
-            <div className="col-xl-12 d-flex justify-content-center">
-                <div className="col-xl-8 py-4 m-xl-5 shadow rounded-lg my-3 bg-light text-center">
-                    <label className="py-2" style={{ fontSize: 20 }}>Вход на сайт</label>
-                    <br />
-                    <Form
-                        name="basic"
-                        labelCol={{ span: 5 }}
-                        wrapperCol={{ span: 19 }}
-                        layout="vertical"
-                        initialValues={{ remember: true }}
-                        autoComplete="off"
+            <div className="flex justify-content-center items-center py-20">
+                <div className={classNames(
+                    " bg-zinc-100 rounded-2xl lg:shadow lg:border lg:border-neutral-200 py-[40px] lg:px-[200px] max-w-4xl w-full",
+                    "lg:bg-zinc-100 md:bg-transparent md:px-0 md:shadow-none md:border-none"
+                )}>
+                    <div className="text-center text-black text-3xl font-medium font-['SF UI Display'] mb-8">Вход на сайт</div>
+
+                    <Title title="Номер телефона" />
+                    <DefaultPhoneInput
+                        name="title"
+                        placeholder="Введите номер телефона"
+                        value={phoneNumber}
+                        onCountryCodeChange={(value) => {
+                            setCountryCode(value);
+                        }}
+                        onChange={(e) => {
+                            setLogin(e.target.value);
+                        }}
+                        required={true}
+                    />
+
+                    <Title title="Пароль" />
+                    <DefaultPasswordInput
+                        value={password}
+                        placeholder={"Введите пароль"}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                        required={true}
+                    />
+
+                    <div
+                        className={classNames(
+                            "w-full h-14 py-4 bg-blue-600 rounded-2xl justify-center items-center gap-2.5 inline-flex cursor-pointer mt-4",
+                            "hover:bg-blue-700 transition-colors duration-200",
+                        )}
+                        onClick={signIn}
                     >
-                        <Form.Item
-                            label="Телефон"
-                            name="phone"
-                            rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
-                            wrapperCol={{ offset: 0 }}
+                        <div className="text-center text-white text-xl font-semibold">Войти</div>
+                    </div>
+
+                    <div className="text-center text-blue-600 text-sm font-medium mt-4">
+                        <Link to="/forgot_password">
+                            Забыли пароль?
+                        </Link>
+                    </div>
+
+                    <div className="flex flex-col justify-content-center items-center mt-4">
+
+                        <div
+                            className={classNames(
+                                "w-full h-14 py-4 bg-neutral-800 rounded-2xl justify-center items-center gap-2.5 inline-flex",
+                                "hover:bg-neutral-900 transition-colors duration-200",
+                                "cursor-pointer"
+                            )}
+                            onClick={() => {
+                                googleLogin.signIn();
+                            }}
                         >
-                            <Input
-                                addonBefore={
-                                    <Select
-                                        placeholder="код страны"
-                                        showSearch
-                                        optionFilterProp="children"
-                                        onChange={onChange}
-                                        filterOption={(input, option) =>
-                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                        }
-                                    >
-                                        <Option value="996">+996</Option>
-                                        <Option value="7">+7</Option>
-                                    </Select>
-                                }
-                                onChange={(e) => {
-                                    setLogin(e.target.value)
-                                }}
-                                className="w-full border border-neutral-200 bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                                type="number"
-                                placeholder="Номер телефона"
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            label="Пароль"
-                            name="password"
-                            rules={[{ required: true, message: 'Пожалуйста введите пароль!' }]}
-                            wrapperCol={{ offset: 0 }}
-                        >
-                            <Input.Password
-                                className="bg-white rounded border-0"
-                                onChange={(e) => {
-                                    setPassword(e.target.value)
-                                }} placeholder="Пароль" />
-                        </Form.Item>
-                        <Form.Item wrapperCol={{ offset: 0 }}>
-                            <button
-                                className="col-md-12 ml-0 rounded btn btn-primary"
-                                htmltype="submit"
-                                onClick={signIn}
-                            >
-                                Войти
-                            </button>
-                        </Form.Item>
-                        <Link className="mt-3" to="/forgot_password">Забыли пароль?</Link><br />
-                        <label className="text-muted">Вход с помощью</label>
-                        <Form.Item wrapperCol={{ offset: 0 }} className="d-xl-flex justify-content-center">
-                            <GoogleLogin
-                                clientId={clientId}
-                                buttonText="Войти через Google"
-                                onSuccess={responseGoogle}
-                                onFailure={onFailure}
-                                // cookiePolicy={'single_host_origin'}
-                                isSignedIn={false}
-                                scope='https://www.googleapis.com/auth/userinfo.profile'
-                            />
-                        </Form.Item>
-                    </Form>
-                    <label>Нету аккаунта?</label>
-                    <Link className="ml-2" to="/register">Зарегиструйтесь</Link><br />
+                            <div className="w-4 h-5 relative">
+                                <GoogleIcon />
+                            </div>
+                            <div className="text-center text-white text-xl font-semibold font-['SF UI Display']">Войти</div>
+                        </div>
+
+                        {/*
+                        <GoogleLogin
+                            clientId={clientId}
+                            buttonText="Войти через Google"
+                            onSuccess={responseGoogle}
+                            onFailure={onFailure}
+                            // cookiePolicy={'single_host_origin'}
+                            isSignedIn={false}
+                            scope='https://www.googleapis.com/auth/userinfo.profile'
+                        />
+                        */}
+
+                        <div className="mt-4">
+                            <label>Нету аккаунта?</label>
+                            <Link className="ml-2 text-blue-600" to="/register">Зарегиструйтесь</Link>
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
         </div>

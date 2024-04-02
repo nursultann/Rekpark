@@ -16,7 +16,6 @@ export const useUserStore = create((set) => ({
         if (response.success) {
             const result = response.result
             localStorage.setItem('token', result.token)
-            await this.fetchPermissions()
             set((state) => ({
                 isAuthenticated: true,
                 user: result.user,
@@ -30,7 +29,6 @@ export const useUserStore = create((set) => ({
         if (response) {
             const result = response.result
             localStorage.setItem('token', result.token)
-            await this.fetchPermissions();
 
             set((state) => ({
                 isAuthenticated: true,

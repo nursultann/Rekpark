@@ -1,7 +1,11 @@
 import { KeyboardArrowDown } from '@mui/icons-material';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useClickAway } from 'react-use';
+import { Phone, Key, Lock, RemoveRedEye, RemoveRedEyeOutlined } from "@mui/icons-material";
+import InputMask from 'react-input-mask';
+import { useAppStore } from '../../store/app_store';
+import { dataStore } from '../../config/data';
 
 const DefaultInput = ({
     name,
@@ -199,5 +203,124 @@ const SearchableSelect = ({ name, className, value, onChange, placeholder, disab
     );
 };
 
+function CountryCodeSelect({ value, onChange }) {
+    const [selectWidth, setSelectWidth] = React.useState('auto');
+    const countryCodes = dataStore.countryCodes;
 
-export { DefaultInput, DefaultSelect, SearchableSelect };
+    const handleChange = (event) => {
+        const selectedOption = event.target.options[event.target.selectedIndex];
+        const length = selectedOption.text.length;
+        setSelectWidth((length * 20) + 'px');
+        if (onChange) onChange(event.target.value);
+    };
+
+    return (
+        <select
+            className="border-0 rounded-2xl focus:outline-none mr-2"
+            style={{ width: selectWidth, font: 'sans-serif' }}
+            onChange={handleChange}
+            value={value}
+        >
+            {countryCodes.map((item, index) => (
+                <option key={index} value={item.code}>
+                    +{item.code}
+                </option>
+            ))}
+        </select>
+    );
+}
+
+function DefaultPhoneInput({ name, className, prefix, value, onChange, onCountryCodeChange, placeholder, disabled, required, error }) {
+    const appStore = useAppStore();
+    const [countryCode, setCountryCode] = React.useState('996');
+    const handleChange = (e) => {
+        if (onChange) onChange(e);
+    };
+
+    const handleCountryCodeChange = (e) => {
+        setCountryCode(e);
+        if (onCountryCodeChange) onCountryCodeChange(e);
+    };
+
+    const formatter = useMemo(() => {
+        return dataStore.findCountryCode(countryCode.replace('+', ''))?.formatter || '';
+    }, [countryCode]);
+
+    return (
+        <div className={className}>
+            <div className="w-full h-14 bg-white rounded-2xl border border-neutral-200 px-4 flex items-center">
+                {prefix || (
+                    <div className="flex flex-row items-center mr-3">
+                        <Phone />
+                    </div>
+                )}
+                <CountryCodeSelect
+                    value={countryCode}
+                    onChange={handleCountryCodeChange}
+                />
+                <InputMask
+                    mask={formatter}
+                    maskChar={null}
+                    name={name}
+                    type="tel"
+                    value={value}
+                    onChange={handleChange}
+                    className="border-0 h-full w-full rounded-2xl focus:outline-none"
+                    placeholder={placeholder}
+                    disabled={disabled}
+                    required={required}
+                />
+            </div>
+        </div>
+    );
+}
+
+function DefaultPasswordInput({ name, className, prefix, postfix, value, onChange, placeholder, disabled, required, error }) {
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const handleChange = (e) => {
+        if (onChange) onChange(e);
+    };
+
+    return (
+        <div className={className}>
+            <div className="w-full h-14 bg-white rounded-2xl border border-neutral-200 px-4 flex items-center">
+                {prefix || (
+                    <div className="flex flex-row items-center mr-4">
+                        <Lock />
+                    </div>
+                )}
+                <input
+                    name={name}
+                    id={name}
+                    type={showPassword ? 'text' : 'password'}
+                    value={value}
+                    onChange={handleChange}
+                    className="border-0 h-full w-full rounded-2xl focus:outline-none"
+                    placeholder={placeholder}
+                    disabled={disabled}
+                    required={required}
+                />
+                {postfix || (
+                    <div className="flex flex-row items-center ml-4">
+                        {showPassword ? (
+                            <RemoveRedEye
+                                onClick={() => setShowPassword(false)}
+                                className="cursor-pointer"
+                            />
+                        ) : (
+                            <RemoveRedEyeOutlined
+                                onClick={() => setShowPassword(true)}
+                                className="cursor-pointer"
+                            />
+                        )}
+                    </div>
+
+                )}
+            </div>
+        </div>
+    );
+}
+
+
+export { DefaultInput, DefaultSelect, SearchableSelect, DefaultPhoneInput, DefaultPasswordInput };

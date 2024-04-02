@@ -5,10 +5,7 @@ import { checkPhone, loginGoogle, register } from "../../../api/user";
 import { Steps, Button, message, Form, Input, Select } from 'antd';
 
 const clientId = "363682799555-97hlkli04bo0eevlu0br81jtl3vg677a.apps.googleusercontent.com";
-// const countryCodes = [
-//     {"value": "+996", "label": "+996"},
-//     {"value": "+7", "label": "+7"},
-// ];
+
 const key = 'updatable';
 const { Option } = Select;
 const { Step } = Steps;
