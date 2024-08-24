@@ -13,15 +13,15 @@ import { Link } from "react-router-dom";
 import { useCallback } from "react";
 
 const ProfilePage = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
     const auth = useUserStore()
 
     const location = useLocation()
 
-    const user = auth.user;
-    const [products, setProducts] = useState([]);
-    const limit = 20;
-    const [offset, setOffset] = useState(0);
+    const user = auth.user
+    const [products, setProducts] = useState([])
+    const limit = 20
+    const [offset, setOffset] = useState(0)
 
     const tab = useMemo(() => {
         if (location.hash) {
@@ -31,35 +31,33 @@ const ProfilePage = () => {
     }, [location])
 
     const fetchPlans = async () => {
-        const plans = await subscriptions();
+        const plans = await subscriptions()
         if (plans != null) {
-            dispatch(setProductPlans(plans));
+            dispatch(setProductPlans(plans))
         }
     }
 
     const fetchProducts = async () => {
-        let data = await api.fetchUserProducts({ 'status': tab });
+        let data = await api.fetchUserProducts({ status: tab })
         if (data != null) {
-            setProducts(data);
-            setOffset(offset + limit);
+            setProducts(data)
+            setOffset(offset + limit)
         }
-    };
+    }
 
-    const cancelBussiness = async () => {
-        const cancel = await cancelBussinessAccount();
-
+    const cancelBusiness = async () => {
+        const cancel = await cancelBussinessAccount()
 
         setTimeout(() => {
-            window.location.href = `/profile`;
-        }, 1200);
-
+            window.location.href = `/profile`
+        }, 1200)
     }
 
     useEffectOnce(() => {
-        document.title = "Мои объявления";
+        document.title = "Мои объявления"
 
-        fetchPlans();
-        auth.fetchUser();
+        fetchPlans()
+        auth.fetchUser()
     });
 
     useEffect(() => {
@@ -121,14 +119,14 @@ const ProfilePage = () => {
                                 product={product}
                                 index={index}
                                 onEdit={() => {
-                                    window.location.href = `/edit/${product.id}`;
+                                    window.location.href = `/edit/${product.id}`
                                 }}
                                 onDelete={() => {
-                                    window.location.href = `/delete/${product.id}`;
+                                    window.location.href = `/delete/${product.id}`
                                 }}
                             />
                         </div>
-                    );
+                    )
                 })}
             </div>
         </>
