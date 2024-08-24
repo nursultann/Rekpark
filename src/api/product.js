@@ -320,7 +320,6 @@ export const subscriptions = async () => {
     }
     return null;
 }
-
 export const bussinessAccount = async (params) => {
     try {
         const response = await ApiClient.get(`/business/account`, params);

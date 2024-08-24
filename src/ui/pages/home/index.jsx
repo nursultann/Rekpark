@@ -7,7 +7,9 @@ import { Button, BackTop, Tooltip } from "antd";
 import { UpOutlined } from "@ant-design/icons";
 import NewsGrid from "../../components/news";
 import { useEffectOnce } from "react-use";
-
+import RightBannerPicture from '../../../dist/img/Полиграфия 90х160.jpg';
+import RightBannerPicture2 from '../../../dist/img/Реклама 90х160 (2).jpg';
+import RightBannerPicture3 from '../../../dist/img/Реклама 90х160.jpg';
 const HomePage = () => {
   useEffectOnce(() => {
     document.title = "Главная страница";
@@ -29,14 +31,14 @@ const HomePage = () => {
       <SearchBar />
       <main role="main" className="container-fluid mb-5">
         <div className="row">
-          <div className="col-lg-9 col-md-12">
+          <div className="col-lg-9 col-md-12 pr-0">
             <div className="flex flex-grow gap-4 h-[400px] overflow-x-scroll d-none d-md-none w-full">
               {Array.from(new Array(10)).map((item, index) => {
                 return (
                   <div
                     key={index}
                     className={`d-inline-block w-[200px] h-[400px] rounded-[10px] bg-gray-200 xl:h-[400px] lg:h-[300px] md:w-[200px]`}
-                    style={{ objectFit: 'cover', backgroundImage: `url(https://picsum.photos/seed/${index}/200/300)` }}
+                    style={{ objectFit: 'cover', backgroundImage: `url(${RightBannerPicture})` }}
                   />
                 )
               })}
@@ -45,7 +47,6 @@ const HomePage = () => {
             <ProductsGrid
               title="Новые объявления:"
             />
-
             <ProductsGrid
               title="Популярные:"
               className={'mt-5'}
@@ -53,16 +54,20 @@ const HomePage = () => {
           </div>
 
           <div className="col-lg-3 mt-5 d-md-none d-lg-block">
-            <div className="flex lg:flex-col justify-start items-start gap-4 lg:h-[100%] md:flex-row md:gap-2 md:overflow-scroll md:h-[400px]">
-              {Array.from(new Array(3)).map((item, index) => {
+            <div className="flex lg:flex-col justify-start items-start gap-4 lg:h-[100%] md:flex-row md:gap-2 md:overflow-scroll md:h-[400px] overflow-hidden">
+              {/* {Array.from(new Array(1)).map((item, index) => {
                 return (
                   <div
                     key={index}
                     className={`lg:w-full h-[400px] rounded-[10px] bg-gray-200 xl:h-[400px] lg:h-[300px] md:w-[200px]`}
-                    style={{ objectFit: 'cover', backgroundImage: `url(https://picsum.photos/seed/${index}/200/300)` }}
+                    style={{ objectFit: 'cover', backgroundImage: `url(${LeftBannerPicture})` }}
                   />
+                  
                 )
-              })}
+              })} */}
+              <img src={RightBannerPicture} alt="" width={'100%'} />
+              <img src={RightBannerPicture2} alt="" width={'100%'} />
+              <img src={RightBannerPicture3} alt="" width={'100%'} />
             </div>
           </div>
 
@@ -80,17 +85,14 @@ const HomePage = () => {
     </div >
   );
 }
-
 function ProductsGrid({
   title,
   to = "/products",
   className,
 }) {
   const [products, setProducts] = useState([]);
-
   const limit = 6;
   const [offset, setOffset] = useState(0);
-
   const fetchProducts = async () => {
     let prods = await api.fetchProducts({
       offset: offset,

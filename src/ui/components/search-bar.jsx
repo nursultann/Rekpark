@@ -83,7 +83,6 @@ const SearchBar = ({ query }) => {
                         />
                         <SearchOutlined className='relative right-8  text-gray-400 ' />
                     </div>
-
                     <button
                         className='btn btn-primary rounded-xl px-[60px] py-[7px] ml-2 d-md-none d-lg-block d-sm-none d-xs-none'
                         type="primary"
@@ -98,16 +97,11 @@ const SearchBar = ({ query }) => {
                     >
                         <SearchOutlined />
                     </RoundedButton>
-
-
                 </div>
-
                 <div className="col-md-12 mt-3 pb-3 px-0">
                     <CategorySlider />
                 </div>
-
             </div>
-
         </div>
     );
 }

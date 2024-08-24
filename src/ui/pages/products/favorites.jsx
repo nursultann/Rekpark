@@ -6,10 +6,13 @@ import ProductItem from "../../components/product/product_item";
 import { useUserStore } from "../../../store/user_store";
 import { useEffectOnce } from "react-use";
 import { Helmet } from 'react-helmet';
+import { useEffect } from "react";
 
 const ProductFavoritesPage = () => {
     const user = useUserStore().user;
-
+    if (localStorage.getItem('token') == null) {
+        window.location.href = '/login';
+    }
     const [products, setProducts] = useState();
     const limit = 20;
     const [offset, setOffset] = useState(0);
@@ -17,27 +20,22 @@ const ProductFavoritesPage = () => {
 
     const fetchUserProducts = async () => {
         if (loading) return;
-
         setLoading(true);
         let _products = await api.fetchUserFavorites({ 'sub': true });
         if (_products != null) {
             setProducts(_products);
             setOffset(offset + limit);
         }
-
         setLoading(false);
     };
-
-    useEffectOnce(() => {
+    useEffect(() => {
         fetchUserProducts();
-    });
-
+    }, []);
     return (
         <>
             <Helmet>
                 <title>Избранные</title>
             </Helmet>
-
             {products?.length > 0 ?
                 <div className="row px-3">
                     {products.map((product) => {
@@ -57,15 +55,12 @@ const ProductFavoritesPage = () => {
                     }
                 </>
             }
-
             {loading && <div className="col-xl-12 text-center py-5">
                 <div className="spinner-border text-success" role="status">
                     <span className="sr-only">Loading...</span>
                 </div>
             </div>}
-
         </>
     );
 }
-
 export default ProductFavoritesPage;

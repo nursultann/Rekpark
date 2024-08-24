@@ -65,7 +65,6 @@ const SignInPage = () => {
         // console.log('phone', countryCode + phoneNumber);
         await login(countryCode + phoneNumber, password, onLoginSuccess, onLoginError);
     }
-
     const onLoginSuccess = (data) => {
         localStorage.setItem('token', data.api_token);
         message.loading({ content: 'Загрузка...', key });

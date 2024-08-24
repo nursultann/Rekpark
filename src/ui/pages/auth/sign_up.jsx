@@ -26,7 +26,6 @@ const SignUpPage = () => {
     const [countrycode, setCountryCode] = useState();
     const [current, setCurrent] = useState(0);
     const [link, setLink] = useState(false);
-
     const responseGoogle = (response) => {
         console.log("google response", response);
         const email = response.profileObj.email;
@@ -43,7 +42,6 @@ const SignUpPage = () => {
 
             // message.error({content:'Номер или пароль указан неверно!', duration: 2});
         };
-
     }
     const signIn = async () => {
         const check = await checkPhone(countrycode + phoneNumber);
@@ -77,7 +75,6 @@ const SignUpPage = () => {
             });
         }
     };
-
     const validateOtp = () => {
         if (otp === null || final === null)
             return;
@@ -115,7 +112,6 @@ const SignUpPage = () => {
             message.error('Неправильный пароль', 10);
         }
     }
-
     function onChange(value) {
         console.log(`selected ${value}`);
         setCountryCode(value);
@@ -125,12 +121,10 @@ const SignUpPage = () => {
         window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         window.verify.render();
     }, []);
-
     const step1 = (
         <div className="col-xl-12 d-flex justify-content-center">
             <div className="col-xl-8 px-5 pt-4 m-xl-5 shadow rounded-lg bg-light text-center">
                 <label className="" style={{ fontSize: 20 }}>Регистрация профиля</label><br />
-
                 <Form
                     name="basic"
                     // labelCol={{ span: 5 }}
@@ -239,7 +233,6 @@ const SignUpPage = () => {
             content: step3,
         },
     ];
-
     return (
         <div>
             <div className="row">

@@ -8,25 +8,20 @@ function ProfileImage({ image, onChange }) {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [file, setFile] = useState(null);
-
-
     const handleDragEnter = (e) => {
         e.preventDefault();
         e.stopPropagation();
         setHighlight(true);
     };
-
     const handleDragLeave = (e) => {
         e.preventDefault();
         e.stopPropagation();
         setHighlight(false);
     };
-
     const handleDragOver = (e) => {
         e.preventDefault();
         e.stopPropagation();
     };
-
     const handleDrop = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -35,19 +30,15 @@ function ProfileImage({ image, onChange }) {
         setFile(file);
         onChange(file);
     };
-
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setFile(file);
         onChange(file);
     };
-
     const handleRemoveFile = () => {
         setFile(null);
     };
-
     const imageUrl = file ? URL.createObjectURL(file) : image;
-
     return (
         <>
             <div
@@ -84,7 +75,6 @@ function ProfileImage({ image, onChange }) {
                             </div>
                         </>
                     ) : (
-
                         <div className="flex flex-col items-center justify-center h-[130px] content-center ">
                             <AddOutlined
                                 className="text-gray-500"
@@ -93,9 +83,7 @@ function ProfileImage({ image, onChange }) {
                             <p className="text-gray-500">Загрузить</p>
                         </div>
                     )}
-
                 </div>
-
             </div>
             <input
                 ref={fileInputRef}
@@ -107,5 +95,4 @@ function ProfileImage({ image, onChange }) {
         </>
     )
 }
-
 export default ProfileImage;

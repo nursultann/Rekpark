@@ -73,16 +73,13 @@ const SubCategories = ({ category, onSubmit }) => {
 
     setDistricts(city.districts);
   };
-
   const onChange = () => {
     if (onSubmit != null) onSubmit(form);
     setVisible(false);
   };
-
   const showModal = () => {
     setVisible(true);
   };
-
   const handleOk = () => {
     setConfirmLoading(true);
     setTimeout(() => {
@@ -90,20 +87,16 @@ const SubCategories = ({ category, onSubmit }) => {
       setConfirmLoading(false);
     }, 2000);
   };
-
   const newCategory = (category) => {
     history(category);
     fetchRegions();
     document.location.reload();
   }
-
   const handleCancel = () => {
     console.log('Clicked cancel button');
     setVisible(false);
   };
-
   const [options, setOptions] = useState([]);
-
   const fetchCategoriesTree = async (category) => {
     category?.children?.map((item) =>
       setOptions(prevState => [...prevState, {
@@ -121,28 +114,24 @@ const SubCategories = ({ category, onSubmit }) => {
     )
     console.log('options', options);
   }
-
   if (options.length == 0) {
     fetchCategoriesTree(category);
   }
-
   const handleChange = (value) => {
     console.log(`selected ${value}`);
     window.location.href = "/category/" + value;
   };
-
   useEffect(() => {
     fetchRegions();
     fetchCategoriesTree(category);
   }, []);
-
   return (
     <>
       {category?.children?.length ?
         <>
           <div className="col-md-12 pb-3 d-none d-xl-block">
             <label className="" style={{ fontSize: 18 }}>Поиск</label>
-            <div className="mb-3" style={{ 'width': '55px', 'height': '3px', 'backgroundColor': 'rgb(9, 72, 130)' }}></div>
+            <div className="mb-3"></div>
             <Form
               form={form}
               name="advanced_search"
@@ -242,13 +231,13 @@ const SubCategories = ({ category, onSubmit }) => {
                 </div>
               </div>
               <div className="col-xl-12 d-xl-flex justify-content-end">
-                <Button type="primary" className="col-12 col-xl-2" onClick={onChange}>Поиск</Button>
+                <button className="btn btn-primary col-12 col-xl-2" onClick={onChange}>Поиск</button>
               </div>
             </Form>
           </div>
           <div className="d-block d-xl-none my-4">
             <div className="text-center px-3">
-              <button className="btn col-12 rounded" style={{ backgroundColor: "#184d9f", color: "#fff" }} type="primary" onClick={showModal}>
+              <button className="btn btn-primary col-12 rounded" onClick={showModal}>
                 Поиск по фильтрам
               </button>
             </div>
@@ -362,7 +351,7 @@ const SubCategories = ({ category, onSubmit }) => {
                   </Form.Item>
                 </div>
                 <div className="col-xl-12 d-xl-flex justify-content-end">
-                  <Button type="primary" className="col-12 col-xl-2" onClick={onChange}>Поиск</Button>
+                  <button className="btn btn-primary col-12 col-xl-2" onClick={onChange}>Поиск</button>
                 </div>
               </Form>
             </Modal>

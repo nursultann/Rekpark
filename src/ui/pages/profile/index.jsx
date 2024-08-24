@@ -15,14 +15,11 @@ import { useCallback } from "react";
 const ProfilePage = () => {
     const dispatch = useDispatch()
     const auth = useUserStore()
-
     const location = useLocation()
-
     const user = auth.user
     const [products, setProducts] = useState([])
     const limit = 20
     const [offset, setOffset] = useState(0)
-
     const tab = useMemo(() => {
         if (location.hash) {
             return location.hash.replace('#', '')
@@ -36,7 +33,6 @@ const ProfilePage = () => {
             dispatch(setProductPlans(plans))
         }
     }
-
     const fetchProducts = async () => {
         let data = await api.fetchUserProducts({ status: tab })
         if (data != null) {
@@ -44,7 +40,6 @@ const ProfilePage = () => {
             setOffset(offset + limit)
         }
     }
-
     const cancelBusiness = async () => {
         const cancel = await cancelBussinessAccount()
 
@@ -63,8 +58,6 @@ const ProfilePage = () => {
     useEffect(() => {
         fetchProducts();
     }, [tab])
-
-
     const activeLink = useCallback((path, borderColor, bgColor, textColor) => {
         return classNames(
             'h-[45px] px-5 w-full py-2.5 rounded-[10px] justify-center items-center gap-2.5 inline-flex',
@@ -74,7 +67,6 @@ const ProfilePage = () => {
             }
         )
     }, [location])
-
     return (
         <>
             <div className="flex flex-row justify-content-around items-center mt-[50px] gap-4">
@@ -85,7 +77,6 @@ const ProfilePage = () => {
                 >
                     <div className="text-center text-sm font-medium font-['SF UI Display'] leading-snug">Активные</div>
                 </Link>
-
                 <Link
                     className={activeLink("inactive", 'border-red-500', 'bg-red-500')}
                     to="/profile/list#inactive"
@@ -93,7 +84,6 @@ const ProfilePage = () => {
                 >
                     Неактивные
                 </Link>
-
                 <Link
                     className={activeLink("moderation", 'border-yellow-500', 'bg-yellow-500')}
                     to="/profile/list#moderation"
@@ -101,7 +91,6 @@ const ProfilePage = () => {
                 >
                     Модерация
                 </Link>
-
                 <Link
                     className={activeLink("disabled", 'border-gray-500', 'bg-gray-500')}
                     to="/profile/list#disabled"
@@ -110,7 +99,6 @@ const ProfilePage = () => {
                     Отключенные
                 </Link>
             </div>
-
             <div className="mt-[40px] grid grid-cols-2 md:grid-cols-2 xs:grid-cols-1 gap-4">
                 {products.map((product, index) => {
                     return (

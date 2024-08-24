@@ -188,12 +188,9 @@ const ProductDetailPage = ({ match }) => {
             openNotificationWithIcon('error', 'Заполните поле для сообщения!');
         }
     }
-
     var time = moment(productDetails.created_at, 'YYYYMMDD, H:mm:ss');
     var update = time.fromNow();
-
     const phones = productDetails.phones;
-
     return (
         <div>
             <div className="col-xl-12 mt-xl-3 mt-[50px]">
@@ -207,7 +204,7 @@ const ProductDetailPage = ({ match }) => {
                                 {productDetails.media.length > 0 ?
                                     <DetailsImageCarousel
                                         images={productDetails.media.map((item) => item.original_url)}
-                                        className='h-[500px] w-full object-cover rounded-xl transition-all duration-300 '
+                                        className='h-[500px] w-full object-cover rounded-xl transition-all duration-300'
                                     />
                                     :
                                     <div className="col-12 border rounded p-1">
@@ -404,7 +401,7 @@ const ProductDetailPage = ({ match }) => {
 
             <Modal
                 className="rounded"
-                title="ПОЖАЛОВАТЬСЯ"
+                title="Пожаловаться"
                 visible={visible}
                 onOk={handleOk}
                 confirmLoading={confirmLoading}
@@ -426,8 +423,8 @@ const ProductDetailPage = ({ match }) => {
                 <TextArea className="rounded mt-3" rows={4} placeholder="Напишите, что вам не понравилось в данном объявлении" onChange={(e) => setComplaintsText(e.target.value)} />
                 <hr />
                 <div className="text-right">
-                    <button className="btn btn-outline-light border text-dark mr-2" onClick={handleCancel}>Закрыть</button>
-                    <button className="btn text-white" style={{ backgroundColor: "#184d9f" }} onClick={PostComplaint}>Пожаловаться</button>
+                    <button className="btn btn-outline-light py-[9px] rounded-2xl border text-dark mr-2" onClick={handleCancel}>Закрыть</button>
+                    <button className="col-3 mt-1 rounded-2xl py-[9px] justify-center items-center bg-blue-600 text-white" onClick={PostComplaint}>Пожаловаться</button>
                 </div>
             </Modal>
             {/* <div className="fixed-bottom d-block d-md-none">

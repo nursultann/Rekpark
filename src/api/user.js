@@ -1,6 +1,5 @@
 import SocketHelper from "../helpers/socket";
 import ApiClient from "./ApiClient";
-
 export const login = async (phone, password, onSuccess, onError) => {
     try {
         const params = { 'login': phone, 'password': password };
@@ -12,7 +11,6 @@ export const login = async (phone, password, onSuccess, onError) => {
         if (onError != null) onError(error);
     }
 };
-
 export const loginGoogle = async (gmail, name, idToken, onSuccess, onError) => {
     try {
         const params = {
@@ -28,7 +26,6 @@ export const loginGoogle = async (gmail, name, idToken, onSuccess, onError) => {
         if (onError != null) onError(error);
     }
 };
-
 export const register = async (params, onSuccess = null, onError = null) => {
     await ApiClient.post('/register', params).then(response => {
         if (response.status == 200 || response.status == 201) {
@@ -38,7 +35,6 @@ export const register = async (params, onSuccess = null, onError = null) => {
         if (onError != null) onError(error);
     });
 };
-
 export const passwordChange = async (params, onSuccess = null, onError = null) => {
     console.log('params', params);
     await ApiClient.post('/user/change/password', params).then(response => {
@@ -89,7 +85,6 @@ export const deleteAd = async (id) => {
 
     return null;
 };
-
 export const userSettings = async (params, onSuccess = null, onError = null) => {
     await ApiClient.post('/user', params, 'multipart/form-data').then(response => {
         if (response.status == 200 || response.status == 201) {
@@ -99,7 +94,6 @@ export const userSettings = async (params, onSuccess = null, onError = null) => 
         if (onError != null) onError(error);
     });
 };
-
 export const getUserChats = async () => {
     try {
         const response = await ApiClient.get('/chats');
@@ -109,10 +103,8 @@ export const getUserChats = async () => {
     } catch (error) {
         console.log('fetch user details error ', error.response);
     }
-
     return null;
 }
-
 export const getUserMessages = async (params) => {
     try {
         const response = await ApiClient.get('/messages', params);
@@ -125,7 +117,6 @@ export const getUserMessages = async (params) => {
 
     return null;
 }
-
 export const postUserMessage = async (params) => {
     try {
         SocketHelper.getInstance().sendMessage(params['message']);
@@ -152,11 +143,8 @@ export const fetchChatByPartner = async (partnerId) => {
     } catch (error) {
         console.log('fetch user details error ', error.response);
     }
-
     return null;
-
 }
-
 export const readMessages = async (params) => {
     try {
         const response = await ApiClient.post('/messages/read', params);
@@ -168,7 +156,6 @@ export const readMessages = async (params) => {
     }
     return null;
 }
-
 export const deleteChat = async (id) => {
     try {
         const response = await ApiClient.delete('/messages/' + id);
@@ -180,7 +167,6 @@ export const deleteChat = async (id) => {
     }
     return null;
 }
-
 export const unreadMessages = async () => {
     try {
         const response = await ApiClient.get('/messages/unread-count');

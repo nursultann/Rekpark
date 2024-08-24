@@ -21,12 +21,12 @@ export default function Layout({ requireAuth = false }) {
     }
 
     return (
-        <div className='bg-white p-0 m-0'>
-            <div className="col-lg-12 bg-success px-0 text-white text-center">
+        <div className='container-fluid px-0 px-lg-3 mx-0 bg-white '>
+            <div className="col-lg-12 px-0 text-white text-center">
                 <img src={top} width="100%" />
             </div>
-            <Navbar />
-            <div className="container-fluid p-0">
+            <Navbar className="" />
+            <div className="container-fluid">
 
                 <div className="row">
                     <div className="col-1-5 px-0 d-none d-lg-block text-white text-center d-md-none"
@@ -38,7 +38,7 @@ export default function Layout({ requireAuth = false }) {
                     >
                     </div>
 
-                    <div className="col-lg-9 col-xl-9 col-md-12 col-sm-12 col-xs-12 lg:px-0 sm:px-[75px]"
+                    <div className="col-lg-10 col-xl-9 col-md-12 col-sm-12 col-xs-12"
                         style={{ backgroundColor: '#fff', minHeight: "500px" }}>
                         <AuthStatus />
                         <Outlet />

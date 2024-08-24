@@ -125,7 +125,10 @@ const ForgotPasswordPage = () => {
                     <Form.Item
                         label="Телефон"
                         name="phone"
-                        rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
+                        rules={[{ 
+                            required: true, 
+                            message: 'Пожалуйста введите номер телефона!' 
+                        }]}
                     >
                         <Input 
                             addonBefore={<Select
@@ -155,12 +158,11 @@ const ForgotPasswordPage = () => {
             </div>
         </div>
     );
-
     const step2 = (
         <div className="form-group col-xl-9 px-0">
             <Form.Item
                 name="otp"
-                rules={[{ required: true, message: 'Пожалуйста введите код потверждения!' }]}
+                rules={[{ required: true, message: 'Пожалуйста введите код подтверждения!' }]}
             >
                 <Input className="form-control" type="text" placeholder="Код потверждения"
                     onChange={(e) => { setOtp(e.target.value) }}></Input>

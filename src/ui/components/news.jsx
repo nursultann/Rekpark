@@ -73,20 +73,15 @@ function NewsItem({
                         src={item?.image}
                     />
                 </div>
-
-
                 <div className="self-stretch flex-col justify-start items-start px-3 mt-2">
-
                     <div className="flex-col justify-center items-start gap-[4.85px] flex">
                         <div className="text-neutral-800 text-sm font-medium font-['SF UI Display']">{item.title}</div>
                         <div
                             className="h-[40px] text-neutral-400 text-xs font-medium font-['SF UI Display']"
-
                         >
                             {maxSymbolEllipsis(item.text, 70)}
                         </div>
                     </div>
-
                     <div className="justify-start items-center gap-[5px] inline-flex mt-3">
                         <div className="text-zinc-500 text-xs font-medium font-['SF UI Display']">Регион:</div>
                         <div className="text-neutral-800 text-xs font-normal font-['SF UI Display']">г.Бишкек</div>

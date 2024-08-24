@@ -111,7 +111,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="">
+    <div className="pr-0">
 
       <div className="d-block d-lg-none">
         <div className="flex flex-row mt-4 mx-1 align-items-center justify-content-between md:px-[75px] xs:px-[15px]">
@@ -143,7 +143,7 @@ const Navbar = () => {
       </div>
       <div className="bg-zinc-100 border-b row  d-lg-flex d-md-none d-sm-none d-xs-none xs:hidden">
         <div className="col-1-5 "></div>
-        <div className="col-lg-9 col-md-12 ">
+        <div className="col-lg-9 col-md-12">
           <header className="blog-header py-3">
             <div className="row flex-nowrap justify-content-between align-items-center">
               <div className="col-8 col-lg-6">
