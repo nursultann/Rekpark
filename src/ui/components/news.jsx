@@ -20,7 +20,7 @@ const NewsGrid = () => {
                     </Link>
                 </h3>
 
-                <div className="grid gap-4 mt-[25px] xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-4 sm:grid-cols-3">
+                <div className="grid gap-4 mt-[25px] xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2">
                     {
                         isLoading ? (Array.from(new Array(4))).map((item, index) => {
                             return (
@@ -107,7 +107,6 @@ function NewsItem({
         </div>
     )
 }
-
 function NewsItemSkeleton() {
     return (
         <div className="max-w-md pb-2.5 rounded-[10px] border border-neutral-200 flex-col justify-start items-center">

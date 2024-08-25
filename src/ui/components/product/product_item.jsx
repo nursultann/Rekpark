@@ -77,7 +77,7 @@ const ProductItem = ({ product, onClick, border = true }) => {
             </div>
 
 
-            <div className="self-stretch flex-col justify-start items-start px-3 mt-2">
+            <div className="self-stretch flex-col justify-start items-start px-1 px-lg-3 mt-2">
 
                 <div className="flex-col justify-center items-start gap-[4.85px] flex">
                     <div className="text-neutral-800 text-sm font-medium">{product.title}</div>

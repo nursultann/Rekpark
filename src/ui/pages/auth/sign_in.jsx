@@ -3,11 +3,9 @@ import { message } from 'antd';
 import { Form, Input, Select } from 'antd';
 import { Link, useNavigate } from "react-router-dom";
 import GoogleLogin from "react-google-login";
-
 import { login, loginGoogle } from "../../../api/user";
 import Navbar from "../../components/navbar";
-import { auth, clientId, googleAuthProvider } from '../../../config/firebase_config';
-
+import { auth, clientId, googleAuthProvider, signInWithGoogleRedirect } from '../../../config/firebase_config';
 const { Option } = Select;
 const key = 'updatable';
 
@@ -63,7 +61,7 @@ const SignInPage = () => {
     const signIn = async () => {
         if (password === "" || phoneNumber.length < 9) return;
         // console.log('phone', countryCode + phoneNumber);
-        await login(countryCode + phoneNumber, password, onLoginSuccess, onLoginError);
+        await login((countryCode + phoneNumber), password, onLoginSuccess, onLoginError);
     }
     const onLoginSuccess = (data) => {
         localStorage.setItem('token', data.api_token);
@@ -83,7 +81,10 @@ const SignInPage = () => {
         // console.log(`selected ${value}`);
         setCountryCode(value);
     }
+    const LoginGoogle = ()=>{
+        signInWithGoogleRedirect();
 
+    }
     useEffect(() => {
         document.title = "Вход";
         // function start() {
@@ -93,6 +94,20 @@ const SignInPage = () => {
         //     })
         // }
         // gapi.load('client:auth2', start);
+        auth.getRedirectResult()
+            .then((result) => {
+                if (result) {
+                    // Successfully signed in
+                    console.log('Success:', result);
+                    // You can also access the user: result.user
+                }
+            })
+            .catch((error) => {
+                // Handle Errors here.
+                console.error('Error during sign-in:', error);
+                // Access error code: error.code
+                // Access error message: error.message
+            });
     });
 
     return (
@@ -162,7 +177,7 @@ const SignInPage = () => {
                         <Link className="mt-3" to="/forgot_password">Забыли пароль?</Link><br />
                         <label className="text-muted">Вход с помощью</label>
                         <Form.Item wrapperCol={{ offset: 0 }} className="d-xl-flex justify-content-center">
-                            <GoogleLogin
+                            {/* <GoogleLogin
                                 clientId={clientId}
                                 buttonText="Войти через Google"
                                 onSuccess={responseGoogle}
@@ -170,7 +185,10 @@ const SignInPage = () => {
                                 // cookiePolicy={'single_host_origin'}
                                 isSignedIn={false}
                                 scope='https://www.googleapis.com/auth/userinfo.profile'
-                            />
+                            /> */}
+                            <div className="btn btn-primary" onClick={LoginGoogle}>
+                                Google
+                            </div>
                         </Form.Item>
                     </Form>
                     <label>Нету аккаунта?</label>

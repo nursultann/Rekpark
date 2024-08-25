@@ -25,5 +25,6 @@ class ApiClient {
 }
 const setContentType = (contentType) => {
     client.defaults.headers['Content-Type'] = contentType;
+    client.defaults.headers['Accept-Encoding'] = contentType;
 };
 export default new ApiClient();
