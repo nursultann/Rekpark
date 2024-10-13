@@ -231,7 +231,7 @@ export const fetchUsersProducts = async (params) => {
         params['orderBy'] = 'id';
         params['sortedBy'] = 'desc';
         // params['with'] = 'user';
-        const response = await ApiClient.get('/products', params);
+        const response = await ApiClient.get('/user-products', params);
         if (response.status == 200 || response.status == 201) {
             return Product.fromArray(response.data.data);
         }

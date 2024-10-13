@@ -5,6 +5,7 @@ import { fetchUsersProducts } from '../../../api/product';
 import Navbar from '../../components/navbar';
 import ProductItem from "../../components/product/product_item";
 import moment from 'moment';
+import { useParams } from 'react-router-dom';
 
 const UserProductListPage = ({ match }) => {
     const [product, setProducts] = useState()
@@ -15,11 +16,10 @@ const UserProductListPage = ({ match }) => {
     const [location, setLocation] = useState(null);
     const [photoGallery, setPhotoGallery] = useState(null);
     const [visible, setVisible] = useState(false);
-
+    const params = useParams();
     const fetchProducts = async () => {
         const _products = await fetchUsersProducts({
-            'search': 'user_id:' + match.params.id,
-            'searchFields': 'user_id:=',
+            'user_id': params.id,
             'with': 'user;region;city'
         });
 
