@@ -1,0 +1,260 @@
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { checkPhone, passwordChange, login, sendEmailVerification, verifyEmail } from "../../../api/user";
+import { firebase, auth } from "../../../config/firebase_config";
+import { Steps, message, Form, Input, Select } from 'antd';
+import Navbar from '../../components/navbar';
+import { useNavigate } from 'react-router-dom';
+
+const { Option } = Select;
+const { Step } = Steps;
+const key = 'updatable';
+
+const ForgotPasswordPage = () => {
+    const history = useNavigate();
+    const [phoneNumber, setPhoneNumber] = useState();
+    const [countryСode, setCountryCode] = useState();
+    const [current, setCurrent] = useState(0);
+    const [final, setFinal] = useState('');
+    const [otp, setOtp] = useState('');
+    const [timer, setTimer] = useState(59);
+    const [password, setPassword] = useState();
+    const [passwordCheck, checkPassword] = useState();
+    const [uuid, setUuid] = useState();
+    const [link, setLink] = useState(false);
+    const result = "";
+
+    const getAccessCode = async () => {
+        const check = await checkPhone(phoneNumber);
+        if (check == false) {
+            message.warning('Такого пользователя не удалось найти!', 10);
+        } else if (check == true) {
+            // if (phoneNumber === "" || phoneNumber.length < 9) return;
+            // auth.signInWithPhoneNumber(`+${countryСode + phoneNumber}`, window.verify).then((result) => {
+            //     setFinal(result);
+            //     message.success('Код подтверждения отправлен!', 10);
+            //     setCurrent(current + 1);
+            //     setLink(false);
+            //     var t = 59;
+            //     function i() {
+            //         t -= 1;
+            //         setTimer(t);
+            //     }
+            //     var interval = setInterval(i, 1000);
+            //     function time() {
+            //         clearInterval(interval);
+            //         setLink(true);
+            //         message.info('Время вышло!', 10);
+            //         // window.location.reload(); 
+            //     }
+            //     setTimeout(time, 59000);
+            // }).catch((err) => {
+            //     message.error('Email указан неверно или было очень много попыток подтверждения!', 10);
+            //     alert(err);
+            //     window.location.reload()
+            // });
+            const verifyEmail = await sendEmailVerification(phoneNumber);
+            if (verifyEmail) {
+                message.success('Код потверждения отправлен!', 10);
+                setCurrent(current + 1);
+                setLink(false);
+                var t = 59;
+                function i() {
+                    t -= 1;
+                    setTimer(t);
+                }
+                var interval = setInterval(i, 1000);
+                function time() {
+                    clearInterval(interval);
+                    setLink(true);
+                    message.info('Время вышло!', 10);
+                    window.location.reload(); 
+                }
+                setTimeout(time, 59000);
+            } else {
+                message.error('Email указан неверно!', 10);
+            }
+        }
+    }
+
+    const validateOtp = async () => {
+        // clearInterval(getAccessCode.time);
+        // if (otp === null || final === null)
+        //     return;
+        // final.confirm(otp).then((result) => {
+        //     message.success('Код потверждения верный', 10);
+        //     setUuid(result.user.uid);
+        //     console.log('firebase result', result);
+        //     setCurrent(current + 1);
+        //     // result.user.uuid;
+
+        //     console.log('success ', result);
+
+        // }).catch((err) => {
+        //     message.error('Код потверждения введен неверно!', 10);
+        // })
+        const verify = await verifyEmail(phoneNumber, otp);
+        if (verify) {
+            message.success('Код потверждения подтвержден', 10);
+            setCurrent(current + 1);
+        } else {
+            message.error('Код потверждения введен неверно!', 10);
+        }
+    }
+
+    const saveChanges = async () => {
+        if (password == passwordCheck) {
+            const params = {
+                'new_password': password,
+                // 'uid': uuid,
+                'email': phoneNumber,
+                'code':otp
+            };
+            message.loading({ content: 'Загрузка...', key });
+            const result = await passwordChange(params, async function (data) {
+                console.log(data);
+                // localStorage.setItem('token', params['api_token']); 
+                const loginResult = await login(phoneNumber, password, function (user) {
+                    localStorage.setItem('token', user.api_token);
+                    history('/profile');
+                }, function (data) {
+                    message.loading({ content: 'Пароль успешно обновлен!', key });
+                    history('/login');
+                });
+            }, function (data) {
+                console.log("Error", data);
+            });
+        } else {
+            message.error('Пароли не совпадают!', 10);
+        }
+
+    }
+
+    function onChange(value) {
+        console.log(`selected ${value}`);
+        setCountryCode(value);
+    }
+    document.title = "Восстановление пароля";
+    useEffect(() => {
+        if(localStorage.getItem('token') != null){
+            window.location.href = '/profile';
+        }
+        window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+        window.verify.render();
+    }, []);
+
+    const step1 = (
+        <div className="col-xl-12 d-flex justify-content-center px-0">
+            <div className="col-xl-9 py-3 shadow bg-white text-center">
+                <label className="py-3" style={{ fontSize: 20 }}>Восстановление пароля</label><br />
+                <Form
+                    name="basic"
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 18 }}
+                    initialValues={{ remember: true }}
+                    autoComplete="off"
+                >
+                    <Form.Item
+                        label="Email"
+                        name="phone"
+                        rules={[{ 
+                            required: true, 
+                            message: 'Пожалуйста введите email!' 
+                        }]}
+                    >
+                        <Input 
+                        onChange={(e) => { setPhoneNumber(e.target.value) }} 
+                        type="text" 
+                        className="bg-white rounded border-1"
+                        placeholder="rekpark@gmail.com" 
+                        />
+                    </Form.Item>
+                    <div className="my-3" id="recaptcha-container"></div>
+                    <Form.Item wrapperCol={{ offset: 0 }}>
+                        <button className="col-md-7 btn btn-primary" htmlType="submit" onClick={getAccessCode}>
+                            Получить код потверждения
+                        </button>
+                    </Form.Item>
+                </Form>
+            </div>
+        </div>
+    );
+    const step2 = (
+        <div className="form-group col-xl-9 px-0">
+            <Form.Item
+                name="otp"
+                rules={[{ required: true, message: 'Пожалуйста введите код подтверждения!' }]}
+            >
+                <Input className="form-control" type="text" placeholder="Код потверждения"
+                    onChange={(e) => { setOtp(e.target.value) }}></Input>
+            </Form.Item>
+            <center>
+                <div className="text-secondary">{":" + timer}</div>
+                <a href="/forgot_password" style={{ display: link ? "block" : "none" }}>Вернуться назад</a>
+                <Form.Item wrapperCol={{ offset: 0 }}>
+                    <button className="col-md-7 btn btn-primary"  onClick={validateOtp}>Подтвердить</button>
+                </Form.Item>
+            </center>
+        </div>
+    );
+
+    const step3 = (
+        <div className="form-group col-xl-9 px-0">
+            <Form.Item
+                name="password"
+                rules={[{ required: true, message: 'Пожалуйста введите новый пароль!' }]}
+            >
+                <Input className="form-control" type="text" placeholder="Новый пароль"
+                    onChange={(e) => { setPassword(e.target.value) }}></Input>
+            </Form.Item>
+            <Form.Item
+                name="password"
+                rules={[{ required: true, message: 'Пожалуйста введите новый пароль снова!' }]}
+            >
+                <Input className="form-control" type="text" placeholder="Повторить пароль"
+                    onChange={(e) => { checkPassword(e.target.value) }}></Input>
+            </Form.Item>
+            <center>
+                <Form.Item wrapperCol={{ offset: 0 }}>
+                    <button className="col-md-7 btn btn-primary" onClick={saveChanges}>Сохранить новый пароль</button>
+                </Form.Item>
+            </center>
+        </div>
+    );
+
+    const steps = [
+        {
+            title: 'Шаг 1',
+            content: step1,
+        },
+        {
+            title: 'Шаг 2',
+            content: step2,
+        },
+        {
+            title: 'Шаг 3',
+            content: step3,
+        },
+    ];
+
+    return (
+        <div>
+            <div className="col-xl-12 py-3" style={{ height: "auto" }}>
+                <div className="col-xl-12 d-flex justify-content-center mt-0 mt-xl-3 px-0">
+                    <div className="col-xl-9 bg-white md-rounded-pill py-2 py-3">
+                        <Steps current={current} size="small">
+                            {steps.map(item => (
+                                <Step key={item.title} title={item.title} />
+                            ))}
+                        </Steps>
+                    </div>
+                </div>
+                <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-xl-3 px-0">
+                    {steps[current].content}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default ForgotPasswordPage;
