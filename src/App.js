@@ -31,8 +31,6 @@ import AgreementPage from './ui/pages/profile/agreement';
 import CompletePage from './ui/pages/profile/complete';
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useEffectOnce } from "react-use";
-import { message, notification } from 'antd';
-
 import 'moment/locale/ru';
 import 'antd/dist/antd.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -46,34 +44,26 @@ import NotFound from './ui/pages/not_found';
 import { useChatStore } from './store/chat_store';
 import { useUserStore } from './store/user_store';
 import { Slide, Snackbar } from '@mui/material';
-
 import notificationSound from './dist/audio/notification.ogg';
-
 const queryClient = new QueryClient();
 ReactModal.setAppElement('#root');
-
 function TransitionLeft(props) {
   return <Slide {...props} direction="left" />;
 }
-
 const App = ({ match }) => {
   const chatStore = useChatStore();
   const { isAuthenticated } = useUserStore();
-
   const soundRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
-
   useEffectOnce(() => {
     if (isAuthenticated) {
       chatStore.listenMessages();
     }
   });
-
   useEffect(() => {
     if (chatStore.lastMessage) {
       const { lastMessage } = chatStore;
       const { selectedChat } = chatStore;
-
       if (selectedChat && selectedChat.id == lastMessage.room_id) {
         // chatStore.fetchMessages(lastMessage.sender_id);
       } else {
@@ -83,10 +73,7 @@ const App = ({ match }) => {
       soundRef.current.play();
     }
   }, [chatStore.lastMessage]);
-
   return (
-    // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
-    // url('https://www.house.kg/build/images/banners/branding-left-imarat-20-may.e320d43f.png')
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
@@ -126,11 +113,8 @@ const App = ({ match }) => {
             <Route path="/business-plan/:id/:period" element={<BusinessPlan />} />
             <Route path="/gallery" element={<Gallery />} />
           </Route>
-
-
         </Routes>
       </BrowserRouter>
-
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={open}
@@ -159,9 +143,7 @@ const App = ({ match }) => {
           </div>
         </div>
       </Snackbar>
-
       <audio ref={soundRef} id="audio" src={notificationSound} preload="auto"></audio>
-
     </QueryClientProvider >
   );
 }

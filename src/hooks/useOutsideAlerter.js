@@ -11,13 +11,10 @@ function useOutsideAlerter(ref, callback) {
                 console.log(error);
             }
         }
-
         document.addEventListener('mousedown', handleClickOutside);
-
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [ref, callback]);
 }
-
 export default useOutsideAlerter;

@@ -15,14 +15,12 @@ function SampleArrow(props) {
         />
     );
 }
-
 function CategoryItem({ category, ...props }) {
     const image = category.image != null
         ? category.image
         : 'https://kartinkin.com/uploads/posts/2021-07/thumbs/1626123851_61-kartinkin-com-p-svetlo-serii-fon-krasivo-63.jpg';
-
     return (
-        <div className="px-2 pt-[3px] flex flex-col h-full align-items-center justify-center">
+        <div className="px-2 pt-[3px] flex flex-col h-full align-items-center justify-center" onClick={() => { window.location.href = '/category/' + category.id }}>
             <div className="bg-zinc-100 rounded-xlg border border-neutral-200 justify-center items-center gap-[10px] inline-flex min-w-[100px] px-4 py-1.5 rounded-xl cursor-pointer hover:bg-zinc-200 active:bg-zinc-300">
                 <img className="rounded-full" src={image} width="30px" height="30px" />
                 <p className="text-sm" style={{ maxLines: 1 }} >
@@ -32,9 +30,8 @@ function CategoryItem({ category, ...props }) {
         </div>
     )
 }
-
 const CategorySlider = () => {
-    const categories = useCategoriesTree()
+    const categories = useCategoriesTree();
     const [options, setOptions] = useState([]);
     const [active, setActive] = useState(0);
     const sliderRef = React.useRef();
@@ -66,9 +63,10 @@ const CategorySlider = () => {
 
     };
 
+
     return (
         <div className="flex flex-col">
-            <div className="flex flex-row align-items-center ">
+            <div className="flex flex-row align-items-center">
                 <ModalBox
                     modal={<CategoriesTreeModal categories={categories} />}
                 >
@@ -82,33 +80,35 @@ const CategorySlider = () => {
                         </div>
                     </div>
                 </ModalBox>
-
-                <div
-                    className=" bg-neutral-800 rounded-[9.58px] flex align-items-center justify-center ml-3 mr-1 hover:bg-neutral-700 cursor-pointer active:bg-neutral-900 d-md-none d-lg-flex d-sm-none d-xs-none"
-                    style={{ height: "35px", width: "45px" }}
-                    onClick={() => sliderRef.current.slickPrev()}
-                >
-                    <LeftOutlined className="text-white" />
+                <div className="col-12">
+                    <div className="row">
+                    <div
+                        className=" bg-neutral-800 rounded-[9.58px] flex align-items-center justify-center mt-2 ml-3 hover:bg-neutral-700 cursor-pointer active:bg-neutral-900 d-md-none d-lg-flex d-sm-none d-xs-none"
+                        style={{ height: "35px", width: "45px" }}
+                        onClick={() => sliderRef.current.slickPrev()}
+                    >
+                        <LeftOutlined className="text-white" />
+                    </div>
+                    <div className="col-lg-9">
+                    <Slider className="" {...sliderSettings} ref={sliderRef}>
+                        {categories.map((category) => {
+                            return <CategoryItem
+                                key={category.id}
+                                category={category}
+                            />
+                        })}
+                    </Slider>
+                    </div>
+                    <div
+                        className="bg-neutral-800 rounded-[9.58px] flex align-items-center justify-center mt-2 ml-2 hover:bg-neutral-700 cursor-pointer active:bg-neutral-900 d-md-none d-lg-flex d-sm-none d-xs-none"
+                        style={{ height: "35px", width: "45px" }}
+                        onClick={() => sliderRef.current.slickNext()}
+                    >
+                        <RightOutlined className="text-white" />
+                    </div>
+                    </div>
                 </div>
 
-                <Slider className="w-full overflow-x-clip align-items-center" {...sliderSettings} ref={sliderRef}>
-
-                    {categories.map((category) => {
-                        return <CategoryItem
-                            key={category.id}
-                            category={category}
-                        />
-                    })}
-
-                </Slider>
-
-                <div
-                    className="bg-neutral-800 rounded-[9.58px] flex align-items-center justify-center ml-2 hover:bg-neutral-700 cursor-pointer active:bg-neutral-900 d-md-none d-lg-flex d-sm-none d-xs-none"
-                    style={{ height: "35px", width: "45px" }}
-                    onClick={() => sliderRef.current.slickNext()}
-                >
-                    <RightOutlined className="text-white" />
-                </div>
 
             </div >
 
@@ -126,7 +126,6 @@ const CategorySlider = () => {
                     })}
                 </div>
             </div>
-
         </div >
     );
 
@@ -148,6 +147,7 @@ function CategoriesTreeModal({ categories }) {
                             return (
                                 <div
                                     key={category.id}
+                                    onClick={() => { window.location.href = '/category/' + category.id }}
                                     className="flex flex-row justify-between w-full py-2 px-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                     <div className="flex flex-row items-center gap-2 ">
                                         <img src={category.image} width="30px" height="30px" />

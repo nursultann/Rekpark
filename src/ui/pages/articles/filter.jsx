@@ -30,18 +30,8 @@ const ArticlesFilterPage = ({ match }) => {
 
     return (
         <div>
-            <Navbar />
             <div className="col-xl-12 mt-3">
-                <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item">
-                            <a className="text-primary" href="/">
-                                <i className="fa-solid fa-house"></i> Главная страница
-                            </a>
-                        </li>
-                        <li className="breadcrumb-item active" aria-current="page">Статьи и новости</li>
-                    </ol>
-                </nav>
+                
             </div>
             <div className="row px-2">
                 <div className="col-md-12">

@@ -6,11 +6,77 @@ import { login, loginGoogle } from "../../../api/user";
 import { clientId } from '../../../config/firebase_config';
 
 const SignInPage = () => {
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [phone, setPhone] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const history = useNavigate();
+    const [phoneNumber, setLogin] = useState(0);
+    const [password, setPassword] = useState();
+    const [countryCode, setCountryCode] = useState();
+
+    const responseGoogle = async (response) => {
+        console.log("google response", response);
+        const email = response.profileObj.email;
+        const name = response.profileObj.name;
+        const uid = response.profileObj.googleId;
+
+        // const credential = await auth.signInWithEmailAndPassword(email, uid);
+
+        console.log(clientId, email, name)
+
+        const credential = await auth.signInWithCredential(googleAuthProvider.credential(
+            response.tokenId,
+            response.accessToken,
+        ))
+
+        console.log('credential', credential)
+
+        const idToken = await credential.user.getIdToken(true);
+        // credential.user.displayName;
+        // credential.user.email;
+
+
+        console.log('datas', email, name, idToken)
+        await loginGoogle(
+            email, name, idToken,
+            (data) => {
+                console.log('Success', data);
+            },
+            (data) => {
+                console.log('error', data);
+            },
+        );
+
+        const onLoginError = (data) => {
+            // message.error({content:'Номер или пароль указан неверно!', duration: 2});
+        };
+
+    }
+
+    const onFailure = (response) => {
+        console.log("Failure!", response);
+    }
+
+    const signIn = async () => {
+        if (password === "" || phoneNumber.length < 9) return;
+        // console.log('phone', countryCode + phoneNumber);
+        await login(countryCode + phoneNumber, password, onLoginSuccess, onLoginError);
+    }
+    const onLoginSuccess = (data) => {
+        localStorage.setItem('token', data.api_token);
+        message.loading({ content: 'Загрузка...', key });
+        setTimeout(() => {
+            message.success({ content: 'Успешно!', key, duration: 2 });
+        }, 1000);
+        history("/profile");
+    };
+
+    const onLoginError = (data) => {
+        console.log('error', data);
+        message.error({ content: 'Номер или пароль указан неверно!', duration: 2 });
+    };
+
+    function onChange(value) {
+        // console.log(`selected ${value}`);
+        setCountryCode(value);
+    }
 
     useEffect(() => {
         document.title = "Вход";
@@ -22,29 +88,6 @@ const SignInPage = () => {
         setError('');
         try {
             await login(phone, password, onLoginSuccess, onLoginError);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const onLoginSuccess = (data) => {
-        localStorage.setItem('token', data.api_token);
-        navigate("/profile");
-    };
-
-    const onLoginError = () => {
-        setError('Неверный номер телефона или пароль');
-    };
-
-    const responseGoogle = async (response) => {
-        setLoading(true);
-        setError('');
-        try {
-            const { email, name, googleId } = response.profileObj;
-            await loginGoogle(email, name, googleId, onLoginSuccess, onLoginError);
-        } catch (error) {
-            console.error("Google login error", error);
-            setError('Ошибка при входе через Google');
         } finally {
             setLoading(false);
         }

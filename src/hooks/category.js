@@ -13,10 +13,8 @@ export function useCategoriesTree() {
             dispatch(setCategories(categories));
         }
     };
-
     useEffectOnce(() => {
         fetchCategoriesTree().then();
     })
-
     return categories;
 }

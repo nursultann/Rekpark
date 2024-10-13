@@ -1,14 +1,11 @@
 
 import React, { useState } from "react";
-
 function TreeView({ data, onSelect, className, value }) {
     const [openItems, setOpenItems] = useState([]);
-
     const handleItemClick = (item) => {
         onSelect(item);
         handleItemToggle(item);
     };
-
     const handleItemToggle = (item) => {
         if (openItems.includes(item)) {
             setOpenItems(openItems.filter((i) => i !== item));
@@ -16,7 +13,6 @@ function TreeView({ data, onSelect, className, value }) {
             setOpenItems([...openItems, item]);
         }
     };
-
     const renderTree = (treeData) => {
         return treeData.map((item) => (
             <div key={item.id}>
@@ -39,12 +35,10 @@ function TreeView({ data, onSelect, className, value }) {
             </div>
         ));
     };
-
     return <div
         className={className}
     >
         {renderTree(data)}
     </div>;
 }
-
 export default TreeView;

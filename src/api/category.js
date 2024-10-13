@@ -1,6 +1,5 @@
 import ApiClient from "./ApiClient";
 import { filterCategoriesByParentIdRecursive } from "../helpers/functions";
-
 export const fetchCategoriesTree = async (params = {}) => {
     try {
         const response = await ApiClient.get('/categories', { ...params, cache: { maxAge: 60 * 60 * 1000, } });
@@ -13,10 +12,8 @@ export const fetchCategoriesTree = async (params = {}) => {
     } catch (error) {
         console.log('FetchCategoriesErr', error);
     }
-
     return null;
 };
-
 export const fetchCategoryProducts = async (id, params = { limit: 20, offset: 0 }) => {
     try {
         if (!params.hasOwnProperty('sub')) {
@@ -27,9 +24,7 @@ export const fetchCategoryProducts = async (id, params = { limit: 20, offset: 0 
         // params['search'] = `category_id:${id}`;
         // params['searchFields'] = `category_id:=`;
         params['categories'] = `${id}`;
-
         console.log('fetchCategoryProductsParams', params);
-
         const response = await ApiClient.get(`/products-list`, params);
         if (response.status == 200 || response.status == 201) {
             return response.data.data;
@@ -39,7 +34,6 @@ export const fetchCategoryProducts = async (id, params = { limit: 20, offset: 0 
     }
     return null;
 };
-
 export const fetchCategoryDetails = async (id) => {
     try {
         const params = { 'with': 'customAttribute;children;caGroups.attributes' };
@@ -52,7 +46,6 @@ export const fetchCategoryDetails = async (id) => {
     }
     return null;
 };
-
 export const fetchCustomAttributeRelations = async (id) => {
     try {
         const response = await ApiClient.get(`/custom-attributes/${id}/relations`);
@@ -62,6 +55,5 @@ export const fetchCustomAttributeRelations = async (id) => {
     } catch (error) {
         console.log('FetchCategoryErr', error);
     }
-
     return null;
 }

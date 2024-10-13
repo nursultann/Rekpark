@@ -8,17 +8,13 @@ import SearchBar from "../../components/search-bar";
 const ProductsSearchResultPage = ({ match }) => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState();
     const limit = 20;
     const [offset, setOffset] = useState(0);
     const [reachEnd, setReachEnd] = useState(false);
-
     const [loading, setLoading] = useState(false);
-
     const searchQuery = searchParams.get('q');
-
     const fetchProducts = async () => {
         if (loading) return;
         setLoading(true);
@@ -75,7 +71,6 @@ const ProductsSearchResultPage = ({ match }) => {
                             })
                     }
                 </div>
-
                 <div className="flex flex-row justify-center mt-4">
                     {!reachEnd &&
                         <button

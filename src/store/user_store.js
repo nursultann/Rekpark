@@ -36,9 +36,9 @@ export const useUserStore = create((set) => ({
                 isAuthenticated: true,
                 user: result.user,
             }))
-            return true
+            return true;
         }
-        return false
+        return false;
     },
     signOut(callback) {
         set((state) => ({ isAuthenticated: false, permissions: [] }))

@@ -5,9 +5,11 @@ import { Button } from "antd";
 import Navbar from "../../components/navbar";
 import ProductItem from "../../components/product/product_item";
 import SubCategories from "../../components/category/sub_categories ";
+import { useParams } from "react-router-dom";
 
 const ProductsFilterPage = ({ match }) => {
     const dispatch = useDispatch();
+    const params = useParams();
     const [categoryProducts, setProducts] = useState();
     const [category, setCategory] = useState();
     const [formValues, setFormValues] = useState({});
@@ -17,9 +19,10 @@ const ProductsFilterPage = ({ match }) => {
 
     const fetchCategory = async (searchAttributes = {}) => {
         setIsLoading(true);
-        const category = await fetchCategoryDetails(match.params.id);
-        const products = await fetchCategoryProducts(match.params.id, searchAttributes ?? {});
+        const category = await fetchCategoryDetails(params.id);
+        const products = await fetchCategoryProducts(params.id, searchAttributes ?? {});
         console.log('attr', searchAttributes);
+        console.log('category products',products)
         if (products != null) {
             setCategory(category);
             setProducts(products);
@@ -83,14 +86,14 @@ const ProductsFilterPage = ({ match }) => {
                         })}
                     <div className="col-md-12 py-5">
                         <center className="">
-                            <Button
-                                type="primary"
+                            <button
+                                className="btn btn-primary"
                                 onClick={() => {
                                     fetchProducts();
                                 }}
                             >
                                 Показать еще
-                            </Button>
+                            </button>
                         </center>
                     </div>
                 </div>

@@ -1,19 +1,5 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-<<<<<<< HEAD:src/components/category/filter.jsx
-import { setCurrencies, setRegions } from "../../redux/actions/main_actions";
-import { setCategories } from "../../redux/actions/category_actions";
-import { Form, Button, Input, InputNumber, Modal, Select, TreeSelect } from 'antd';
-import { CustomAttributeField } from "../custom_components";
-import * as api from "../../api";
-import { Link, useHistory } from "react-router-dom";
-import CarAttributes from "../custom_attribute/car_attributes";
-import filter from '../../img/free-icon-setting-5736290.png';
-const { TreeNode } = TreeSelect;
-const { Option } = Select;
-const Filter = ({ onSubmit }) => {
-  const history = useHistory();
-=======
 import { Form, Button, InputNumber, Modal, Select } from 'antd';
 import { useNavigate } from "react-router-dom";
 import { useEffectOnce } from "react-use";
@@ -25,7 +11,6 @@ const { Option } = Select;
 
 const Filter = ({ category, onSubmit }) => {
   const history = useNavigate();
->>>>>>> origin/dev:src/ui/components/category/filter.jsx
   const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
@@ -34,12 +19,6 @@ const Filter = ({ category, onSubmit }) => {
   const [selectedCurrencyId, setSelectedCurrencyId] = useState(null);
   const { currencies, regions } = useSelector((state) => state.main);
   const [districts, setDistricts] = useState([]);
-<<<<<<< HEAD:src/components/category/filter.jsx
-  const { categories } = useSelector((state) => state.category);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-=======
-
->>>>>>> origin/dev:src/ui/components/category/filter.jsx
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
   };
@@ -123,29 +102,6 @@ const Filter = ({ category, onSubmit }) => {
     console.log('Clicked cancel button');
     setVisible(false);
   };
-<<<<<<< HEAD:src/components/category/filter.jsx
-  const setCategory = async (category) => {
-    setSelectedCategory(category);
-    const response = await api.fetchCategoryDetails(category.id);
-    if (response != null) {
-      setSelectedCategory(response);
-    }
-  }
-  const fetchCategoriesTree = async () => {
-    const categories = await api.fetchCategoriesTree();
-    if (categories != null) {
-      dispatch(setCategories(categories));
-      console.log('cateogry_id', form.getFieldValue("category_id"));
-      if (form.getFieldValue("category_id")) {
-        const category = categories.find(o => o.id === form.getFieldValue("category_id"));
-        setSelectedCategory(category);
-      }
-    }
-  };
-  const categoryTree = (tree) => {
-    if (!tree?.length) return;
-    return tree.map((item) => (<TreeNode value={item.id} title={item.name}>{categoryTree(item.children)}</TreeNode>));
-=======
 
   const [options, setOptions] = useState([]);
 
@@ -166,19 +122,12 @@ const Filter = ({ category, onSubmit }) => {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
     window.location.href = "/category/" + value;
->>>>>>> origin/dev:src/ui/components/category/filter.jsx
   };
-
   useEffectOnce(() => {
     fetchRegions();
-<<<<<<< HEAD:src/components/category/filter.jsx
-    fetchCategoriesTree()
-  }, []);
-=======
     fetchCategoriesTree(category);
   });
 
->>>>>>> origin/dev:src/ui/components/category/filter.jsx
   return (
     <>
       {true ?
@@ -245,7 +194,6 @@ const Filter = ({ category, onSubmit }) => {
                             name={item.name}
                             onChange={(item) => {
                               const category = categories.find(o => o.id === item);
-
                             }}
                             rules={[{ required: item.is_required, message: item.placeholder }]}
                           >
