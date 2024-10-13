@@ -105,21 +105,15 @@ const SubCategories = ({ category, onSubmit }) => {
   const [options, setOptions] = useState([]);
 
   const fetchCategoriesTree = async (category) => {
-    category?.children?.map((item) =>
-      setOptions(prevState => [...prevState, {
-        label: item.name,
-        value: item.id
-        // options: [
-        //   category.children.map((item)=>
-        //   {
-        //     label: item.name,
-        //     value: item.id,
-        //   },
-        //   )
-        // ],
-      }])
-    )
-    console.log('options', options);
+    return category?.children?.forEach((item) =>
+      setOptions(prevState => [
+        ...prevState,
+        {
+          label: item.name,
+          value: item.id
+        }
+      ])
+    );
   }
 
   if (options.length == 0) {

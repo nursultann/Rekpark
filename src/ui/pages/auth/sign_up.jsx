@@ -1,265 +1,255 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../../components/navbar";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { firebase, auth } from "../../../config/firebase_config";
-import { checkPhone, loginGoogle, register } from "../../../api/user";
-import { Steps, Button, message, Form, Input, Select } from 'antd';
-
-const clientId = "363682799555-97hlkli04bo0eevlu0br81jtl3vg677a.apps.googleusercontent.com";
-// const countryCodes = [
-//     {"value": "+996", "label": "+996"},
-//     {"value": "+7", "label": "+7"},
-// ];
-const key = 'updatable';
-const { Option } = Select;
-const { Step } = Steps;
+import { register } from "../../../api/user";
 
 const SignUpPage = () => {
-    // Inputs
-    const [phoneNumber, setPhoneNumber] = useState("");
+    const navigate = useNavigate();
+    const [step, setStep] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [otp, setOtp] = useState('');
-    const [final, setFinal] = useState('');
-    const [userName, setUserName] = useState();
-    const [timer, setTimer] = useState(59);
-    const [userPassword, setPassword] = useState();
-    const [passwordCheck, checkPassword] = useState();
-    const [uuid, setUuid] = useState();
-    const [countrycode, setCountryCode] = useState();
-    const [current, setCurrent] = useState(0);
-    const [link, setLink] = useState(false);
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [timer, setTimer] = useState(0);
+    const [verificationId, setVerificationId] = useState(null);
 
-    const responseGoogle = (response) => {
-        console.log("google response", response);
-        const email = response.profileObj.email;
-        const name = response.profileObj.name;
-        const uid = response.profileObj.googleId;
-        console.log(email, name, uid)
-        loginGoogle(email, name, uid, (data) => {
-            console.log('Success', data);
-        }, (data) => {
-            console.log('error', data);
+    useEffect(() => {
+        document.title = "Регистрация";
+        const recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+            'size': 'invisible',
         });
+        window.recaptchaVerifier = recaptchaVerifier;
+    }, []);
 
-        const onLoginError = (data) => {
-
-            // message.error({content:'Номер или пароль указан неверно!', duration: 2});
-        };
-
-    }
-    const signIn = async () => {
-        const check = await checkPhone(countrycode + phoneNumber);
-        if (check == true) {
-            message.warning('Такой номер уже существует!', 10);
+    useEffect(() => {
+        if (timer > 0) {
+            const interval = setInterval(() => setTimer(timer - 1), 1000);
+            return () => clearInterval(interval);
         }
-        else if (check == false) {
-            if (phoneNumber === "" || phoneNumber.length < 9) return;
-            auth.signInWithPhoneNumber(`+${countrycode + phoneNumber}`, window.verify).then((result) => {
-                setFinal(result);
-                message.success('Код потверждения отправлен!', 10);
-                setCurrent(current + 1);
-                setLink(false);
-                var t = 59;
-                function i() {
-                    t -= 1;
-                    setTimer(t);
-                }
-                var interval = setInterval(i, 1000);
-                function time() {
-                    clearInterval(interval);
-                    setLink(true);
-                    message.info('Время вышло!', 10);
-                    // window.location.reload(); 
-                }
-                setTimeout(time, 59000);
-            }).catch((err) => {
-                alert(err);
-                message.error('Номер указан неверно!', 10);
-                window.location.reload()
-            });
+    }, [timer]);
+
+    const sendVerificationCode = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            const phoneProvider = new firebase.auth.PhoneAuthProvider();
+            const verificationId = await phoneProvider.verifyPhoneNumber(
+                `+${phoneNumber}`,
+                window.recaptchaVerifier
+            );
+            setVerificationId(verificationId);
+            setStep(2);
+            setTimer(60);
+        } catch (err) {
+            setError('Не удалось отправить код. Попробуйте позже.');
+        } finally {
+            setLoading(false);
         }
     };
 
-    const validateOtp = () => {
-        if (otp === null || final === null)
-            return;
-        final.confirm(otp).then((result) => {
-            console.log("OTP", result);
-            message.success('Код потверждения подтвержден', 10);
-            setUuid(result.user.uid);
-            setCurrent(current + 1);
-            // result.user.uuid;
-            console.log('success ', result);
-        }).catch((err) => {
-            message.error('Код потверждения введен неверно!', 10);
-        })
-    }
-    const addUser = async () => {
-        if (userPassword === passwordCheck) {
-            const params = {
-                'name': userName,
-                'password': userPassword,
-                'phone': countrycode + phoneNumber,
-                'uid': uuid,
-            };
-            console.log('params', params);
-            message.loading({ content: 'Загрузка...', key });
-            const result = await register(params, function (data) {
-                localStorage.setItem('token', data.api_token);
-                setTimeout(() => {
-                    message.success({ content: 'Успешно!', key, duration: 2 });
-                }, 1000);
-                window.location.href = '/profile';
-            }, function (data) {
-                console.log("Error");
-            });
-        } else {
-            message.error('Неправильный пароль', 10);
+    const verifyCode = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            const credential = firebase.auth.PhoneAuthProvider.credential(
+                verificationId,
+                otp
+            );
+            await auth.signInWithCredential(credential);
+            setStep(3);
+        } catch (err) {
+            setError('Неверный код. Попробуйте еще раз.');
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
-    function onChange(value) {
-        console.log(`selected ${value}`);
-        setCountryCode(value);
-    }
-    document.title = "Регистрация";
-    useEffect(() => {
-        window.verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-        window.verify.render();
-    }, []);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+            setError('Пароли не совпадают');
+            return;
+        }
+        setLoading(true);
+        setError('');
+        try {
+            await register({
+                name,
+                phone: phoneNumber,
+                password,
+            });
+            navigate('/login');
+        } catch (err) {
+            setError('Не удалось зарегистрироваться. Попробуйте позже.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const step1 = (
-        <div className="col-xl-12 d-flex justify-content-center">
-            <div className="col-xl-8 px-5 pt-4 m-xl-5 shadow rounded-lg bg-light text-center">
-                <label className="" style={{ fontSize: 20 }}>Регистрация профиля</label><br />
-
-                <Form
-                    name="basic"
-                    // labelCol={{ span: 5 }}
-                    // wrapperCol={{ span: 19 }}
-                    initialValues={{ remember: true }}
-                    layout="vertical"
-                    autoComplete="off"
-                >
-                    <Form.Item
-                        label="Телефон"
-                        name="phone"
-                        rules={[{ required: true, message: 'Пожалуйста введите номер телефона!' }]}
-                    >
-                        <Input addonBefore={<Select
-                            placeholder="код страны"
-                            showSearch
-                            optionFilterProp="children"
-                            onChange={onChange}
-                            className="bg-white rounded border-0"
-                            filterOption={(input, option) =>
-                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                            }
-                        >
-                            <Option value="996">+996</Option>
-                            <Option value="7">+7</Option>
-                        </Select>}
-                            onChange={(e) => { setPhoneNumber(e.target.value) }}
-                            type="number"
-                            placeholder="(XXX) XXX XXX"
-                            className="w-full border border-neutral-200 bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                        />
-                    </Form.Item>
-                    <div className="my-3 ml-xl-5" id="recaptcha-container"></div>
-                    <Form.Item wrapperCol={{ offset: 0 }}>
-                        <button className="flex w-full justify-center rounded-md btn btn-primary px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" htmlType="submit" onClick={signIn}>
-                            Зарегистрироваться
-                        </button>
-                    </Form.Item>
-                </Form>
-            </div>
-        </div>
-    );
-    const step2 = (
-        <div className="form-group col-xl-8 px-5 pt-4 m-xl-5 shadow rounded-lg">
-            <center>
-                <label className="py-3" style={{ fontSize: 20 }}>Подтверждение номера</label>
-            </center>
-            <Form.Item
-                name="otp"
-                rules={[{ required: true, message: 'Пожалуйста введите код потверждения!' }]}
-            >
-                <Input className="form-control" type="text" placeholder="Код потверждения"
-                    onChange={(e) => { setOtp(e.target.value) }}></Input>
-            </Form.Item>
-            <center>
-                <div className="text-secondary">{":" + timer}</div>
-                <a href="/register" style={{ display: link ? "block" : "none" }}>Вернуться назад</a>
-                <Form.Item wrapperCol={{ offset: 0 }}>
-                    <Button className='col-md-7' onClick={validateOtp}>Подтвердить</Button>
-                </Form.Item>
-            </center>
-        </div>
-    );
-    const step3 = (
-        <div className="form-group col-xl-8 px-5 pt-4 m-xl-5 shadow rounded-lg">
-            <Form.Item
-                name="password"
-                rules={[{ required: true, message: 'Пожалуйста введите имя пользователя!' }]}
-            >
-                <Input className="form-control" type="text" placeholder="Имя пользователя"
-                    onChange={(e) => { setUserName(e.target.value) }}></Input>
-            </Form.Item>
-            <Form.Item
-                name="password"
-                rules={[{ required: true, message: 'Пожалуйста введите новый пароль!' }]}
-            >
-                <Input className="form-control" type="text" placeholder="Новый пароль"
-                    onChange={(e) => { setPassword(e.target.value) }}></Input>
-            </Form.Item>
-            <Form.Item
-                name="password"
-                rules={[{ required: true, message: 'Пожалуйста введите новый пароль снова!' }]}
-            >
-                <Input className="form-control" type="text" placeholder="Повторить пароль"
-                    onChange={(e) => { checkPassword(e.target.value) }}></Input>
-            </Form.Item>
-            <center>
-                <Form.Item wrapperCol={{ offset: 0 }}>
-                    <Button className='col-md-7' onClick={addUser}>Завершить регистрацию</Button>
-                </Form.Item>
-            </center>
-        </div>
-    );
-
-    const steps = [
-        {
-            title: 'Шаг 1',
-            content: step1,
-        },
-        {
-            title: 'Шаг 2',
-            content: step2,
-        },
-        {
-            title: 'Шаг 3',
-            content: step3,
-        },
-    ];
+    const renderStep = () => {
+        switch (step) {
+            case 1:
+                return (
+                    <>
+                        <div className="mb-6">
+                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                                Номер телефона
+                            </label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                placeholder="+7 999 999 99 99"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <button
+                                type="button"
+                                onClick={sendVerificationCode}
+                                disabled={loading}
+                                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${loading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                            >
+                                {loading ? 'Отправка...' : 'Отправить код'}
+                            </button>
+                        </div>
+                    </>
+                );
+            case 2:
+                return (
+                    <>
+                        <div className="mb-6">
+                            <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
+                                Код подтверждения
+                            </label>
+                            <input
+                                type="text"
+                                id="otp"
+                                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value)}
+                                placeholder="Введите код"
+                                required
+                            />
+                        </div>
+                        <div className="text-sm text-gray-500 text-center mb-6">
+                            {timer > 0 ? (
+                                <p>Повторная отправка через {timer} сек</p>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={sendVerificationCode}
+                                    className="text-indigo-600 hover:text-indigo-500"
+                                >
+                                    Отправить код повторно
+                                </button>
+                            )}
+                        </div>
+                        <div>
+                            <button
+                                type="button"
+                                onClick={verifyCode}
+                                disabled={loading}
+                                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${loading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                            >
+                                {loading ? 'Проверка...' : 'Подтвердить'}
+                            </button>
+                        </div>
+                    </>
+                );
+            case 3:
+                return (
+                    <>
+                        <div className="mb-6">
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                                Имя
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Введите имя"
+                                required
+                            />
+                        </div>
+                        <div className="mb-6">
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                                Пароль
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Введите пароль"
+                                required
+                            />
+                        </div>
+                        <div className="mb-6">
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                                Подтвердите пароль
+                            </label>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                placeholder="Повторите пароль"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${loading ? 'bg-indigo-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                            >
+                                {loading ? 'Регистрация...' : 'Зарегистрироваться'}
+                            </button>
+                        </div>
+                    </>
+                );
+        }
+    };
 
     return (
-        <div>
-            <div className="row">
-                <div className="col-xl-12 px-0" style={{ height: "auto" }}>
-                    {/* <div className="col-xl-12 d-flex justify-content-center mt-2 mt-md-3">
-                    <div className="col-xl-6 bg-white xl-rounded-pill shadow-sm py-2 py-3">
-                        <Steps current={current} size="small">
-                            {steps.map(item => (
-                                <Step key={item.title} title={item.title} />
-                            ))}
-                        </Steps>
-                    </div>
-                </div> */}
-                    <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-xl-3" style={{ height: "400px" }}>
-                        {steps[current].content}
-                    </div>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full space-y-8">
+                <div>
+                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                        Регистрация
+                    </h2>
                 </div>
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    <div className="space-y-6">
+                        {renderStep()}
+                    </div>
+
+                    {error && (
+                        <div className="text-red-500 text-sm text-center mt-2">{error}</div>
+                    )}
+
+                    <div>
+                        <div className="text-sm text-center">
+                            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                                Уже есть аккаунт? Войти
+                            </Link>
+                        </div>
+                    </div>
+                </form>
             </div>
+            <div id="recaptcha-container"></div>
         </div>
     );
-}
+};
 
 export default SignUpPage;
