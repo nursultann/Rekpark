@@ -268,7 +268,7 @@ const ProductDetailPage = ({ match }) => {
                     </div>
 
                     <div className="col-xl-4">
-                        <div className="col-xl-12 border rounded-2xl mt-3">
+                        <div className="col-xl-12 border rounded-2xl p-4 pt-0 mt-3">
                             <div className="row">
                                 <div className="col-xl-12 mt-4">
 
@@ -427,74 +427,6 @@ const ProductDetailPage = ({ match }) => {
                     <button className="col-3 mt-1 rounded-2xl py-[9px] justify-center items-center bg-blue-600 text-white" onClick={PostComplaint}>Пожаловаться</button>
                 </div>
             </Modal>
-            {/* <div className="fixed-bottom d-block d-md-none">
-                <div className="row">
-                    <button className="btn col-6 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fas fa-phone-volume"></i> Позвонить</button>
-                    <button className="btn col-6 text-white" style={{ backgroundColor: "rgb(9, 72, 130)" }} data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"><i className="fa-solid fa-envelope"></i> Написать</button>
-                    <div className="col-12">
-                        <div className="collapse multi-collapse" id="multiCollapseExample1">
-                            <div className="card card-body bg-white">
-                                {phones != null && phones.length > 12 ?
-                                    <>
-                                        {phones.split(",").map((item, index) =>
-                                            <a key={index} href={"tel:" + item}>{item}</a>
-                                        )}
-                                    </>
-                                    :
-                                    <>
-                                        <a href={"tel:" + phones}>{phones}</a>
-                                    </>
-                                }
-                            </div>
-                        </div>
-                        <div className="collapse multi-collapse" id="multiCollapseExample2">
-                            {token ?
-                                <div className="col-xl-12 bg-white border rounded p-2">
-                                    <div className="col-xl-12 text-center" style={{ backgroundColor: "rgb(9, 72, 130)" }}>
-                                        <label className="p-2 rounded text-white">Написать сообщение к {productDetails?.user?.name}</label>
-                                    </div>
-                                    <div className="col-xl-12 mt-2 px-0">
-                                        <textarea rows="10" className="form-control" value={messag} onChange={(e) => { setMessage(e.target.value) }}></textarea>
-                                        <Button
-                                            loading={loadings}
-                                            className="btn btn-outline-primary rounded col-12 mt-2"
-                                            onClick={async () => {
-                                                setLoadings(true);
-                                                await postQuickMessage(messag);
-                                                setLoadings(false);
-                                            }}
-                                        >
-                                            Отправить
-                                        </Button>
-                                        <Button
-                                            className="btn text-white rounded mt-2 col-12"
-                                            style={{ backgroundColor: "rgb(9, 72, 130)" }}
-                                            onClick={() => postQuickMessage("Еще актуально?")}
-                                        >
-                                            Еще актуально?
-                                        </Button>
-                                        <Button
-                                            className="btn text-white rounded mt-2 col-12"
-                                            style={{ backgroundColor: "rgb(9, 72, 130)" }}
-                                            onClick={() => postQuickMessage("Обмен интересует?")}
-                                        >
-                                            Обмен интересует?
-                                        </Button>
-                                        <Button
-                                            className="btn text-white rounded mt-2 col-12"
-                                            style={{ backgroundColor: "rgb(9, 72, 130)" }}
-                                            onClick={() => postQuickMessage("Торг возможен?")}
-                                        >
-                                            Торг возможен?
-                                        </Button>
-                                    </div>
-                                </div>
-                                : <div className="bg-white">Авторизуйтесь сначала чтобы написать</div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div> */}
         </div>
     );
 }

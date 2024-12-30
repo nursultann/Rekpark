@@ -11,13 +11,14 @@ export const login = async (phone, password, onSuccess, onError) => {
         if (onError != null) onError(error);
     }
 };
-export const loginGoogle = async (gmail, name, idToken, onSuccess, onError) => {
+export const loginGoogle = async (gmail, name, uid, onSuccess, onError) => {
     try {
         const params = {
-            'email': gmail,
-            'name': name,
-            'id_token': idToken,
-        };
+            "id_token": uid,
+            "email": gmail,
+            "name": name,
+            "provider": "firebase"
+          };
         const response = await ApiClient.post('/firebase-auth', params);
         if (response.status == 200 || response.status == 201) {
             if (onSuccess != null) onSuccess(response.data.data);
@@ -45,7 +46,6 @@ export const passwordChange = async (params, onSuccess = null, onError = null) =
         if (onError != null) onError(error);
     });
 };
-
 export const userDetails = async (params) => {
     try {
         const response = await ApiClient.get('/user', params);
@@ -57,7 +57,6 @@ export const userDetails = async (params) => {
     }
     return null;
 };
-
 export const checkPhone = async (phone) => {
     try {
         const response = await ApiClient.get('/user/check', { 'email': phone });
@@ -77,7 +76,7 @@ export const sendEmailVerification = async (email) => {
     } catch (error) {
         return false;
     }
-}
+};
 export const verifyEmail = async (email, code) => {
     try {
         const response = await ApiClient.post('/user/verify-code', { 'email': email, 'code': code });
@@ -100,7 +99,6 @@ export const deleteAd = async (id) => {
     } catch (error) {
         console.log('Error', error.response);
     }
-
     return null;
 };
 export const userSettings = async (params, onSuccess = null, onError = null) => {
@@ -132,7 +130,6 @@ export const getUserMessages = async (params) => {
     } catch (error) {
         console.log('fetch user details error ', error.response);
     }
-
     return null;
 }
 export const postUserMessage = async (params) => {

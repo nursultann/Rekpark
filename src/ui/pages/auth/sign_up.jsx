@@ -3,16 +3,10 @@ import Navbar from "../../components/navbar";
 import { firebase, auth } from "../../../config/firebase_config";
 import { checkPhone, loginGoogle, register, sendEmailVerification, verifyEmail } from "../../../api/user";
 import { Steps, Button, message, Form, Input, Select } from 'antd';
-
 const clientId = "363682799555-97hlkli04bo0eevlu0br81jtl3vg677a.apps.googleusercontent.com";
-// const countryCodes = [
-//     {"value": "+996", "label": "+996"},
-//     {"value": "+7", "label": "+7"},
-// ];
 const key = 'updatable';
 const { Option } = Select;
 const { Step } = Steps;
-
 const SignUpPage = () => {
     // Inputs
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -37,10 +31,8 @@ const SignUpPage = () => {
         }, (data) => {
             console.log('error', data);
         });
-
         const onLoginError = (data) => {
-
-            // message.error({content:'Номер или пароль указан неверно!', duration: 2});
+            
         };
     }
     const signIn = async () => {
@@ -49,33 +41,9 @@ const SignUpPage = () => {
             message.warning('Такой пользователь уже существует!', 10);
         }
         else if (check == false) {
-            // if (phoneNumber === "" || phoneNumber.length < 9) return;
-            // auth.signInWithPhoneNumber(`+${countrycode + phoneNumber}`, window.verify).then((result) => {
-            //     setFinal(result);
-            //     message.success('Код потверждения отправлен!', 10);
-            //     setCurrent(current + 1);
-            //     setLink(false);
-            //     var t = 59;
-            //     function i() {
-            //         t -= 1;
-            //         setTimer(t);
-            //     }
-            //     var interval = setInterval(i, 1000);
-            //     function time() {
-            //         clearInterval(interval);
-            //         setLink(true);
-            //         message.info('Время вышло!', 10);
-            //         // window.location.reload(); 
-            //     }
-            //     setTimeout(time, 59000);
-            // }).catch((err) => {
-            //     alert(err);
-            //     message.error('Номер указан неверно!', 10);
-            //     window.location.reload()
-            // });
             const verifyEmail = await sendEmailVerification(phoneNumber);
             if (verifyEmail) {
-                message.success('Код потверждения отправлен!', 10);
+                message.success('Код подтверждения отправлен!', 10);
                 setCurrent(current + 1);
                 setLink(false);
                 var t = 59;
@@ -97,18 +65,6 @@ const SignUpPage = () => {
         }
     };
     const validateOtp = async () => {
-        // if (otp === null || final === null)
-        //     return;
-        // final.confirm(otp).then((result) => {
-        //     console.log("OTP", result);
-        //     message.success('Код потверждения подтвержден', 10);
-        //     setUuid(result.user.uid);
-        //     setCurrent(current + 1);
-        //     // result.user.uuid;
-        //     console.log('success ', result);
-        // }).catch((err) => {
-        //     message.error('Код потверждения введен неверно!', 10);
-        // })
         const verify = await verifyEmail(phoneNumber, otp);
         if (verify) {
             message.success('Код потверждения подтвержден', 10);
@@ -237,7 +193,6 @@ const SignUpPage = () => {
             </center>
         </div>
     );
-
     const steps = [
         {
             title: 'Шаг 1',
@@ -256,15 +211,6 @@ const SignUpPage = () => {
         <div>
             <div className="row">
                 <div className="col-xl-12 px-0" style={{ height: "auto" }}>
-                    {/* <div className="col-xl-12 d-flex justify-content-center mt-2 mt-md-3">
-                    <div className="col-xl-6 bg-white xl-rounded-pill shadow-sm py-2 py-3">
-                        <Steps current={current} size="small">
-                            {steps.map(item => (
-                                <Step key={item.title} title={item.title} />
-                            ))}
-                        </Steps>
-                    </div>
-                </div> */}
                     <div className="steps-content col-xl-12 d-flex justify-content-center rounded mt-3 mt-xl-3" style={{ height: "400px" }}>
                         {steps[current].content}
                     </div>

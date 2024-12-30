@@ -45,6 +45,7 @@ import { useChatStore } from './store/chat_store';
 import { useUserStore } from './store/user_store';
 import { Slide, Snackbar } from '@mui/material';
 import notificationSound from './dist/audio/notification.ogg';
+import PublicationHelp from './ui/pages/help';
 const queryClient = new QueryClient();
 ReactModal.setAppElement('#root');
 function TransitionLeft(props) {
@@ -94,6 +95,7 @@ const App = ({ match }) => {
             <Route path="/userAds/:id" element={<UserProductListPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path='/agreement' element={<AgreementPage />} />
+            <Route path="/help" element={<PublicationHelp />} />
           </Route>
           <Route element={<Layout requireAuth={true} />}>
             <Route path="/products/create" element={<CreateProductPage />} />

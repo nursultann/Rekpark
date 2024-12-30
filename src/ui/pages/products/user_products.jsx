@@ -8,7 +8,7 @@ import moment from 'moment';
 import { useParams } from 'react-router-dom';
 
 const UserProductListPage = ({ match }) => {
-    const [product, setProducts] = useState()
+    const [product, setProducts] = useState();
     const [user, setUser] = useState();
     const [socials, setSocials] = useState(null);
     const [phones, setPhones] = useState(null);
@@ -22,7 +22,6 @@ const UserProductListPage = ({ match }) => {
             'user_id': params.id,
             'with': 'user;region;city'
         });
-
         if (_products != null) {
             setProducts(_products);
             console.log("product", _products[0]);
@@ -40,11 +39,9 @@ const UserProductListPage = ({ match }) => {
             }
         }
     }
-
     if (photoGallery != null) {
         console.log("photos", photoGallery);
     }
-
     if (location != null) {
         //map
         var DG = require('2gis-maps');
@@ -58,11 +55,9 @@ const UserProductListPage = ({ match }) => {
             DG.marker([location.latitude, location.longitude]).addTo(map);
         });
     }
-
     useEffect(() => {
         fetchProducts();
-    }, [])
-
+    }, []);
     return (
         <div>
             <div className="container-fluid">
@@ -124,7 +119,6 @@ const UserProductListPage = ({ match }) => {
                                     </> : <></>
                                 }
                             </div>
-
                             {product != null || product != undefined ?
                                 <>
                                     {
