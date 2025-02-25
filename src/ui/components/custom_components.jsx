@@ -49,8 +49,8 @@ const NewCustomAttributeField = ({ item, value, onChange }) => {
         }}
         value={value}
       >
-        {Object.keys(values['options']).map((itm, index) => {
-          return (<option key={index} value={itm}>{itm}</option>);
+        {Object.values(values['options']).map((item, index) => {
+          return (<option key={index} value={item}>{item}</option>);
         })}
       </DefaultSelect>
     );

@@ -1,16 +1,30 @@
 import SocketHelper from "../helpers/socket";
 import ApiClient from "./ApiClient";
-export const login = async (phone, password, onSuccess, onError) => {
+
+export const login = async (email, password, onSuccess, onError) => {
     try {
-        const params = { 'login': phone, 'password': password };
+        const params = { 'login': email, 'password': password };
         const response = await ApiClient.post('/login', params);
         if (response.status == 200 || response.status == 201) {
             if (onSuccess != null) onSuccess(response.data.data);
         }
+
+        return {
+            success: response.status == 200 || response.status == 201,
+            result: response.data?.data,
+            error: response.status == 200 || response.status == 201 ? null : response.data,
+        }
     } catch (error) {
         if (onError != null) onError(error);
+
+        return {
+            success: false,
+            result: null,
+            error: error,
+        }
     }
 };
+
 export const loginGoogle = async (gmail, name, idToken, onSuccess, onError) => {
     try {
         const params = {
@@ -27,12 +41,24 @@ export const loginGoogle = async (gmail, name, idToken, onSuccess, onError) => {
     }
 };
 export const register = async (params, onSuccess = null, onError = null) => {
-    await ApiClient.post('/register', params).then(response => {
+    return ApiClient.post('/register', params).then(response => {
         if (response.status == 200 || response.status == 201) {
             if (onSuccess != null) onSuccess(response.data.data);
         }
+
+        return {
+            success: response.status == 200 || response.status == 201,
+            result: response.data?.data,
+            error: response.status == 200 || response.status == 201 ? null : response.data,
+        }
     }).catch(error => {
         if (onError != null) onError(error);
+
+        return {
+            success: false,
+            result: null,
+            error: error,
+        }
     });
 };
 export const passwordChange = async (params, onSuccess = null, onError = null) => {

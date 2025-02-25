@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const socket = io('https://rekpark.kg:8001', {
+const socket = io('http://127.0.0.1:3000', {
     transports: ['websocket'],
     autoConnect: false,
 });

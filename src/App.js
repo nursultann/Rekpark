@@ -29,6 +29,9 @@ import Gallery from './ui/pages/business/photo_gallery';
 import ArticlesFilterPage from './ui/pages/articles/filter';
 import AgreementPage from './ui/pages/profile/agreement';
 import CompletePage from './ui/pages/profile/complete';
+import CreateBusinessPage from './ui/pages/business/create_business';
+import UserBusinessPage from './ui/pages/business/user_business_page';
+import MainPage from './ui/pages/main_page';
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useEffectOnce } from "react-use";
 import 'moment/locale/ru';
@@ -45,21 +48,28 @@ import { useChatStore } from './store/chat_store';
 import { useUserStore } from './store/user_store';
 import { Slide, Snackbar } from '@mui/material';
 import notificationSound from './dist/audio/notification.ogg';
+import { ToastProvider } from './hooks/useToast';
+
 const queryClient = new QueryClient();
+
 ReactModal.setAppElement('#root');
+
 function TransitionLeft(props) {
   return <Slide {...props} direction="left" />;
 }
+
 const App = ({ match }) => {
   const chatStore = useChatStore();
   const { isAuthenticated } = useUserStore();
   const soundRef = React.useRef(null);
   const [open, setOpen] = React.useState(false);
+
   useEffectOnce(() => {
     if (isAuthenticated) {
       chatStore.listenMessages();
     }
   });
+
   useEffect(() => {
     if (chatStore.lastMessage) {
       const { lastMessage } = chatStore;
@@ -73,78 +83,80 @@ const App = ({ match }) => {
       soundRef.current.play();
     }
   }, [chatStore.lastMessage]);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Layout requireAuth={false} />}>
-            <Route exact path="/" element={<HomePage />} />
-            <Route path="/login" element={<SignInPage />} />
-            <Route path="/register" element={<SignUpPage />} />
-            <Route path="/forgot_password" element={<ForgotPasswordPage />} />
-            <Route path="/products" element={<ProductListPage />} />
-            <Route path="/products/:id" element={<ProductDetailPage />} />
-            <Route path="/category/:id" element={<ProductsFilterPage />} />
-            <Route path="/search-result" element={<ProductsSearchResultPage />} />
-            <Route path="/about_us" element={<AboutPage />} />
-            <Route path="/contacts" element={<ContactsPage />} />
-            <Route path="/articles" element={<ArticleListPage />} />
-            <Route path="/article/:id" element={<ArticleDetailPage />} />
-            <Route path="/articles_categories/:id" element={<ArticlesFilterPage />} />
-            <Route path="/userAds/:id" element={<UserProductListPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path='/agreement' element={<AgreementPage />} />
-          </Route>
-          <Route element={<Layout requireAuth={true} />}>
-            <Route path="/products/create" element={<CreateProductPage />} />
-            <Route path="/products/:id/edit" element={<EditProductPage />} />
-            <Route element={<Profilelayout />}>
-              <Route path="/profile" element={<SettingsPage />} />
-              <Route path="/profile/list" element={<ProfilePage />} />
-              <Route path="/profile/favorites" element={<ProductFavoritesPage />} />
-              <Route path="/profile/wallets" element={<WalletsPage />} />
-              <Route path="/profile/complete" element={<CompletePage />} />
-              <Route path="/profile/chats" element={<ChatListPage />} />
+    <ToastProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout requireAuth={false} />}>
+              <Route exact path="/" element={<HomePage />} />
+              <Route path="/login" element={<SignInPage />} />
+              <Route path="/register" element={<SignUpPage />} />
+              <Route path="/forgot_password" element={<ForgotPasswordPage />} />
+              <Route path="/products" element={<ProductListPage />} />
+              <Route path="/products/:id" element={<ProductDetailPage />} />
+              <Route path="/filter" element={<ProductsFilterPage />} />
+              <Route path="/about_us" element={<AboutPage />} />
+              <Route path="/contacts" element={<ContactsPage />} />
+              <Route path="/articles" element={<ArticleListPage />} />
+              <Route path="/article/:id" element={<ArticleDetailPage />} />
+              <Route path="/userAds/:id" element={<UserProductListPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path='/agreement' element={<AgreementPage />} />
             </Route>
-            <Route path="/chat/:id?/:ad_id" element={<ChatWithUserPage />} />
-            <Route path="/business-profile" element={<BusinessProfile />} />
-            <Route path="/business-settings" element={<BusinessSettings />} />
-            <Route path="/business" element={<SetBusinessProfile />} />
-            <Route path="/business-plan/:id/:period" element={<BusinessPlan />} />
-            <Route path="/gallery" element={<Gallery />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={open}
-        onClose={() => setOpen(false)}
-        autoHideDuration={6000}
-        key={'bottom' + 'right'}
-        TransitionComponent={TransitionLeft}
-      >
-        <div className="alert alert-info flex flex-row gap-2 " role="alert">
-          {chatStore.lastMessage?.senderImage
-            ? <img src={chatStore.lastMessage?.senderImage} className="rounded-full w-10 h-10" />
-            : <div className="rounded-full w-10 h-10 bg-gray-200"></div>}
-          <div className="flex flex-col gap-1">
-            <div
-              className="text-base"
-              style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-            >
-              Новое сообщение от <strong>{chatStore.lastMessage?.senderName}</strong>
+            <Route element={<Layout requireAuth={true} />}>
+              <Route path="/products/create" element={<CreateProductPage />} />
+              <Route path="/products/:id/edit" element={<EditProductPage />} />
+              <Route element={<Profilelayout />}>
+                <Route path="/profile" element={<SettingsPage />} />
+                <Route path="/profile/list" element={<ProfilePage />} />
+                <Route path="/profile/favorites" element={<ProductFavoritesPage />} />
+                <Route path="/profile/wallets" element={<WalletsPage />} />
+                <Route path="/profile/complete" element={<CompletePage />} />
+                <Route path="/profile/chats" element={<ChatListPage />} />
+              </Route>
+              <Route path="/chat/:id?/:ad_id" element={<ChatWithUserPage />} />
+              <Route path="/business-profile" element={<UserBusinessPage />} />
+              <Route path="/business-settings" element={<BusinessSettings />} />
+              <Route path="/business" element={<SetBusinessProfile />} />
+              <Route path="/create-business" element={<CreateBusinessPage />} />
+              <Route path="/business-plan/:id/:period" element={<BusinessPlan />} />
+              <Route path="/gallery" element={<Gallery />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          open={open}
+          onClose={() => setOpen(false)}
+          autoHideDuration={6000}
+          key={'bottom' + 'right'}
+          TransitionComponent={TransitionLeft}
+        >
+          <div className="alert alert-info flex flex-row gap-2 " role="alert">
+            {chatStore.lastMessage?.senderImage
+              ? <img src={chatStore.lastMessage?.senderImage} className="rounded-full w-10 h-10" />
+              : <div className="rounded-full w-10 h-10 bg-gray-200"></div>}
+            <div className="flex flex-col gap-1">
+              <div
+                className="text-base"
+                style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+              >
+                Новое сообщение от <strong>{chatStore.lastMessage?.senderName}</strong>
+              </div>
+              <p
+                className="text-sm text-gray-500"
+                style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+              >
+                {chatStore.lastMessage?.message}
+              </p>
             </div>
-            <p
-              className="text-sm text-gray-500"
-              style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-            >
-              {chatStore.lastMessage?.message}
-            </p>
           </div>
-        </div>
-      </Snackbar>
-      <audio ref={soundRef} id="audio" src={notificationSound} preload="auto"></audio>
-    </QueryClientProvider >
+        </Snackbar>
+        <audio ref={soundRef} id="audio" src={notificationSound} preload="auto"></audio>
+      </QueryClientProvider >
+    </ToastProvider>
   );
 }
 export default App;

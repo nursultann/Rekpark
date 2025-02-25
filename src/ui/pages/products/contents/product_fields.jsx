@@ -213,7 +213,7 @@ const ProductFields = ({ loading = false, onSend }) => {
 
   const attributes = checkAttributes(categories);
 
-  console.log('ca_groups.attributes', selectedCategory?.ca_groups?.map((group) => group));
+  console.log('ca_groups.attributes', attributes);
 
   return (
     <>
