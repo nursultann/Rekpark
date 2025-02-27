@@ -26,10 +26,12 @@ const Navbar = ({ onSignIn, onProfile }) => {
   const handleSearch = (e) => {
     e.preventDefault();
     
-    if (searchQuery) {
-      navigate(`/filter?q=${searchQuery}`);
-    }
+    navigate(`/filter`);
   };
+
+  const handleAddProduct = () => {
+    navigate("/products/create");
+  }
 
   return (
     <header className="sticky top-0 z-40 bg-white shadow-sm">
@@ -97,9 +99,12 @@ const Navbar = ({ onSignIn, onProfile }) => {
             >
               <User className="w-6 h-6" />
             </button>
-            <button className="flex flex-row justify-content-center align-items-center gap-2  px-3 xs:px-1 xs:gap-0 py-2 rounded-2xl border border-zinc-100">
+            <button 
+              onClick={handleAddProduct}
+              className="flex flex-row justify-content-center align-items-center gap-2  px-3 xs:px-1 xs:gap-0 py-2 rounded-2xl border border-zinc-100"
+            >
               <Plus className="w-5 h-5" />
-              <div className="d-none d-md-block">
+              <div className=" text-sm max-w-xs" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   Разместить объявление
                 </div>
             </button>

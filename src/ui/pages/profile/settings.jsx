@@ -45,6 +45,7 @@ const SettingsPage = () => {
     const [imageUrl, setImageurl] = useState();
     const [name, setName] = useState(user != null ? user.name : "");
     const [phone, setPhone] = useState(user != null ? user.phone : "");
+    const [email, setEmail] = useState(user != null ? user.email : "");
     const [userid, setUserid] = useState();
     const [file, setFile] = useState();
 
@@ -86,6 +87,11 @@ const SettingsPage = () => {
         if (file != null) {
             formData.append('avatar', file);
         }
+        
+        if (phone) {
+            formData.append('phone', phone);
+        }
+
         if (name != null || file != null) {
             formData.append('_method', 'PATCH');
             setLoading(true);
@@ -94,14 +100,13 @@ const SettingsPage = () => {
                     setTimeout(() => {
                         message.success({ content: 'Успешно!', key, duration: 2 });
                     }, 1000);
-                    setLoading(false);
                     userState.fetchUser()
                 },
                 function (data) {
                     console.log("Error");
-                    setLoading(false);
                 },
             );
+            setLoading(false);
         }
     }
 
@@ -145,7 +150,16 @@ const SettingsPage = () => {
                         </div>
                     )}
                     placeholder="Номер телефона"
-                    value={formatPhoneNumber(phone)}
+                    value={phone}
+                    onChange={setPhone}
+                />
+
+                <div className="h-[20px]" />
+                <Input
+                    label="Email:"
+                    placeholder="Введите email"
+                    value={email}
+                    onChange={setEmail}
                     enabled={false}
                 />
 

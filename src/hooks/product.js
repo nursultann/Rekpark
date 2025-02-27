@@ -78,7 +78,8 @@ const useProducts = (initialFilters = {}) => {
   const [pagination, setPagination] = useState({
     currentPage: 1,
     total: 0,
-    perPage: 15
+    perPage: 15,
+    count: 0
   });
   const [filters, setFilters] = useState({
     categories: '', // Comma-separated category IDs
@@ -105,14 +106,14 @@ const useProducts = (initialFilters = {}) => {
       // Build query parameters
       const params = {
         page,
-        limit: pagination.perPage,
+        per_page: pagination.perPage,
         ...filters,
         filter_attributes: filters.filter_attributes && Object.keys(filters.filter_attributes).length > 0 
           ? JSON.stringify(filters.filter_attributes)
           : undefined,
         car_attributes: filters.car_attributes && Object.keys(filters.car_attributes).length > 0
           ? JSON.stringify(filters.car_attributes)
-          : undefined
+          : undefined,
       };
 
       // Remove undefined/null values
@@ -122,14 +123,16 @@ const useProducts = (initialFilters = {}) => {
         }
       });
 
-      const response = await axios.get('/products-list', { params });
-
-      setProducts(response.data.data);
-      setPagination({
-        ...pagination,
-        currentPage: page,
-        total: response.data.meta?.total || 0
-      });
+      const response = await axios.get('/products-paginated', { params });
+      
+      const result = response.data.data;
+      setPagination((p) => ({
+        perPage: result.pagination.per_page,
+        currentPage: result.pagination.current_page,
+        total: response.pagination?.total || 0,
+        count: result.pagination.count
+      }));
+      setProducts(result.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch products');
     } finally {

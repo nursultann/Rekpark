@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Check, Edit, Plus, Trash, Calendar, MapPin, Mail, Phone, Globe, Package, Instagram, Facebook, X } from 'lucide-react';
 import useToast from '../../../hooks/useToast';
-import useCurrentUserBusiness from '../../../hooks/useCurrentUserBusiness';
+import useBusinessProfile from '../../../hooks/useBusinessProfile';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -39,24 +39,18 @@ const UserBusinessPage = () => {
     const [logoPreview, setLogoPreview] = useState(null);
     const [coverPreview, setCoverPreview] = useState(null);
 
-    // Use our new hook to manage business data
+    // Use the new useBusinessProfile hook
     const {
-        businessData,
+        businessProfile,
         loading,
         error,
-        updateUserBusinessAccount,
-        cancelBusinessAccount,
-        fetchBusinessProfiles,
+        updateBusinessProfile,
+        cancelBusinessSubscription,
         addPhotoGallery,
         deletePhotoGallery,
-        businessProfiles
-    } = useCurrentUserBusiness({
-        onSuccess: (data) => {
-            if (data && !Array.isArray(data)) {
-                updateFormDataFromBusiness(data);
-            }
-        }
-    });
+        refreshBusinessProfile,
+        isActive
+    } = useBusinessProfile();
 
     // Helper function to update form data from business object
     const updateFormDataFromBusiness = (business) => {
@@ -92,10 +86,10 @@ const UserBusinessPage = () => {
 
     // Load business data into form when it becomes available
     useEffect(() => {
-        if (businessData) {
-            updateFormDataFromBusiness(businessData);
+        if (businessProfile) {
+            updateFormDataFromBusiness(businessProfile);
         }
-    }, [businessData]);
+    }, [businessProfile]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -171,17 +165,21 @@ const UserBusinessPage = () => {
         e.preventDefault();
 
         try {
-            await updateUserBusinessAccount(formData);
-            toast({
-                title: "Success",
-                description: "Business profile updated successfully",
-                variant: "success"
-            });
-            setIsEditing(false);
+            const result = await updateBusinessProfile(formData);
+            if (result.success) {
+                toast({
+                    title: "Success",
+                    description: "Business profile updated successfully",
+                    variant: "success"
+                });
+                setIsEditing(false);
+            } else {
+                throw new Error(result.error);
+            }
         } catch (err) {
             toast({
                 title: "Error",
-                description: err.response?.data?.message || "Failed to update business profile",
+                description: err.message || "Failed to update business profile",
                 variant: "destructive"
             });
         }
@@ -190,17 +188,21 @@ const UserBusinessPage = () => {
     const handleCancel = async () => {
         if (window.confirm("Are you sure you want to cancel your business account? This action cannot be undone.")) {
             try {
-                await cancelBusinessAccount();
-                toast({
-                    title: "Success",
-                    description: "Business account cancelled successfully",
-                    variant: "success"
-                });
-                fetchBusinessProfiles();
+                const result = await cancelBusinessSubscription();
+                if (result.success) {
+                    toast({
+                        title: "Success",
+                        description: "Business account cancelled successfully",
+                        variant: "success"
+                    });
+                    refreshBusinessProfile();
+                } else {
+                    throw new Error(result.error);
+                }
             } catch (err) {
                 toast({
                     title: "Error",
-                    description: err.response?.data?.message || "Failed to cancel business account",
+                    description: err.message || "Failed to cancel business account",
                     variant: "destructive"
                 });
             }
@@ -212,27 +214,27 @@ const UserBusinessPage = () => {
         setUploadingGallery(true);
 
         try {
-            await addPhotoGallery({
-                title: galleryTitle,
-                images: galleryImages
-            });
+            const result = await addPhotoGallery(galleryTitle, galleryImages);
+            if (result.success) {
+                toast({
+                    title: "Success",
+                    description: "Photo gallery added successfully",
+                    variant: "success"
+                });
 
-            toast({
-                title: "Success",
-                description: "Photo gallery added successfully",
-                variant: "success"
-            });
-
-            setGalleryTitle('');
-            setGalleryImages([]);
-            setUploadingGallery(false);
-            fetchBusinessProfiles();
+                setGalleryTitle('');
+                setGalleryImages([]);
+                refreshBusinessProfile();
+            } else {
+                throw new Error(result.error);
+            }
         } catch (err) {
             toast({
                 title: "Error",
-                description: err.response?.data?.message || "Failed to add photo gallery",
+                description: err.message || "Failed to add photo gallery",
                 variant: "destructive"
             });
+        } finally {
             setUploadingGallery(false);
         }
     };
@@ -240,24 +242,28 @@ const UserBusinessPage = () => {
     const handleDeleteGallery = async (galleryId) => {
         if (window.confirm("Are you sure you want to delete this gallery? This action cannot be undone.")) {
             try {
-                await deletePhotoGallery(galleryId);
-                toast({
-                    title: "Success",
-                    description: "Photo gallery deleted successfully",
-                    variant: "success"
-                });
-                fetchBusinessProfiles();
+                const result = await deletePhotoGallery(galleryId);
+                if (result.success) {
+                    toast({
+                        title: "Success",
+                        description: "Photo gallery deleted successfully",
+                        variant: "success"
+                    });
+                    refreshBusinessProfile();
+                } else {
+                    throw new Error(result.error);
+                }
             } catch (err) {
                 toast({
                     title: "Error",
-                    description: err.response?.data?.message || "Failed to delete photo gallery",
+                    description: err.message || "Failed to delete photo gallery",
                     variant: "destructive"
                 });
             }
         }
     };
 
-    if (loading && !businessData && !businessProfiles.length) {
+    if (loading && !businessProfile) {
         return (
             <div className="flex justify-center items-center h-64">
                 <div className="animate-spin w-8 h-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
@@ -265,7 +271,7 @@ const UserBusinessPage = () => {
         );
     }
 
-    if (error && !businessData && !businessProfiles.length) {
+    if (error && !businessProfile) {
         return (
             <div className="p-4 bg-red-50 text-red-800 rounded-md flex items-center">
                 <AlertCircle className="w-5 h-5 mr-2" />
@@ -275,7 +281,7 @@ const UserBusinessPage = () => {
     }
 
     // If no business account exists
-    if (!loading && !businessData && (!businessProfiles || businessProfiles.length === 0)) {
+    if (!loading && !businessProfile) {
         return (
             <div className="max-w-4xl mx-auto p-4">
                 <div className="text-center p-8 border rounded-lg shadow-sm">
@@ -300,7 +306,7 @@ const UserBusinessPage = () => {
 
     return (
         <div className="max-w-6xl mx-auto p-4">
-            {!businessData ? (
+            {!businessProfile ? (
                 <div className="flex justify-center items-center h-64">
                     <div className="animate-spin w-8 h-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
                 </div>
@@ -328,14 +334,14 @@ const UserBusinessPage = () => {
                                 )}
                             </div>
                             <div>
-                                <h1 className="text-2xl font-bold text-white">{businessData.name}</h1>
+                                <h1 className="text-2xl font-bold text-white">{businessProfile.name}</h1>
                                 <div className="flex space-x-2 text-white/80 text-sm">
                                     <span className="bg-blue-500/20 px-2 py-0.5 rounded">
-                                        {businessData.businessPlan?.name || 'Free Plan'}
+                                        {businessProfile.businessPlan?.name || 'Free Plan'}
                                     </span>
-                                    {businessData.end_at && (
+                                    {businessProfile.end_at && (
                                         <span className="bg-gray-500/20 px-2 py-0.5 rounded">
-                                            Expires: {new Date(businessData.end_at).toLocaleDateString()}
+                                            Expires: {new Date(businessProfile.end_at).toLocaleDateString()}
                                         </span>
                                     )}
                                 </div>
@@ -664,70 +670,70 @@ const UserBusinessPage = () => {
                                             {/* Business Description */}
                                             <div>
                                                 <h3 className="text-lg font-medium mb-3">About</h3>
-                                                <p className="text-gray-700 whitespace-pre-line">{businessData.description}</p>
+                                                <p className="text-gray-700 whitespace-pre-line">{businessProfile.description}</p>
                                             </div>
 
                                             {/* Contact Information */}
                                             <div>
                                                 <h3 className="text-lg font-medium mb-3">Contact Information</h3>
                                                 <div className="space-y-3">
-                                                    {businessData.phones && (
+                                                    {businessProfile.phones && (
                                                         <div className="flex items-start">
                                                             <Phone className="w-5 h-5 text-gray-500 mr-3 mt-0.5" />
                                                             <div>
                                                                 <h4 className="text-sm font-medium text-gray-700">Phone</h4>
                                                                 <p className="text-gray-600">
-                                                                    {Array.isArray(businessData.phones)
-                                                                        ? businessData.phones.join(', ')
-                                                                        : businessData.phones}
+                                                                    {Array.isArray(businessProfile.phones)
+                                                                        ? businessProfile.phones.join(', ')
+                                                                        : businessProfile.phones}
                                                                 </p>
                                                             </div>
                                                         </div>
                                                     )}
 
-                                                    {businessData.email && (
+                                                    {businessProfile.email && (
                                                         <div className="flex items-start">
                                                             <Mail className="w-5 h-5 text-gray-500 mr-3 mt-0.5" />
                                                             <div>
                                                                 <h4 className="text-sm font-medium text-gray-700">Email</h4>
-                                                                <p className="text-gray-600">{businessData.email}</p>
+                                                                <p className="text-gray-600">{businessProfile.email}</p>
                                                             </div>
                                                         </div>
                                                     )}
 
-                                                    {businessData.site && (
+                                                    {businessProfile.site && (
                                                         <div className="flex items-start">
                                                             <Globe className="w-5 h-5 text-gray-500 mr-3 mt-0.5" />
                                                             <div>
                                                                 <h4 className="text-sm font-medium text-gray-700">Website</h4>
                                                                 <a
-                                                                    href={businessData.site.startsWith('http') ? businessData.site : `https://${businessData.site}`}
+                                                                    href={businessProfile.site.startsWith('http') ? businessProfile.site : `https://${businessProfile.site}`}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className="text-blue-600 hover:underline"
                                                                 >
-                                                                    {businessData.site}
+                                                                    {businessProfile.site}
                                                                 </a>
                                                             </div>
                                                         </div>
                                                     )}
 
-                                                    {businessData.whatsapp && (
+                                                    {businessProfile.whatsapp && (
                                                         <div className="flex items-start">
                                                             <Phone className="w-5 h-5 text-green-500 mr-3 mt-0.5" />
                                                             <div>
                                                                 <h4 className="text-sm font-medium text-gray-700">WhatsApp</h4>
-                                                                <p className="text-gray-600">{businessData.whatsapp}</p>
+                                                                <p className="text-gray-600">{businessProfile.whatsapp}</p>
                                                             </div>
                                                         </div>
                                                     )}
 
-                                                    {businessData.address && (
+                                                    {businessProfile.address && (
                                                         <div className="flex items-start">
                                                             <MapPin className="w-5 h-5 text-gray-500 mr-3 mt-0.5" />
                                                             <div>
                                                                 <h4 className="text-sm font-medium text-gray-700">Address</h4>
-                                                                <p className="text-gray-600">{businessData.address}</p>
+                                                                <p className="text-gray-600">{businessProfile.address}</p>
                                                             </div>
                                                         </div>
                                                     )}
@@ -735,13 +741,13 @@ const UserBusinessPage = () => {
                                             </div>
 
                                             {/* Social Media */}
-                                            {businessData.socials && Object.values(businessData.socials).some(val => val) && (
+                                            {businessProfile.socials && Object.values(businessProfile.socials).some(val => val) && (
                                                 <div>
                                                     <h3 className="text-lg font-medium mb-3">Social Media</h3>
                                                     <div className="flex space-x-4">
-                                                        {businessData.socials.instagram && (
+                                                        {businessProfile.socials.instagram && (
                                                             <a
-                                                                href={`https://instagram.com/${businessData.socials.instagram}`}
+                                                                href={`https://instagram.com/${businessProfile.socials.instagram}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 className="text-pink-600 hover:text-pink-700"
@@ -750,9 +756,9 @@ const UserBusinessPage = () => {
                                                             </a>
                                                         )}
 
-                                                        {businessData.socials.facebook && (
+                                                        {businessProfile.socials.facebook && (
                                                             <a
-                                                                href={`https://facebook.com/${businessData.socials.facebook}`}
+                                                                href={`https://facebook.com/${businessProfile.socials.facebook}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 className="text-blue-600 hover:text-blue-700"
@@ -761,9 +767,9 @@ const UserBusinessPage = () => {
                                                             </a>
                                                         )}
 
-                                                        {businessData.socials.twitter && (
+                                                        {businessProfile.socials.twitter && (
                                                             <a
-                                                                href={`https://twitter.com/${businessData.socials.twitter}`}
+                                                                href={`https://twitter.com/${businessProfile.socials.twitter}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 className="text-blue-400 hover:text-blue-500"
@@ -778,10 +784,10 @@ const UserBusinessPage = () => {
                                             {/* Business Hours */}
                                             <div>
                                                 <h3 className="text-lg font-medium mb-3">Business Hours</h3>
-                                                {businessData.schedule ? (
+                                                {businessProfile.schedule ? (
                                                     <div className="space-y-2">
                                                         {daysOfWeek.map(day => {
-                                                            const daySchedule = businessData.schedule[day];
+                                                            const daySchedule = businessProfile.schedule[day];
                                                             if (!daySchedule) return null;
 
                                                             return (
@@ -811,18 +817,18 @@ const UserBusinessPage = () => {
                                                         <Package className="w-5 h-5 text-blue-500 mr-3 mt-0.5" />
                                                         <div>
                                                             <h4 className="text-sm font-medium text-gray-700">Current Plan</h4>
-                                                            <p className="text-gray-600 font-medium">{businessData.businessPlan?.name || 'Free Plan'}</p>
-                                                            {businessData.businessPlan?.description && (
-                                                                <p className="text-sm text-gray-500 mt-1">{businessData.businessPlan.description}</p>
+                                                            <p className="text-gray-600 font-medium">{businessProfile.businessPlan?.name || 'Free Plan'}</p>
+                                                            {businessProfile.businessPlan?.description && (
+                                                                <p className="text-sm text-gray-500 mt-1">{businessProfile.businessPlan.description}</p>
                                                             )}
                                                         </div>
                                                     </div>
 
                                                     <div className="mt-4">
                                                         <h4 className="text-sm font-medium text-gray-700 mb-2">Plan Features</h4>
-                                                        {businessData.features && businessData.features.length > 0 ? (
+                                                        {businessProfile.features && businessProfile.features.length > 0 ? (
                                                             <ul className="space-y-1">
-                                                                {businessData.features.map((feature, index) => (
+                                                                {businessProfile.features.map((feature, index) => (
                                                                     <li key={index} className="flex items-start">
                                                                         <Check className="w-4 h-4 text-green-500 mr-2 mt-0.5" />
                                                                         <span className="text-sm text-gray-600">{feature.name}</span>
@@ -834,12 +840,12 @@ const UserBusinessPage = () => {
                                                         )}
                                                     </div>
 
-                                                    {businessData.end_at && (
+                                                    {businessProfile.end_at && (
                                                         <div className="mt-4 pt-4 border-t border-gray-200">
                                                             <div className="flex items-center">
                                                                 <Calendar className="w-5 h-5 text-gray-500 mr-2" />
                                                                 <span className="text-sm text-gray-700">
-                                                                    Expires on {new Date(businessData.end_at).toLocaleDateString()}
+                                                                    Expires on {new Date(businessProfile.end_at).toLocaleDateString()}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -851,11 +857,156 @@ const UserBusinessPage = () => {
                                 </div>
                             </div>
                         )}
+
+                        {activeTab === 'gallery' && (
+                            <div className="space-y-8">
+                                {/* Add Photo Gallery Form */}
+                                <div className="bg-white p-6 rounded-lg border border-gray-200">
+                                    <h3 className="text-lg font-medium mb-4">Add New Photo Gallery</h3>
+                                    <form onSubmit={handleAddGallery} className="space-y-4">
+                                        <div>
+                                            <label htmlFor="galleryTitle" className="block text-sm font-medium text-gray-700 mb-1">
+                                                Gallery Title
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="galleryTitle"
+                                                value={galleryTitle}
+                                                onChange={(e) => setGalleryTitle(e.target.value)}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                                required
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label htmlFor="galleryImages" className="block text-sm font-medium text-gray-700 mb-1">
+                                                Gallery Images
+                                            </label>
+                                            <input
+                                                type="file"
+                                                id="galleryImages"
+                                                multiple
+                                                accept="image/*"
+                                                onChange={handleGalleryImagesChange}
+                                                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0 file:text-sm file:font-semibold
+                                    file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                required
+                                            />
+                                            {galleryImages.length > 0 && (
+                                                <p className="mt-2 text-sm text-gray-500">{galleryImages.length} images selected</p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <button
+                                                type="submit"
+                                                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center"
+                                                disabled={uploadingGallery}
+                                            >
+                                                {uploadingGallery ? (
+                                                    <>
+                                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                                                        Uploading...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Plus className="w-4 h-4 mr-2" />
+                                                        Add Gallery
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                {/* Existing Galleries */}
+                                {businessProfile.galleries && businessProfile.galleries.length > 0 ? (
+                                    <div className="space-y-6">
+                                        <h3 className="text-lg font-medium">Photo Galleries</h3>
+                                        
+                                        {businessProfile.galleries.map((gallery) => (
+                                            <div key={gallery.id} className="bg-white p-4 rounded-lg border border-gray-200">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <h4 className="text-md font-medium">{gallery.title}</h4>
+                                                    <button
+                                                        onClick={() => handleDeleteGallery(gallery.id)}
+                                                        className="text-red-600 hover:text-red-800 flex items-center text-sm"
+                                                    >
+                                                        <Trash className="w-4 h-4 mr-1" />
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                                
+                                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                    {gallery.images && gallery.images.map((image) => (
+                                                        <div key={image.id} className="aspect-square rounded-md overflow-hidden">
+                                                            <img
+                                                                src={image.url}
+                                                                alt={`Gallery image ${image.id}`}
+                                                                className="w-full h-full object-cover"
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8 text-gray-500">
+                                        <p>No photo galleries yet. Add your first gallery above!</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {activeTab === 'settings' && (
+                            <div className="max-w-2xl mx-auto">
+                                <div className="bg-white p-6 rounded-lg border border-gray-200">
+                                    <h3 className="text-lg font-medium mb-6">Account Settings</h3>
+                                    
+                                    {/* Plan Upgrade */}
+                                    <div className="mb-8">
+                                        <h4 className="text-md font-medium mb-2">Business Plan</h4>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            You are currently on the {businessProfile.businessPlan?.name || 'Free Plan'} plan.
+                                            {businessProfile.end_at && (
+                                                <> Your plan expires on {new Date(businessProfile.end_at).toLocaleDateString()}.</>
+                                            )}
+                                        </p>
+                                        
+                                        <button
+                                            onClick={() => window.location.href = '/business/plans'}
+                                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                                        >
+                                            Upgrade Plan
+                                        </button>
+                                    </div>
+                                    
+                                    {/* Cancel Business Account */}
+                                    <div className="border-t pt-6">
+                                        <h4 className="text-md font-medium mb-2 text-red-600">Cancel Business Account</h4>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            Warning: Cancelling your business account will remove all your business information
+                                            and cannot be undone. Your subscription will be cancelled at the end of the billing period.
+                                        </p>
+                                        
+                                        <button
+                                            onClick={handleCancel}
+                                            className="bg-red-100 text-red-700 px-4 py-2 rounded-md hover:bg-red-200 flex items-center"
+                                        >
+                                            <Trash className="w-4 h-4 mr-2" />
+                                            Cancel Business Account
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </>
             )}
         </div>
     );
-}
+};
 
 export default UserBusinessPage;

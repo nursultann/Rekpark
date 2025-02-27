@@ -25,7 +25,7 @@ function Profilelayout({ children }) {
     }
 
     return (
-        <div className="col-12 mt-3 px-0">
+        <div className="col-12 mt-3 px-0 max-w-[1024px] mx-auto">
             <div className="col-12 px-0 ">
                 <div className="col-12 px-0 pb-3">
                     <div

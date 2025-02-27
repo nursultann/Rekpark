@@ -1,303 +1,465 @@
-import React from "react";
-import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
-import { Tabs, notification } from 'antd';
+import React, { useEffect, useState, useRef } from "react";
+import { Link } from 'react-router-dom';
+import { notification } from 'antd';
 import moment from "moment-timezone";
 import { Helmet } from "react-helmet";
 import { useEffectOnce } from "react-use";
 import classNames from "classnames";
-import { deleteChat, getUserChats, getUserMessages, postUserMessage, readMessages, userDetails } from "../../../api/user";
-import * as api from "../../../api";
-import { ChatBubble, ChatBubbleOutlined, ChatOutlined, MessageOutlined, PersonOutline } from "@mui/icons-material";
-import personOutline from '../../../dist/icons/person-outline.svg';
+import { deleteChat, postUserMessage } from "../../../api/user";
 import { useUserStore } from "../../../store/user_store";
 import { useChatStore } from "../../../store/chat_store";
+import { 
+  MessageCircle, 
+  Send, 
+  User, 
+  Trash2, 
+  Search, 
+  MoreVertical, 
+  Clock, 
+  Check, 
+  AlertCircle,
+  Info
+} from "lucide-react";
 
-const openNotificationWithIcon = (type, info) => {
-    notification[type]({
-        message: info,
-    });
+const openNotification = (type, message, description = "") => {
+  notification[type]({
+    message,
+    description,
+    placement: "bottomRight",
+  });
 };
 
 const ChatListPage = () => {
-    const user = useUserStore().user;
-    const { chats, selectedChat, fetchChats, setSelectedChat, messages, fetchMessages, lastMessage } = useChatStore();
+  const { user } = useUserStore();
+  const { 
+    chats, 
+    selectedChat, 
+    fetchChats, 
+    setSelectedChat, 
+    messages, 
+    fetchMessages, 
+    sendMessage,
+    deleteChat 
+  } = useChatStore();
 
-    //const [selectedChat, setSelectedChat] = useState();
+  const [loading, setLoading] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [showMobileChat, setShowMobileChat] = useState(false);
 
-    const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const getPartner = (chat) => {
+    return chat?.partner?.id === user?.id ? chat?.user : chat?.partner;
+  };
 
-    const partner = selectedChat?.partner?.id == user.id ? selectedChat?.user : selectedChat?.partner;
+  const partner = selectedChat ? getPartner(selectedChat) : null;
 
-    const removeChat = async (id) => {
-        const remove = await deleteChat(id);
-        console.log(remove);
-        if (remove != null) {
-            openNotificationWithIcon('success', 'Чат успешно удалён!');
-        }else{
-            openNotificationWithIcon('error', 'Что-то пошло не так!');
-        }
+  const handleSendMessage = async (message) => {
+    if (!message.trim()) {
+      openNotification("warning", "Пустое сообщение", "Пожалуйста, введите текст сообщения");
+      return;
     }
 
-    useEffect(() => {
-        const resizeListener = async () => {
-            setInnerWidth(window.innerWidth);
-        };
-
-        window.addEventListener('resize', resizeListener);
-
-        return () => {
-            window.removeEventListener('resize', resizeListener);
-        }
-    }, []);
-
-    const postMessage = async (message) => {
-        if (message != "" && message != null) {
-            const sendMessage = await postUserMessage({ 'user_id': partner?.id, 'message': message });
-            console.log('send message', sendMessage);
-            if (sendMessage != null) {
-                fetchMessages(partner.id);
-            }
-            openNotificationWithIcon('success', 'Сообщение отправлено!');
-        } else {
-            openNotificationWithIcon('error', 'Заполните поле для сообщения!');
-        }
+    setLoading(true);
+    try {
+      await sendMessage(partner.id, message);
+      openNotification("success", "Сообщение отправлено");
+    } catch (error) {
+      openNotification("error", "Ошибка отправки", "Не удалось отправить сообщение");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    useEffect(() => {
-        if (selectedChat) {
-            console.log('selected chat', partner?.id);
+  const handleDeleteChat = async (chatId) => {
+    try {
+      await deleteChat(chatId);
+      openNotification("success", "Чат удален");
+      
+      // If the deleted chat was selected, clear selection
+      if (selectedChat?.id === chatId) {
+        setSelectedChat(null);
+      }
+      
+      // Refresh chat list
+      fetchChats();
+      
+    } catch (error) {
+      openNotification("error", "Ошибка удаления", "Не удалось удалить чат");
+    }
+    setDeleteConfirmId(null);
+  };
 
-            fetchMessages(partner?.id);
-        }
-    }, [selectedChat]);
+  const selectChat = (chat) => {
+    setSelectedChat(chat);
+    if (windowWidth < 768) {
+      setShowMobileChat(true);
+    }
+  };
 
+  const filteredChats = chats.filter(chat => {
+    const chatPartner = getPartner(chat);
+    return chatPartner?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
-    useEffectOnce(() => {
-        moment.locale('ru')
-        fetchChats()
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setWindowWidth(width);
+      
+      // Reset mobile view on larger screens
+      if (width >= 768) {
+        setShowMobileChat(false);
+      }
+    };
 
-        return () => {
-            setSelectedChat(null);
-        }
-    });
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    return (
-        <>
-            <Helmet>
-                <title>Сообщение пользователя</title>
-            </Helmet>
+  useEffect(() => {
+    if (selectedChat && partner?.id) {
+      fetchMessages(partner.id);
+    }
+  }, [selectedChat]);
 
-            <Contents
-                chats={chats}
-                user={user}
-                messages={messages}
-                selectedChat={selectedChat}
-                onSelectedChatChange={(chat) => {
-                    setSelectedChat(null);
-                    setTimeout(() => {
-                        setSelectedChat(chat);
-                    }, 100);
-                }}
-                onSendMessage={postMessage}
-            />
+  useEffectOnce(() => {
+    moment.locale('ru');
+    fetchChats();
 
-            <div className="h-[50px]" />
-        </>
-    );
-}
+    return () => {
+      setSelectedChat(null);
+    };
+  });
 
-function Contents({ chats, user, messages, selectedChat, onSelectedChatChange, onSendMessage, onRemoveChat }) {
-    const [message, setMessage] = useState('');
-    const scrollRef = React.useRef();
+  // Mobile back button
+  const handleBackToList = () => {
+    setShowMobileChat(false);
+  };
 
-    useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [messages]);
+  return (
+    <>
+      <Helmet>
+        <title>Сообщения | RekPark</title>
+      </Helmet>
 
-    return (
-        <div className="h-[750px] w-full bg-[#587fb3] rounded-2xl flex flex-row gap-3 p-3">
-            <div className="w-[40%] flex flex-col gap-2">
-                {chats?.length == 0 && (
-                    <></>
-                )}
+      <div className="container mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Сообщения</h1>
 
-                {chats?.map((item, i) => {
-                    return (
-                        <div key={i}>
-                            <ChatListItem
-                                item={item}
-                                isSelected={selectedChat?.id == item.id}
-                                onClick={() => {
-                                    onSelectedChatChange(item);
-                                }}
-                                userId={user?.id}
-                            />
-                        </div>
-                    )
-                })}
-
-            </div>
-
-            <div className="w-[60%] flex flex-col gap-2 bg-zinc-100 rounded-2xl">
-                {selectedChat && (
-                    <div className="flex flex-col gap-2 h-full w-full">
-                        <div className="flex-1 overflow-y-scroll">
-                            <div
-                                ref={scrollRef}
-                                className="flex flex-col gap-2 expand  px-3 pt-1 "
-                            >
-                                <div className="pt-1" />
-
-                                {messages?.map((item, index) => {
-                                    const isMe = item.sender?.id == user?.id;
-
-                                    return (
-                                        <div
-                                            key={index}
-                                            className={classNames(
-                                                "flex flex-row gap-2 items-center w-full animate__animated animate__fadeIn",
-                                                { 'justify-end': isMe, 'justify-start': !isMe },
-                                            )}
-                                        >
-                                            <div
-                                                className={classNames(
-                                                    "flex flex-row gap-2 items-center p-[13px] bg-slate-500 rounded-[10px] max-w-[50%]",
-                                                    { 'justify-end': isMe, 'justify-start': !isMe },
-                                                )}
-                                            >
-                                                <div
-                                                    className="text-white text-xs font-normal w-full break-words"
-                                                >
-                                                    {item.message}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        </div>
-
-                        <div className="flex-none w-full mb-3 px-3">
-                            <div className="flex flex-row gap-2 items-center justify-center w-full">
-                                <div className="flex flex-row gap-2 items-center justify-center w-full bg-neutral-200 p-1 rounded-[20px]">
-                                    <input
-                                        className="w-full h-[40px] border-2 border-none focus:outline-none focus:border-primary-500 px-3 bg-transparent"
-                                        placeholder="Сообщение"
-                                        value={message}
-                                        onChange={(e) => {
-                                            setMessage(e.target.value);
-                                        }}
-                                        onKeyPress={async (e) => {
-                                            if (e.key == 'Enter') {
-                                                await onSendMessage(message);
-                                                setMessage('');
-                                            }
-                                        }}
-                                    />
-                                    <button
-                                        className="w-[40px] h-[40px] rounded-[15px] p-3 bg-primary text-white flex items-center justify-center"
-                                        onClick={async () => {
-                                            await onSendMessage(message);
-                                            setMessage('');
-                                        }}
-                                    >
-                                        <ChatBubbleOutlined />
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                ) || (
-                        <div className="flex flex-col gap-2 items-center justify-center h-100">
-                            <div className="flex flex-row gap-2 items-center justify-center ">
-                                <div className="bg-zinc-400 rounded-[25px] justify-center items-center p-[10px]">
-                                    <ChatBubbleOutlined style={{ fontSize: '30px', color: '#fff' }} />
-                                </div>
-
-                                <div className="flex flex-col gap-2">
-                                    <div className="text-sm font-medium font-['SF UI Display']">
-                                        Выберите чат
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-            </div>
-        </div>
-    );
-}
-
-function ChatListItem({ item, isSelected = false, userId, onClick }) {
-    const textColor = isSelected ? 'text-white' : 'text-neutral-800';
-
-    const partner = item.partner?.id == userId ? item.user : item.partner;
-    const image = partner?.image;
-
-    return (
-        <div
-            className={classNames(
-                "h-[66px] flex flex-row gap-2  rounded-[25px] p-[8px] cursor-pointer animate__animated animate__fadeIn",
-                'chat-' + item.id,
-                { 'bg-neutral-800': isSelected, 'bg-zinc-100': !isSelected },
-            )}
-            onClick={onClick}
-        >
-            <span
-                className={classNames(
-                    "bg-zinc-400 rounded-[25px] justify-center items-center flex-shrink-0",
-                    { 'bg-zinc-400': image },
-                    { 'bg-neutral-800 p-[15px]': !image }
-                )}
-                style={{
-                    width: '50px',
-                    height: '50px',
-                }}
-            >
-                {image && (
-                    <img
-                        src={image}
-                        alt="person"
-                        style={{
-                            width: '50px',
-                            height: '50px',
-                            objectFit: 'cover',
-                            borderRadius: '50%',
-                        }}
-                    />
-                )}
-            </span>
-
-            <div className="flex-col justify-start items-start gap-[5px] inline-flex w-full overflow-hidden">
-                <Link
-                    className={classNames(
-                        "text-sm font-medium font-['SF UI Display']",
-                        textColor,
-                    )}
-                    to={`/chat/${item.id}/${partner?.id}`}
-                >
-                    {partner?.name}
-                </Link>
-                <div
-                    className={classNames(
-                        "h-[17px] text-[15px] font-normal w-full",
-                        textColor,
-                    )}
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                    }}
-                >
-                    {item.lastMessage?.message || 'Здравствуйте! Сколько просите и есть торг'}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+          <div className="flex h-[600px] md:h-[700px]">
+            {/* Chat List Panel - Hide on mobile when chat is open */}
+            <div className={classNames(
+              "w-full md:w-2/5 lg:w-1/3 border-r border-gray-200",
+              { "hidden": windowWidth < 768 && showMobileChat }
+            )}>
+              {/* Search Box */}
+              <div className="p-3 border-b border-gray-200">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Поиск контактов..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full rounded-lg border border-gray-200 pl-9 pr-4 py-2 text-sm focus:ring-primary focus:border-primary"
+                  />
                 </div>
+              </div>
+
+              {/* Chat List */}
+              <div className="h-[calc(100%-61px)] overflow-y-auto">
+                {filteredChats.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-gray-500 p-6">
+                    <MessageCircle className="w-12 h-12 mb-3 opacity-30" />
+                    {searchQuery ? (
+                      <p className="text-center">Не найдено контактов по запросу "{searchQuery}"</p>
+                    ) : (
+                      <p className="text-center">У вас пока нет сообщений</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="divide-y divide-gray-100">
+                    {filteredChats.map((chat) => (
+                      <ChatListItem
+                        key={chat.id}
+                        chat={chat}
+                        isSelected={selectedChat?.id === chat.id}
+                        userId={user?.id}
+                        onClick={() => selectChat(chat)}
+                        onDelete={() => setDeleteConfirmId(chat.id)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-        </div >
-    );
-}
+
+            {/* Chat View Panel - Show on mobile only when chat is open */}
+            <div className={classNames(
+              "w-full md:w-3/5 lg:w-2/3 flex flex-col",
+              { "hidden": windowWidth < 768 && !showMobileChat }
+            )}>
+              {selectedChat ? (
+                <ChatView
+                  partner={partner}
+                  messages={messages}
+                  loading={loading}
+                  onSendMessage={handleSendMessage}
+                  onBack={handleBackToList}
+                  isMobile={windowWidth < 768}
+                />
+              ) : (
+                <EmptyChatState />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Delete Confirmation Dialog */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold mb-3">Удалить чат</h3>
+            <p className="text-gray-600 mb-6">
+              Вы уверены, что хотите удалить этот чат? Это действие нельзя отменить.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+                onClick={() => setDeleteConfirmId(null)}
+              >
+                Отмена
+              </button>
+              <button
+                className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
+                onClick={() => handleDeleteChat(deleteConfirmId)}
+              >
+                Удалить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+const ChatListItem = ({ chat, isSelected, userId, onClick, onDelete }) => {
+  const partner = chat.partner?.id === userId ? chat.user : chat.partner;
+  const lastMessage = chat.lastMessage?.message || 'Нет сообщений';
+  const timeSince = chat.lastMessage?.created_at 
+    ? moment(chat.lastMessage.created_at).fromNow() 
+    : '';
+
+  return (
+    <div
+      className={classNames(
+        "flex items-center px-4 py-3 cursor-pointer transition-colors",
+        {
+          "bg-primary bg-opacity-10": isSelected,
+          "hover:bg-gray-50": !isSelected
+        }
+      )}
+      onClick={onClick}
+    >
+      {/* Avatar */}
+      <div className="flex-shrink-0 mr-3">
+        {partner?.image ? (
+          <img
+            src={partner.image}
+            alt={partner.name}
+            className="w-12 h-12 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+            <User className="w-6 h-6" />
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex justify-between items-center mb-1">
+          <h3 className="text-sm font-medium truncate">
+            {partner?.name || "Неизвестный пользователь"}
+          </h3>
+          <span className="text-xs text-gray-500 flex-shrink-0">{timeSince}</span>
+        </div>
+        <p className="text-xs text-gray-500 truncate">{lastMessage}</p>
+      </div>
+
+      {/* Delete Button */}
+      <button
+        className="ml-2 p-2 text-gray-400 hover:text-red-500 rounded-full hover:bg-gray-100"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+    </div>
+  );
+};
+
+const ChatView = ({ partner, messages, loading, onSendMessage, onBack, isMobile }) => {
+  const [messageText, setMessageText] = useState("");
+  const messagesEndRef = useRef(null);
+
+  const handleSend = () => {
+    if (messageText.trim()) {
+      onSendMessage(messageText);
+      setMessageText("");
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  return (
+    <>
+      {/* Chat Header */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center">
+          {isMobile && (
+            <button
+              className="mr-3 text-gray-500 hover:text-gray-700"
+              onClick={onBack}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+          )}
+          <div className="flex items-center">
+            {partner?.image ? (
+              <img
+                src={partner.image}
+                alt={partner.name}
+                className="w-10 h-10 rounded-full object-cover mr-3"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                <User className="w-5 h-5" />
+              </div>
+            )}
+            <div>
+              <h3 className="font-medium text-gray-900">
+                {partner?.name || "Неизвестный пользователь"}
+              </h3>
+              <p className="text-xs text-gray-500">
+                {partner?.online ? "В сети" : "Не в сети"}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100">
+            <MoreVertical className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-gray-500">
+            <MessageCircle className="w-12 h-12 mb-3 opacity-30" />
+            <p>Начните общение с {partner?.name}</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {messages.map((message, index) => (
+              <MessageBubble
+                key={message.id || index}
+                message={message}
+                isOwnMessage={message.sender?.id !== partner?.id}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+      </div>
+
+      {/* Message Input */}
+      <div className="border-t border-gray-200 p-3">
+        <div className="flex items-center bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+          <textarea
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Введите сообщение..."
+            className="flex-1 px-4 py-2 bg-transparent border-none focus:ring-0 resize-none max-h-24 min-h-[42px]"
+            rows={1}
+            disabled={loading}
+          />
+          <button
+            onClick={handleSend}
+            disabled={!messageText.trim() || loading}
+            className="p-2 mr-2 text-white bg-primary rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Send className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const MessageBubble = ({ message, isOwnMessage }) => {
+  const time = message.created_at ? moment(message.created_at).format('HH:mm') : '';
+  
+  return (
+    <div className={classNames(
+      "flex",
+      isOwnMessage ? "justify-end" : "justify-start"
+    )}>
+      <div className={classNames(
+        "max-w-[75%] rounded-lg px-4 py-2 relative group",
+        isOwnMessage 
+          ? "bg-primary text-white rounded-br-none" 
+          : "bg-white text-gray-800 rounded-bl-none border border-gray-200"
+      )}>
+        <p className="break-words">{message.message}</p>
+        <div className={classNames(
+          "flex items-center mt-1",
+          isOwnMessage ? "justify-end" : "justify-start"
+        )}>
+          <span className="text-xs opacity-70 flex items-center">
+            {time}
+            {isOwnMessage && (
+              <Check className="w-3 h-3 ml-1" />
+            )}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const EmptyChatState = () => {
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
+      <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+        <MessageCircle className="w-8 h-8 text-gray-400" />
+      </div>
+      <h3 className="text-lg font-medium text-gray-700 mb-2">Выберите чат</h3>
+      <p className="text-sm text-center max-w-md">
+        Выберите контакт из списка слева, чтобы начать общение
+      </p>
+    </div>
+  );
+};
 
 export default ChatListPage;

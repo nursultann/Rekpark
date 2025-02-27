@@ -1,6 +1,7 @@
 import React from 'react';
 import Slider from 'react-slick';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import useBannersQuery from '../../hooks/useBannersQuery';
 
 // Custom arrow components for better styling integration with Tailwind
 const PrevArrow = ({ className, onClick }) => (
@@ -23,71 +24,45 @@ const NextArrow = ({ className, onClick }) => (
   </button>
 );
 
+// Fallback banner data when API fails or while loading
+const fallbackBanners = [
+  {
+    id: 1,
+    title: "Продавайте быстрее с премиум объявлениями",
+    description: "Получите в 3 раза больше просмотров и найдите покупателя за 24 часа",
+    buttonText: "Узнать больше",
+    buttonLink: "/business",
+    backgroundColor: "bg-gradient-to-r from-blue-600 to-blue-400",
+    textColor: "text-white",
+    image: "https://picsum.photos/500/300?random=1"
+  }
+];
+
 const BannersCarousel = () => {
-  // Sample banner data - in a real app, this would come from an API or CMS
-  const banners = [
-    {
-      id: 1,
-      title: "Продавайте быстрее с премиум объявлениями",
-      description: "Получите в 3 раза больше просмотров и найдите покупателя за 24 часа",
-      buttonText: "Узнать больше",
-      buttonLink: "/business",
-      backgroundColor: "bg-gradient-to-r from-blue-600 to-blue-400",
-      textColor: "text-white",
-      image: "https://picsum.photos/500/300?random=1"
-    },
-    {
-      id: 2,
-      title: "Скачайте мобильное приложение",
-      description: "Доступ к объявлениям в любое время и в любом месте",
-      buttonText: "Скачать",
-      buttonLink: "#",
-      backgroundColor: "bg-gradient-to-r from-purple-600 to-indigo-600",
-      textColor: "text-white",
-      image: "https://picsum.photos/500/300?random=2"
-    },
-    {
-      id: 3,
-      title: "Весенняя распродажа!",
-      description: "Товары со скидками до 70% только в этом месяце",
-      buttonText: "Смотреть предложения",
-      buttonLink: "/filter?sale=true",
-      backgroundColor: "bg-gradient-to-r from-red-500 to-orange-500",
-      textColor: "text-white",
-      image: "https://picsum.photos/500/300?random=3"
-    },
-    {
-      id: 4,
-      title: "Начните бизнес с RekPark",
-      description: "Специальные условия для корпоративных клиентов",
-      buttonText: "Для бизнеса",
-      buttonLink: "/business",
-      backgroundColor: "bg-gradient-to-r from-green-600 to-teal-500",
-      textColor: "text-white",
-      image: "https://picsum.photos/500/300?random=4"
-    },
-    {
-      id: 5,
-      title: "Рассрочка и кредит",
-      description: "Покупайте сейчас, платите потом с нашими партнерами",
-      buttonText: "Подробнее",
-      buttonLink: "#",
-      backgroundColor: "bg-gradient-to-r from-yellow-500 to-amber-500",
-      textColor: "text-white",
-      image: "https://picsum.photos/500/300?random=5"
-    }
-  ];
+  // Use the custom hook to fetch banner data
+  const { 
+    banners, 
+    isLoading, 
+    error, 
+    isEmpty 
+  } = useBannersQuery({
+    position: 'main_advertising_slider',
+    platform: 'web'
+  });
+
+  // Determine which banners to display
+  const displayBanners = isEmpty ? fallbackBanners : banners;
 
   // Settings for react-slick
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: displayBanners.length > 1,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    centerMode: true,
+    centerMode: displayBanners.length > 1,
     centerPadding: '20%',
-    autoplay: true,
+    autoplay: displayBanners.length > 1,
     autoplaySpeed: 5000,
     pauseOnHover: true,
     prevArrow: <PrevArrow />,
@@ -120,10 +95,19 @@ const BannersCarousel = () => {
     )
   };
 
+  // Show loading state
+  if (isLoading && isEmpty) {
+    return (
+      <div className="h-64 md:h-80 lg:h-96 rounded-xl bg-gray-100 animate-pulse flex items-center justify-center">
+        <p className="text-gray-500">Loading banners...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative overflow-hidden fadeout-overflows">
       <Slider {...settings} className="banner-carousel">
-        {banners.map((banner) => (
+        {displayBanners.map((banner) => (
           <div key={banner.id} className="outline-none px-1">
             <div className="h-64 md:h-80 lg:h-96 rounded-xl overflow-hidden ">
               <div className={`h-full ${banner.backgroundColor} relative`}>
@@ -160,6 +144,13 @@ const BannersCarousel = () => {
           </div>
         ))}
       </Slider>
+
+      {/* Display error message if there's an error */}
+      {error && (
+        <div className="text-red-500 text-sm mt-2">
+          Error loading banners: {error}
+        </div>
+      )}
 
       {/* Custom CSS to override some slick-carousel defaults */}
       <style jsx>{`

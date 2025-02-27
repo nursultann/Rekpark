@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useProducts } from '../../../hooks/product';
 import { useCategoriesTree } from '../../../hooks/category';
-import { 
-  Search, 
-  SlidersHorizontal, 
-  ChevronDown, 
+import {
+  Search,
+  SlidersHorizontal,
+  ChevronDown,
   X,
   MapPin,
   CheckCircle2,
@@ -19,9 +19,14 @@ import {
   DollarSign,
   Filter,
   ChevronRight,
-  Video
+  Video,
+  Info
 } from 'lucide-react';
 import ProductItem, { ProductItemSkeleton } from '../../components/product/product_item';
+import useRegionsQuery from '../../../hooks/useRegionsQuery';
+import useCurrencyQuery from '../../../hooks/useCurrencyQuery';
+import CustomTooltip from '../../components/custom_tooltip';
+import CatalogMenu from '../../components/catalog_menu';
 
 // Category kinds enum similar to Flutter code
 const CategoryKind = {
@@ -57,8 +62,8 @@ const CategorySearchField = ({ field, value, onChange }) => {
       return (
         <div className="mb-4">
           <label className="block text-sm font-medium mb-2">{label}</label>
-          <select 
-            value={value || ''} 
+          <select
+            value={value || ''}
             onChange={(e) => onChange(name, e.target.value)}
             className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
@@ -194,7 +199,7 @@ const CarFilters = ({ values = {}, onChange }) => {
   const handleChange = (field, value) => {
     // Reset dependent fields when parent changes
     let updatedValues = { ...values, [field]: value };
-    
+
     if (field === 'type_id') {
       updatedValues = {
         type_id: value,
@@ -231,7 +236,7 @@ const CarFilters = ({ values = {}, onChange }) => {
         modification_id: null
       };
     }
-    
+
     onChange(updatedValues);
   };
 
@@ -254,12 +259,12 @@ const CarFilters = ({ values = {}, onChange }) => {
         <Car className="w-5 h-5" />
         Параметры автомобиля
       </h3>
-      
+
       <div className="rounded-lg border border-gray-200 overflow-hidden divide-y divide-gray-200">
         {/* Car Type */}
         <div className="p-3 bg-white">
           <label className="block text-sm font-medium mb-2">Тип кузова</label>
-          <select 
+          <select
             value={values.type_id || ''}
             onChange={(e) => handleChange('type_id', e.target.value)}
             className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -274,7 +279,7 @@ const CarFilters = ({ values = {}, onChange }) => {
         {/* Car Mark */}
         <div className={`p-3 bg-white ${!values.type_id ? 'opacity-60' : ''}`}>
           <label className="block text-sm font-medium mb-2">Марка</label>
-          <select 
+          <select
             value={values.mark_id || ''}
             onChange={(e) => handleChange('mark_id', e.target.value)}
             className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -290,7 +295,7 @@ const CarFilters = ({ values = {}, onChange }) => {
         {/* Car Model */}
         <div className={`p-3 bg-white ${!values.mark_id ? 'opacity-60' : ''}`}>
           <label className="block text-sm font-medium mb-2">Модель</label>
-          <select 
+          <select
             value={values.model_id || ''}
             onChange={(e) => handleChange('model_id', e.target.value)}
             className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -306,7 +311,7 @@ const CarFilters = ({ values = {}, onChange }) => {
         {/* Car Generation */}
         <div className={`p-3 bg-white ${!values.model_id ? 'opacity-60' : ''}`}>
           <label className="block text-sm font-medium mb-2">Поколение</label>
-          <select 
+          <select
             value={values.generation_id || ''}
             onChange={(e) => handleChange('generation_id', e.target.value)}
             className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -347,14 +352,10 @@ const groupSearchFields = (searchFields) => {
 const ProductsFilterPage = () => {
   const [showFilters, setShowFilters] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [catalogMenuOpen, setCatalogMenuOpen] = useState(false);
   const categories = useCategoriesTree();
-  const [regions, setRegions] = useState([
-    { id: 1, name: 'Бишкек' },
-    { id: 2, name: 'Чуйская область' },
-    { id: 3, name: 'Ыссык-Кульская область' },
-    { id: 4, name: 'Нарынская область' }
-  ]);
-  
+  const { regions } = useRegionsQuery()
+
   const [filters, setFilters] = useState({
     searchText: '',
     priceFrom: '',
@@ -376,24 +377,16 @@ const ProductsFilterPage = () => {
   const getCategoryKind = (category) => {
     // Simplified version - in real app should come from backend
     if (!category) return CategoryKind.OTHER;
-    
-    const name = category.name.toLowerCase();
-    if (name.includes('авто') || name.includes('машин')) return CategoryKind.CARS;
-    if (name.includes('недвиж') || name.includes('квартир')) return CategoryKind.REALTY;
-    if (name.includes('работа') || name.includes('вакан')) return CategoryKind.JOBS;
-    if (name.includes('услуг')) return CategoryKind.SERVICES;
-    if (name.includes('электрон')) return CategoryKind.ELECTRONICS;
-    if (name.includes('одежд') || name.includes('обув')) return CategoryKind.CLOTHINGS;
-    
-    return CategoryKind.OTHER;
+
+    return category.kind;
   };
 
   // Simulate category search fields based on category kind
   const getCategorySearchFields = (category) => {
     if (!category) return [];
-    
+
     const kind = getCategoryKind(category);
-    
+
     switch (kind) {
       case CategoryKind.CARS:
         return [
@@ -491,20 +484,15 @@ const ProductsFilterPage = () => {
   // Get category-specific search fields
   const categorySearchFields = selectedCategory ? getCategorySearchFields(selectedCategory) : [];
   const groupedSearchFields = groupSearchFields(categorySearchFields);
-  
+
   // Determine if category is a car category
   const isCarCategory = selectedCategory && getCategoryKind(selectedCategory) === CategoryKind.CARS;
   const categoryKind = selectedCategory ? getCategoryKind(selectedCategory) : null;
 
   // Get currency list
-  const currencies = [
-    { id: 1, name: 'USD', symbol: '$' },
-    { id: 2, name: 'KGS', symbol: 'сом' },
-    { id: 3, name: 'RUB', symbol: '₽' }
-  ];
-
-  const { products, loading } = useProducts({
-    ...filters,
+  const { currencies } = useCurrencyQuery();
+  const convertFilters = (filters) => ({
+    searchText: filters.searchText,
     categories: filters.category ? [filters.category].join(',') : '',
     has_photo: filters.hasPhoto,
     has_video: filters.hasVideo,
@@ -516,9 +504,11 @@ const ProductsFilterPage = () => {
     region_id: filters.regionId,
     currency_id: filters.currencyId
   });
+  const { products, loading, pagination, updateFilters } = useProducts(convertFilters(filters));
 
   // Simulate fetching results count
   useEffect(() => {
+    updateFilters(convertFilters(filters));
     const fetchResultsCount = async () => {
       setIsLoadingResults(true);
       // Simulate API delay
@@ -606,6 +596,7 @@ const ProductsFilterPage = () => {
                 type="text"
                 placeholder="Поиск объявлений..."
                 value={filters.searchText}
+                autoFocus
                 onChange={(e) => handleFilterChange('searchText', e.target.value)}
                 className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -630,7 +621,7 @@ const ProductsFilterPage = () => {
             <select
               value={filters.sortBy}
               onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-              className="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {sortOptions.map(option => (
                 <option key={option.value} value={option.value}>
@@ -668,7 +659,7 @@ const ProductsFilterPage = () => {
               {filters.regionId && (
                 <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm">
                   <MapPin className="w-4 h-4" />
-                  {regions.find(r => r.id === filters.regionId)?.name}
+                  {regions.find(r => r.id == filters.regionId)?.name}
                   <button onClick={() => handleFilterChange('regionId', null)}>
                     <X className="w-4 h-4" />
                   </button>
@@ -737,13 +728,13 @@ const ProductsFilterPage = () => {
           <div className={`md:w-72 flex-shrink-0 ${showFilters ? 'block' : 'hidden md:block'}`}>
             {/* Show Results Button - Visible on Mobile */}
             <div className="sticky top-0 md:hidden bg-blue-500 text-white rounded-lg p-3 mb-4 shadow-md">
-              <button 
-                className="w-full flex items-center justify-center gap-2" 
+              <button
+                className="w-full flex items-center justify-center gap-2"
                 onClick={() => setShowFilters(false)}
-                disabled={!resultsCount}
+                disabled={!pagination.count}
               >
                 <span>Показать результаты</span>
-                {resultsCount && <span className="font-bold">: {resultsCount}</span>}
+                {pagination.count && <span className="font-bold">: {pagination.count}</span>}
                 {isLoadingResults && (
                   <span className="ml-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                 )}
@@ -762,34 +753,47 @@ const ProductsFilterPage = () => {
               </div>
 
               {/* Category Selection */}
-              <div className="mb-6">
-                <h3 className="font-medium mb-2">Категория</h3>
-                <div className="space-y-1 max-h-48 overflow-y-auto">
-                  {categories.map(category => (
-                    <button
-                      key={category.id}
-                      onClick={() => handleCategorySelect(category)}
-                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                        selectedCategory?.id === category.id
-                          ? 'bg-blue-50 text-blue-500'
-                          : 'hover:bg-gray-50'
-                      }`}
+              <div className="mb-2">
+                <div className="relative">
+                  <CustomTooltip
+                    trigger='click'
+                    content={
+                      <CatalogMenu
+                        handleSelect={(categoryId) => {
+                          const category = categories.find(c => c.id === categoryId);
+                          handleCategorySelect(category);
+                          setCatalogMenuOpen(false);
+                        }}
+                      />
+                    }
+                    position="bottom"
+                    maxWidth="80vh"
+                    maxHeight="80vh"
+                    isOpen={catalogMenuOpen}
+                    showArrow={true}
+                    onClose={() => setCatalogMenuOpen(false)}
+                    className="shadow-xl"
+                  >
+                    <div
+                      onClick={() => { setCatalogMenuOpen(true) }}
+                      className={`block w-full rounded-lg border border-gray-300 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-left`}
                     >
-                      {category.name}
-                    </button>
-                  ))}
+                      {selectedCategory ? selectedCategory.name : 'Категория'}
+                      <ChevronDown className="absolute right-1 top-1/2 transform -translate-y-1/2 w-4 h-4" />
+                    </div>
+                    
+                  </CustomTooltip>
                 </div>
               </div>
 
               {/* Region Selection */}
               <div className="mb-6">
-                <h3 className="font-medium mb-2">Регион</h3>
                 <select
                   value={filters.regionId || ''}
                   onChange={(e) => handleFilterChange('regionId', e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">Выберите регион</option>
+                  <option value="">Регион</option>
                   {regions.map(region => (
                     <option key={region.id} value={region.id}>{region.name}</option>
                   ))}
@@ -913,11 +917,11 @@ const ProductsFilterPage = () => {
                   <div className="h-8 w-40 bg-gray-200 animate-pulse rounded"></div>
                 ) : (
                   <>
-                    {resultsCount ? `Найдено объявлений: ${resultsCount}` : 'Объявления не найдены'}
+                    {pagination.count ? `Найдено объявлений: ${pagination.count}` : 'Объявления не найдены'}
                   </>
                 )}
               </h2>
-              
+
               {selectedCategory && (
                 <div className="text-sm text-gray-500 flex items-center gap-1">
                   <span>
@@ -955,7 +959,7 @@ const ProductsFilterPage = () => {
                   <p className="text-gray-500 max-w-md">
                     Попробуйте изменить параметры фильтрации или выбрать другую категорию
                   </p>
-                  <button 
+                  <button
                     onClick={clearFilters}
                     className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                   >
@@ -968,7 +972,7 @@ const ProductsFilterPage = () => {
             {/* Pagination or Load More */}
             {products?.length > 0 && !loading && (
               <div className="mt-8 flex justify-center">
-                <button 
+                <button
                   className="px-6 py-2 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
                 >
                   Загрузить ещё

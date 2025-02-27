@@ -255,7 +255,7 @@ const CustomTooltip = ({
   
   return (
     <>
-      <div ref={triggerRef} {...triggerProps} className="inline-block">
+      <div ref={triggerRef} {...triggerProps} >
         {children}
       </div>
       
