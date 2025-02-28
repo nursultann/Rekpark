@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useCategoriesQuery } from "../../../../hooks/category";
 import DragAndDropUploader from "../../../components/drag_and_drop_uploader";
 import TagsInput from "../../../components/tags_input";
-import { ChevronDown, Info, X, Plus, Smartphone } from "lucide-react";
+import { ChevronDown, Info, X, Plus, Smartphone, MapPin } from "lucide-react";
 import SelectCategoryModal from "../../../components/category/select_category_modal";
 import { NewCustomAttributeField } from "../../../components/custom_components";
 import useCurrencyQuery from "../../../../hooks/useCurrencyQuery";
 import useRegionsQuery from "../../../../hooks/useRegionsQuery";
+import CarAttributes from "../../../components/custom_attribute/car_attributes";
 
 const ProductForm = ({
     initialValues = {},
@@ -34,11 +35,13 @@ const ProductForm = ({
         region_id: "",
         city_id: "",
         district: "",
-        location: "",
+        location: null, // Will store map coordinates as {latitude, longitude}
+        address: "", // This will store the text address
         phones: [""],
         images: [],
         video: "",
         custom_attribute_values: [],
+        car_attributes: [],
         ...initialValues
     });
 
@@ -50,6 +53,9 @@ const ProductForm = ({
     const [previewImages, setPreviewImages] = useState([]);
     const [deletedImageIds, setDeletedImageIds] = useState([]);
     const [showErrorSummary, setShowErrorSummary] = useState(false);
+    const [mapInitialized, setMapInitialized] = useState(false);
+    const [map, setMap] = useState(null);
+    const [marker, setMarker] = useState(null);
 
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
@@ -79,6 +85,55 @@ const ProductForm = ({
             });
         }
     }, [innitialCategory])
+
+    // Initialize 2GIS map
+    useEffect(() => {
+        if (!mapInitialized && typeof window !== 'undefined') {
+            // Only import and initialize if we're in browser environment
+            const DG = window.DG;
+            if (DG) {
+                DG.then(function () {
+                    const defaultCoords = [42.876, 74.607]; // Default coordinates (Bishkek)
+                    
+                    // Use existing coordinates if available in formData
+                    const initialCoords = formData.location 
+                        ? [parseFloat(formData.location.latitude), parseFloat(formData.location.longitude)]
+                        : defaultCoords;
+                    
+                    const mapInstance = DG.map('map-container', {
+                        'center': initialCoords,
+                        'zoom': 13
+                    });
+                    
+                    const markerInstance = DG.marker(initialCoords, {
+                        draggable: true
+                    }).addTo(mapInstance);
+                    
+                    // When marker is dragged, update location
+                    markerInstance.on('drag', function (e) {
+                        let lat = e.target._latlng.lat.toFixed(6);
+                        let lng = e.target._latlng.lng.toFixed(6);
+                        setFormData(prev => ({
+                            ...prev,
+                            location: { latitude: lat, longitude: lng }
+                        }));
+                        
+                        // Clear location error when user sets a location
+                        if (errors.location) {
+                            setErrors({
+                                ...errors,
+                                location: null
+                            });
+                        }
+                    });
+                    
+                    setMap(mapInstance);
+                    setMarker(markerInstance);
+                    setMapInitialized(true);
+                });
+            }
+        }
+    }, [mapInitialized]);
 
     // Update category fields and attributes when category changes
     useEffect(() => {
@@ -278,6 +333,11 @@ const ProductForm = ({
         const validPhones = formData.phones.filter(phone => phone.trim() !== "");
         if (validPhones.length === 0) {
             newErrors.phones = "Укажите хотя бы один номер телефона";
+        }
+
+        // Validate location from map
+        if (!formData.location) {
+            newErrors.location = "Пожалуйста, укажите местоположение на карте";
         }
 
         // Validate required custom attributes
@@ -561,20 +621,46 @@ const ProductForm = ({
                             />
                         </div>
 
-                        {/* Location */}
+                        {/* Address */}
                         <div>
-                            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
                                 Адрес
                             </label>
                             <input
-                                id="location"
-                                name="location"
+                                id="address"
+                                name="address"
                                 type="text"
-                                value={formData.location}
+                                value={formData.address}
                                 onChange={handleChange}
                                 className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                                 placeholder="Полный адрес"
                             />
+                        </div>
+
+                        {/* Map Location */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-3">
+                                Местоположение на карте <span className="text-red-500">*</span>
+                            </label>
+                            <div 
+                                id="map-container" 
+                                style={{ width: "100%", height: "400px", borderRadius: "0.5rem", overflow: "hidden" }}
+                                className={`border ${errors.location ? 'border-red-300' : 'border-gray-300'}`}
+                            ></div>
+                            <p className="mt-2 text-sm text-gray-500 flex items-center">
+                                <MapPin className="w-4 h-4 mr-1" />
+                                Поставьте маркер на карте, перетащив его в нужное место
+                            </p>
+                            
+                            {errors.location && (
+                                <p className="mt-1 text-sm text-red-600">{errors.location}</p>
+                            )}
+                            
+                            {formData.location && (
+                                <div className="mt-2 text-sm text-gray-700">
+                                    Координаты: {formData.location.latitude}, {formData.location.longitude}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -752,6 +838,44 @@ const ProductForm = ({
                                     );
                                 })}
                             </div>
+                        </div>
+                    </div>
+                )}
+                
+                {/* Car Attributes - only shown when category kind is "cars" */}
+                {selectedCategory && selectedCategory.kind === 'cars' && (
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                            <h3 className="text-lg font-medium text-gray-900">
+                                Параметры траспорта
+                            </h3>
+                        </div>
+
+                        <div className="p-6 space-y-6 min-h-[200px]">
+                            <CarAttributes
+                                type={formData.car_attributes?.type}
+                                mark={formData.car_attributes?.mark}
+                                model={formData.car_attributes?.model}
+                                generation={formData.car_attributes?.generation}
+                                series={formData.car_attributes?.series}
+                                modification={formData.car_attributes?.modification}
+                                characteristics={formData.car_attributes?.characteristics}
+                                onChange={(carAttrs) => {
+                                    console.log(carAttrs)
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        car_attributes: carAttrs
+                                    }));
+                                    
+                                    // Clear car attributes errors if they exist
+                                    if (errors.car_attributes) {
+                                        setErrors({
+                                            ...errors,
+                                            car_attributes: null
+                                        });
+                                    }
+                                }}
+                            />
                         </div>
                     </div>
                 )}

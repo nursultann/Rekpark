@@ -66,45 +66,45 @@ export default function CarAttributes({
     const types = useQuery(['types'], () => api.fetchCar('types'));
     const marks = useQuery(['marks', type], () => api.fetchCar('marks', {
         where: {
-            car_type_id: type,
+            id_car_type: type,
         },
         limit: 1000
     }));
     const models = useQuery(['models', type, mark], () => api.fetchCar('models', {
         where: filterObject({
-            car_type_id: type,
-            car_mark_id: mark
+            id_car_type: type,
+            id_car_mark: mark
         }),
         limit: 1000
     }));
     const generations = useQuery(['generations', type, mark, model], () => api.fetchCar('generations', {
         where: filterObject({
-            car_type_id: type,
-            car_model_id: model
+            id_car_type: type,
+            id_car_model: model
         }),
         limit: 1000
     }));
     const seriesQuery = useQuery(['series', type, mark, model, generation], () => api.fetchCar('series', {
         where: filterObject({
-            car_type_id: type,
-            car_model_id: model,
-            car_generation_id: generation
+            id_car_type: type,
+            id_car_model: model,
+            id_car_generation: generation
         }),
         limit: 1000
     }));
     const modifications = useQuery(['modifications', type, mark, model, generation, series], () => api.fetchCar('modifications', {
         where: filterObject({
-            car_type_id: type,
-            car_model_id: model,
-            car_series_id: series
+            id_car_type: type,
+            id_car_model: model,
+            id_car_series: series
         }),
         limit: 1000
     }));
     const characteristicsQuery = useQuery(['characteristics', type, mark, model], () => api.fetchCar('characteristics', {
         where: filterObject({
-            car_type_id: type,
-            car_model_id: model,
-            car_mark_id: mark,
+            id_car_type: type,
+            id_car_model: model,
+            id_car_mark: mark,
         }),
         where_allow_null: true,
         limit: 1000,
@@ -118,6 +118,7 @@ export default function CarAttributes({
                     value={type}
                     placeholder="Выберите тип"
                     onChange={(value) => {
+                        console.log('value', value);
                         onChange({
                             type: value,
                             mark: null,
@@ -127,7 +128,7 @@ export default function CarAttributes({
                             modification: null,
                         });
                     }}
-                    options={types.data?.map((type) => ({ value: type.id, label: type.name }))}
+                    options={types.data?.map((type) => ({ value: type.id_car_type, label: type.name }))}
                 />
 
                 {type != null ?
@@ -144,7 +145,7 @@ export default function CarAttributes({
                                 modification: null,
                             });
                         }}
-                        options={marks.data?.map((type) => ({ value: type.id, label: type.name }))}
+                        options={marks.data?.map((type) => ({ value: type.id_car_mark, label: type.name }))}
                     />
                     : null}
                 {mark != null ?
@@ -161,7 +162,7 @@ export default function CarAttributes({
                                 modification: null,
                             });
                         }}
-                        options={models.data?.map((type) => ({ value: type.id, label: type.name }))}
+                        options={models.data?.map((type) => ({ value: type.id_car_model, label: type.name }))}
                     />
                     : null}
                 {model != null ?
@@ -178,7 +179,7 @@ export default function CarAttributes({
                                 modification: null,
                             });
                         }}
-                        options={generations.data?.map((type) => ({ value: type.id, label: type.name }))}
+                        options={generations.data?.map((type) => ({ value: type.id_car_generation, label: type.name }))}
                     />
                     : null}
                 {generation != null ?
@@ -195,7 +196,7 @@ export default function CarAttributes({
                                 modification: null,
                             });
                         }}
-                        options={seriesQuery.data?.map((type) => ({ value: type.id, label: type.name }))}
+                        options={seriesQuery.data?.map((type) => ({ value: type.id_car_serie, label: type.name }))}
                     />
                     : null}
                 {series != null ?
@@ -212,7 +213,7 @@ export default function CarAttributes({
                                 modification: value,
                             });
                         }}
-                        options={modifications.data?.map((type) => ({ value: type.id, label: type.name }))}
+                        options={modifications.data?.map((type) => ({ value: type.id_car_modification, label: type.name }))}
                     />
                     : null}
             </div>
@@ -238,7 +239,6 @@ export default function CarAttributes({
                                     modificationId={modification}
                                     value={value?.value}
                                     onChange={(value) => {
-                                        console.log('value', value, characteristic, characteristics);
                                         onChange({
                                             type: type,
                                             mark: mark,
