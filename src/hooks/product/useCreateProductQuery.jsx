@@ -27,7 +27,8 @@ const useCreateProductQuery = () => {
         'city_id',
         'district',
         'location',
-        'video'
+        'video',
+        'address',
       ];
 
       basicFields.forEach(field => {
